@@ -45,7 +45,6 @@
     lis.cornerBackgroundColor = [UIColor whiteColor];
     lis.cornerBorderColor = [UIColor redColor];
     lis.cornerBorderWidth = 0.0f;
-    lis.isBlur = YES;
     lis.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, is1.bottom + 10.0f, 100.0f, 100.0f);
     
     
@@ -57,7 +56,7 @@
     is2.cornerBorderWidth = 0.0f;
     is2.cornerBorderColor = [UIColor orangeColor];
     is2.contentMode = UIViewContentModeScaleAspectFill;
-    
+    is2.isBlur = YES;
     
     //4.直接对CALayer对象使用
     UIView* view2 = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 50,

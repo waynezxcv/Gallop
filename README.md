@@ -9,6 +9,11 @@
 
 Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框架。只需要使用框架中抽象的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIIamgeView）模型来构建界面，Gallop将确保你的应用的流畅性。
 
+
+## Architecture
+
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/architecture.png)
+
 ## Features
 
 主要用于解决以下需求：
@@ -17,7 +22,6 @@ Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框�
 * 搭建属性文本界面，比如在文本中添加图片，对文字添加点击事件等。
 * 解析HTML渲染生成原生iOS页面，并可做自定义的调节。
 * 简便地实现对网络图片和本地图片的圆角和模糊处理等，并能提供缓存，无需重复处理。
-
 
 ## Requirements
 

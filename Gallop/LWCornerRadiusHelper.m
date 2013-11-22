@@ -195,7 +195,7 @@
                                           saturationDeltaFactor:1.4
                                                       maskImage:nil];
         }
-                
+        
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = CGBitmapContextCreate(NULL,
                                                      (int)width,
