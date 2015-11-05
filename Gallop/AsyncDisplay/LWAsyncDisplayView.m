@@ -34,12 +34,13 @@
 @property (nonatomic,strong) NSMutableArray* imageContainers;
 @property (nonatomic,assign) NSInteger maxImageStorageCount;
 
+@property (nonatomic,copy) NSArray* textStorages;
+@property (nonatomic,copy) NSArray* imageStorages;
+
 @end
 
 
 @implementation LWAsyncDisplayView{
-    NSArray* _textStorages;
-    NSArray* _imageStorages;
     LWTextHighlight* _highlight;
     CGPoint _highlightAdjustPoint;
     BOOL _showingHighlight;
@@ -89,12 +90,13 @@
     self.displaysAsynchronously = YES;
 }
 
+
 #pragma mark - Private
 - (void)_setImageStorages {
     for (NSInteger i = 0; i < self.maxImageStorageCount; i ++) {
         if (i >= _imageStorages.count) {
             UIView* container = self.imageContainers[i];
-            container.hidden = YES;
+            [container cleanup];
         } else {
             LWImageStorage* imageStorage = _imageStorages[i];
             if ([imageStorage.contents isKindOfClass:[NSURL class]]) {
@@ -170,7 +172,6 @@
 
 
 #pragma mark - Touch
-
 - (LWTextHighlight *)_isNeedShowHighlight:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
     if ([textStorage isKindOfClass:[LWTextStorage class]]) {
         CGPoint adjustPosition = textStorage.frame.origin;
@@ -321,10 +322,10 @@
         return;
     }
     _layout = layout;
-    _imageStorages = _layout.imageStorages;
-    _textStorages = _layout.textStorages;
-    [self _setImageStorages];
+    self.imageStorages = self.layout.imageStorages;
+    self.textStorages = self.layout.textStorages;
     [self.layer setNeedsDisplay];
+    [self _setImageStorages];
 }
 
 @end
