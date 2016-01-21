@@ -15,6 +15,9 @@
 		B0B9CE311C50B93200C81916 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0B9CE2F1C50B93200C81916 /* LaunchScreen.storyboard */; };
 		B0B9CE3C1C50B93200C81916 /* LWAsyncLayerDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE3B1C50B93200C81916 /* LWAsyncLayerDemoTests.m */; };
 		B0B9CE471C50B93200C81916 /* LWAsyncLayerDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE461C50B93200C81916 /* LWAsyncLayerDemoUITests.m */; };
+		B0B9CE571C50B9B600C81916 /* CALayer+AsyncDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE561C50B9B600C81916 /* CALayer+AsyncDisplay.m */; };
+		B0B9CE5A1C50C26E00C81916 /* AsyncDisplayHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE591C50C26E00C81916 /* AsyncDisplayHelper.m */; };
+		B0B9CE5D1C50CA9E00C81916 /* DisplayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE5C1C50CA9E00C81916 /* DisplayCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +54,12 @@
 		B0B9CE421C50B93200C81916 /* LWAsyncLayerDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LWAsyncLayerDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B9CE461C50B93200C81916 /* LWAsyncLayerDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWAsyncLayerDemoUITests.m; sourceTree = "<group>"; };
 		B0B9CE481C50B93200C81916 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B0B9CE551C50B9B600C81916 /* CALayer+AsyncDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+AsyncDisplay.h"; sourceTree = "<group>"; };
+		B0B9CE561C50B9B600C81916 /* CALayer+AsyncDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+AsyncDisplay.m"; sourceTree = "<group>"; };
+		B0B9CE581C50C26E00C81916 /* AsyncDisplayHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncDisplayHelper.h; sourceTree = "<group>"; };
+		B0B9CE591C50C26E00C81916 /* AsyncDisplayHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncDisplayHelper.m; sourceTree = "<group>"; };
+		B0B9CE5B1C50CA9E00C81916 /* DisplayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayCell.h; sourceTree = "<group>"; };
+		B0B9CE5C1C50CA9E00C81916 /* DisplayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,15 +110,8 @@
 		B0B9CE201C50B93200C81916 /* LWAsyncLayerDemo */ = {
 			isa = PBXGroup;
 			children = (
-				B0B9CE241C50B93200C81916 /* AppDelegate.h */,
-				B0B9CE251C50B93200C81916 /* AppDelegate.m */,
-				B0B9CE271C50B93200C81916 /* ViewController.h */,
-				B0B9CE281C50B93200C81916 /* ViewController.m */,
-				B0B9CE2A1C50B93200C81916 /* Main.storyboard */,
-				B0B9CE2D1C50B93200C81916 /* Assets.xcassets */,
-				B0B9CE2F1C50B93200C81916 /* LaunchScreen.storyboard */,
-				B0B9CE321C50B93200C81916 /* Info.plist */,
-				B0B9CE211C50B93200C81916 /* Supporting Files */,
+				B0B9CE5E1C50CB9B00C81916 /* Demo */,
+				B0B9CE541C50B98300C81916 /* CALayer+AsyncDisplay */,
 			);
 			path = LWAsyncLayerDemo;
 			sourceTree = "<group>";
@@ -117,6 +119,10 @@
 		B0B9CE211C50B93200C81916 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B0B9CE2A1C50B93200C81916 /* Main.storyboard */,
+				B0B9CE2D1C50B93200C81916 /* Assets.xcassets */,
+				B0B9CE2F1C50B93200C81916 /* LaunchScreen.storyboard */,
+				B0B9CE321C50B93200C81916 /* Info.plist */,
 				B0B9CE221C50B93200C81916 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -138,6 +144,31 @@
 				B0B9CE481C50B93200C81916 /* Info.plist */,
 			);
 			path = LWAsyncLayerDemoUITests;
+			sourceTree = "<group>";
+		};
+		B0B9CE541C50B98300C81916 /* CALayer+AsyncDisplay */ = {
+			isa = PBXGroup;
+			children = (
+				B0B9CE551C50B9B600C81916 /* CALayer+AsyncDisplay.h */,
+				B0B9CE561C50B9B600C81916 /* CALayer+AsyncDisplay.m */,
+				B0B9CE581C50C26E00C81916 /* AsyncDisplayHelper.h */,
+				B0B9CE591C50C26E00C81916 /* AsyncDisplayHelper.m */,
+			);
+			name = "CALayer+AsyncDisplay";
+			sourceTree = "<group>";
+		};
+		B0B9CE5E1C50CB9B00C81916 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				B0B9CE241C50B93200C81916 /* AppDelegate.h */,
+				B0B9CE251C50B93200C81916 /* AppDelegate.m */,
+				B0B9CE271C50B93200C81916 /* ViewController.h */,
+				B0B9CE281C50B93200C81916 /* ViewController.m */,
+				B0B9CE5B1C50CA9E00C81916 /* DisplayCell.h */,
+				B0B9CE5C1C50CA9E00C81916 /* DisplayCell.m */,
+				B0B9CE211C50B93200C81916 /* Supporting Files */,
+			);
+			name = Demo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -271,7 +302,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0B9CE291C50B93200C81916 /* ViewController.m in Sources */,
+				B0B9CE571C50B9B600C81916 /* CALayer+AsyncDisplay.m in Sources */,
+				B0B9CE5A1C50C26E00C81916 /* AsyncDisplayHelper.m in Sources */,
 				B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */,
+				B0B9CE5D1C50CA9E00C81916 /* DisplayCell.m in Sources */,
 				B0B9CE231C50B93200C81916 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -496,6 +530,7 @@
 				B0B9CE4D1C50B93200C81916 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B0B9CE4E1C50B93200C81916 /* Build configuration list for PBXNativeTarget "LWAsyncLayerDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -504,6 +539,7 @@
 				B0B9CE501C50B93200C81916 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B0B9CE511C50B93200C81916 /* Build configuration list for PBXNativeTarget "LWAsyncLayerDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -512,6 +548,7 @@
 				B0B9CE531C50B93200C81916 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
