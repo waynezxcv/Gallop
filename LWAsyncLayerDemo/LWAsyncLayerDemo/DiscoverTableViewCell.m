@@ -65,9 +65,12 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     UITouch* touch = [touches anyObject];
     CGPoint point = [touch locationInView:self];
-    if (CGRectContainsPoint(CGRectMake(self.layout.menuPosition.origin.x - 10.0f, self.layout.menuPosition.origin.x - 5.0f, 40.0f, 25.0f), point)) {
+    if (CGRectContainsPoint(self.layout.menuPosition, point)) {
         if (!self.isMenuShow) {
             [self menuViewShow];
+        }
+        else {
+            [self menuViewHide];
         }
     }
 }
@@ -82,7 +85,7 @@
 
 - (void)menuViewHide {
     [UIView animateWithDuration:0.2f animations:^{
-        
+        self.menuView.frame = CGRectMake(self.layout.menuPosition.origin.x, self.layout.menuPosition.origin.y - 12.5f, 0.0f, 40.0f);
     } completion:^(BOOL finished) {
         
     }];
