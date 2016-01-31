@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01347F1A1C5DE63C0014D9EF /* CALayer+LWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F0C1C5DE63C0014D9EF /* CALayer+LWWebImage.m */; };
+		01347F1B1C5DE63C0014D9EF /* LWImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F0E1C5DE63C0014D9EF /* LWImageCache.m */; };
+		01347F1C1C5DE63C0014D9EF /* LWImageDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F101C5DE63C0014D9EF /* LWImageDecoder.m */; };
+		01347F1D1C5DE63C0014D9EF /* LWImageDownloadeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F121C5DE63C0014D9EF /* LWImageDownloadeOperation.m */; };
+		01347F1E1C5DE63C0014D9EF /* LWWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F151C5DE63C0014D9EF /* LWWebImageManager.m */; };
+		01347F1F1C5DE63C0014D9EF /* UIImage+LWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F171C5DE63C0014D9EF /* UIImage+LWWebImage.m */; };
+		01347F201C5DE63C0014D9EF /* UIImageView+LWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F191C5DE63C0014D9EF /* UIImageView+LWWebImage.m */; };
+		01347F251C5DE6DD0014D9EF /* FPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F241C5DE6DD0014D9EF /* FPSLabel.m */; };
 		B0B9CE231C50B93200C81916 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE221C50B93200C81916 /* main.m */; };
 		B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE251C50B93200C81916 /* AppDelegate.m */; };
 		B0B9CE291C50B93200C81916 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE281C50B93200C81916 /* ViewController.m */; };
@@ -38,6 +46,23 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01347F0B1C5DE63C0014D9EF /* CALayer+LWWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+LWWebImage.h"; path = "LWWebImage/CALayer+LWWebImage.h"; sourceTree = "<group>"; };
+		01347F0C1C5DE63C0014D9EF /* CALayer+LWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+LWWebImage.m"; path = "LWWebImage/CALayer+LWWebImage.m"; sourceTree = "<group>"; };
+		01347F0D1C5DE63C0014D9EF /* LWImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWImageCache.h; path = LWWebImage/LWImageCache.h; sourceTree = "<group>"; };
+		01347F0E1C5DE63C0014D9EF /* LWImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWImageCache.m; path = LWWebImage/LWImageCache.m; sourceTree = "<group>"; };
+		01347F0F1C5DE63C0014D9EF /* LWImageDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWImageDecoder.h; path = LWWebImage/LWImageDecoder.h; sourceTree = "<group>"; };
+		01347F101C5DE63C0014D9EF /* LWImageDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWImageDecoder.m; path = LWWebImage/LWImageDecoder.m; sourceTree = "<group>"; };
+		01347F111C5DE63C0014D9EF /* LWImageDownloadeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWImageDownloadeOperation.h; path = LWWebImage/LWImageDownloadeOperation.h; sourceTree = "<group>"; };
+		01347F121C5DE63C0014D9EF /* LWImageDownloadeOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWImageDownloadeOperation.m; path = LWWebImage/LWImageDownloadeOperation.m; sourceTree = "<group>"; };
+		01347F131C5DE63C0014D9EF /* LWWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWWebImage.h; path = LWWebImage/LWWebImage.h; sourceTree = "<group>"; };
+		01347F141C5DE63C0014D9EF /* LWWebImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWWebImageManager.h; path = LWWebImage/LWWebImageManager.h; sourceTree = "<group>"; };
+		01347F151C5DE63C0014D9EF /* LWWebImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWWebImageManager.m; path = LWWebImage/LWWebImageManager.m; sourceTree = "<group>"; };
+		01347F161C5DE63C0014D9EF /* UIImage+LWWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+LWWebImage.h"; path = "LWWebImage/UIImage+LWWebImage.h"; sourceTree = "<group>"; };
+		01347F171C5DE63C0014D9EF /* UIImage+LWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+LWWebImage.m"; path = "LWWebImage/UIImage+LWWebImage.m"; sourceTree = "<group>"; };
+		01347F181C5DE63C0014D9EF /* UIImageView+LWWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+LWWebImage.h"; path = "LWWebImage/UIImageView+LWWebImage.h"; sourceTree = "<group>"; };
+		01347F191C5DE63C0014D9EF /* UIImageView+LWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+LWWebImage.m"; path = "LWWebImage/UIImageView+LWWebImage.m"; sourceTree = "<group>"; };
+		01347F231C5DE6DD0014D9EF /* FPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPSLabel.h; sourceTree = "<group>"; };
+		01347F241C5DE6DD0014D9EF /* FPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPSLabel.m; sourceTree = "<group>"; };
 		B0B9CE1E1C50B93200C81916 /* LWAsyncLayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LWAsyncLayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B9CE221C50B93200C81916 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B0B9CE241C50B93200C81916 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -87,9 +112,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01347F0A1C5DE5E00014D9EF /* LWWebImage */ = {
+			isa = PBXGroup;
+			children = (
+				01347F0B1C5DE63C0014D9EF /* CALayer+LWWebImage.h */,
+				01347F0C1C5DE63C0014D9EF /* CALayer+LWWebImage.m */,
+				01347F0D1C5DE63C0014D9EF /* LWImageCache.h */,
+				01347F0E1C5DE63C0014D9EF /* LWImageCache.m */,
+				01347F0F1C5DE63C0014D9EF /* LWImageDecoder.h */,
+				01347F101C5DE63C0014D9EF /* LWImageDecoder.m */,
+				01347F111C5DE63C0014D9EF /* LWImageDownloadeOperation.h */,
+				01347F121C5DE63C0014D9EF /* LWImageDownloadeOperation.m */,
+				01347F131C5DE63C0014D9EF /* LWWebImage.h */,
+				01347F141C5DE63C0014D9EF /* LWWebImageManager.h */,
+				01347F151C5DE63C0014D9EF /* LWWebImageManager.m */,
+				01347F161C5DE63C0014D9EF /* UIImage+LWWebImage.h */,
+				01347F171C5DE63C0014D9EF /* UIImage+LWWebImage.m */,
+				01347F181C5DE63C0014D9EF /* UIImageView+LWWebImage.h */,
+				01347F191C5DE63C0014D9EF /* UIImageView+LWWebImage.m */,
+			);
+			name = LWWebImage;
+			sourceTree = "<group>";
+		};
+		01347F211C5DE6A40014D9EF /* FPSLabel */ = {
+			isa = PBXGroup;
+			children = (
+				01347F231C5DE6DD0014D9EF /* FPSLabel.h */,
+				01347F241C5DE6DD0014D9EF /* FPSLabel.m */,
+			);
+			name = FPSLabel;
+			sourceTree = "<group>";
+		};
+		01347F221C5DE6B40014D9EF /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				01347F211C5DE6A40014D9EF /* FPSLabel */,
+				01347F0A1C5DE5E00014D9EF /* LWWebImage */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		B0B9CE151C50B93200C81916 = {
 			isa = PBXGroup;
 			children = (
+				01347F221C5DE6B40014D9EF /* Utils */,
 				B0B9CE201C50B93200C81916 /* LWAsyncLayerDemo */,
 				B0B9CE3A1C50B93200C81916 /* LWAsyncLayerDemoTests */,
 				B0B9CE451C50B93200C81916 /* LWAsyncLayerDemoUITests */,
@@ -238,6 +304,7 @@
 				TargetAttributes = {
 					B0B9CE1D1C50B93200C81916 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = N29J3PPND9;
 					};
 					B0B9CE361C50B93200C81916 = {
 						CreatedOnToolsVersion = 7.2;
@@ -302,10 +369,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0B9CE291C50B93200C81916 /* ViewController.m in Sources */,
+				01347F1A1C5DE63C0014D9EF /* CALayer+LWWebImage.m in Sources */,
+				01347F1D1C5DE63C0014D9EF /* LWImageDownloadeOperation.m in Sources */,
+				01347F1F1C5DE63C0014D9EF /* UIImage+LWWebImage.m in Sources */,
+				01347F1E1C5DE63C0014D9EF /* LWWebImageManager.m in Sources */,
 				B0B9CE571C50B9B600C81916 /* CALayer+AsyncDisplay.m in Sources */,
+				01347F1C1C5DE63C0014D9EF /* LWImageDecoder.m in Sources */,
+				01347F1B1C5DE63C0014D9EF /* LWImageCache.m in Sources */,
 				B0B9CE5A1C50C26E00C81916 /* AsyncDisplayHelper.m in Sources */,
+				01347F201C5DE63C0014D9EF /* UIImageView+LWWebImage.m in Sources */,
 				B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */,
 				B0B9CE5D1C50CA9E00C81916 /* DisplayCell.m in Sources */,
+				01347F251C5DE6DD0014D9EF /* FPSLabel.m in Sources */,
 				B0B9CE231C50B93200C81916 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -445,10 +520,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = LWAsyncLayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.warmjar.LWAsyncLayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Wayne.LWAsyncLayerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -456,10 +534,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = LWAsyncLayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.warmjar.LWAsyncLayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Wayne.LWAsyncLayerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
