@@ -1,17 +1,14 @@
 //
-//  CALayer+AsyncDisplay.m
+//  LWAsyncDisplayLayer.m
 //  LWAsyncLayerDemo
 //
-//  Created by 刘微 on 16/1/21.
+//  Created by 刘微 on 16/1/31.
 //  Copyright © 2016年 Warm+. All rights reserved.
 //
 
-#import "CALayer+AsyncDisplay.h"
-#import <UIKit/UIKit.h>
+#import "LWAsyncDisplayLayer.h"
 
-
-
-@implementation CALayer(AsyncDisplay)
+@implementation LWAsyncDisplayLayer
 
 - (void)asyncDisplayWithBolock:(AsyncDisplayBlock) displayBlock {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -28,5 +25,6 @@
         });
     });
 }
+
 
 @end

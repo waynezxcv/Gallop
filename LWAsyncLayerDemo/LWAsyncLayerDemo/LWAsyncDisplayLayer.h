@@ -1,8 +1,8 @@
 //
-//  CALayer+AsyncDisplay.h
+//  LWAsyncDisplayLayer.h
 //  LWAsyncLayerDemo
 //
-//  Created by 刘微 on 16/1/21.
+//  Created by 刘微 on 16/1/31.
 //  Copyright © 2016年 Warm+. All rights reserved.
 //
 
@@ -12,7 +12,7 @@
 
 typedef void(^AsyncDisplayBlock)(CGContextRef context,CGSize size);
 
-@interface CALayer(AsyncDisplay)
+@interface LWAsyncDisplayLayer : CALayer
 
 - (void)asyncDisplayWithBolock:(AsyncDisplayBlock) displayBlock;
 

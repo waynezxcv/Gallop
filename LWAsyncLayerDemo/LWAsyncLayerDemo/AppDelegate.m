@@ -7,8 +7,10 @@
 //
 
 #import "AppDelegate.h"
+#import "DiscoverViewController.h"
 
 @interface AppDelegate ()
+
 
 @end
 
@@ -17,6 +19,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    DiscoverViewController* disconverViewController = [[DiscoverViewController alloc] init];
+    UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:disconverViewController];
+    self.window.rootViewController = navigationController;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 

@@ -11,17 +11,14 @@
 
 #define kSize CGSizeMake(55, 20)
 
-@implementation FPSLabel
-{
+@implementation FPSLabel {
     CADisplayLink *_link;
     NSUInteger _count;
     NSTimeInterval _lastTime;
     UIFont *_font;
     UIFont *_subFont;
-    
     NSTimeInterval _llll;
 }
-
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (frame.size.width == 0 && frame.size.height == 0) {
@@ -70,9 +67,7 @@
     
     CGFloat progress = fps / 60.0;
     UIColor *color = [UIColor colorWithHue:0.27 * (progress - 0.2) saturation:1 brightness:0.9 alpha:1];
-    
-    NSLog(@"fps:%f",fps);
-    
+        
     NSDictionary* attributes_1 = @{NSForegroundColorAttributeName:color,
                                    NSFontAttributeName:_font};
     
