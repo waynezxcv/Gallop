@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "DiscoverViewController.h"
+#import "LWAsyncDisplayKit.h"
 
 @interface AppDelegate ()
 
@@ -24,6 +25,9 @@
     UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:disconverViewController];
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
+
+
+
     return YES;
 }
 
