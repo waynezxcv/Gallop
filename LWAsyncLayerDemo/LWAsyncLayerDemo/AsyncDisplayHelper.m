@@ -48,6 +48,7 @@
     if (text == nil ) {
         return;
     }
+
     NSAttributedString* attributedString = [[NSAttributedString alloc] initWithString:text attributes:attributesDict];
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributedString);
     CGMutablePathRef textPath = CGPathCreateMutable();

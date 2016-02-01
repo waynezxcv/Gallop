@@ -24,10 +24,7 @@
 		01347F401C5DF7B00014D9EF /* ProfileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F3F1C5DF7B00014D9EF /* ProfileModel.m */; };
 		01347F561C5E258C0014D9EF /* discoverTimeline.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01347F551C5E258C0014D9EF /* discoverTimeline.plist */; };
 		01347F5C1C5E717C0014D9EF /* LWTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F5B1C5E717C0014D9EF /* LWTextLayout.m */; };
-		01347F691C5EB7180014D9EF /* FHMagPhotoContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F621C5EB7180014D9EF /* FHMagPhotoContainer.m */; };
-		01347F6A1C5EB7180014D9EF /* LWImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F641C5EB7180014D9EF /* LWImageItem.m */; };
-		01347F6B1C5EB7180014D9EF /* LWImageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F661C5EB7180014D9EF /* LWImageModel.m */; };
-		01347F6C1C5EB7180014D9EF /* LWImageScrollBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F681C5EB7180014D9EF /* LWImageScrollBrowser.m */; };
+		B08711111C5F018000458941 /* LWAsyncDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = B08711101C5F018000458941 /* LWAsyncDisplayView.m */; };
 		B0B9CE231C50B93200C81916 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE221C50B93200C81916 /* main.m */; };
 		B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE251C50B93200C81916 /* AppDelegate.m */; };
 		B0B9CE2E1C50B93200C81916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0B9CE2D1C50B93200C81916 /* Assets.xcassets */; };
@@ -90,14 +87,8 @@
 		01347F551C5E258C0014D9EF /* discoverTimeline.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = discoverTimeline.plist; sourceTree = "<group>"; };
 		01347F5A1C5E717C0014D9EF /* LWTextLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWTextLayout.h; sourceTree = "<group>"; };
 		01347F5B1C5E717C0014D9EF /* LWTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWTextLayout.m; sourceTree = "<group>"; };
-		01347F611C5EB7180014D9EF /* FHMagPhotoContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHMagPhotoContainer.h; sourceTree = "<group>"; };
-		01347F621C5EB7180014D9EF /* FHMagPhotoContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHMagPhotoContainer.m; sourceTree = "<group>"; };
-		01347F631C5EB7180014D9EF /* LWImageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageItem.h; sourceTree = "<group>"; };
-		01347F641C5EB7180014D9EF /* LWImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageItem.m; sourceTree = "<group>"; };
-		01347F651C5EB7180014D9EF /* LWImageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageModel.h; sourceTree = "<group>"; };
-		01347F661C5EB7180014D9EF /* LWImageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageModel.m; sourceTree = "<group>"; };
-		01347F671C5EB7180014D9EF /* LWImageScrollBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageScrollBrowser.h; sourceTree = "<group>"; };
-		01347F681C5EB7180014D9EF /* LWImageScrollBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageScrollBrowser.m; sourceTree = "<group>"; };
+		B087110F1C5F018000458941 /* LWAsyncDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWAsyncDisplayView.h; sourceTree = "<group>"; };
+		B08711101C5F018000458941 /* LWAsyncDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWAsyncDisplayView.m; sourceTree = "<group>"; };
 		B0B9CE1E1C50B93200C81916 /* LWAsyncLayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LWAsyncLayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B9CE221C50B93200C81916 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B0B9CE241C50B93200C81916 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -174,7 +165,6 @@
 		01347F221C5DE6B40014D9EF /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				01347F601C5EB6F70014D9EF /* LWImageBrowser */,
 				01347F211C5DE6A40014D9EF /* FPSLabel */,
 				01347F0A1C5DE5E00014D9EF /* LWWebImage */,
 			);
@@ -201,6 +191,8 @@
 		01347F3C1C5DF4F90014D9EF /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B087110F1C5F018000458941 /* LWAsyncDisplayView.h */,
+				B08711101C5F018000458941 /* LWAsyncDisplayView.m */,
 				01347F381C5DF43F0014D9EF /* DiscoverHeader.h */,
 				01347F391C5DF43F0014D9EF /* DiscoverHeader.m */,
 				01347F2E1C5DF1FA0014D9EF /* DiscoverTableViewCell.h */,
@@ -230,21 +222,6 @@
 				01347F551C5E258C0014D9EF /* discoverTimeline.plist */,
 			);
 			name = Resource;
-			sourceTree = "<group>";
-		};
-		01347F601C5EB6F70014D9EF /* LWImageBrowser */ = {
-			isa = PBXGroup;
-			children = (
-				01347F611C5EB7180014D9EF /* FHMagPhotoContainer.h */,
-				01347F621C5EB7180014D9EF /* FHMagPhotoContainer.m */,
-				01347F631C5EB7180014D9EF /* LWImageItem.h */,
-				01347F641C5EB7180014D9EF /* LWImageItem.m */,
-				01347F651C5EB7180014D9EF /* LWImageModel.h */,
-				01347F661C5EB7180014D9EF /* LWImageModel.m */,
-				01347F671C5EB7180014D9EF /* LWImageScrollBrowser.h */,
-				01347F681C5EB7180014D9EF /* LWImageScrollBrowser.m */,
-			);
-			name = LWImageBrowser;
 			sourceTree = "<group>";
 		};
 		B0B9CE151C50B93200C81916 = {
@@ -457,9 +434,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				01347F6C1C5EB7180014D9EF /* LWImageScrollBrowser.m in Sources */,
 				01347F2B1C5DED180014D9EF /* DiscoverViewController.m in Sources */,
-				01347F6A1C5EB7180014D9EF /* LWImageItem.m in Sources */,
+				B08711111C5F018000458941 /* LWAsyncDisplayView.m in Sources */,
 				01347F401C5DF7B00014D9EF /* ProfileModel.m in Sources */,
 				01347F3A1C5DF43F0014D9EF /* DiscoverHeader.m in Sources */,
 				01347F1A1C5DE63C0014D9EF /* CALayer+LWWebImage.m in Sources */,
@@ -468,7 +444,6 @@
 				01347F1F1C5DE63C0014D9EF /* UIImage+LWWebImage.m in Sources */,
 				01347F5C1C5E717C0014D9EF /* LWTextLayout.m in Sources */,
 				01347F1E1C5DE63C0014D9EF /* LWWebImageManager.m in Sources */,
-				01347F6B1C5EB7180014D9EF /* LWImageModel.m in Sources */,
 				01347F301C5DF1FA0014D9EF /* DiscoverTableViewCell.m in Sources */,
 				01347F1C1C5DE63C0014D9EF /* LWImageDecoder.m in Sources */,
 				01347F1B1C5DE63C0014D9EF /* LWImageCache.m in Sources */,
@@ -476,7 +451,6 @@
 				01347F341C5DF39F0014D9EF /* DiscoverStatuModel.m in Sources */,
 				01347F201C5DE63C0014D9EF /* UIImageView+LWWebImage.m in Sources */,
 				B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */,
-				01347F691C5EB7180014D9EF /* FHMagPhotoContainer.m in Sources */,
 				01347F251C5DE6DD0014D9EF /* FPSLabel.m in Sources */,
 				01347F281C5DEB350014D9EF /* LWAsyncDisplayLayer.m in Sources */,
 				B0B9CE231C50B93200C81916 /* main.m in Sources */,

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LWAsyncDisplayView.h"
 #import "DiscoverLayout.h"
 
 @interface DiscoverTableViewCell : UITableViewCell
@@ -17,12 +18,11 @@
 
 
 
-
-@interface BackgroundImageView : UIView
-
-- (void)drawContentWithLayout:(DiscoverLayout *)layout;
+@interface BackgroundContentView : LWAsyncDisplayView
 
 @end
+
+
 
 @interface MenuView : UIView
 

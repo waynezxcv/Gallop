@@ -8,7 +8,6 @@
 
 #import "FPSLabel.h"
 
-
 #define kSize CGSizeMake(55, 20)
 
 @implementation FPSLabel {
@@ -64,7 +63,7 @@
     _lastTime = link.timestamp;
     float fps = _count / delta;
     _count = 0;
-    
+//    NSLog(@"%f",fps);
     CGFloat progress = fps / 60.0;
     UIColor *color = [UIColor colorWithHue:0.27 * (progress - 0.2) saturation:1 brightness:0.9 alpha:1];
         

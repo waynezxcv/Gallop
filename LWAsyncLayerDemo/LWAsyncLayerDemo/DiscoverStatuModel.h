@@ -35,8 +35,8 @@ typedef NS_ENUM(NSUInteger, DiscoverStatuType) {
 //图片
 @interface ImageModels : NSObject
 
-@property (nonatomic,copy) NSString* thumbnailURL;
-@property (nonatomic,copy) NSString* HDURL;
+@property (nonatomic,strong) NSURL* thumbnailURL;
+@property (nonatomic,strong) NSURL* HDURL;
 
 @end
 

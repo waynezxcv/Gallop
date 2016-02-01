@@ -25,33 +25,69 @@
 }
 
 - (void)layout {
+    //avatar
+    self.avatarPosition = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
     //name
     self.nameTextLayout = [[LWTextLayout alloc] initWithText:self.statusModel.user.name
                                                         font:[UIFont systemFontOfSize:14.0f]
                                                textAlignment:NSTextAlignmentCenter
                                                    linespace:0.0f
                                                    textColor:RGB(113, 129, 161, 1)
-                                                        rect:CGRectMake(60.0f, 20.0f,ScreenWidth, 20.0f)];
+                                                        rect:CGRectMake(60.0f,
+                                                                        20.0f,
+                                                                        ScreenWidth,
+                                                                        20.0f)];
     //text
     self.textTextLayout = [[LWTextLayout alloc] initWithText:self.statusModel.text
                                                         font:[UIFont systemFontOfSize:15.0f]
                                                textAlignment:NSTextAlignmentLeft
                                                    linespace:2.0f
                                                    textColor:RGB(40, 40, 40, 1)
-                                                        rect:CGRectMake(60.0f, 50.0f, ScreenWidth - 80.0f, CGFLOAT_MAX)];
+                                                        rect:CGRectMake(60.0f,
+                                                                        50.0f,
+                                                                        ScreenWidth - 80.0f,
+                                                                        CGFLOAT_MAX)];
+    //pics
+    NSInteger imageCount = [self.statusModel.imageModels count];
+    switch (imageCount) {
+        case 0:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 0.0f);
+            break;
+        case 1:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 80.0f);
+            break;
+        case 2:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 80.0f);
+            break;
+        case 3:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 80.0f);
+            break;
+        case 4:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 165.0f);
+            break;
+        case 5:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 165.0f);
+            break;
+        case 6:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 165.0f);
+            break;
+        case 7:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 250.0f);
+            break;
+        case 8:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 250.0f);
+            break;
+        case 9:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 250.0f);
+            break;
+        default:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 0.0f);
+            break;
+    }
     //timeStamp
     self.timeStampTextLayout = [[LWTextLayout alloc] initWithText:self.statusModel.timeStamp
                                                              font:[UIFont systemFontOfSize:13.0f]
                                                     textAlignment:NSTextAlignmentCenter
                                                         linespace:2.0f
                                                         textColor:[UIColor grayColor]
-                                                             rect:CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, ScreenWidth - 80.0f, 20.0f)];
-    //avatar
-    self.avatarPosition = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
+                                                             rect:CGRectMake(60.0f,
+                                                                             70.0f + self.imagesPosition.size.height + self.textTextLayout.boundsSize.height,
+                                                                             ScreenWidth - 80.0f,
+                                                                             20.0f)];
+
     //menu
-    self.menuPosition = CGRectMake(ScreenWidth - 40.0f, 65.0f + self.textTextLayout.boundsSize.height, 20.0f, 15.0f);
+    self.menuPosition = CGRectMake(ScreenWidth - 40.0f, 70.0f + self.textTextLayout.boundsSize.height + self.imagesPosition.size.height, 20.0f, 15.0f);
     //cellHeight
-    self.cellHeight = 60.0f + self.textTextLayout.boundsSize.height + self.timeStampTextLayout.boundsSize.height + 20.0f;
+    self.cellHeight = 100.0f + self.imagesPosition.size.height + self.textTextLayout.boundsSize.height;
 }
 
 

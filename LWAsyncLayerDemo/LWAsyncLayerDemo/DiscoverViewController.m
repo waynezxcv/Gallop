@@ -119,8 +119,8 @@
         NSMutableArray* imageModels = [[NSMutableArray alloc] initWithCapacity:imgs.count];
         for (NSString* url in imgs) {
             ImageModels* imageModel = [[ImageModels alloc] init];
-            imageModel.thumbnailURL = url;
-            imageModel.HDURL = url;
+            imageModel.thumbnailURL = [NSURL URLWithString:url];
+            imageModel.HDURL = [NSURL URLWithString:url];
             [imageModels addObject:imageModel];
         }
         DiscoverStatuModel* statuModel = [[DiscoverStatuModel alloc] init];
@@ -149,10 +149,9 @@
                 statuModel.statuType = DiscoverStatuTypeNormal;
                 break;
         }
-        
         DiscoverLayout* layout = [[DiscoverLayout alloc] initWithStatusModel:statuModel];
         [self.dataSource addObject:layout];
-        for (NSInteger i = 0; i < 5; i ++) {
+        for (NSInteger i = 0; i < 2; i ++) {
             [self.dataSource addObjectsFromArray:self.dataSource];
         }
     }

@@ -10,6 +10,7 @@
 #import "LWWebImageManager.h"
 #import "UIImage+LWWebImage.h"
 #import <objc/runtime.h>
+#import "LWAsyncDisplayView.h"
 
 @implementation CALayer(LWWebImage)
 
@@ -38,10 +39,14 @@ const void* imageURLKey = (void *)@"imageURLKey";
                                                 transform:transform
                                                completion:^(UIImage *image, NSURL *url, NSError *error, BOOL isFinished) {
                                                    if (isProgressive) {
-                                                       weakSelf.contents = (__bridge id _Nullable)(image.CGImage);
+                                                       LWTransaction* transaction = [LWTransaction transactionWithTarget:weakSelf selector:@selector(setContents:) withObject:(__bridge id)image.CGImage];
+                                                       [transaction commit];
+                                                       //                                                       weakSelf.contents = (__bridge id _Nullable)(image.CGImage);
                                                    }
                                                    if (isFinished) {
-                                                       weakSelf.contents = (__bridge id _Nullable)(image.CGImage);
+                                                       //                                                       weakSelf.contents = (__bridge id _Nullable)(image.CGImage);
+                                                       LWTransaction* transaction = [LWTransaction transactionWithTarget:weakSelf selector:@selector(setContents:) withObject:(__bridge id)image.CGImage];
+                                                       [transaction commit];
                                                        if (isFade) {
                                                            CATransition*transition = [CATransition animation];
                                                            transition.duration = 0.3f;
