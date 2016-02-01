@@ -15,7 +15,6 @@
 		01347F1F1C5DE63C0014D9EF /* UIImage+LWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F171C5DE63C0014D9EF /* UIImage+LWWebImage.m */; };
 		01347F201C5DE63C0014D9EF /* UIImageView+LWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F191C5DE63C0014D9EF /* UIImageView+LWWebImage.m */; };
 		01347F251C5DE6DD0014D9EF /* FPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F241C5DE6DD0014D9EF /* FPSLabel.m */; };
-		01347F281C5DEB350014D9EF /* LWAsyncDisplayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F271C5DEB350014D9EF /* LWAsyncDisplayLayer.m */; };
 		01347F2B1C5DED180014D9EF /* DiscoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F2A1C5DED180014D9EF /* DiscoverViewController.m */; };
 		01347F301C5DF1FA0014D9EF /* DiscoverTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F2F1C5DF1FA0014D9EF /* DiscoverTableViewCell.m */; };
 		01347F341C5DF39F0014D9EF /* DiscoverStatuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F331C5DF39F0014D9EF /* DiscoverStatuModel.m */; };
@@ -24,6 +23,10 @@
 		01347F401C5DF7B00014D9EF /* ProfileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F3F1C5DF7B00014D9EF /* ProfileModel.m */; };
 		01347F561C5E258C0014D9EF /* discoverTimeline.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01347F551C5E258C0014D9EF /* discoverTimeline.plist */; };
 		01347F5C1C5E717C0014D9EF /* LWTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F5B1C5E717C0014D9EF /* LWTextLayout.m */; };
+		B04E5D481C5F5EB500C8F1E6 /* LWFlag.m in Sources */ = {isa = PBXBuildFile; fileRef = B04E5D471C5F5EB500C8F1E6 /* LWFlag.m */; };
+		B04E5D4D1C5F5EF000C8F1E6 /* LWLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = B04E5D4C1C5F5EF000C8F1E6 /* LWLabel.m */; };
+		B04E5D511C5F5F6C00C8F1E6 /* LWRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B04E5D501C5F5F6C00C8F1E6 /* LWRunLoopObserver.m */; };
+		B04E5D551C5F603F00C8F1E6 /* CALayer+AsyncDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = B04E5D541C5F603F00C8F1E6 /* CALayer+AsyncDisplay.m */; };
 		B08711111C5F018000458941 /* LWAsyncDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = B08711101C5F018000458941 /* LWAsyncDisplayView.m */; };
 		B0B9CE231C50B93200C81916 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE221C50B93200C81916 /* main.m */; };
 		B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE251C50B93200C81916 /* AppDelegate.m */; };
@@ -31,7 +34,6 @@
 		B0B9CE311C50B93200C81916 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0B9CE2F1C50B93200C81916 /* LaunchScreen.storyboard */; };
 		B0B9CE3C1C50B93200C81916 /* LWAsyncLayerDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE3B1C50B93200C81916 /* LWAsyncLayerDemoTests.m */; };
 		B0B9CE471C50B93200C81916 /* LWAsyncLayerDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE461C50B93200C81916 /* LWAsyncLayerDemoUITests.m */; };
-		B0B9CE5A1C50C26E00C81916 /* AsyncDisplayHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE591C50C26E00C81916 /* AsyncDisplayHelper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,8 +71,6 @@
 		01347F191C5DE63C0014D9EF /* UIImageView+LWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+LWWebImage.m"; path = "LWWebImage/UIImageView+LWWebImage.m"; sourceTree = "<group>"; };
 		01347F231C5DE6DD0014D9EF /* FPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPSLabel.h; sourceTree = "<group>"; };
 		01347F241C5DE6DD0014D9EF /* FPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPSLabel.m; sourceTree = "<group>"; };
-		01347F261C5DEB350014D9EF /* LWAsyncDisplayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWAsyncDisplayLayer.h; sourceTree = "<group>"; };
-		01347F271C5DEB350014D9EF /* LWAsyncDisplayLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWAsyncDisplayLayer.m; sourceTree = "<group>"; };
 		01347F291C5DED180014D9EF /* DiscoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoverViewController.h; sourceTree = "<group>"; };
 		01347F2A1C5DED180014D9EF /* DiscoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoverViewController.m; sourceTree = "<group>"; };
 		01347F2D1C5DEF4B0014D9EF /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
@@ -85,8 +85,16 @@
 		01347F3E1C5DF7B00014D9EF /* ProfileModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileModel.h; sourceTree = "<group>"; };
 		01347F3F1C5DF7B00014D9EF /* ProfileModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileModel.m; sourceTree = "<group>"; };
 		01347F551C5E258C0014D9EF /* discoverTimeline.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = discoverTimeline.plist; sourceTree = "<group>"; };
-		01347F5A1C5E717C0014D9EF /* LWTextLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWTextLayout.h; sourceTree = "<group>"; };
-		01347F5B1C5E717C0014D9EF /* LWTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWTextLayout.m; sourceTree = "<group>"; };
+		01347F5A1C5E717C0014D9EF /* LWTextLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextLayout.h; path = LWAsyncLayerDemo/LWTextLayout.h; sourceTree = "<group>"; };
+		01347F5B1C5E717C0014D9EF /* LWTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextLayout.m; path = LWAsyncLayerDemo/LWTextLayout.m; sourceTree = "<group>"; };
+		B04E5D461C5F5EB500C8F1E6 /* LWFlag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWFlag.h; sourceTree = "<group>"; };
+		B04E5D471C5F5EB500C8F1E6 /* LWFlag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWFlag.m; sourceTree = "<group>"; };
+		B04E5D4B1C5F5EF000C8F1E6 /* LWLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWLabel.h; sourceTree = "<group>"; };
+		B04E5D4C1C5F5EF000C8F1E6 /* LWLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWLabel.m; sourceTree = "<group>"; };
+		B04E5D4F1C5F5F6C00C8F1E6 /* LWRunLoopObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWRunLoopObserver.h; sourceTree = "<group>"; };
+		B04E5D501C5F5F6C00C8F1E6 /* LWRunLoopObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWRunLoopObserver.m; sourceTree = "<group>"; };
+		B04E5D531C5F603F00C8F1E6 /* CALayer+AsyncDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+AsyncDisplay.h"; sourceTree = "<group>"; };
+		B04E5D541C5F603F00C8F1E6 /* CALayer+AsyncDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+AsyncDisplay.m"; sourceTree = "<group>"; };
 		B087110F1C5F018000458941 /* LWAsyncDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWAsyncDisplayView.h; sourceTree = "<group>"; };
 		B08711101C5F018000458941 /* LWAsyncDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWAsyncDisplayView.m; sourceTree = "<group>"; };
 		B0B9CE1E1C50B93200C81916 /* LWAsyncLayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LWAsyncLayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,8 +110,6 @@
 		B0B9CE421C50B93200C81916 /* LWAsyncLayerDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LWAsyncLayerDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B9CE461C50B93200C81916 /* LWAsyncLayerDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWAsyncLayerDemoUITests.m; sourceTree = "<group>"; };
 		B0B9CE481C50B93200C81916 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B0B9CE581C50C26E00C81916 /* AsyncDisplayHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncDisplayHelper.h; sourceTree = "<group>"; };
-		B0B9CE591C50C26E00C81916 /* AsyncDisplayHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncDisplayHelper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +171,9 @@
 		01347F221C5DE6B40014D9EF /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				B0B9CE541C50B98300C81916 /* CALayer+AsyncDisplay */,
+				B04E5D4E1C5F5F5200C8F1E6 /* LWRunLoopObserver */,
+				B04E5D451C5F5E8A00C8F1E6 /* LWFlag */,
 				01347F211C5DE6A40014D9EF /* FPSLabel */,
 				01347F0A1C5DE5E00014D9EF /* LWWebImage */,
 			);
@@ -184,6 +193,8 @@
 		01347F3B1C5DF4EE0014D9EF /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				01347F291C5DED180014D9EF /* DiscoverViewController.h */,
+				01347F2A1C5DED180014D9EF /* DiscoverViewController.m */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -210,8 +221,6 @@
 				01347F3F1C5DF7B00014D9EF /* ProfileModel.m */,
 				01347F351C5DF3AB0014D9EF /* DiscoverLayout.h */,
 				01347F361C5DF3AB0014D9EF /* DiscoverLayout.m */,
-				01347F5A1C5E717C0014D9EF /* LWTextLayout.h */,
-				01347F5B1C5E717C0014D9EF /* LWTextLayout.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -224,12 +233,41 @@
 			name = Resource;
 			sourceTree = "<group>";
 		};
+		B04E5D451C5F5E8A00C8F1E6 /* LWFlag */ = {
+			isa = PBXGroup;
+			children = (
+				B04E5D461C5F5EB500C8F1E6 /* LWFlag.h */,
+				B04E5D471C5F5EB500C8F1E6 /* LWFlag.m */,
+			);
+			name = LWFlag;
+			sourceTree = "<group>";
+		};
+		B04E5D4A1C5F5ED900C8F1E6 /* LWLabel */ = {
+			isa = PBXGroup;
+			children = (
+				01347F5A1C5E717C0014D9EF /* LWTextLayout.h */,
+				01347F5B1C5E717C0014D9EF /* LWTextLayout.m */,
+				B04E5D4B1C5F5EF000C8F1E6 /* LWLabel.h */,
+				B04E5D4C1C5F5EF000C8F1E6 /* LWLabel.m */,
+			);
+			name = LWLabel;
+			sourceTree = "<group>";
+		};
+		B04E5D4E1C5F5F5200C8F1E6 /* LWRunLoopObserver */ = {
+			isa = PBXGroup;
+			children = (
+				B04E5D4F1C5F5F6C00C8F1E6 /* LWRunLoopObserver.h */,
+				B04E5D501C5F5F6C00C8F1E6 /* LWRunLoopObserver.m */,
+			);
+			name = LWRunLoopObserver;
+			sourceTree = "<group>";
+		};
 		B0B9CE151C50B93200C81916 = {
 			isa = PBXGroup;
 			children = (
+				B04E5D4A1C5F5ED900C8F1E6 /* LWLabel */,
 				01347F221C5DE6B40014D9EF /* Utils */,
-				B0B9CE541C50B98300C81916 /* LWAsyncDisplayLayer */,
-				B0B9CE5E1C50CB9B00C81916 /* Demo */,
+				B0B9CE5E1C50CB9B00C81916 /* LWAsyncDisplayKitDemo */,
 				B0B9CE3A1C50B93200C81916 /* LWAsyncLayerDemoTests */,
 				B0B9CE451C50B93200C81916 /* LWAsyncLayerDemoUITests */,
 				B0B9CE1F1C50B93200C81916 /* Products */,
@@ -275,19 +313,17 @@
 			path = LWAsyncLayerDemoUITests;
 			sourceTree = "<group>";
 		};
-		B0B9CE541C50B98300C81916 /* LWAsyncDisplayLayer */ = {
+		B0B9CE541C50B98300C81916 /* CALayer+AsyncDisplay */ = {
 			isa = PBXGroup;
 			children = (
-				01347F261C5DEB350014D9EF /* LWAsyncDisplayLayer.h */,
-				01347F271C5DEB350014D9EF /* LWAsyncDisplayLayer.m */,
-				B0B9CE581C50C26E00C81916 /* AsyncDisplayHelper.h */,
-				B0B9CE591C50C26E00C81916 /* AsyncDisplayHelper.m */,
+				B04E5D531C5F603F00C8F1E6 /* CALayer+AsyncDisplay.h */,
+				B04E5D541C5F603F00C8F1E6 /* CALayer+AsyncDisplay.m */,
 			);
-			name = LWAsyncDisplayLayer;
+			name = "CALayer+AsyncDisplay";
 			path = LWAsyncLayerDemo;
 			sourceTree = "<group>";
 		};
-		B0B9CE5E1C50CB9B00C81916 /* Demo */ = {
+		B0B9CE5E1C50CB9B00C81916 /* LWAsyncDisplayKitDemo */ = {
 			isa = PBXGroup;
 			children = (
 				01347F521C5E0FF10014D9EF /* Resource */,
@@ -295,11 +331,9 @@
 				01347F3D1C5DF4FE0014D9EF /* Models */,
 				01347F3C1C5DF4F90014D9EF /* Views */,
 				01347F3B1C5DF4EE0014D9EF /* ViewController */,
-				01347F291C5DED180014D9EF /* DiscoverViewController.h */,
-				01347F2A1C5DED180014D9EF /* DiscoverViewController.m */,
 				B0B9CE211C50B93200C81916 /* Supporting Files */,
 			);
-			name = Demo;
+			name = LWAsyncDisplayKitDemo;
 			path = LWAsyncLayerDemo;
 			sourceTree = "<group>";
 		};
@@ -438,22 +472,24 @@
 				B08711111C5F018000458941 /* LWAsyncDisplayView.m in Sources */,
 				01347F401C5DF7B00014D9EF /* ProfileModel.m in Sources */,
 				01347F3A1C5DF43F0014D9EF /* DiscoverHeader.m in Sources */,
+				B04E5D511C5F5F6C00C8F1E6 /* LWRunLoopObserver.m in Sources */,
 				01347F1A1C5DE63C0014D9EF /* CALayer+LWWebImage.m in Sources */,
 				01347F1D1C5DE63C0014D9EF /* LWImageDownloadeOperation.m in Sources */,
 				01347F371C5DF3AB0014D9EF /* DiscoverLayout.m in Sources */,
 				01347F1F1C5DE63C0014D9EF /* UIImage+LWWebImage.m in Sources */,
+				B04E5D551C5F603F00C8F1E6 /* CALayer+AsyncDisplay.m in Sources */,
 				01347F5C1C5E717C0014D9EF /* LWTextLayout.m in Sources */,
 				01347F1E1C5DE63C0014D9EF /* LWWebImageManager.m in Sources */,
 				01347F301C5DF1FA0014D9EF /* DiscoverTableViewCell.m in Sources */,
 				01347F1C1C5DE63C0014D9EF /* LWImageDecoder.m in Sources */,
 				01347F1B1C5DE63C0014D9EF /* LWImageCache.m in Sources */,
-				B0B9CE5A1C50C26E00C81916 /* AsyncDisplayHelper.m in Sources */,
+				B04E5D4D1C5F5EF000C8F1E6 /* LWLabel.m in Sources */,
 				01347F341C5DF39F0014D9EF /* DiscoverStatuModel.m in Sources */,
 				01347F201C5DE63C0014D9EF /* UIImageView+LWWebImage.m in Sources */,
 				B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */,
 				01347F251C5DE6DD0014D9EF /* FPSLabel.m in Sources */,
-				01347F281C5DEB350014D9EF /* LWAsyncDisplayLayer.m in Sources */,
 				B0B9CE231C50B93200C81916 /* main.m in Sources */,
+				B04E5D481C5F5EB500C8F1E6 /* LWFlag.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

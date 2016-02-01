@@ -7,7 +7,6 @@
 //
 
 #import "LWAsyncDisplayView.h"
-#import "LWAsyncDisplayLayer.h"
 
 @implementation LWAsyncDisplayView
 
