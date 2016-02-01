@@ -14,7 +14,7 @@
 		01347F1E1C5DE63C0014D9EF /* LWWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F151C5DE63C0014D9EF /* LWWebImageManager.m */; };
 		01347F1F1C5DE63C0014D9EF /* UIImage+LWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F171C5DE63C0014D9EF /* UIImage+LWWebImage.m */; };
 		01347F201C5DE63C0014D9EF /* UIImageView+LWWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F191C5DE63C0014D9EF /* UIImageView+LWWebImage.m */; };
-		01347F251C5DE6DD0014D9EF /* FPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F241C5DE6DD0014D9EF /* FPSLabel.m */; };
+		01347F251C5DE6DD0014D9EF /* LWFPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F241C5DE6DD0014D9EF /* LWFPSLabel.m */; };
 		01347F2B1C5DED180014D9EF /* DiscoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F2A1C5DED180014D9EF /* DiscoverViewController.m */; };
 		01347F301C5DF1FA0014D9EF /* DiscoverTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F2F1C5DF1FA0014D9EF /* DiscoverTableViewCell.m */; };
 		01347F341C5DF39F0014D9EF /* DiscoverStatuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F331C5DF39F0014D9EF /* DiscoverStatuModel.m */; };
@@ -69,8 +69,8 @@
 		01347F171C5DE63C0014D9EF /* UIImage+LWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+LWWebImage.m"; path = "LWWebImage/UIImage+LWWebImage.m"; sourceTree = "<group>"; };
 		01347F181C5DE63C0014D9EF /* UIImageView+LWWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+LWWebImage.h"; path = "LWWebImage/UIImageView+LWWebImage.h"; sourceTree = "<group>"; };
 		01347F191C5DE63C0014D9EF /* UIImageView+LWWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+LWWebImage.m"; path = "LWWebImage/UIImageView+LWWebImage.m"; sourceTree = "<group>"; };
-		01347F231C5DE6DD0014D9EF /* FPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPSLabel.h; sourceTree = "<group>"; };
-		01347F241C5DE6DD0014D9EF /* FPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPSLabel.m; sourceTree = "<group>"; };
+		01347F231C5DE6DD0014D9EF /* LWFPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWFPSLabel.h; sourceTree = "<group>"; };
+		01347F241C5DE6DD0014D9EF /* LWFPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWFPSLabel.m; sourceTree = "<group>"; };
 		01347F291C5DED180014D9EF /* DiscoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoverViewController.h; sourceTree = "<group>"; };
 		01347F2A1C5DED180014D9EF /* DiscoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoverViewController.m; sourceTree = "<group>"; };
 		01347F2D1C5DEF4B0014D9EF /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
@@ -159,13 +159,13 @@
 			name = LWWebImage;
 			sourceTree = "<group>";
 		};
-		01347F211C5DE6A40014D9EF /* FPSLabel */ = {
+		01347F211C5DE6A40014D9EF /* LWFPSLabel */ = {
 			isa = PBXGroup;
 			children = (
-				01347F231C5DE6DD0014D9EF /* FPSLabel.h */,
-				01347F241C5DE6DD0014D9EF /* FPSLabel.m */,
+				01347F231C5DE6DD0014D9EF /* LWFPSLabel.h */,
+				01347F241C5DE6DD0014D9EF /* LWFPSLabel.m */,
 			);
-			name = FPSLabel;
+			name = LWFPSLabel;
 			sourceTree = "<group>";
 		};
 		01347F221C5DE6B40014D9EF /* Utils */ = {
@@ -174,7 +174,7 @@
 				B0B9CE541C50B98300C81916 /* CALayer+AsyncDisplay */,
 				B04E5D4E1C5F5F5200C8F1E6 /* LWRunLoopObserver */,
 				B04E5D451C5F5E8A00C8F1E6 /* LWFlag */,
-				01347F211C5DE6A40014D9EF /* FPSLabel */,
+				01347F211C5DE6A40014D9EF /* LWFPSLabel */,
 				01347F0A1C5DE5E00014D9EF /* LWWebImage */,
 			);
 			name = Utils;
@@ -487,7 +487,7 @@
 				01347F341C5DF39F0014D9EF /* DiscoverStatuModel.m in Sources */,
 				01347F201C5DE63C0014D9EF /* UIImageView+LWWebImage.m in Sources */,
 				B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */,
-				01347F251C5DE6DD0014D9EF /* FPSLabel.m in Sources */,
+				01347F251C5DE6DD0014D9EF /* LWFPSLabel.m in Sources */,
 				B0B9CE231C50B93200C81916 /* main.m in Sources */,
 				B04E5D481C5F5EB500C8F1E6 /* LWFlag.m in Sources */,
 			);

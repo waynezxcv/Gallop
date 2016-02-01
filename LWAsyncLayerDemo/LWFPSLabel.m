@@ -1,12 +1,12 @@
 //
-//  FPSLabel.m
-//  FHMagProject
+//  FPSLabel.h
 //
 //  Created by 刘微 on 16/1/31.
 //  Copyright © 2016年 WayneInc. All rights reserved.
 //
 
-#import "FPSLabel.h"
+
+#import "LWFPSLabel.h"
 
 #define kSize CGSizeMake(55, 20)
 
@@ -24,13 +24,11 @@
         frame.size = kSize;
     }
     self = [super initWithFrame:frame];
-    
     self.layer.cornerRadius = 5;
     self.clipsToBounds = YES;
     self.textAlignment = NSTextAlignmentCenter;
     self.userInteractionEnabled = NO;
     self.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.700];
-    
     _font = [UIFont fontWithName:@"Menlo" size:14];
     if (_font) {
         _subFont = [UIFont fontWithName:@"Menlo" size:4];
@@ -63,7 +61,6 @@
     _lastTime = link.timestamp;
     float fps = _count / delta;
     _count = 0;
-//    NSLog(@"%f",fps);
     CGFloat progress = fps / 60.0;
     UIColor *color = [UIColor colorWithHue:0.27 * (progress - 0.2) saturation:1 brightness:0.9 alpha:1];
         

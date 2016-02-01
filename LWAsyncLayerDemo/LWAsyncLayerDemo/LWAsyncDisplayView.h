@@ -28,7 +28,6 @@
 @end
 
 
-
 //将要开始绘制
 typedef void(^WillBeginDisplay)(CALayer* layer);
 //绘制

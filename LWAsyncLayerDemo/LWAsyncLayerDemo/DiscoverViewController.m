@@ -8,7 +8,7 @@
 
 #import "DiscoverViewController.h"
 #import "DiscoverTableViewCell.h"
-#import "FPSLabel.h"
+#import "LWFPSLabel.h"
 #import "DiscoverHeader.h"
 #import "ProfileModel.h"
 #import "DiscoverStatuModel.h"
