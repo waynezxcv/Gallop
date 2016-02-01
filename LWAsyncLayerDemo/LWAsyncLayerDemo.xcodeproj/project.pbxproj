@@ -97,6 +97,7 @@
 		B04E5D541C5F603F00C8F1E6 /* CALayer+AsyncDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+AsyncDisplay.m"; sourceTree = "<group>"; };
 		B087110F1C5F018000458941 /* LWAsyncDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWAsyncDisplayView.h; sourceTree = "<group>"; };
 		B08711101C5F018000458941 /* LWAsyncDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWAsyncDisplayView.m; sourceTree = "<group>"; };
+		B0B9C9911C5F63BD008A7526 /* LWAsyncDisplayKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LWAsyncDisplayKit.h; sourceTree = "<group>"; };
 		B0B9CE1E1C50B93200C81916 /* LWAsyncLayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LWAsyncLayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B9CE221C50B93200C81916 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B0B9CE241C50B93200C81916 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -260,6 +261,7 @@
 		B0B9C9901C5F6272008A7526 /* LWAsyncDisplayKit */ = {
 			isa = PBXGroup;
 			children = (
+				B0B9C9911C5F63BD008A7526 /* LWAsyncDisplayKit.h */,
 				B0B9CE541C50B98300C81916 /* CALayer+AsyncDisplay */,
 				B04E5D4E1C5F5F5200C8F1E6 /* LWRunLoopObserver */,
 				B04E5D451C5F5E8A00C8F1E6 /* LWFlag */,
