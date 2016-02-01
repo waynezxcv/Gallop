@@ -168,18 +168,6 @@
 			name = LWFPSLabel;
 			sourceTree = "<group>";
 		};
-		01347F221C5DE6B40014D9EF /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				B0B9CE541C50B98300C81916 /* CALayer+AsyncDisplay */,
-				B04E5D4E1C5F5F5200C8F1E6 /* LWRunLoopObserver */,
-				B04E5D451C5F5E8A00C8F1E6 /* LWFlag */,
-				01347F211C5DE6A40014D9EF /* LWFPSLabel */,
-				01347F0A1C5DE5E00014D9EF /* LWWebImage */,
-			);
-			name = Utils;
-			sourceTree = "<group>";
-		};
 		01347F311C5DF3520014D9EF /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -262,11 +250,31 @@
 			name = LWRunLoopObserver;
 			sourceTree = "<group>";
 		};
+		B0B9C98F1C5F622F008A7526 /* LWImageBrowser */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = LWImageBrowser;
+			sourceTree = "<group>";
+		};
+		B0B9C9901C5F6272008A7526 /* LWAsyncDisplayKit */ = {
+			isa = PBXGroup;
+			children = (
+				B0B9CE541C50B98300C81916 /* CALayer+AsyncDisplay */,
+				B04E5D4E1C5F5F5200C8F1E6 /* LWRunLoopObserver */,
+				B04E5D451C5F5E8A00C8F1E6 /* LWFlag */,
+				01347F211C5DE6A40014D9EF /* LWFPSLabel */,
+				01347F0A1C5DE5E00014D9EF /* LWWebImage */,
+				B0B9C98F1C5F622F008A7526 /* LWImageBrowser */,
+				B04E5D4A1C5F5ED900C8F1E6 /* LWLabel */,
+			);
+			name = LWAsyncDisplayKit;
+			sourceTree = "<group>";
+		};
 		B0B9CE151C50B93200C81916 = {
 			isa = PBXGroup;
 			children = (
-				B04E5D4A1C5F5ED900C8F1E6 /* LWLabel */,
-				01347F221C5DE6B40014D9EF /* Utils */,
+				B0B9C9901C5F6272008A7526 /* LWAsyncDisplayKit */,
 				B0B9CE5E1C50CB9B00C81916 /* LWAsyncDisplayKitDemo */,
 				B0B9CE3A1C50B93200C81916 /* LWAsyncLayerDemoTests */,
 				B0B9CE451C50B93200C81916 /* LWAsyncLayerDemoUITests */,
@@ -627,7 +635,7 @@
 				INFOPLIST_FILE = LWAsyncLayerDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Wayne.LWAsyncLayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Wayne.LWAsyncDisplayKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -644,7 +652,7 @@
 				INFOPLIST_FILE = LWAsyncLayerDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Wayne.LWAsyncLayerDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Wayne.LWAsyncDisplayKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
