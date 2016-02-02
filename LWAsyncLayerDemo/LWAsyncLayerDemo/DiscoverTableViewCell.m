@@ -54,13 +54,23 @@
     return self;
 }
 
+
 - (void)setLayout:(DiscoverLayout *)layout {
     if (_layout != layout) {
         _layout = layout;
     }
-    [self drawContent];
+    self.backgroundImageView.layout = self.layout;
 }
 
+
+- (void)cleanUp {
+    for (NSInteger i = 0; i < 9; i ++) {
+        UIImageView* imageView = [self.imageViews objectAtIndex:i];
+        imageView.frame = CGRectZero;
+        imageView.hidden = YES;
+    }
+    [self.backgroundImageView cleanUp];
+}
 
 - (void)drawContent {
     self.backgroundImageView.frame = CGRectMake(0,
@@ -74,39 +84,33 @@
                                           progress:nil
                                          transform:nil
                                    completionBlock:^{}];
-
     self.menuView.frame = CGRectMake(self.layout.menuPosition.origin.x,
                                      self.layout.menuPosition.origin.y - 12.5f,
                                      0.0f,
                                      40.0f);
-    self.backgroundImageView.layout = self.layout;
     [self setupImages];
+    [self.backgroundImageView drawConent];
 
 }
 
-
 - (void)setupImages {
-    for (NSInteger i = 0; i < self.layout.statusModel.imageModels.count; i ++) {
-        UIImageView* imageView = [self.imageViews objectAtIndex:i];
-        imageView.hidden = YES;
-    }
     NSInteger row = 0;
     NSInteger column = 0;
     for (NSInteger i = 0; i < self.layout.statusModel.imageModels.count; i ++) {
         UIImageView* imageView = [self.imageViews objectAtIndex:i];
-        imageView.hidden = NO;
         imageView.frame = CGRectMake(self.layout.imagesPosition.origin.x + (column * 85.0f),
                                      self.layout.imagesPosition.origin.y + (row * 85.0f),
                                      80.0f,
                                      80.0f);
-
         ImageModels* imageModel = [self.layout.statusModel.imageModels objectAtIndex:i];
         NSURL* URL = imageModel.thumbnailURL;
         [imageView.layer lw_setImageWithURL:URL
                                     options:0
                                    progress:nil
                                   transform:nil
-                            completionBlock:^{}];
+                            completionBlock:^{
+                                imageView.hidden = NO;
+                            }];
         column = column + 1;
         if (column > 2) {
             column = 0;

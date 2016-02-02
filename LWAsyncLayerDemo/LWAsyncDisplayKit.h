@@ -10,6 +10,7 @@
 #define LWAsyncDisplayKit_h
 
 #import "LWAsyncDisplayLayer.h"
+#import "CALayer+AsyncDisplay.h"
 #import "LWRunLoopObserver.h"
 #import "LWFlag.h"
 

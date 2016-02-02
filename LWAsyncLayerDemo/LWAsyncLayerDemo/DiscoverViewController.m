@@ -151,9 +151,7 @@
         }
         DiscoverLayout* layout = [[DiscoverLayout alloc] initWithStatusModel:statuModel];
         [self.dataSource addObject:layout];
-        for (NSInteger i = 0; i < 2; i ++) {
-            [self.dataSource addObjectsFromArray:self.dataSource];
-        }
+        [self.dataSource addObjectsFromArray:self.dataSource];
     }
 }
 
@@ -231,8 +229,10 @@
     if (!cell) {
         cell = [[DiscoverTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
+    [cell cleanUp];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.layout = [self.dataSource objectAtIndex:indexPath.row];
+    [cell drawContent];
     return cell;
 }
 

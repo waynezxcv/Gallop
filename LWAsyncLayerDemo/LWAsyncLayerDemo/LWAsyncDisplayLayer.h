@@ -25,7 +25,8 @@
 /**
  *  异步绘制回调函数
  */
-- (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size isCancled:(BOOL)isCancled;
+- (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size;
+
 
 @optional
 
@@ -54,5 +55,9 @@
  *  取消绘制Flag
  */
 @property (nonatomic,strong,readonly) LWFlag* flag;
+
+- (void)cleanUp;
+
+- (void)asyncDisplayContent;
 
 @end

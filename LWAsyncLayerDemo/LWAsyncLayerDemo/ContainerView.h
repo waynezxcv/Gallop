@@ -13,4 +13,8 @@
 
 @property (nonatomic,strong) DiscoverLayout* layout;
 
+- (void)cleanUp;
+
+- (void)drawConent;
+
 @end

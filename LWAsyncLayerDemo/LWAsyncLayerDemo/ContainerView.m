@@ -31,18 +31,19 @@
     return self;
 }
 
-- (void)setLayout:(DiscoverLayout *)layout {
-    if (_layout != layout) {
-        _layout = layout;
-    }
-    [self.asyncDisplayLayer setNeedsDisplay];
-}
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     [self.asyncDisplayLayer setFrame:frame];
 }
 
+- (void)cleanUp {
+    [self.asyncDisplayLayer cleanUp];
+}
+
+- (void)drawConent {
+    [self.asyncDisplayLayer asyncDisplayContent];
+}
 
 #pragma mark - LWAsyncDisplayLayerDelegate
 
@@ -50,7 +51,7 @@
     return YES;
 }
 
-- (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size isCancled:(BOOL)isCancled {
+- (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size{
     [_layout.nameTextLayout drawTextLayoutIncontext:context];
     [_layout.textTextLayout drawTextLayoutIncontext:context];
     [_layout.timeStampTextLayout drawTextLayoutIncontext:context];
@@ -61,9 +62,6 @@
     CGContextSetLineWidth(context, 0.3f);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextStrokePath(context);
-    if (isCancled) {
-        NSLog(@"cancled");
-    }
 }
 
 - (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL)isFinished {

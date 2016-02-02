@@ -14,6 +14,10 @@
 
 @property (nonatomic,strong) DiscoverLayout* layout;
 
+- (void)cleanUp;
+
+- (void)drawContent;
+
 @end
 
 @interface MenuView : UIView

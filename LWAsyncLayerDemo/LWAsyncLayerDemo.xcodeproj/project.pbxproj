@@ -329,10 +329,10 @@
 		B0B9CE541C50B98300C81916 /* CALayer+AsyncDisplay */ = {
 			isa = PBXGroup;
 			children = (
-				B0EE3B421C6089A80049FBFF /* CALayer+AsyncDisplay.h */,
-				B0EE3B431C6089A80049FBFF /* CALayer+AsyncDisplay.m */,
 				B0CFDFB51C60506D00E4291F /* LWAsyncDisplayLayer.h */,
 				B0CFDFB61C60506D00E4291F /* LWAsyncDisplayLayer.m */,
+				B0EE3B421C6089A80049FBFF /* CALayer+AsyncDisplay.h */,
+				B0EE3B431C6089A80049FBFF /* CALayer+AsyncDisplay.m */,
 			);
 			name = "CALayer+AsyncDisplay";
 			path = LWAsyncLayerDemo;

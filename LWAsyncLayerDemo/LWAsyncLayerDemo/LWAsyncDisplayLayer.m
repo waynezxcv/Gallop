@@ -8,8 +8,8 @@
 
 #import "LWAsyncDisplayLayer.h"
 #import <UIKit/UIKit.h>
-#import "CALayer+AsyncDisplay.h"
 #import <libkern/OSAtomic.h>
+#import "CALayer+AsyncDisplay.h"
 
 
 static dispatch_queue_t GetAsyncDisplayQueue() {
@@ -63,19 +63,26 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
     return self;
 }
 
-- (void)setNeedsDisplay {
+
+- (void)cleanUp {
     [self _cancelDisplay];
-    [super setNeedsDisplay];
 }
 
-- (void)display {
-    super.contents = super.contents;
+- (void)asyncDisplayContent {
     [self _asyncDisplay];
 }
 
 #pragma mark - Private
 - (void)_asyncDisplay {
     [self lazySetContent:nil];
+    LWFlag* flag = self.flag;
+    int32_t value = flag.value;
+    BOOL (^isCancelled)() = ^BOOL() {
+        return value != flag.value;
+    };
+    if (isCancelled()) {
+        return ;
+    }
     CGSize size = self.bounds.size;
     BOOL opaque = self.opaque;
     CGFloat scale = self.contentsScale;
@@ -90,10 +97,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         return;
     }
     dispatch_async(GetAsyncDisplayQueue(), ^{
-        LWFlag* flag = self.flag;
-        int32_t value = flag.value;
-        BOOL isCancled = (value != flag.value);
-        if (isCancled) {
+        if (isCancelled()) {
             return ;
         }
         BOOL isWillDisplay = [self.asyncDisplayDelegate willBeginAsyncDisplay:self];
@@ -106,13 +110,13 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
             NSLog(@"context is NULL");
             return;
         }
-        if (isCancled) {
+        if (isCancelled()) {
             UIGraphicsEndImageContext();
             return;
         }
-        [self.asyncDisplayDelegate didAsyncDisplay:self context:context size:self.bounds.size isCancled:isCancled];
+        [self.asyncDisplayDelegate didAsyncDisplay:self context:context size:self.bounds.size];
         UIImage* screenshotImage = UIGraphicsGetImageFromCurrentImageContext();
-        if (isCancled) {
+        if (isCancelled()) {
             UIGraphicsEndImageContext();
             return;
         }
