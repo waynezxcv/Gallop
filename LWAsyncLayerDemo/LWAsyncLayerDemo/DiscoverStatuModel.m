@@ -40,7 +40,7 @@
     self = [super init];
     if (self) {
         self.name = @"";
-        self.avatarURL = @"";
+        self.avatarURL = [NSURL URLWithString: @""];
     }
     return self;
 }

@@ -27,7 +27,6 @@
         self.asyncDisplayLayer.asyncDisplayDelegate = self;
         [self.layer addSublayer:self.asyncDisplayLayer];
 
-
     }
     return self;
 }

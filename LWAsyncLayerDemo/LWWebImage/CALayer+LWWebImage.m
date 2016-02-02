@@ -28,7 +28,7 @@ const void* imageURLKey = (void *)@"imageURLKey";
         //对imageURL重新赋值
         [self setImageURL:URL.absoluteString];
     }
-    BOOL isFade = ((options & LWWebImageShowFade));
+//    BOOL isFade = ((options & LWWebImageShowFade));
     BOOL isProgressive = (options & LWWebImageShowProgressvie);
     __weak typeof(self) weakSelf = self;
     //开始读取图片
@@ -43,13 +43,11 @@ const void* imageURLKey = (void *)@"imageURLKey";
                                                    }
                                                    if (isFinished) {
                                                        [weakSelf lazySetContent:(__bridge id)image.CGImage];
-                                                       if (isFade) {
-                                                           CATransition*transition = [CATransition animation];
-                                                           transition.duration = 0.3f;
-                                                           transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-                                                           transition.type = kCATransitionFade;
-                                                           [weakSelf addAnimation:transition forKey:@"LWWebImageFadeAnimation"];
-                                                       }
+                                                       CATransition*transition = [CATransition animation];
+                                                       transition.duration = 0.3f;
+                                                       transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                                                       transition.type = kCATransitionFade;
+                                                       [weakSelf addAnimation:transition forKey:@"LWWebImageFadeAnimation"];
                                                        completionBlock();
                                                    }
                                                }];

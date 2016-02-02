@@ -113,7 +113,6 @@
     }
 }
 
-
 - (void)refreshingAnimateBegin {
     CABasicAnimation* rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.duration = 0.5f;
