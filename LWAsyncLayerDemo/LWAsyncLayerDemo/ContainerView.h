@@ -1,21 +1,16 @@
 //
-//  DiscoverTableViewCell.h
+//  ContainerView.h
 //  LWAsyncLayerDemo
 //
-//  Created by 刘微 on 16/1/31.
+//  Created by 刘微 on 16/2/2.
 //  Copyright © 2016年 Warm+. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "DiscoverLayout.h"
-#import "LWAsyncDisplayLayer.h"
 
-@interface DiscoverTableViewCell : UITableViewCell
+@interface ContainerView : UIView
 
 @property (nonatomic,strong) DiscoverLayout* layout;
-
-@end
-
-@interface MenuView : UIView
 
 @end

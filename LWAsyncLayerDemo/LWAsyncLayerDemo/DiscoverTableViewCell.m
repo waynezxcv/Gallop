@@ -8,28 +8,31 @@
 
 #import "DiscoverTableViewCell.h"
 #import "CALayer+LWWebImage.h"
-#import "LWAsyncDisplayView.h"
+#import "ContainerView.h"
+#import "LWRunLoopObserver.h"
 
-@interface DiscoverTableViewCell () <LWAsyncDisplayViewDelegate>
 
-@property (nonatomic,strong) BackgroundContentView* backgroundImageView;
+
+@interface DiscoverTableViewCell ()
+
+@property (nonatomic,strong) ContainerView* backgroundImageView;
 @property (nonatomic,strong) UIImageView* avatarImageView;
 @property (nonatomic,strong) MenuView* menuView;
-@property (nonatomic,assign,getter = isMenuShow) BOOL menuShow;
 @property (nonatomic,strong) NSMutableArray* imageViews;
 
+
 @end
+
+
 
 @implementation DiscoverTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.menuShow = NO;
-
         self.backgroundColor = [UIColor whiteColor];
-        self.backgroundImageView = [[BackgroundContentView alloc] initWithFrame:CGRectZero];
-        self.backgroundImageView.delegate = self;
+
+        self.backgroundImageView = [[ContainerView alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.backgroundImageView];
 
         self.avatarImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -76,16 +79,17 @@
                                      self.layout.menuPosition.origin.y - 12.5f,
                                      0.0f,
                                      40.0f);
+    self.backgroundImageView.layout = self.layout;
     [self setupImages];
-    [self.backgroundImageView setNeedsDisplay];
+
 }
+
 
 - (void)setupImages {
     for (NSInteger i = 0; i < self.layout.statusModel.imageModels.count; i ++) {
         UIImageView* imageView = [self.imageViews objectAtIndex:i];
         imageView.hidden = YES;
     }
-
     NSInteger row = 0;
     NSInteger column = 0;
     for (NSInteger i = 0; i < self.layout.statusModel.imageModels.count; i ++) {
@@ -95,13 +99,14 @@
                                      self.layout.imagesPosition.origin.y + (row * 85.0f),
                                      80.0f,
                                      80.0f);
-            ImageModels* imageModel = [self.layout.statusModel.imageModels objectAtIndex:i];
-            NSURL* URL = imageModel.thumbnailURL;
-            [imageView.layer lw_setImageWithURL:URL
-                                        options:0
-                                       progress:nil
-                                      transform:nil
-                                completionBlock:^{}];
+
+        ImageModels* imageModel = [self.layout.statusModel.imageModels objectAtIndex:i];
+        NSURL* URL = imageModel.thumbnailURL;
+        [imageView.layer lw_setImageWithURL:URL
+                                    options:0
+                                   progress:nil
+                                  transform:nil
+                            completionBlock:^{}];
         column = column + 1;
         if (column > 2) {
             column = 0;
@@ -114,12 +119,7 @@
     UITouch* touch = [touches anyObject];
     CGPoint point = [touch locationInView:self];
     if (CGRectContainsPoint(self.layout.menuPosition, point)) {
-        if (!self.isMenuShow) {
-            [self menuViewShow];
-        }
-        else {
-            [self menuViewHide];
-        }
+        
     }
 }
 
@@ -145,67 +145,8 @@
 
 
 
-- (LWAsyncDisplayTask *)newAsyncDisplayTask {
-    LWAsyncDisplayTask* task = [LWAsyncDisplayTask new];
-    task.willDisplay = ^(CALayer *layer) {
-    };
-
-    task.display = ^(CGContextRef context,CGSize size) {
-        [_layout.nameTextLayout drawTextLayoutIncontext:context];
-        [_layout.textTextLayout drawTextLayoutIncontext:context];
-        [_layout.timeStampTextLayout drawTextLayoutIncontext:context];
-        [self drawImage:[UIImage imageNamed:@"menu"] rect:_layout.menuPosition context:context];
-
-        CGContextAddRect(context,_layout.avatarPosition);
-        CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
-        CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
-        CGContextSetLineWidth(context, 0.3f);
-        CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
-        CGContextStrokePath(context);
-    };
-    task.didDisplay = ^(CALayer* layer ,BOOL finished) {
-
-    };
-    return task;
-}
-
-
-- (void)drawImage:(UIImage *)image rect:(CGRect)rect context:(CGContextRef)context {
-    CGContextSaveGState(context);
-    CGContextTranslateCTM(context, rect.origin.x, rect.origin.y);
-    CGContextTranslateCTM(context, 0, rect.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    CGContextTranslateCTM(context, -rect.origin.x, -rect.origin.y);
-    CGContextDrawImage(context, rect, image.CGImage);
-    CGContextRestoreGState(context);
-}
-
 
 @end
-
-
-
-
-@interface BackgroundContentView()
-
-@end
-
-
-@implementation BackgroundContentView
-
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.backgroundColor = [UIColor whiteColor];
-    }
-    return self;
-}
-
-
-
-
-@end
-
 
 
 @implementation MenuView

@@ -21,13 +21,11 @@
 
 static NSMutableSet* transactionSet = nil;
 
-
-
 static void LWRunLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
     if (transactionSet.count == 0) return;
     NSSet *currentSet = transactionSet;
-    transactionSet = [NSMutableSet new];
-    [currentSet enumerateObjectsUsingBlock:^(LWRunLoopObserver* observer, BOOL *stop) {
+    transactionSet = [[NSMutableSet alloc] init];
+    [currentSet enumerateObjectsUsingBlock:^(LWRunLoopObserver* observer, BOOL* stop) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [observer.target performSelector:observer.selector withObject:observer.object];
