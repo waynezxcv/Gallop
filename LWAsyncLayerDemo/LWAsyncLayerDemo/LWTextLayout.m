@@ -36,7 +36,10 @@
         NSAttributedString* attributedString = [[NSAttributedString alloc] initWithString:text
                                                                                attributes:attributes];
         CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributedString);
-        CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter, CFRangeMake(0, attributedString.length),(__bridge CFDictionaryRef)attributes, rect.size, NULL);
+        CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,
+                                                                          CFRangeMake(0, attributedString.length),
+                                                                          (__bridge CFDictionaryRef)attributes, rect.size,
+                                                                          NULL);
         CGMutablePathRef textPath = CGPathCreateMutable();
         CGPathAddRect(textPath, NULL, CGRectMake(rect.origin.x, rect.origin.y, suggestSize.width, suggestSize.height));
         CTFrameRef ctFrame = CTFramesetterCreateFrame(ctFrameSetter, CFRangeMake(0, 0), textPath, NULL);

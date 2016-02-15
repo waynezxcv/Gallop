@@ -29,7 +29,7 @@
 #pragma mark - Setup
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:ScreenBounds style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:SCREEN_BOUNDS style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -41,14 +41,14 @@
 
 - (FPSLabel *)fpsLabel {
     if (!_fpsLabel) {
-        _fpsLabel = [[FPSLabel alloc] initWithFrame:CGRectMake(10.0f, ScreenHeight - 30.0f, 55.0f, 20.0f)];
+        _fpsLabel = [[FPSLabel alloc] initWithFrame:CGRectMake(10.0f, SCREEN_HEIGHT - 30.0f, 55.0f, 20.0f)];
     }
     return _fpsLabel;
 }
 
 - (DiscoverHeader *)discoverHeader {
     if (!_discoverHeader) {
-        _discoverHeader = [[DiscoverHeader alloc] initWithFrame:CGRectMake(0.0f, 0.0f, ScreenWidth, 270.0f)];
+        _discoverHeader = [[DiscoverHeader alloc] initWithFrame:CGRectMake(0.0f, 0.0f, SCREEN_WIDTH, 270.0f)];
     }
     return _discoverHeader;
 }

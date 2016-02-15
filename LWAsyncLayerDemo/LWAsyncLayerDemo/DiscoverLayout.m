@@ -35,7 +35,7 @@
                                                    textColor:RGB(113, 129, 161, 1)
                                                         rect:CGRectMake(60.0f,
                                                                         20.0f,
-                                                                        ScreenWidth,
+                                                                        SCREEN_WIDTH,
                                                                         20.0f)];
     //text
     self.textTextLayout = [[LWTextLayout alloc] initWithText:self.statusModel.text
@@ -45,7 +45,7 @@
                                                    textColor:RGB(40, 40, 40, 1)
                                                         rect:CGRectMake(60.0f,
                                                                         50.0f,
-                                                                        ScreenWidth - 80.0f,
+                                                                        SCREEN_WIDTH - 80.0f,
                                                                         CGFLOAT_MAX)];
     //pics
     NSInteger imageCount = [self.statusModel.imageModels count];
@@ -81,11 +81,11 @@
                                                         textColor:[UIColor grayColor]
                                                              rect:CGRectMake(60.0f,
                                                                              70.0f + self.imagesPosition.size.height + self.textTextLayout.boundsSize.height,
-                                                                             ScreenWidth - 80.0f,
+                                                                             SCREEN_WIDTH - 80.0f,
                                                                              20.0f)];
 
     //menu
-    self.menuPosition = CGRectMake(ScreenWidth - 40.0f, 70.0f + self.textTextLayout.boundsSize.height + self.imagesPosition.size.height, 20.0f, 15.0f);
+    self.menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f, 70.0f + self.textTextLayout.boundsSize.height + self.imagesPosition.size.height, 20.0f, 15.0f);
     //cellHeight
     self.cellHeight = 100.0f + self.imagesPosition.size.height + self.textTextLayout.boundsSize.height;
 }

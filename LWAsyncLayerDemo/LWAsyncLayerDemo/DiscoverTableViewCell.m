@@ -75,7 +75,7 @@
 - (void)drawContent {
     self.backgroundImageView.frame = CGRectMake(0,
                                                 0,
-                                                ScreenWidth,
+                                                SCREEN_WIDTH,
                                                 self.layout.cellHeight);
 
     self.avatarImageView.frame = self.layout.avatarPosition;

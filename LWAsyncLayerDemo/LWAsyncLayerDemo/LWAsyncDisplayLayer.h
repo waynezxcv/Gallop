@@ -36,7 +36,6 @@
 - (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL) isFinished;
 
 
-
 @end
 
 

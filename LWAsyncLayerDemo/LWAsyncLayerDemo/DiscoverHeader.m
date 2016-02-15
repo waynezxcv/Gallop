@@ -37,7 +37,7 @@
 
 - (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, - 60.0f, ScreenWidth, 240.0f)];
+        _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, - 60.0f, SCREEN_WIDTH, 240.0f)];
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
         _imageView.backgroundColor = RGB(50, 50, 50, 1);
     }
@@ -46,7 +46,7 @@
 
 - (UIView *)avatarContainer {
     if (!_avatarContainer) {
-        _avatarContainer = [[UIView alloc] initWithFrame:CGRectMake(ScreenWidth - 75.0f, 200.0f, 65.0f, 65.0f)];
+        _avatarContainer = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 75.0f, 200.0f, 65.0f, 65.0f)];
         _avatarContainer.backgroundColor = [UIColor whiteColor];
     }
     return _avatarContainer;
@@ -63,7 +63,7 @@
 
 - (UILabel *)nameLabel {
     if (!_nameLabel) {
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(ScreenWidth - 235.0f, 215.0f, 150.0f, 20.0f)];
+        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 235.0f, 215.0f, 150.0f, 20.0f)];
         _nameLabel.font = [UIFont boldSystemFontOfSize:16.0f];
         _nameLabel.textColor = [UIColor whiteColor];
         _nameLabel.textAlignment = NSTextAlignmentRight;
