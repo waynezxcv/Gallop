@@ -23,7 +23,7 @@ static NSMutableSet* transactionSet = nil;
 
 static void LWRunLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
     if (transactionSet.count == 0) return;
-    NSSet *currentSet = transactionSet;
+    NSSet* currentSet = transactionSet;
     transactionSet = [[NSMutableSet alloc] init];
     [currentSet enumerateObjectsUsingBlock:^(LWRunLoopObserver* observer, BOOL* stop) {
 #pragma clang diagnostic push

@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface LWLabel : NSObject
+@interface LWLabel : UIView
 
 @end

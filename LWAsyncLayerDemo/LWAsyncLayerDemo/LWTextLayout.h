@@ -21,6 +21,7 @@
 @property (nonatomic,readonly) CGMutablePathRef textPath;
 
 
+
 - (LWTextLayout *)initWithText:(NSString *)text
                           font:(UIFont *)font
                  textAlignment:(NSTextAlignment)textAlignment
