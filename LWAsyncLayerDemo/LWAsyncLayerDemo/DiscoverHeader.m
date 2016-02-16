@@ -8,7 +8,7 @@
 
 #import "DiscoverHeader.h"
 #import "ProfileModel.h"
-#import "CALayer+LWWebImage.h"
+#import "UIImageView+WebCache.h"
 
 @interface DiscoverHeader ()
 
@@ -87,20 +87,10 @@
         _profileModel = profileModel;
     }
     if (self.profileModel.backgroundImageURL.length != 0) {
-        [self.imageView.layer lw_setImageWithURL:[NSURL URLWithString:self.profileModel.backgroundImageURL]
-                                         options:0
-                                        progress:nil
-                                       transform:nil
-                                 completionBlock:^{
-                                 }];
+        [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.profileModel.backgroundImageURL]];
     }
     if (self.profileModel.avatarURL.length != 0) {
-        [self.avatarView.layer lw_setImageWithURL:[NSURL URLWithString:self.profileModel.avatarURL]
-                                          options:0
-                                         progress:nil
-                                        transform:nil
-                                  completionBlock:^{
-                                  }];
+        [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.profileModel.avatarURL]];
     }
     if (self.profileModel.name.length != 0) {
         self.nameLabel.text = self.profileModel.name;
@@ -122,7 +112,6 @@
     rotationAnimation.toValue = [NSNumber numberWithFloat:2 * M_PI];
     [self.loadingView.layer addAnimation:rotationAnimation forKey:@"rotationAnimations"];
 }
-
 
 - (void)refreshingAnimateStop {
     [self.loadingView.layer removeAllAnimations];

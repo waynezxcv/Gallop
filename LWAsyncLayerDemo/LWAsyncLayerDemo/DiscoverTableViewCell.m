@@ -7,9 +7,9 @@
 //
 
 #import "DiscoverTableViewCell.h"
-#import "CALayer+LWWebImage.h"
 #import "ContainerView.h"
 #import "LWRunLoopObserver.h"
+#import "UIImageView+WebCache.h"
 
 
 
@@ -77,13 +77,8 @@
                                                 0,
                                                 SCREEN_WIDTH,
                                                 self.layout.cellHeight);
-
     self.avatarImageView.frame = self.layout.avatarPosition;
-    [self.avatarImageView.layer lw_setImageWithURL:self.layout.statusModel.user.avatarURL
-                                           options:0
-                                          progress:nil
-                                         transform:nil
-                                   completionBlock:^{}];
+    [self.avatarImageView sd_setImageWithURL:self.layout.statusModel.user.avatarURL];
     self.menuView.frame = CGRectMake(self.layout.menuPosition.origin.x,
                                      self.layout.menuPosition.origin.y - 12.5f,
                                      0.0f,
@@ -104,13 +99,9 @@
                                      80.0f);
         ImageModels* imageModel = [self.layout.statusModel.imageModels objectAtIndex:i];
         NSURL* URL = imageModel.thumbnailURL;
-        [imageView.layer lw_setImageWithURL:URL
-                                    options:0
-                                   progress:nil
-                                  transform:nil
-                            completionBlock:^{
-                                imageView.hidden = NO;
-                            }];
+        [imageView sd_setImageWithURL:URL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            imageView.hidden = NO;
+        }];
         column = column + 1;
         if (column > 2) {
             column = 0;

@@ -25,9 +25,6 @@
     UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:disconverViewController];
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
-
-
-
     return YES;
 }
 

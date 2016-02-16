@@ -1,18 +1,16 @@
 //
-//  CALayer+AsyncDisplay.m
-//  LWAsyncLayerDemo
+//  CALayer+LazySetContents.m
+//  SDWebImage
 //
-//  Created by 刘微 on 16/2/1.
-//  Copyright © 2016年 Warm+. All rights reserved.
+//  Created by 刘微 on 16/2/2.
+//  Copyright © 2016年 Dailymotion. All rights reserved.
 //
 
-#import "CALayer+AsyncDisplay.h"
-#import <objc/runtime.h>
-#import <UIKit/UIKit.h>
+#import "CALayer+LazySetContents.h"
 #import "LWRunLoopObserver.h"
 
-@implementation CALayer(AsyncDisplay)
 
+@implementation CALayer(LazySetContents)
 
 - (void)lazySetContent:(id)contents {
     LWRunLoopObserver* obeserver = [LWRunLoopObserver observerWithTarget:self
@@ -20,5 +18,6 @@
                                                                   object:contents];
     [obeserver commit];
 }
+
 
 @end

@@ -64,7 +64,6 @@ static void LWRunLoopObserverSetup() {
     return observer;
 }
 
-
 - (void)commit {
     if (!_target || !_selector) {
         return;

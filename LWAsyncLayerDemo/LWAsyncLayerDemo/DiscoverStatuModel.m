@@ -27,12 +27,9 @@
 
 @end
 
-
 @implementation ImageModels
 
 @end
-
-
 
 @implementation UserModel
 
@@ -40,15 +37,12 @@
     self = [super init];
     if (self) {
         self.name = @"";
-        self.avatarURL = [NSURL URLWithString: @""];
+        self.avatarURL = [NSURL URLWithString:@""];
     }
     return self;
 }
 
 @end
-
-
-
 
 @implementation DiscoverCommentModel
 
@@ -63,8 +57,6 @@
 }
 
 @end
-
-
 
 @implementation DiscoverShareModel
 

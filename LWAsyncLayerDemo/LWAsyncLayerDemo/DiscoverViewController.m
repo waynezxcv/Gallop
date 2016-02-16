@@ -16,7 +16,7 @@
 
 @interface DiscoverViewController ()<UITableViewDataSource,UITableViewDelegate>
 
-@property (nonatomic,strong) FPSLabel* fpsLabel;
+@property (nonatomic,strong) LWFPSLabel* fpsLabel;
 @property (nonatomic,strong) DiscoverHeader* discoverHeader;
 @property (nonatomic,strong) UITableView* tableView;
 @property (nonatomic,strong) NSMutableArray* dataSource;
@@ -39,9 +39,9 @@
     return _tableView;
 }
 
-- (FPSLabel *)fpsLabel {
+- (LWFPSLabel *)fpsLabel {
     if (!_fpsLabel) {
-        _fpsLabel = [[FPSLabel alloc] initWithFrame:CGRectMake(10.0f, SCREEN_HEIGHT - 30.0f, 55.0f, 20.0f)];
+        _fpsLabel = [[LWFPSLabel alloc] initWithFrame:CGRectMake(10.0f, SCREEN_HEIGHT - 30.0f, 55.0f, 20.0f)];
     }
     return _fpsLabel;
 }

@@ -10,12 +10,12 @@
 
 #define kSize CGSizeMake(55, 20)
 
-@implementation FPSLabel {
-    CADisplayLink *_link;
+@implementation LWFPSLabel {
+    CADisplayLink* _link;
     NSUInteger _count;
     NSTimeInterval _lastTime;
-    UIFont *_font;
-    UIFont *_subFont;
+    UIFont* _font;
+    UIFont* _subFont;
     NSTimeInterval _llll;
 }
 
@@ -54,7 +54,6 @@
         _lastTime = link.timestamp;
         return;
     }
-    
     _count++;
     NSTimeInterval delta = link.timestamp - _lastTime;
     if (delta < 1) return;
@@ -62,22 +61,15 @@
     float fps = _count / delta;
     _count = 0;
     CGFloat progress = fps / 60.0;
-    UIColor *color = [UIColor colorWithHue:0.27 * (progress - 0.2) saturation:1 brightness:0.9 alpha:1];
-        
+    UIColor* color = [UIColor colorWithHue:0.27 * (progress - 0.2) saturation:1 brightness:0.9 alpha:1];
     NSDictionary* attributes_1 = @{NSForegroundColorAttributeName:color,
                                    NSFontAttributeName:_font};
-    
     NSDictionary* attributes_2 = @{NSForegroundColorAttributeName:[UIColor whiteColor],
                                    NSFontAttributeName:_font};
-    
-    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d FPS",(int)round(fps)]];
-    
+    NSMutableAttributedString* text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d FPS",(int)round(fps)]];
     [text addAttributes:attributes_1 range:NSMakeRange(0, text.length - 3)];
     [text addAttributes:attributes_2 range:NSMakeRange(text.length - 3, 3)];
     self.attributedText = text;
 }
-
-
-
 
 @end

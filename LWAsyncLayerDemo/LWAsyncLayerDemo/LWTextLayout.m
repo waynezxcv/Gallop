@@ -19,6 +19,7 @@
 
 @end
 
+
 @implementation LWTextLayout
 
 - (LWTextLayout *)initWithText:(NSString *)text
@@ -59,7 +60,6 @@
     CFRelease(self.textPath);
 }
 
-
 - (void)drawTextLayoutIncontext:(CGContextRef)context {
     @autoreleasepool {
         CGContextSaveGState(context);
@@ -89,7 +89,6 @@
     };
     CTParagraphStyleRef paragraphRef = CTParagraphStyleCreate(theSettings, kNumberOfSettings);
     CTFontRef fontRef = CTFontCreateWithName((__bridge CFStringRef)font.fontName,font.pointSize,NULL);
-    
     NSMutableDictionary* dict = [NSMutableDictionary dictionary];
     dict[(id)kCTForegroundColorAttributeName] = (id)textColor.CGColor;
     dict[(id)kCTFontAttributeName] = (__bridge id)fontRef;

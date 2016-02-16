@@ -9,7 +9,7 @@
 #import "LWAsyncDisplayLayer.h"
 #import <UIKit/UIKit.h>
 #import <libkern/OSAtomic.h>
-#import "CALayer+AsyncDisplay.h"
+#import "CALayer+LazySetContents.h"
 
 
 static dispatch_queue_t GetAsyncDisplayQueue() {

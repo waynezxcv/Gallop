@@ -7,6 +7,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FPSLabel : UILabel
+@interface LWFPSLabel : UILabel
 
 @end
