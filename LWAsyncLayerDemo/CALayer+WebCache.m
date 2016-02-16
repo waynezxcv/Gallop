@@ -32,7 +32,6 @@ static char imageURLKey;
     [self sd_setImageWithURL:url placeholderImage:nil options:0 processing:nil progress:nil completed:completedBlock];
 }
 
-
 - (void)sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder completed:(SDWebImageCompletionBlock)completedBlock {
     [self sd_setImageWithURL:url placeholderImage:placeholder options:0 processing:nil progress:nil completed:completedBlock];
 }

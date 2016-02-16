@@ -10,8 +10,16 @@
 #import "DiscoverLayout.h"
 #import "LWAsyncDisplayLayer.h"
 
+
+@protocol DiscoverTableViewCellDelegate <NSObject>
+
+- (void)didClickedImageWithLayout:(DiscoverLayout *)layout atIndex:(NSInteger)index;
+
+@end
+
 @interface DiscoverTableViewCell : UITableViewCell
 
+@property (nonatomic,weak) id <DiscoverTableViewCellDelegate> delegate;
 @property (nonatomic,strong) DiscoverLayout* layout;
 
 - (void)cleanUp;

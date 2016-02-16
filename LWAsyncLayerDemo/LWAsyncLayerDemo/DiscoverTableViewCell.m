@@ -11,8 +11,6 @@
 #import "LWRunLoopObserver.h"
 #import "UIImageView+WebCache.h"
 
-
-
 @interface DiscoverTableViewCell ()
 
 @property (nonatomic,strong) ContainerView* backgroundImageView;
@@ -20,10 +18,7 @@
 @property (nonatomic,strong) MenuView* menuView;
 @property (nonatomic,strong) NSMutableArray* imageViews;
 
-
 @end
-
-
 
 @implementation DiscoverTableViewCell
 
@@ -67,7 +62,6 @@
     for (NSInteger i = 0; i < 9; i ++) {
         UIImageView* imageView = [self.imageViews objectAtIndex:i];
         imageView.frame = CGRectZero;
-        imageView.hidden = YES;
     }
     [self.backgroundImageView cleanUp];
 }
@@ -85,38 +79,45 @@
                                      40.0f);
     [self setupImages];
     [self.backgroundImageView drawConent];
-
 }
 
 - (void)setupImages {
-    NSInteger row = 0;
-    NSInteger column = 0;
-    for (NSInteger i = 0; i < self.layout.statusModel.imageModels.count; i ++) {
+    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
         UIImageView* imageView = [self.imageViews objectAtIndex:i];
-        imageView.frame = CGRectMake(self.layout.imagesPosition.origin.x + (column * 85.0f),
-                                     self.layout.imagesPosition.origin.y + (row * 85.0f),
-                                     80.0f,
-                                     80.0f);
+        imageView.frame = CGRectFromString([self.layout.imagePostionArray objectAtIndex:i]);
         ImageModels* imageModel = [self.layout.statusModel.imageModels objectAtIndex:i];
         NSURL* URL = imageModel.thumbnailURL;
-        [imageView sd_setImageWithURL:URL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            imageView.hidden = NO;
-        }];
-        column = column + 1;
-        if (column > 2) {
-            column = 0;
-            row = row + 1;
-        }
+        [imageView sd_setImageWithURL:URL
+                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
     }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     UITouch* touch = [touches anyObject];
     CGPoint point = [touch locationInView:self];
+    [self touchMenuHandlerIfNeedWithPoint:point];
+    [self touchImageHandlerIfNeedWithPoint:point];
+}
+
+//点击菜单按钮
+- (void)touchMenuHandlerIfNeedWithPoint:(CGPoint)point {
     if (CGRectContainsPoint(self.layout.menuPosition, point)) {
-        
+
     }
 }
+
+//点击图片
+- (void)touchImageHandlerIfNeedWithPoint:(CGPoint)point {
+    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
+        CGRect imagePosition = CGRectFromString(self.layout.imagePostionArray[i]);
+        if (CGRectContainsPoint(imagePosition, point)) {
+            if ([self.delegate respondsToSelector:@selector(didClickedImageWithLayout:atIndex:)]) {
+                [self.delegate didClickedImageWithLayout:self.layout atIndex:i];
+            }
+        }
+    }
+}
+
 
 - (void)menuViewShow {
     [UIView animateWithDuration:0.2f animations:^{
@@ -134,15 +135,10 @@
                                          0.0f,
                                          40.0f);
     } completion:^(BOOL finished) {
-
     }];
 }
 
-
-
-
 @end
-
 
 @implementation MenuView
 
@@ -155,4 +151,6 @@
     }
     return self;
 }
+
+
 @end

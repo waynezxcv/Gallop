@@ -22,15 +22,12 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-
         self.asyncDisplayLayer = [[LWAsyncDisplayLayer alloc] init];
         self.asyncDisplayLayer.asyncDisplayDelegate = self;
         [self.layer addSublayer:self.asyncDisplayLayer];
-
     }
     return self;
 }
-
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];

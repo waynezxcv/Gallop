@@ -25,6 +25,7 @@
 @property (nonatomic,assign) CGRect imagesPosition;
 @property (nonatomic,assign) CGRect menuPosition;
 @property (nonatomic,assign) CGRect likesAndCommentsPosition;
+@property (nonatomic,copy) NSArray* imagePostionArray;
 
 @property (nonatomic,assign) CGFloat textHeight;
 @property (nonatomic,assign) CGFloat imagesHeight;

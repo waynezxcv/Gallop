@@ -73,6 +73,25 @@
         default:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.boundsSize.height, 250.0f, 0.0f);
             break;
     }
+    //image detail Position
+
+    NSMutableArray* tmpArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
+    NSInteger row = 0;
+    NSInteger column = 0;
+    for (NSInteger i = 0; i < self.statusModel.imageModels.count; i ++) {
+        CGRect imageRect = CGRectMake(self.imagesPosition.origin.x + (column * 85.0f),
+                                      self.imagesPosition.origin.y + (row * 85.0f),
+                                      80.0f,
+                                      80.0f);
+        NSString* rectString = NSStringFromCGRect(imageRect);
+        [tmpArray addObject:rectString];
+        column = column + 1;
+        if (column > 2) {
+            column = 0;
+            row = row + 1;
+        }
+    }
+    self.imagePostionArray = tmpArray;
     //timeStamp
     self.timeStampTextLayout = [[LWTextLayout alloc] initWithText:self.statusModel.timeStamp
                                                              font:[UIFont systemFontOfSize:13.0f]
@@ -83,7 +102,6 @@
                                                                              70.0f + self.imagesPosition.size.height + self.textTextLayout.boundsSize.height,
                                                                              SCREEN_WIDTH - 80.0f,
                                                                              20.0f)];
-
     //menu
     self.menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f, 70.0f + self.textTextLayout.boundsSize.height + self.imagesPosition.size.height, 20.0f, 15.0f);
     //cellHeight

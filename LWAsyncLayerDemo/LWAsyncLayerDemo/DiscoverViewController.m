@@ -13,8 +13,9 @@
 #import "ProfileModel.h"
 #import "DiscoverStatuModel.h"
 #import "DiscoverLayout.h"
+#import "LWImageBrowser.h"
 
-@interface DiscoverViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface DiscoverViewController ()<UITableViewDataSource,UITableViewDelegate,DiscoverTableViewCellDelegate>
 
 @property (nonatomic,strong) LWFPSLabel* fpsLabel;
 @property (nonatomic,strong) DiscoverHeader* discoverHeader;
@@ -230,6 +231,7 @@
         cell = [[DiscoverTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     [cell cleanUp];
+    cell.delegate = self;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.layout = [self.dataSource objectAtIndex:indexPath.row];
     [cell drawContent];
@@ -239,6 +241,14 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     DiscoverLayout* layout = [self.dataSource objectAtIndex:indexPath.row];
     return layout.cellHeight;
+}
+
+#pragma mark - TableViewCellDelegate
+- (void)didClickedImageWithLayout:(DiscoverLayout *)layout atIndex:(NSInteger)index{
+    NSLog(@"touched image's index :%ld",index);
+    LWImageBrowser* browser = [[LWImageBrowser alloc] init];
+    [self presentViewController:browser animated:YES completion:^{
+    }];
 }
 
 @end

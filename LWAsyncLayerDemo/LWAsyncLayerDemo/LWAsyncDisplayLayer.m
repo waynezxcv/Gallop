@@ -34,7 +34,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         }
     });
     int32_t cur = OSAtomicIncrement32(&counter);
-    if (cur < 0) cur = -cur;
+    if (cur < 0) cur = - cur;
     return queues[(cur) % queueCount];
 #undef MAX_QUEUE_COUNT
 }
@@ -129,7 +129,6 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         });
     });
 }
-
 
 - (void)_cancelDisplay {
     [self.flag increase];
