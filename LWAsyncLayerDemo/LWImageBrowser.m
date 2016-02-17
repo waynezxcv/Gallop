@@ -15,6 +15,17 @@
 
 @implementation LWImageBrowser
 
+
+#pragma mark - Init
+
+- (id)initWithModelArray:(NSArray *)modelArray currentIndex:(NSInteger)currentIndex {
+    self = [super init];
+    if (self) {
+        self.view.backgroundColor = [UIColor blackColor];
+    }
+    return self;
+}
+
 #pragma mark - ViewControllerLifeCycle
 
 - (void)viewDidLoad {
@@ -24,21 +35,12 @@
 }
 
 
+#pragma mark - Actions
+
+- (void)show {
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 #pragma mark - UIViewControllerTransitioningDelegate
