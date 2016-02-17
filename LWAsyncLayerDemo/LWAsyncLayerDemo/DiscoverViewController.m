@@ -247,8 +247,7 @@
 - (void)didClickedImageWithLayout:(DiscoverLayout *)layout atIndex:(NSInteger)index{
     NSLog(@"touched image's index :%ld",index);
     LWImageBrowser* browser = [[LWImageBrowser alloc] init];
-    [self presentViewController:browser animated:YES completion:^{
-    }];
+    [self presentViewController:browser animated:NO completion:^{}];
 }
 
 @end

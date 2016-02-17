@@ -7,7 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LWImageBrowserModel.h"
+
+
+@protocol LWImageBrowserDelegate <NSObject>
+
+- (void)imageBrowserDidFnishDownloadImageToRefreshThumbnialImageIfNeed;
+
+@end
+
+
 
 @interface LWImageBrowser : UIViewController
+
+@property (nonatomic,copy)NSArray* imageModels;
+
+- (id)initWithModelArray:(NSArray *)modelArray currentIndex:(NSInteger)currentIndex;
+
+- (void)show;
 
 @end

@@ -9,42 +9,51 @@
 #import "LWImageBrowser.h"
 #import "LWImageBrowserAnimator.h"
 
-@interface LWImageBrowser ()<LWImageBrowserAnimatorDelegate>
+@interface LWImageBrowser ()<UIViewControllerTransitioningDelegate>
 
 @end
 
 @implementation LWImageBrowser
 
+#pragma mark - ViewControllerLifeCycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
+    self.transitioningDelegate = self;
 }
 
-//- (UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(UIViewController *)presenting sourceViewController:(UIViewController *)source{
-////    presented
-////    return [[PresentationVc alloc] initWithPresentedViewController:presented presentingViewController:presenting];
-//}
-//
-//-(id<UIViewControllerAnimatedTransitioning>) animationControllerForPresentedController:(UIViewController *)presented
-//                                                                  presentingController:(UIViewController*)presenting
-//                                                                      sourceController:(UIViewController *)source {
-//    LWImageBrowserAnimator* animator = [[LWImageBrowserAnimator alloc] init];
-//    animator.delegate = self;
-//    return animator;
-//}
-//
-//-(id<UIViewControllerAnimatedTransitioning>) animationControllerForDismissedController:(UIViewController *)dismissed {
-//    LWImageBrowserAnimator* animator = [[LWImageBrowserAnimator alloc] init];
-//    animator.delegate = self;
-//    return animator;
-//}
-//
-//- (void)lwImageBrowserAnimationWillBegin {
-//
-//}
-//
-//- (void)lwImageBrowserAnimationDidFinished {
-//
-//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
+                                                                            presentingController:(UIViewController *)presenting
+                                                                                sourceController:(UIViewController *)source {
+    LWImageBrowserPresentAnimator* animator = [[LWImageBrowserPresentAnimator alloc] init];
+    return animator;
+}
+
+- (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    LWImageBrowserDismissAnimator* animator = [[LWImageBrowserDismissAnimator alloc] init];
+    return animator;
+}
+
 
 @end

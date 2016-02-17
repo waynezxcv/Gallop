@@ -9,17 +9,21 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+/**
+ *  present时的转场动画
+ */
+@interface LWImageBrowserPresentAnimator : NSObject<UIViewControllerAnimatedTransitioning>
 
-@protocol LWImageBrowserAnimatorDelegate <NSObject>
-
-- (void)lwImageBrowserAnimationWillBegin;
-- (void)lwImageBrowserAnimationDidFinished;
+@property (nonatomic,assign) NSTimeInterval transitionDuration;
 
 @end
 
-@interface LWImageBrowserAnimator : NSObject<UIViewControllerAnimatedTransitioning>
 
-@property (nonatomic,weak) id <LWImageBrowserAnimatorDelegate> delegate;
+/**
+ *  dismiss时的转场动画
+ */
+@interface LWImageBrowserDismissAnimator : NSObject<UIViewControllerAnimatedTransitioning>
+
 @property (nonatomic,assign) NSTimeInterval transitionDuration;
 
 @end
