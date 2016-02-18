@@ -30,7 +30,6 @@
 
 @implementation LWImageBrowserModel
 
-
 - (id)initWithplaceholder:(UIImage *)placeholder
              thumbnailURL:(NSString *)thumbnailURL
                     HDURL:(NSString *)HDURL
@@ -64,7 +63,10 @@
                           options:0
                        processing:nil
                          progress:nil
-                        completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                        completed:^(UIImage *image, NSError *error,
+                                    SDImageCacheType cacheType,
+                                    BOOL finished,
+                                    NSURL *imageURL) {
                             if (finished) {
                                 weakSelf.thumbnailImage = image;
                                 weakSelf.destinationFrame = [weakSelf calculateDestinationFrameWithSize:weakSelf.thumbnailImage.size

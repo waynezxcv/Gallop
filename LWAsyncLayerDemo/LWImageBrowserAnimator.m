@@ -34,9 +34,8 @@
         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
     }];
 }
+
 @end
-
-
 
 @implementation LWImageBrowserDismissAnimator
 

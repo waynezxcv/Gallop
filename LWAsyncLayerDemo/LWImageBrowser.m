@@ -32,16 +32,14 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     self.transitioningDelegate = self;
-}
 
+}
 
 #pragma mark - Actions
 
 - (void)show {
 
-
 }
-
 
 #pragma mark - UIViewControllerTransitioningDelegate
 

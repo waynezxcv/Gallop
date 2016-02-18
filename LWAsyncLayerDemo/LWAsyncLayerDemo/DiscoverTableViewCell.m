@@ -66,6 +66,11 @@
     [self.backgroundImageView cleanUp];
 }
 
+
+- (void)clean {
+
+}
+
 - (void)drawContent {
     self.backgroundImageView.frame = CGRectMake(0,
                                                 0,
@@ -77,7 +82,10 @@
                                      self.layout.menuPosition.origin.y - 12.5f,
                                      0.0f,
                                      40.0f);
-    [self setupImages];
+    LWRunLoopObserver* obeserver = [LWRunLoopObserver observerWithTarget:self
+                                                                selector:@selector(setupImages)
+                                                                  object:nil];
+    [obeserver commit];
     [self.backgroundImageView drawConent];
 }
 

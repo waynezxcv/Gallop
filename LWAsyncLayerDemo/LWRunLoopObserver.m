@@ -3,13 +3,10 @@
 //  LWAsyncLayerDemo
 //
 //  Created by 刘微 on 16/2/1.
-//  Copyright © 2016年 Wayne. All rights reserved.
+//  Copyright © 2016年 Waynezxcv. All rights reserved.
 //
 
-
-
 #import "LWRunLoopObserver.h"
-
 
 @interface LWRunLoopObserver()
 
@@ -21,7 +18,9 @@
 
 static NSMutableSet* transactionSet = nil;
 
-static void LWRunLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
+static void LWRunLoopObserverCallBack(CFRunLoopObserverRef observer,
+                                      CFRunLoopActivity activity,
+                                      void *info) {
     if (transactionSet.count == 0) return;
     NSSet* currentSet = transactionSet;
     transactionSet = [[NSMutableSet alloc] init];

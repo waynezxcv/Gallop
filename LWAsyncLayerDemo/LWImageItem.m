@@ -8,8 +8,10 @@
 
 #import "LWImageItem.h"
 
-@interface LWImageItem ()<UIScrollViewDelegate,UIActionSheetDelegate>
+const CGFloat kMaximumZoomScale = 3.0f;
+const CGFloat kMinimumZoomScale = 1.0f;
 
+@interface LWImageItem ()<UIScrollViewDelegate,UIActionSheetDelegate>
 
 @end
 
@@ -24,22 +26,24 @@
         self.delegate = self;
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
-        self.maximumZoomScale = 3.0f;
-        self.minimumZoomScale = 1.0f;
+        self.maximumZoomScale = kMaximumZoomScale;
+        self.minimumZoomScale = kMinimumZoomScale;
         self.zoomScale = 1.0f;
         [self addSubview:self.imageView];
 
-        UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-        UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-        UITapGestureRecognizer* twoFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTwoFingerTap:)];
-        UILongPressGestureRecognizer* longpress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongpress:)];
-
+        UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(handleSingleTap:)];
+        UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(handleDoubleTap:)];
+        UITapGestureRecognizer* twoFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                       action:@selector(handleTwoFingerTap:)];
+        UILongPressGestureRecognizer* longpress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                                action:@selector(handleLongpress:)];
         longpress.minimumPressDuration = 0.4f;
         singleTap.numberOfTapsRequired = 1;
         singleTap.numberOfTouchesRequired = 1;
         doubleTap.numberOfTapsRequired = 2;
         twoFingerTap.numberOfTouchesRequired = 2;
-
         [self addGestureRecognizer:singleTap];
         [self.imageView addGestureRecognizer:doubleTap];
         [self.imageView addGestureRecognizer:twoFingerTap];
@@ -104,31 +108,32 @@
 
 - (void)downloadImageWithDestinationRect:(CGRect)destinationRect {
     __weak typeof(self) weakSelf = self;
-//    MBProgressHUD* progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-//    progressHUD.mode = MBProgressHUDModeDeterminate;
+    //    MBProgressHUD* progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+    //    progressHUD.mode = MBProgressHUDModeDeterminate;
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [manager downloadImageWithURL:[NSURL URLWithString:self.imageModel.HDURL]  options:options processing:nil progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-
-        } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-            if (finished) {
-//                [MBProgressHUD hideAllHUDsForView:weakSelf animated:NO];
-                weakSelf.imageView.image = image;
-                weakSelf.imageModel.thumbnailImage = image;
-                /**
-                 *  通知刷新
-                 */
-                if ([self.eventDelegate respondsToSelector:@selector(didFinishRefreshThumbnailImageIfNeed)]) {
-                    [self.eventDelegate didFinishRefreshThumbnailImageIfNeed];
-                }
-                [UIView animateWithDuration:0.2f animations:^{
-                    weakSelf.imageView.frame = destinationRect;
-                } completion:^(BOOL finished) {
-                    weakSelf.isLoaded = YES;
-                }];
-            }
-        }];
+        [manager downloadImageWithURL:[NSURL URLWithString:self.imageModel.HDURL]
+                              options:options
+                           processing:nil
+                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                 //TODO:加载动画
+                             } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                                 if (finished) {
+                                     //                [MBProgressHUD hideAllHUDsForView:weakSelf animated:NO];
+                                     weakSelf.imageView.image = image;
+                                     weakSelf.imageModel.thumbnailImage = image;
+                                     // 通知刷新
+                                     if ([self.eventDelegate respondsToSelector:@selector(didFinishRefreshThumbnailImageIfNeed)]) {
+                                         [self.eventDelegate didFinishRefreshThumbnailImageIfNeed];
+                                     }
+                                     [UIView animateWithDuration:0.2f animations:^{
+                                         weakSelf.imageView.frame = destinationRect;
+                                     } completion:^(BOOL finished) {
+                                         weakSelf.isLoaded = YES;
+                                     }];
+                                 }
+                             }];
     });
 }
 
