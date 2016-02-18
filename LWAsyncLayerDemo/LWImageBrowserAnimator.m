@@ -7,6 +7,7 @@
 //
 
 #import "LWImageBrowserAnimator.h"
+#import "LWImageBrowser.h"
 
 @implementation LWImageBrowserPresentAnimator
 
@@ -23,12 +24,23 @@
 }
 
 - (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext {
-    UIViewController* toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    LWImageBrowser* toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIViewController* fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     [[transitionContext containerView] addSubview:toViewController.view];
     [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
         //TODO:
-        NSLog(@"modal~");
+        if (toViewController.imageModels.count < 3) {
+            NSInteger currentIndex = toViewController.currentIndex;
+            if (currentIndex == 0) {
+
+            }
+            else {
+
+            }
+        }
+        else {
+            LWImageItem* currentImageItem = toViewController.currentImageView;
+        }
     } completion:^(BOOL finished) {
         fromViewController.view.transform = CGAffineTransformIdentity;
         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
@@ -36,6 +48,9 @@
 }
 
 @end
+
+
+
 
 @implementation LWImageBrowserDismissAnimator
 

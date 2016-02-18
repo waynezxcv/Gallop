@@ -246,8 +246,23 @@
 #pragma mark - TableViewCellDelegate
 - (void)didClickedImageWithLayout:(DiscoverLayout *)layout atIndex:(NSInteger)index{
     NSLog(@"touched image's index :%ld",index);
-    LWImageBrowser* browser = [[LWImageBrowser alloc] init];
-    [self presentViewController:browser animated:NO completion:^{}];
+    NSMutableArray* tmpArray = [[NSMutableArray alloc] initWithCapacity:layout.statusModel.imageModels.count];
+    for (NSInteger i = 0; i < layout.statusModel.imageModels.count; i ++) {
+        ImageModels* m = layout.statusModel.imageModels[i];
+        CGRect originPosition = CGRectFromString(layout.imagePostionArray[i]);
+        CGRect originRect = [self.tableView convertRect:originPosition toView:self.view];
+        LWImageBrowserModel* model = [[LWImageBrowserModel alloc] initWithplaceholder:nil
+                                                                         thumbnailURL:m.thumbnailURL.absoluteString
+                                                                                HDURL:m.HDURL.absoluteString
+                                                                       originPosition:originRect
+                                                                                index:i];
+        [tmpArray addObject:model];
+    }
+    LWImageBrowser* browser = [[LWImageBrowser alloc] initWithParentViewController:self
+                                                                             style:LWImageBrowserStyleDefault
+                                                                       imageModels:tmpArray
+                                                                      currentIndex:index];
+    [browser show];
 }
 
 @end

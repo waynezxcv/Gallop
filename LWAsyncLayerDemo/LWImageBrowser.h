@@ -8,21 +8,95 @@
 
 #import <UIKit/UIKit.h>
 #import "LWImageBrowserModel.h"
+#import "LWImageItem.h"
 
 
+
+/**
+ *  图片浏览器式样
+ */
+typedef NS_ENUM(NSUInteger, LWImageBrowserStyle){
+    /**
+     *  默认式样：带缩放动画的图片浏览器
+     */
+    LWImageBrowserStyleDefault,
+    /**
+     *  显示文字和其他操作的图片浏览器
+     */
+    LWImageBrowserStyleDetail,
+};
+
+
+/**
+ *  LWImageBrowser协议
+ */
 @protocol LWImageBrowserDelegate <NSObject>
 
+
+@optional
+/**
+ *  下载完高清图片后，会通过此方法通知
+ */
 - (void)imageBrowserDidFnishDownloadImageToRefreshThumbnialImageIfNeed;
 
 @end
 
 
+/**
+ *  图片浏览器
+ */
 @interface LWImageBrowser : UIViewController
 
+/**
+ *  浏览器式样
+ */
+@property (nonatomic,assign) LWImageBrowserStyle style;
+
+/**
+ *  存放图片模型的数组
+ */
 @property (nonatomic,copy)NSArray* imageModels;
 
-- (id)initWithModelArray:(NSArray *)modelArray currentIndex:(NSInteger)currentIndex;
+/**
+ *  当前页码
+ */
+@property (nonatomic,assign) NSInteger currentIndex;
 
+
+/**
+ *  左边的ImageView
+ */
+@property (nonatomic,strong) LWImageItem* previousImageView;
+
+/**
+ *  中间ImageView
+ */
+@property (nonatomic,strong) LWImageItem* currentImageView;
+
+/**
+ *  右边的ImageView
+ */
+@property (nonatomic,strong) LWImageItem* nextImageView;
+
+
+/**
+ *  创建并初始化一个LWImageBrowser
+ *
+ *  @param parentVC    父级ViewController
+ *  @param style       图片浏览器式样
+ *  @param imageModels 一个存放LWImageModel的数组
+ *  @param index       初始化的图片的Index
+ *
+ */
+- (id)initWithParentViewController:(UIViewController *)parentVC
+                             style:(LWImageBrowserStyle)style
+                       imageModels:(NSArray *)imageModels
+                      currentIndex:(NSInteger)index;
+
+/**
+ *  显示图片浏览器
+ */
 - (void)show;
+
 
 @end

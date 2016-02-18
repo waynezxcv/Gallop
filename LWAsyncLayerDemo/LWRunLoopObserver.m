@@ -71,13 +71,16 @@ static void LWRunLoopObserverSetup() {
     [transactionSet addObject:self];
 }
 
-- (NSUInteger)hash {
+
+#pragma mark - Private
+
+- (NSUInteger)_hash {
     long v1 = (long)((void *)_selector);
     long v2 = (long)_target;
     return v1 ^ v2;
 }
 
-- (BOOL)isEqual:(id)object {
+- (BOOL)_isEqual:(id)object {
     if (self == object) {
         return YES;
     }

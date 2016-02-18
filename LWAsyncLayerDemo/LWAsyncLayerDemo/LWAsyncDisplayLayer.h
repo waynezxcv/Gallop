@@ -39,9 +39,8 @@
 @end
 
 
-
 /**
- *  CALayer异步绘制扩展
+ *  LWAsyncDisplayLayer
  */
 @interface LWAsyncDisplayLayer : CALayer
 
@@ -55,8 +54,14 @@
  */
 @property (nonatomic,strong,readonly) LWFlag* flag;
 
+/**
+ *  清除Layer上的内容
+ */
 - (void)cleanUp;
 
+/**
+ *  异步绘制内容
+ */
 - (void)asyncDisplayContent;
 
 @end

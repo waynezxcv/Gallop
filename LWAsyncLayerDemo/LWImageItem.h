@@ -15,7 +15,6 @@
 @protocol LWImageItemEventDelegate <NSObject>
 
 - (void)didClickedItemToHide;
-
 - (void)didFinishRefreshThumbnailImageIfNeed;
 
 @end
@@ -28,8 +27,6 @@
 @property (nonatomic,strong) UIImageView* imageView;
 @property (nonatomic,assign) BOOL isLoaded;
 
-
 - (void)loadHdImageWith:(NSInteger)index animate:(BOOL)animate;
-- (id)initWithFrame:(CGRect)frame imageModel:(LWImageBrowserModel *)imageModel;
 
 @end

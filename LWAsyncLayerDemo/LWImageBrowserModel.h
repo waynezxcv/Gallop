@@ -53,6 +53,17 @@
  */
 @property (nonatomic,assign) NSInteger index;
 
+/**
+ 标题
+ */
+@property (nonatomic,copy) NSString* title;
+
+/**
+ *  详细描述
+ */
+@property (nonatomic,copy) NSString* contentDescription;
+
+
 
 /**
  *  创建LWImageModel实例对象

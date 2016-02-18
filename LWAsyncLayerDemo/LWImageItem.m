@@ -17,11 +17,10 @@ const CGFloat kMinimumZoomScale = 1.0f;
 
 @implementation LWImageItem
 
-- (id)initWithFrame:(CGRect)frame imageModel:(LWImageBrowserModel *)imageModel {
+- (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
         self.isLoaded = NO;
-        self.imageModel = imageModel;
         self.backgroundColor = [UIColor clearColor];
         self.delegate = self;
         self.showsHorizontalScrollIndicator = NO;
@@ -30,7 +29,6 @@ const CGFloat kMinimumZoomScale = 1.0f;
         self.minimumZoomScale = kMinimumZoomScale;
         self.zoomScale = 1.0f;
         [self addSubview:self.imageView];
-
         UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(handleSingleTap:)];
         UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
@@ -53,13 +51,14 @@ const CGFloat kMinimumZoomScale = 1.0f;
     return self;
 }
 
-
 #pragma mark - Setter
 
 - (void)setImageModel:(LWImageBrowserModel *)imageModel {
     if (_imageModel != imageModel) {
         _imageModel = imageModel;
     }
+    NSLog(@"setimage");
+    [self.imageView sd_setImageWithURL:[NSURL URLWithString:imageModel.HDURL]];
 }
 
 
@@ -143,7 +142,7 @@ const CGFloat kMinimumZoomScale = 1.0f;
 
 - (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
         _imageView.userInteractionEnabled = YES;
         _imageView.clipsToBounds = YES;
