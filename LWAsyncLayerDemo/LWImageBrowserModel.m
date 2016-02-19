@@ -19,7 +19,6 @@
  */
 @property (nonatomic,assign,readwrite) CGRect destinationFrame;
 
-
 /**
  *  是否已经下载
  */

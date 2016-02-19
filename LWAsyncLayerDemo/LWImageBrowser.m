@@ -13,6 +13,13 @@
 #define kImageBrowserWidth ([UIScreen mainScreen].bounds.size.width + 10.0f)
 #define kImageBrowserHeight [UIScreen mainScreen].bounds.size.height
 
+typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
+    LWImageBrowserScrollDirectionLeft,
+    LWImageBrowserScrollDirectionRight,
+    LWImageBrowserScrollDirectionNone
+};
+
+
 @interface LWImageBrowser ()<UIViewControllerTransitioningDelegate,UIScrollViewDelegate>
 
 @property (nonatomic,strong) UIScrollView* scrollView;
@@ -22,7 +29,9 @@
 
 @end
 
-@implementation LWImageBrowser
+@implementation LWImageBrowser{
+    int _lastPosition;    //A variable define in headfile
+}
 
 
 #pragma mark - Init
@@ -134,17 +143,30 @@
     if (self.style == LWImageBrowserStyleDefault) {
         [self.view addSubview:self.pageControl];
     }
-    if (self.imageModels.count < 3) {
-        [self.scrollView setContentOffset:CGPointMake(self.currentIndex * kImageBrowserWidth, 0.0f)];
+    if (self.imageModels.count > 3) {
+        [self.scrollView setContentOffset:CGPointMake(kImageBrowserWidth, 0.0f)];
     }
     else {
-        [self.scrollView setContentOffset:CGPointMake(kImageBrowserWidth, 0.0f)];
+        [self.scrollView setContentOffset:CGPointMake(self.currentIndex * kImageBrowserWidth, 0.0f)];
     }
     self.lastOffset = self.scrollView.contentOffset.x;
 }
 
 
 #pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    int currentPostion = scrollView.contentOffset.x;
+    if (currentPostion - _lastPosition > 25) {
+        _lastPosition = currentPostion;
+        NSLog(@"ScrollUp now");
+    }
+    else if (_lastPosition - currentPostion > 25) {
+        _lastPosition = currentPostion;
+        NSLog(@"ScrollDown now");
+    }
+}
+
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     CGFloat currentOffset = self.scrollView.contentOffset.x;
@@ -153,32 +175,46 @@
         self.lastOffset = self.scrollView.contentOffset.x;
         self.currentIndex ++;
         self.pageControl.currentPage = self.currentIndex;
+        NSLog(@"左....%ld",self.currentIndex);
     }
     //右滑
     else if (currentOffset < self.lastOffset){
         self.lastOffset = self.scrollView.contentOffset.x;
         self.currentIndex --;
         self.pageControl.currentPage = self.currentIndex;
+        NSLog(@"右....%ld",self.currentIndex);
     }
-    [self.scrollView setContentOffset:CGPointMake(kImageBrowserWidth, 0.0f) animated:NO];
-    NSLog(@"currentOffset:%f....lastOffset:%f..",currentOffset,self.lastOffset);
+    if (self.imageModels.count > 3) {
+        if (self.currentIndex > 0 && self.currentIndex < self.imageModels.count - 1) {
+            NSLog(@"setOffset");
+            [self.scrollView setContentOffset:CGPointMake(kImageBrowserWidth, 0.0f) animated:NO];
+        }
+    }
 }
 
 - (void)setCurrentIndex:(NSInteger)currentIndex {
     _currentIndex = currentIndex;
-    NSLog(@"currentIndex:%ld",self.currentIndex);
     [self _loadImage];
+    NSLog(@"currentIndex:%ld",self.currentIndex);
 }
 
 #pragma mark - Private
 
 - (void)_loadImage {
-    if (self.currentIndex > 0) {
-        self.previousImageView.imageModel = [self.imageModels objectAtIndex:self.currentIndex - 1];
+    if (self.imageModels.count > 3) {
+        //前一张图片
+        if (self.currentIndex - 1 > 0) {
+            self.previousImageView.imageModel = [self.imageModels objectAtIndex:self.currentIndex - 1];
+        }
+        //中间的图片
+        self.currentImageView.imageModel = [self.imageModels objectAtIndex:self.currentIndex];
+        //下一张图片
+        if (self.currentIndex + 1 < self.imageModels.count - 1) {
+            self.nextImageView.imageModel = [self.imageModels objectAtIndex:self.currentIndex + 1];
+        }
     }
-    self.currentImageView.imageModel = [self.imageModels objectAtIndex:self.currentIndex];
-    if (self.currentIndex + 1 <= self.imageModels.count) {
-        self.nextImageView.imageModel = [self.imageModels objectAtIndex:self.currentIndex + 1];
+    else {
+
     }
 }
 

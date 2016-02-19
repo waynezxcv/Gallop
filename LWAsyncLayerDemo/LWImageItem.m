@@ -57,7 +57,6 @@ const CGFloat kMinimumZoomScale = 1.0f;
     if (_imageModel != imageModel) {
         _imageModel = imageModel;
     }
-    NSLog(@"setimage");
     [self.imageView sd_setImageWithURL:[NSURL URLWithString:imageModel.HDURL]];
 }
 
