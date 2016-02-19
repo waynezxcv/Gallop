@@ -29,6 +29,9 @@ const CGFloat kMinimumZoomScale = 1.0f;
         self.minimumZoomScale = kMinimumZoomScale;
         self.zoomScale = 1.0f;
         [self addSubview:self.imageView];
+
+
+
         UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(handleSingleTap:)];
         UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self

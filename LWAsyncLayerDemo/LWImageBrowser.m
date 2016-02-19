@@ -8,24 +8,26 @@
 
 #import "LWImageBrowser.h"
 #import "LWImageBrowserAnimator.h"
+#import "LWImageBrowserFlowLayout.h"
+#import "LWImageBrowserCell.h"
 
 #define kPageControlHeight 40.0f
 #define kImageBrowserWidth ([UIScreen mainScreen].bounds.size.width + 10.0f)
 #define kImageBrowserHeight [UIScreen mainScreen].bounds.size.height
+#define kCellIdentifier @"LWImageBroserCellIdentifier"
 
-typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
-    LWImageBrowserScrollDirectionLeft,
-    LWImageBrowserScrollDirectionRight,
-};
+@interface LWImageBrowser () <UIViewControllerTransitioningDelegate,
+UICollectionViewDataSource,
+UICollectionViewDelegate,
+UIScrollViewDelegate,
+LWImageItemEventDelegate>
 
-
-@interface LWImageBrowser ()<UIViewControllerTransitioningDelegate,UIScrollViewDelegate>
-
-@property (nonatomic,strong) UIScrollView* scrollView;
+@property (nonatomic,strong) UIImageView* screenshotImageView;
+@property (nonatomic,strong) UIImage* screenshot;
+@property (nonatomic,strong) LWImageBrowserFlowLayout* flowLayout;
+@property (nonatomic,strong) UICollectionView* collectionView;
 @property (nonatomic,strong) UIPageControl* pageControl;
 @property (nonatomic,strong) UIViewController* parentVC;
-@property (nonatomic,assign) NSInteger lastPosition;
-@property (nonatomic,assign) LWImageBrowserScrollDirection scrollDirection;
 
 @end
 
@@ -50,10 +52,12 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
 - (void)show {
     switch (self.style) {
         case LWImageBrowserStyleDetail: {
+            self.screenshot = [self _screenshotFromView:self.parentVC.view];
             [self.parentVC.navigationController pushViewController:self animated:YES];
         }
             break;
         default: {
+            self.screenshot = [self _screenshotFromView:self.parentVC.view];
             [self.parentVC presentViewController:self animated:YES completion:^{}];
         }
             break;
@@ -63,58 +67,23 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
 
 #pragma mark - Setter & Getter
 
-- (LWImageItem *)previousImageView {
-    if (!_previousImageView) {
-        _previousImageView = [[LWImageItem alloc] initWithFrame:CGRectMake(0.0f,
-                                                                           0.0f,
-                                                                           SCREEN_WIDTH,
-                                                                           SCREEN_HEIGHT)];
+- (LWImageBrowserFlowLayout *)flowLayout {
+    if (!_flowLayout) {
+        _flowLayout = [[LWImageBrowserFlowLayout alloc] init];
     }
-    return _previousImageView;
+    return _flowLayout;
 }
 
-- (LWImageItem *)currentImageView {
-    if (!_currentImageView) {
-        _currentImageView = [[LWImageItem alloc] initWithFrame:CGRectMake(kImageBrowserWidth,
-                                                                          0.0f,
-                                                                          SCREEN_WIDTH,
-                                                                          SCREEN_HEIGHT)];
+- (UICollectionView *)collectionView {
+    if (!_collectionView) {
+        _collectionView = [[UICollectionView alloc] initWithFrame:SCREEN_BOUNDS collectionViewLayout:self.flowLayout];
+        _collectionView.backgroundColor = [UIColor clearColor];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        _collectionView.pagingEnabled = YES;
+        [_collectionView registerClass:[LWImageBrowserCell class] forCellWithReuseIdentifier:kCellIdentifier];
     }
-    return _currentImageView;
-}
-
-- (LWImageItem *)nextImageView {
-    if (!_nextImageView) {
-        _nextImageView = [[LWImageItem alloc] initWithFrame:CGRectMake(2 * kImageBrowserWidth,
-                                                                       0.0f,
-                                                                       SCREEN_WIDTH,
-                                                                       SCREEN_HEIGHT)];
-    }
-    return _nextImageView;
-}
-
-- (UIScrollView *)scrollView {
-    if (!_scrollView) {
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                     0.0f,
-                                                                     kImageBrowserWidth,
-                                                                     kImageBrowserHeight)];
-        _scrollView.backgroundColor = [UIColor clearColor];
-        _scrollView.bounces = YES;
-        _scrollView.scrollEnabled = YES;
-        _scrollView.delegate = self;
-        _scrollView.pagingEnabled = YES;
-        if (self.imageModels.count <3) {
-            _scrollView.contentSize = CGSizeMake(kImageBrowserWidth * self.imageModels.count, kImageBrowserHeight);
-        }
-        else {
-            _scrollView.contentSize = CGSizeMake(3 * kImageBrowserWidth, kImageBrowserHeight);
-        }
-        [_scrollView addSubview:self.previousImageView];
-        [_scrollView addSubview:self.currentImageView];
-        [_scrollView addSubview:self.nextImageView];
-    }
-    return _scrollView;
+    return _collectionView;
 }
 
 - (UIPageControl *)pageControl {
@@ -129,6 +98,15 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
     return _pageControl;
 }
 
+- (UIImageView *)screenshotImageView {
+    if (!_screenshotImageView) {
+        _screenshotImageView = [[UIImageView alloc] initWithFrame:SCREEN_BOUNDS];
+        _screenshotImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _screenshotImageView.image = self.screenshot;
+    }
+    return _screenshotImageView;
+}
+
 
 #pragma mark - ViewControllerLifeCycle
 
@@ -136,115 +114,36 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     self.transitioningDelegate = self;
-    [self.view addSubview:self.scrollView];
-    if (self.style == LWImageBrowserStyleDefault) {
-        [self.view addSubview:self.pageControl];
-    }
-    if (self.imageModels.count > 3) {
-        [self.scrollView setContentOffset:CGPointMake(kImageBrowserWidth, 0.0f)];
-    }
-    else {
-        [self.scrollView setContentOffset:CGPointMake(self.currentIndex * kImageBrowserWidth, 0.0f)];
-    }
+    [self.view addSubview:self.screenshotImageView];
+    [self.view addSubview:self.collectionView];
+    [self.view addSubview:self.pageControl];
+    [self.collectionView setContentOffset:CGPointMake(self.currentIndex * SCREEN_WIDTH, 0.0f) animated:NO];
 }
 
+#pragma mark - UICollectionViewDataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.imageModels.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    LWImageBrowserCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
+    cell.imageModel = [self.imageModels objectAtIndex:indexPath.row];
+    cell.imageItem.eventDelegate = self;
+    return cell;
+}
 
 #pragma mark - UIScrollViewDelegate
 
-
-/***
- 第二种方式：
- 利用中间的两个变量来当前的View及缓冲的View，最多创建三个View，将当前的View放在中间。判断滑动的位置，优先去缓冲的View找
- 优点：对内存消耗少，缺点：代码相比要复杂一丝丝
- */
-//- (void) realizeScrollLoop2{
-//
-//    status = ScrollViewLoopStatusResuing;
-//
-//    UIScrollView *scrollView = [[UIScrollView alloc] init];
-//    scrollView.pagingEnabled = YES;
-//    scrollView.frame = self.view.bounds ;
-//    scrollView.delegate = self;
-//    [self.view addSubview:scrollView];
-//    self.scrollView = scrollView;
-//
-//    CGSize scrollViewSize = scrollView.frame.size;
-//    scrollView.contentSize = CGSizeMake(3 * scrollViewSize.width, 0);
-//    scrollView.contentOffset = CGPointMake(scrollViewSize.width, 0);
-//
-//    UIImageView *currentView = [[UIImageView alloc] init];
-//    currentView.tag = 0;
-//    currentView.frame = CGRectMake(scrollViewSize.width, 0, scrollViewSize.width, scrollViewSize.height);
-//    currentView.image = [UIImage imageNamed:@"00.jpg"];
-//    [scrollView addSubview:currentView];
-//    self.currentView = currentView;
-//
-//    [self resuingView];
-//    self.index = 0;
-//
-//}
-//
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if (scrollView.contentOffset.x > self.currentImageView.frame.origin.x) {
-        NSInteger index = self.currentIndex + 1;
-        if (self.currentIndex >= [self.imageModels count] - 1) {
-            index = 0;
-        }
-        self.scrollDirection = LWImageBrowserScrollDirectionLeft;
-        // 取缓冲区的View
-        ////        self.resuingView.image = [UIImage imageNamed:[NSString stringWithFormat:@"0%zd.jpg",val]];
-        //        self.resuingView.x = CGRectGetMinX(_currentView.frame) + _currentView.width;
-        //        self.isLastScrollDirection = YES;
-    }else{
-        NSInteger index = self.currentIndex - 1;
-        if (index < 0) {
-            index = [self.imageModels count] - 1;
-        }
-        self.scrollDirection = LWImageBrowserScrollDirectionRight;
-        //        self.resuingView.image = [UIImage imageNamed:[NSString stringWithFormat:@"0%zd.jpg",val]];
-        //        self.resuingView.x = 0;
-        //        self.isLastScrollDirection = NO;
-    }
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat offset = scrollView.contentOffset.x;
+    NSInteger index = offset / SCREEN_WIDTH;
+    self.currentIndex = index;
+    self.pageControl.currentPage = self.currentIndex;
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    // 是否是往右边滑动
-    if (self.scrollDirection == LWImageBrowserScrollDirectionLeft) {
-        if (self.currentIndex + 1 < self.imageModels.count) {
-            self.currentIndex ++;
-        }
-    }else{
-        if (self.currentIndex - 1 > 0) {
-            self.currentIndex --;
-        }
-    }
-}
-
-- (void)setCurrentIndex:(NSInteger)currentIndex {
-    _currentIndex = currentIndex;
-    //    [self _loadImage];
-    NSLog(@"currentIndex:%ld",self.currentIndex);
-}
-
-#pragma mark - Private
-
-- (void)_loadImage {
-    if (self.imageModels.count > 3) {
-        //前一张图片
-        if (self.currentIndex - 1 > 0) {
-            self.previousImageView.imageModel = [self.imageModels objectAtIndex:self.currentIndex - 1];
-        }
-        //中间的图片
-        self.currentImageView.imageModel = [self.imageModels objectAtIndex:self.currentIndex];
-        //下一张图片
-        if (self.currentIndex + 1 < self.imageModels.count - 1) {
-            self.nextImageView.imageModel = [self.imageModels objectAtIndex:self.currentIndex + 1];
-        }
-    }
-    else {
-
-    }
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [self _setCurrentItem];
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
@@ -261,5 +160,49 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
     return animator;
 }
 
+#pragma mark - LWImageItemDelegate
+
+- (void)didClickedItemToHide {
+    [self _hide];
+}
+
+
+- (void)didFinishRefreshThumbnailImageIfNeed {
+    if ([self.delegate respondsToSelector:@selector(imageBrowserDidFnishDownloadImageToRefreshThumbnialImageIfNeed)]
+        && [self.delegate conformsToProtocol:@protocol(LWImageBrowserDelegate)]) {
+        [self.delegate imageBrowserDidFnishDownloadImageToRefreshThumbnialImageIfNeed];
+    }
+}
+
+#pragma mark - Private
+
+- (UIImage *)_screenshotFromView:(UIView *)aView {
+    UIGraphicsBeginImageContextWithOptions(aView.bounds.size,aView.opaque, 0.0f);
+    [aView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage* screenshotImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return screenshotImage;
+}
+
+- (void)_hide {
+    switch (self.style) {
+        case LWImageBrowserStyleDetail: {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+            break;
+        default: {
+            [self dismissViewControllerAnimated:YES completion:^{}];
+        }
+            break;
+    }
+}
+
+- (void)_setCurrentItem {
+    NSArray* cells = [self.collectionView visibleCells];
+    if (cells.count != 0) {
+        LWImageBrowserCell* cell = [cells objectAtIndex:0];
+        self.currentImageItem = cell.imageItem;
+    }
+}
 
 @end

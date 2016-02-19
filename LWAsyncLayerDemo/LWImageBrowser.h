@@ -47,6 +47,8 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserStyle){
  */
 @interface LWImageBrowser : UIViewController
 
+@property (nonatomic,weak) id <LWImageBrowserDelegate> delegate;
+
 /**
  *  浏览器式样
  */
@@ -64,19 +66,9 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserStyle){
 
 
 /**
- *  左边的ImageView
+ *  当前的ImageItem
  */
-@property (nonatomic,strong) LWImageItem* previousImageView;
-
-/**
- *  中间ImageView
- */
-@property (nonatomic,strong) LWImageItem* currentImageView;
-
-/**
- *  右边的ImageView
- */
-@property (nonatomic,strong) LWImageItem* nextImageView;
+@property (nonatomic,strong) LWImageItem* currentImageItem;
 
 
 /**
