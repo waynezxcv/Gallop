@@ -16,7 +16,6 @@
 typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
     LWImageBrowserScrollDirectionLeft,
     LWImageBrowserScrollDirectionRight,
-    LWImageBrowserScrollDirectionNone
 };
 
 
@@ -25,16 +24,14 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
 @property (nonatomic,strong) UIScrollView* scrollView;
 @property (nonatomic,strong) UIPageControl* pageControl;
 @property (nonatomic,strong) UIViewController* parentVC;
-@property (nonatomic,assign) CGFloat lastOffset;
+@property (nonatomic,assign) NSInteger lastPosition;
+@property (nonatomic,assign) LWImageBrowserScrollDirection scrollDirection;
 
 @end
 
-@implementation LWImageBrowser{
-    int _lastPosition;    //A variable define in headfile
-}
+@implementation LWImageBrowser
 
-
-#pragma mark - Init
+#pragma mark - Initialization
 
 - (id)initWithParentViewController:(UIViewController *)parentVC
                              style:(LWImageBrowserStyle)style
@@ -64,7 +61,7 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
 }
 
 
-#pragma mark - Setter&Getter
+#pragma mark - Setter & Getter
 
 - (LWImageItem *)previousImageView {
     if (!_previousImageView) {
@@ -149,52 +146,84 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserScrollDirection) {
     else {
         [self.scrollView setContentOffset:CGPointMake(self.currentIndex * kImageBrowserWidth, 0.0f)];
     }
-    self.lastOffset = self.scrollView.contentOffset.x;
 }
 
 
 #pragma mark - UIScrollViewDelegate
 
+
+/***
+ 第二种方式：
+ 利用中间的两个变量来当前的View及缓冲的View，最多创建三个View，将当前的View放在中间。判断滑动的位置，优先去缓冲的View找
+ 优点：对内存消耗少，缺点：代码相比要复杂一丝丝
+ */
+//- (void) realizeScrollLoop2{
+//
+//    status = ScrollViewLoopStatusResuing;
+//
+//    UIScrollView *scrollView = [[UIScrollView alloc] init];
+//    scrollView.pagingEnabled = YES;
+//    scrollView.frame = self.view.bounds ;
+//    scrollView.delegate = self;
+//    [self.view addSubview:scrollView];
+//    self.scrollView = scrollView;
+//
+//    CGSize scrollViewSize = scrollView.frame.size;
+//    scrollView.contentSize = CGSizeMake(3 * scrollViewSize.width, 0);
+//    scrollView.contentOffset = CGPointMake(scrollViewSize.width, 0);
+//
+//    UIImageView *currentView = [[UIImageView alloc] init];
+//    currentView.tag = 0;
+//    currentView.frame = CGRectMake(scrollViewSize.width, 0, scrollViewSize.width, scrollViewSize.height);
+//    currentView.image = [UIImage imageNamed:@"00.jpg"];
+//    [scrollView addSubview:currentView];
+//    self.currentView = currentView;
+//
+//    [self resuingView];
+//    self.index = 0;
+//
+//}
+//
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    int currentPostion = scrollView.contentOffset.x;
-    if (currentPostion - _lastPosition > 25) {
-        _lastPosition = currentPostion;
-        NSLog(@"ScrollUp now");
-    }
-    else if (_lastPosition - currentPostion > 25) {
-        _lastPosition = currentPostion;
-        NSLog(@"ScrollDown now");
+    if (scrollView.contentOffset.x > self.currentImageView.frame.origin.x) {
+        NSInteger index = self.currentIndex + 1;
+        if (self.currentIndex >= [self.imageModels count] - 1) {
+            index = 0;
+        }
+        self.scrollDirection = LWImageBrowserScrollDirectionLeft;
+        // 取缓冲区的View
+        ////        self.resuingView.image = [UIImage imageNamed:[NSString stringWithFormat:@"0%zd.jpg",val]];
+        //        self.resuingView.x = CGRectGetMinX(_currentView.frame) + _currentView.width;
+        //        self.isLastScrollDirection = YES;
+    }else{
+        NSInteger index = self.currentIndex - 1;
+        if (index < 0) {
+            index = [self.imageModels count] - 1;
+        }
+        self.scrollDirection = LWImageBrowserScrollDirectionRight;
+        //        self.resuingView.image = [UIImage imageNamed:[NSString stringWithFormat:@"0%zd.jpg",val]];
+        //        self.resuingView.x = 0;
+        //        self.isLastScrollDirection = NO;
     }
 }
 
-
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    CGFloat currentOffset = self.scrollView.contentOffset.x;
-    //左滑
-    if (currentOffset > self.lastOffset) {
-        self.lastOffset = self.scrollView.contentOffset.x;
-        self.currentIndex ++;
-        self.pageControl.currentPage = self.currentIndex;
-        NSLog(@"左....%ld",self.currentIndex);
-    }
-    //右滑
-    else if (currentOffset < self.lastOffset){
-        self.lastOffset = self.scrollView.contentOffset.x;
-        self.currentIndex --;
-        self.pageControl.currentPage = self.currentIndex;
-        NSLog(@"右....%ld",self.currentIndex);
-    }
-    if (self.imageModels.count > 3) {
-        if (self.currentIndex > 0 && self.currentIndex < self.imageModels.count - 1) {
-            NSLog(@"setOffset");
-            [self.scrollView setContentOffset:CGPointMake(kImageBrowserWidth, 0.0f) animated:NO];
+    // 是否是往右边滑动
+    if (self.scrollDirection == LWImageBrowserScrollDirectionLeft) {
+        if (self.currentIndex + 1 < self.imageModels.count) {
+            self.currentIndex ++;
+        }
+    }else{
+        if (self.currentIndex - 1 > 0) {
+            self.currentIndex --;
         }
     }
 }
 
 - (void)setCurrentIndex:(NSInteger)currentIndex {
     _currentIndex = currentIndex;
-    [self _loadImage];
+    //    [self _loadImage];
     NSLog(@"currentIndex:%ld",self.currentIndex);
 }
 
