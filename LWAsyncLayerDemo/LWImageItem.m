@@ -21,7 +21,6 @@ const CGFloat kDuration = 0.25f;
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        self.isLoaded = NO;
         self.backgroundColor = [UIColor blackColor];
         self.delegate = self;
         self.showsHorizontalScrollIndicator = NO;
@@ -56,19 +55,20 @@ const CGFloat kDuration = 0.25f;
     if (_imageModel != imageModel) {
         _imageModel = imageModel;
     }
-    [self loadHdImage:NO];
+    self.zoomScale = 1.0f;
+    if (self.isFirstShow) {
+        [self loadHdImage:YES];
+    }
+    else {
+        [self loadHdImage:NO];
+    }
 }
 
 - (void)loadHdImage:(BOOL)animated {
-    NSLog(@"load");
     if (self.imageModel.thumbnailImage == nil) {
         return;
     }
     CGRect destinationRect = [self calculateDestinationFrameWithSize:self.imageModel.thumbnailImage.size];
-    CGRect centerRect = CGRectMake(self.bounds.size.width/2 - self.imageModel.thumbnailImage.size.width/2,
-                                   self.bounds.size.height/2 - self.imageModel.thumbnailImage.size.height/2,
-                                   self.imageModel.thumbnailImage.size.width,
-                                   self.imageModel.thumbnailImage.size.height);
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     BOOL isImageCached = [manager cachedImageExistsForURL:[NSURL URLWithString:self.imageModel.HDURL]];
     __weak typeof(self) weakSelf = self;
@@ -77,18 +77,18 @@ const CGFloat kDuration = 0.25f;
         self.imageView.image = self.imageModel.thumbnailImage;
         if (animated) {
             self.imageView.frame = self.imageModel.originPosition;
-            [UIView animateWithDuration:kDuration
+            [UIView animateWithDuration:0.18f
                                   delay:0.0f
-                                options:UIViewAnimationOptionCurveEaseOut
+                                options:UIViewAnimationOptionCurveEaseIn
                              animations:^{
-                                 weakSelf.imageView.frame = centerRect;
+                                 weakSelf.imageView.center = weakSelf.center;
                              } completion:^(BOOL finished) {
                                  if (finished) {
                                      [weakSelf downloadImageWithDestinationRect:destinationRect];
                                  }
                              }];
         } else {
-            self.imageView.frame = centerRect;
+            weakSelf.imageView.center = weakSelf.center;
             [self downloadImageWithDestinationRect:destinationRect];
         }
     }
@@ -135,14 +135,11 @@ const CGFloat kDuration = 0.25f;
                                      [UIView animateWithDuration:0.2f animations:^{
                                          weakSelf.imageView.frame = destinationRect;
                                      } completion:^(BOOL finished) {
-                                         weakSelf.isLoaded = YES;
                                      }];
                                  }
                              }];
     });
 }
-
-
 
 #pragma mark - Getter
 

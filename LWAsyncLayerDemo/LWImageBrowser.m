@@ -29,6 +29,7 @@ LWImageItemEventDelegate>
 @property (nonatomic,strong) UICollectionView* collectionView;
 @property (nonatomic,strong) UIPageControl* pageControl;
 @property (nonatomic,strong) UIViewController* parentVC;
+@property (nonatomic,assign,getter=isFirstShow) BOOL firstShow;
 
 @end
 
@@ -46,6 +47,7 @@ LWImageItemEventDelegate>
         self.style = style;
         self.imageModels = imageModels;
         self.currentIndex = index;
+        self.firstShow = YES;
     }
     return self;
 }
@@ -121,11 +123,11 @@ LWImageItemEventDelegate>
     [self.collectionView setContentOffset:CGPointMake(self.currentIndex * (SCREEN_WIDTH + 10.0f), 0.0f) animated:NO];
 }
 
-
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self _showAnimatiton];
-
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    [self _setCurrentItem];
+    self.firstShow = NO;
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -136,6 +138,7 @@ LWImageItemEventDelegate>
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     LWImageBrowserCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
+    cell.imageItem.firstShow = self.isFirstShow;
     cell.imageModel = [self.imageModels objectAtIndex:indexPath.row];
     cell.imageItem.eventDelegate = self;
     return cell;
@@ -152,7 +155,6 @@ LWImageItemEventDelegate>
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self _setCurrentItem];
-    [self _preDownLoadImageWithIndex:self.currentIndex];
 }
 
 #pragma mark - LWImageItemDelegate
@@ -192,7 +194,10 @@ LWImageItemEventDelegate>
             }
             self.collectionView.backgroundColor = [UIColor clearColor];
             self.currentImageItem.backgroundColor = [UIColor clearColor];
-            [UIView animateWithDuration:0.2f animations:^{
+            [UIView animateWithDuration:0.25f
+                                  delay:0.0f
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
                 weakSelf.currentImageItem.imageView.frame = weakSelf.currentImageItem.imageModel.originPosition;
             } completion:^(BOOL finished) {
                 [weakSelf dismissViewControllerAnimated:NO completion:^{}];
@@ -202,22 +207,14 @@ LWImageItemEventDelegate>
     }
 }
 
-- (void)_showAnimatiton {
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
-    NSArray* cells = [self.collectionView visibleCells];
-    if (cells.count != 0) {
-        LWImageBrowserCell* cell = [cells objectAtIndex:0];
-        self.currentImageItem = cell.imageItem;
-        [self.currentImageItem loadHdImage:YES];
-        [self _preDownLoadImageWithIndex:self.currentIndex];
-    }
-}
-
 - (void)_setCurrentItem {
     NSArray* cells = [self.collectionView visibleCells];
     if (cells.count != 0) {
         LWImageBrowserCell* cell = [cells objectAtIndex:0];
-        self.currentImageItem = cell.imageItem;
+        if (self.currentImageItem != cell.imageItem) {
+            self.currentImageItem = cell.imageItem;
+            [self _preDownLoadImageWithIndex:self.currentIndex];
+        }
     }
 }
 

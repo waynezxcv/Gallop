@@ -25,7 +25,7 @@
 
 @property (nonatomic,strong) LWImageBrowserModel* imageModel;
 @property (nonatomic,strong) UIImageView* imageView;
-@property (nonatomic,assign) BOOL isLoaded;
+@property (nonatomic,assign,getter=isFirstShow) BOOL firstShow;
 
 - (void)loadHdImage:(BOOL)animated;
 
