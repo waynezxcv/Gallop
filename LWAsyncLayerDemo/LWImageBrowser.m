@@ -7,7 +7,6 @@
 //
 
 #import "LWImageBrowser.h"
-#import "LWImageBrowserAnimator.h"
 #import "LWImageBrowserFlowLayout.h"
 #import "LWImageBrowserCell.h"
 
@@ -16,8 +15,10 @@
 #define kImageBrowserHeight [UIScreen mainScreen].bounds.size.height
 #define kCellIdentifier @"LWImageBroserCellIdentifier"
 
-@interface LWImageBrowser () <UIViewControllerTransitioningDelegate,
-UICollectionViewDataSource,
+
+
+@interface LWImageBrowser ()
+<UICollectionViewDataSource,
 UICollectionViewDelegate,
 UIScrollViewDelegate,
 LWImageItemEventDelegate>
@@ -58,7 +59,7 @@ LWImageItemEventDelegate>
             break;
         default: {
             self.screenshot = [self _screenshotFromView:self.parentVC.view];
-            [self.parentVC presentViewController:self animated:YES completion:^{}];
+            [self.parentVC presentViewController:self animated:NO completion:^{}];
         }
             break;
     }
@@ -76,9 +77,9 @@ LWImageItemEventDelegate>
 
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
-        _collectionView = [[UICollectionView alloc] initWithFrame:SCREEN_BOUNDS
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH + 10.0f, SCREEN_HEIGHT)
                                              collectionViewLayout:self.flowLayout];
-        _collectionView.backgroundColor = [UIColor clearColor];
+        _collectionView.backgroundColor = [UIColor blackColor];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.pagingEnabled = YES;
@@ -114,11 +115,17 @@ LWImageItemEventDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
-    self.transitioningDelegate = self;
     [self.view addSubview:self.screenshotImageView];
     [self.view addSubview:self.collectionView];
     [self.view addSubview:self.pageControl];
-    [self.collectionView setContentOffset:CGPointMake(self.currentIndex * SCREEN_WIDTH, 0.0f) animated:NO];
+    [self.collectionView setContentOffset:CGPointMake(self.currentIndex * (SCREEN_WIDTH + 10.0f), 0.0f) animated:NO];
+}
+
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self _showAnimatiton];
+
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -145,20 +152,7 @@ LWImageItemEventDelegate>
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self _setCurrentItem];
-}
-
-#pragma mark - UIViewControllerTransitioningDelegate
-
-- (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
-                                                                            presentingController:(UIViewController *)presenting
-                                                                                sourceController:(UIViewController *)source {
-    LWImageBrowserPresentAnimator* animator = [[LWImageBrowserPresentAnimator alloc] init];
-    return animator;
-}
-
-- (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-    LWImageBrowserDismissAnimator* animator = [[LWImageBrowserDismissAnimator alloc] init];
-    return animator;
+    [self _preDownLoadImageWithIndex:self.currentIndex];
 }
 
 #pragma mark - LWImageItemDelegate
@@ -176,7 +170,6 @@ LWImageItemEventDelegate>
 }
 
 #pragma mark - Private
-
 - (UIImage *)_screenshotFromView:(UIView *)aView {
     UIGraphicsBeginImageContextWithOptions(aView.bounds.size,aView.opaque, 0.0f);
     [aView.layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -186,15 +179,37 @@ LWImageItemEventDelegate>
 }
 
 - (void)_hide {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    __weak typeof(self) weakSelf = self;
     switch (self.style) {
         case LWImageBrowserStyleDetail: {
             [self.navigationController popViewControllerAnimated:YES];
         }
             break;
         default: {
-            [self dismissViewControllerAnimated:YES completion:^{}];
+            if (self.currentImageItem.zoomScale != 1.0f) {
+                self.currentImageItem.zoomScale = 1.0f;
+            }
+            self.collectionView.backgroundColor = [UIColor clearColor];
+            self.currentImageItem.backgroundColor = [UIColor clearColor];
+            [UIView animateWithDuration:0.2f animations:^{
+                weakSelf.currentImageItem.imageView.frame = weakSelf.currentImageItem.imageModel.originPosition;
+            } completion:^(BOOL finished) {
+                [weakSelf dismissViewControllerAnimated:NO completion:^{}];
+            }];
         }
             break;
+    }
+}
+
+- (void)_showAnimatiton {
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    NSArray* cells = [self.collectionView visibleCells];
+    if (cells.count != 0) {
+        LWImageBrowserCell* cell = [cells objectAtIndex:0];
+        self.currentImageItem = cell.imageItem;
+        [self.currentImageItem loadHdImage:YES];
+        [self _preDownLoadImageWithIndex:self.currentIndex];
     }
 }
 
@@ -203,6 +218,37 @@ LWImageItemEventDelegate>
     if (cells.count != 0) {
         LWImageBrowserCell* cell = [cells objectAtIndex:0];
         self.currentImageItem = cell.imageItem;
+    }
+}
+
+//现在当前Index的前一张和后一张图片
+- (void)_preDownLoadImageWithIndex:(NSInteger)index {
+    SDWebImageManager* manager = [SDWebImageManager sharedManager];
+    //下载下一张图片
+    if (index + 1 < self.imageModels.count) {
+        LWImageBrowserModel* nextModel = [self.imageModels objectAtIndex:index + 1];
+        [manager downloadImageWithURL:[NSURL URLWithString:nextModel.HDURL]
+                              options:0
+                           processing:nil
+                             progress:nil
+                            completed:^(UIImage *image,
+                                        NSError *error,
+                                        SDImageCacheType cacheType,
+                                        BOOL finished,
+                                        NSURL *imageURL) {}];
+    }
+    //下载前一张图片
+    if (index - 1 >= 0) {
+        LWImageBrowserModel* previousModel = [self.imageModels objectAtIndex:index - 1];
+        [manager downloadImageWithURL:[NSURL URLWithString:previousModel.HDURL]
+                              options:0
+                           processing:nil
+                             progress:nil
+                            completed:^(UIImage *image,
+                                        NSError *error,
+                                        SDImageCacheType cacheType,
+                                        BOOL finished,
+                                        NSURL *imageURL) {}];
     }
 }
 

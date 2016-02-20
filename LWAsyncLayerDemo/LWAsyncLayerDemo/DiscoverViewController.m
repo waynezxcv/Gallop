@@ -22,6 +22,7 @@
 @property (nonatomic,strong) UITableView* tableView;
 @property (nonatomic,strong) NSMutableArray* dataSource;
 @property (nonatomic,strong) NSDateFormatter* dateFormatter;
+@property (nonatomic,assign,getter=isNeedRefresh) BOOL needRefresh;
 
 @end
 
@@ -167,11 +168,14 @@
     profileModel.avatarURL = @"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460";
     profileModel.name = @"Waynezxcv";
     self.discoverHeader.profileModel = profileModel;
+    self.needRefresh = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self refreshBegin];
+    if (self.isNeedRefresh == YES) {
+        [self refreshBegin];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -202,6 +206,7 @@
         self.tableView.contentInset = UIEdgeInsetsMake(64.0f, 0.0f, 0.0f, 0.0f);
     } completion:^(BOOL finished) {
         [self.tableView reloadData];
+        self.needRefresh = NO;
     }];
 }
 
@@ -244,18 +249,18 @@
 }
 
 #pragma mark - TableViewCellDelegate
-- (void)didClickedImageWithLayout:(DiscoverLayout *)layout atIndex:(NSInteger)index{
-    NSLog(@"touched image's index :%ld",index);
+- (void)discoverTableViewCell:(DiscoverTableViewCell *)cell
+    didClickedImageWithLayout:(DiscoverLayout *)layout
+                      atIndex:(NSInteger)index {
     NSMutableArray* tmpArray = [[NSMutableArray alloc] initWithCapacity:layout.statusModel.imageModels.count];
     for (NSInteger i = 0; i < layout.statusModel.imageModels.count; i ++) {
         ImageModels* m = layout.statusModel.imageModels[i];
         CGRect originPosition = CGRectFromString(layout.imagePostionArray[i]);
-        CGRect originRect = [self.tableView convertRect:originPosition toView:self.view];
         LWImageBrowserModel* model = [[LWImageBrowserModel alloc] initWithplaceholder:nil
                                                                          thumbnailURL:m.thumbnailURL.absoluteString
-                                                                                HDURL:m.HDURL.absoluteString
-                                                                       originPosition:originRect
+                                                                                HDURL:m.HDURL.absoluteString imageViewSuperView:cell positionAtSuperView:originPosition
                                                                                 index:i];
+        
         [tmpArray addObject:model];
     }
     LWImageBrowser* browser = [[LWImageBrowser alloc] initWithParentViewController:self

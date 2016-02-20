@@ -116,8 +116,8 @@
     for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.layout.imagePostionArray[i]);
         if (CGRectContainsPoint(imagePosition, point)) {
-            if ([self.delegate respondsToSelector:@selector(didClickedImageWithLayout:atIndex:)]) {
-                [self.delegate didClickedImageWithLayout:self.layout atIndex:i];
+            if ([self.delegate respondsToSelector:@selector(discoverTableViewCell:didClickedImageWithLayout:atIndex:)]) {
+                [self.delegate discoverTableViewCell:self didClickedImageWithLayout:self.layout atIndex:i];
             }
         }
     }

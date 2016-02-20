@@ -32,15 +32,23 @@
 - (id)initWithplaceholder:(UIImage *)placeholder
              thumbnailURL:(NSString *)thumbnailURL
                     HDURL:(NSString *)HDURL
-           originPosition:(CGRect)originPosition
+       imageViewSuperView:(UIView *)superView
+      positionAtSuperView:(CGRect)positionAtSuperView
                     index:(NSInteger)index {
     self = [super init];
     if (self) {
         self.placeholder = placeholder;
         self.thumbnailURL = thumbnailURL;
         self.HDURL = HDURL;
-        self.originPosition = originPosition;
         self.index = index;
+        if (superView != nil) {
+            UIWindow* window = [UIApplication sharedApplication].keyWindow;
+            CGRect originRect = [superView convertRect:positionAtSuperView toView:window];
+            self.originPosition = originRect;
+        }
+        else {
+            self.originPosition = CGRectMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0, 0);
+        }
     }
     return self;
 }

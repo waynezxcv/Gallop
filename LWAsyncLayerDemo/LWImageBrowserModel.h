@@ -79,7 +79,8 @@
 - (id)initWithplaceholder:(UIImage *)placeholder
              thumbnailURL:(NSString *)thumbnailURL
                     HDURL:(NSString *)HDURL
-           originPosition:(CGRect)originPosition
-             index:(NSInteger)index;
+       imageViewSuperView:(UIView *)superView
+      positionAtSuperView:(CGRect)positionAtSuperView
+                    index:(NSInteger)index;
 
 @end

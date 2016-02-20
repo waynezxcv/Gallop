@@ -27,6 +27,6 @@
 @property (nonatomic,strong) UIImageView* imageView;
 @property (nonatomic,assign) BOOL isLoaded;
 
-- (void)loadHdImageWith:(NSInteger)index animate:(BOOL)animate;
+- (void)loadHdImage:(BOOL)animated;
 
 @end

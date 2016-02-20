@@ -10,6 +10,7 @@
 
 const CGFloat kMaximumZoomScale = 3.0f;
 const CGFloat kMinimumZoomScale = 1.0f;
+const CGFloat kDuration = 0.25f;
 
 @interface LWImageItem ()<UIScrollViewDelegate,UIActionSheetDelegate>
 
@@ -21,7 +22,7 @@ const CGFloat kMinimumZoomScale = 1.0f;
     self = [super initWithFrame:frame];
     if (self) {
         self.isLoaded = NO;
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor blackColor];
         self.delegate = self;
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
@@ -29,9 +30,7 @@ const CGFloat kMinimumZoomScale = 1.0f;
         self.minimumZoomScale = kMinimumZoomScale;
         self.zoomScale = 1.0f;
         [self addSubview:self.imageView];
-
-
-
+        
         UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(handleSingleTap:)];
         UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
@@ -53,59 +52,64 @@ const CGFloat kMinimumZoomScale = 1.0f;
     }
     return self;
 }
-
-#pragma mark - Setter
-
 - (void)setImageModel:(LWImageBrowserModel *)imageModel {
     if (_imageModel != imageModel) {
         _imageModel = imageModel;
     }
-    [self.imageView sd_setImageWithURL:[NSURL URLWithString:imageModel.HDURL]];
+    [self loadHdImage:NO];
 }
 
-
-- (void)loadHdImageWith:(NSInteger)index animate:(BOOL)animate {
-
-    if (self.imageModel.thumbnailImage != nil) {
-        CGRect destinationRect = [self calculateDestinationFrameWithSize:self.imageModel.thumbnailImage.size];
-        CGRect centerRect = CGRectMake(self.bounds.size.width/2 - self.imageModel.thumbnailImage.size.width/2,
-                                       self.bounds.size.height/2 - self.imageModel.thumbnailImage.size.height/2,
-                                       self.imageModel.thumbnailImage.size.width,
-                                       self.imageModel.thumbnailImage.size.height);
-        //还未下载的图片
-        if (!self.imageModel.isDownload) {
-            self.imageView.image = self.imageModel.thumbnailImage;
-            if (animate) {
-                self.imageView.frame = self.imageModel.originPosition;
-                [UIView animateWithDuration:0.2f animations:^{
-                    self.imageView.frame = centerRect;
-                } completion:^(BOOL finished) {
-                    [self downloadImageWithDestinationRect:destinationRect];
-                }];
-            }
-            else {
-                self.imageView.frame = centerRect;
-                [self downloadImageWithDestinationRect:destinationRect];
-            }
+- (void)loadHdImage:(BOOL)animated {
+    NSLog(@"load");
+    if (self.imageModel.thumbnailImage == nil) {
+        return;
+    }
+    CGRect destinationRect = [self calculateDestinationFrameWithSize:self.imageModel.thumbnailImage.size];
+    CGRect centerRect = CGRectMake(self.bounds.size.width/2 - self.imageModel.thumbnailImage.size.width/2,
+                                   self.bounds.size.height/2 - self.imageModel.thumbnailImage.size.height/2,
+                                   self.imageModel.thumbnailImage.size.width,
+                                   self.imageModel.thumbnailImage.size.height);
+    SDWebImageManager* manager = [SDWebImageManager sharedManager];
+    BOOL isImageCached = [manager cachedImageExistsForURL:[NSURL URLWithString:self.imageModel.HDURL]];
+    __weak typeof(self) weakSelf = self;
+    //还未下载的图片
+    if (!isImageCached) {
+        self.imageView.image = self.imageModel.thumbnailImage;
+        if (animated) {
+            self.imageView.frame = self.imageModel.originPosition;
+            [UIView animateWithDuration:kDuration
+                                  delay:0.0f
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 weakSelf.imageView.frame = centerRect;
+                             } completion:^(BOOL finished) {
+                                 if (finished) {
+                                     [weakSelf downloadImageWithDestinationRect:destinationRect];
+                                 }
+                             }];
+        } else {
+            self.imageView.frame = centerRect;
+            [self downloadImageWithDestinationRect:destinationRect];
         }
-        //已经下载的图片
-        else {
-            if (animate) {
-                self.imageView.frame = self.imageModel.originPosition;
-                [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.imageModel.HDURL]];
-                [UIView animateWithDuration:0.2 animations:^{
-                    [UIView animateWithDuration:0.2f animations:^{
-                        self.imageView.frame = destinationRect;
-                    }];
-                }];
-            } else {
-                [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.imageModel.HDURL]];
-                self.imageView.frame = destinationRect;
-            }
+    }
+    //已经下载的图片
+    else {
+        if (animated) {
+            self.imageView.frame = self.imageModel.originPosition;
+            [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.imageModel.HDURL]];
+            [UIView animateWithDuration:kDuration
+                                  delay:0.0f
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 weakSelf.imageView.frame = destinationRect;
+                             } completion:^(BOOL finished) {}];
+        } else {
+            [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.imageModel.HDURL]];
+            self.imageView.frame = destinationRect;
         }
-
     }
 }
+
 
 - (void)downloadImageWithDestinationRect:(CGRect)destinationRect {
     __weak typeof(self) weakSelf = self;
@@ -144,7 +148,7 @@ const CGFloat kMinimumZoomScale = 1.0f;
 
 - (UIImageView *)imageView {
     if (!_imageView) {
-        _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
         _imageView.userInteractionEnabled = YES;
         _imageView.clipsToBounds = YES;

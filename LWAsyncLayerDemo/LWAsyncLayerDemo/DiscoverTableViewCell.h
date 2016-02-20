@@ -10,10 +10,13 @@
 #import "DiscoverLayout.h"
 #import "LWAsyncDisplayLayer.h"
 
+@class DiscoverTableViewCell;
 
 @protocol DiscoverTableViewCellDelegate <NSObject>
 
-- (void)didClickedImageWithLayout:(DiscoverLayout *)layout atIndex:(NSInteger)index;
+- (void)discoverTableViewCell:(DiscoverTableViewCell *)cell
+    didClickedImageWithLayout:(DiscoverLayout *)layout
+                      atIndex:(NSInteger)index;
 
 @end
 

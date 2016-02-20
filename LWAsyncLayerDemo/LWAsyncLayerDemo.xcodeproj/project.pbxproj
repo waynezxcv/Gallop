@@ -42,7 +42,6 @@
 		B04E5D4D1C5F5EF000C8F1E6 /* LWLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = B04E5D4C1C5F5EF000C8F1E6 /* LWLabel.m */; };
 		B04E5D511C5F5F6C00C8F1E6 /* LWRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B04E5D501C5F5F6C00C8F1E6 /* LWRunLoopObserver.m */; };
 		B085F1221C72FCD400054A6A /* LWImageBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = B085F1211C72FCD400054A6A /* LWImageBrowser.m */; };
-		B085F1251C72FDC500054A6A /* LWImageBrowserAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = B085F1241C72FDC500054A6A /* LWImageBrowserAnimator.m */; };
 		B0B9CE231C50B93200C81916 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE221C50B93200C81916 /* main.m */; };
 		B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE251C50B93200C81916 /* AppDelegate.m */; };
 		B0B9CE2E1C50B93200C81916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0B9CE2D1C50B93200C81916 /* Assets.xcassets */; };
@@ -144,8 +143,6 @@
 		B04E5D501C5F5F6C00C8F1E6 /* LWRunLoopObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWRunLoopObserver.m; sourceTree = "<group>"; };
 		B085F1201C72FCD400054A6A /* LWImageBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowser.h; sourceTree = "<group>"; };
 		B085F1211C72FCD400054A6A /* LWImageBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowser.m; sourceTree = "<group>"; };
-		B085F1231C72FDC500054A6A /* LWImageBrowserAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowserAnimator.h; sourceTree = "<group>"; };
-		B085F1241C72FDC500054A6A /* LWImageBrowserAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowserAnimator.m; sourceTree = "<group>"; };
 		B0B9C9911C5F63BD008A7526 /* LWAsyncDisplayKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LWAsyncDisplayKit.h; sourceTree = "<group>"; };
 		B0B9CE1E1C50B93200C81916 /* LWAsyncLayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LWAsyncLayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B9CE221C50B93200C81916 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -339,8 +336,6 @@
 			children = (
 				B0C02ACD1C741A3600B03C8F /* LWImageBrowserModel.h */,
 				B0C02ACE1C741A3600B03C8F /* LWImageBrowserModel.m */,
-				B085F1231C72FDC500054A6A /* LWImageBrowserAnimator.h */,
-				B085F1241C72FDC500054A6A /* LWImageBrowserAnimator.m */,
 				B006E5771C76F596004718AC /* LWImageBrowserFlowLayout.h */,
 				B006E5781C76F596004718AC /* LWImageBrowserFlowLayout.m */,
 				B085F1201C72FCD400054A6A /* LWImageBrowser.h */,
@@ -589,7 +584,6 @@
 				B006E5791C76F596004718AC /* LWImageBrowserFlowLayout.m in Sources */,
 				B04E5D511C5F5F6C00C8F1E6 /* LWRunLoopObserver.m in Sources */,
 				B040EB801C72D31800EA29CF /* CALayer+WebCacheOperation.m in Sources */,
-				B085F1251C72FDC500054A6A /* LWImageBrowserAnimator.m in Sources */,
 				B040EB831C72D31800EA29CF /* SDImageCache.m in Sources */,
 				B040EB8C1C72D31800EA29CF /* UIImage+GIF.m in Sources */,
 				B040EB911C72D31800EA29CF /* UIView+WebCacheOperation.m in Sources */,
