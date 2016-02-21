@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		010AC5771C79C3AF0025CC85 /* LWImageBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 010AC56E1C79C3AF0025CC85 /* LWImageBrowser.m */; };
+		010AC5781C79C3AF0025CC85 /* LWImageBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 010AC5701C79C3AF0025CC85 /* LWImageBrowserCell.m */; };
+		010AC5791C79C3AF0025CC85 /* LWImageBrowserFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 010AC5721C79C3AF0025CC85 /* LWImageBrowserFlowLayout.m */; };
+		010AC57A1C79C3AF0025CC85 /* LWImageBrowserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 010AC5741C79C3AF0025CC85 /* LWImageBrowserModel.m */; };
+		010AC57B1C79C3AF0025CC85 /* LWImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 010AC5761C79C3AF0025CC85 /* LWImageItem.m */; };
 		01347F251C5DE6DD0014D9EF /* LWFPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F241C5DE6DD0014D9EF /* LWFPSLabel.m */; };
 		01347F2B1C5DED180014D9EF /* DiscoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F2A1C5DED180014D9EF /* DiscoverViewController.m */; };
 		01347F301C5DF1FA0014D9EF /* DiscoverTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F2F1C5DF1FA0014D9EF /* DiscoverTableViewCell.m */; };
@@ -16,8 +21,6 @@
 		01347F401C5DF7B00014D9EF /* ProfileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F3F1C5DF7B00014D9EF /* ProfileModel.m */; };
 		01347F561C5E258C0014D9EF /* discoverTimeline.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01347F551C5E258C0014D9EF /* discoverTimeline.plist */; };
 		01347F5C1C5E717C0014D9EF /* LWTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F5B1C5E717C0014D9EF /* LWTextLayout.m */; };
-		B006E5791C76F596004718AC /* LWImageBrowserFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B006E5781C76F596004718AC /* LWImageBrowserFlowLayout.m */; };
-		B006E57C1C76F741004718AC /* LWImageBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B006E57B1C76F741004718AC /* LWImageBrowserCell.m */; };
 		B040EB7E1C72D31800EA29CF /* CALayer+LazySetContents.m in Sources */ = {isa = PBXBuildFile; fileRef = B040EB561C72D31800EA29CF /* CALayer+LazySetContents.m */; };
 		B040EB7F1C72D31800EA29CF /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B040EB581C72D31800EA29CF /* CALayer+WebCache.m */; };
 		B040EB801C72D31800EA29CF /* CALayer+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B040EB5A1C72D31800EA29CF /* CALayer+WebCacheOperation.m */; };
@@ -41,15 +44,12 @@
 		B04E5D481C5F5EB500C8F1E6 /* LWFlag.m in Sources */ = {isa = PBXBuildFile; fileRef = B04E5D471C5F5EB500C8F1E6 /* LWFlag.m */; };
 		B04E5D4D1C5F5EF000C8F1E6 /* LWLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = B04E5D4C1C5F5EF000C8F1E6 /* LWLabel.m */; };
 		B04E5D511C5F5F6C00C8F1E6 /* LWRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B04E5D501C5F5F6C00C8F1E6 /* LWRunLoopObserver.m */; };
-		B085F1221C72FCD400054A6A /* LWImageBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = B085F1211C72FCD400054A6A /* LWImageBrowser.m */; };
 		B0B9CE231C50B93200C81916 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE221C50B93200C81916 /* main.m */; };
 		B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE251C50B93200C81916 /* AppDelegate.m */; };
 		B0B9CE2E1C50B93200C81916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0B9CE2D1C50B93200C81916 /* Assets.xcassets */; };
 		B0B9CE311C50B93200C81916 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0B9CE2F1C50B93200C81916 /* LaunchScreen.storyboard */; };
 		B0B9CE3C1C50B93200C81916 /* LWAsyncLayerDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE3B1C50B93200C81916 /* LWAsyncLayerDemoTests.m */; };
 		B0B9CE471C50B93200C81916 /* LWAsyncLayerDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B9CE461C50B93200C81916 /* LWAsyncLayerDemoUITests.m */; };
-		B0C02ACF1C741A3600B03C8F /* LWImageBrowserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C02ACE1C741A3600B03C8F /* LWImageBrowserModel.m */; };
-		B0C02AD21C7420C600B03C8F /* LWImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C02AD11C7420C600B03C8F /* LWImageItem.m */; };
 		B0CFDFB71C60506D00E4291F /* LWAsyncDisplayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0CFDFB61C60506D00E4291F /* LWAsyncDisplayLayer.m */; };
 		B0CFDFBD1C605FBA00E4291F /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0CFDFBC1C605FBA00E4291F /* ContainerView.m */; };
 /* End PBXBuildFile section */
@@ -72,6 +72,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		010AC56D1C79C3AF0025CC85 /* LWImageBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowser.h; sourceTree = "<group>"; };
+		010AC56E1C79C3AF0025CC85 /* LWImageBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowser.m; sourceTree = "<group>"; };
+		010AC56F1C79C3AF0025CC85 /* LWImageBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowserCell.h; sourceTree = "<group>"; };
+		010AC5701C79C3AF0025CC85 /* LWImageBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowserCell.m; sourceTree = "<group>"; };
+		010AC5711C79C3AF0025CC85 /* LWImageBrowserFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowserFlowLayout.h; sourceTree = "<group>"; };
+		010AC5721C79C3AF0025CC85 /* LWImageBrowserFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowserFlowLayout.m; sourceTree = "<group>"; };
+		010AC5731C79C3AF0025CC85 /* LWImageBrowserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowserModel.h; sourceTree = "<group>"; };
+		010AC5741C79C3AF0025CC85 /* LWImageBrowserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowserModel.m; sourceTree = "<group>"; };
+		010AC5751C79C3AF0025CC85 /* LWImageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageItem.h; sourceTree = "<group>"; };
+		010AC5761C79C3AF0025CC85 /* LWImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageItem.m; sourceTree = "<group>"; };
 		01347F231C5DE6DD0014D9EF /* LWFPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWFPSLabel.h; sourceTree = "<group>"; };
 		01347F241C5DE6DD0014D9EF /* LWFPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWFPSLabel.m; sourceTree = "<group>"; };
 		01347F291C5DED180014D9EF /* DiscoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoverViewController.h; sourceTree = "<group>"; };
@@ -90,10 +100,6 @@
 		01347F551C5E258C0014D9EF /* discoverTimeline.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = discoverTimeline.plist; sourceTree = "<group>"; };
 		01347F5A1C5E717C0014D9EF /* LWTextLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextLayout.h; path = LWAsyncLayerDemo/LWTextLayout.h; sourceTree = "<group>"; };
 		01347F5B1C5E717C0014D9EF /* LWTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextLayout.m; path = LWAsyncLayerDemo/LWTextLayout.m; sourceTree = "<group>"; };
-		B006E5771C76F596004718AC /* LWImageBrowserFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowserFlowLayout.h; sourceTree = "<group>"; };
-		B006E5781C76F596004718AC /* LWImageBrowserFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowserFlowLayout.m; sourceTree = "<group>"; };
-		B006E57A1C76F741004718AC /* LWImageBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowserCell.h; sourceTree = "<group>"; };
-		B006E57B1C76F741004718AC /* LWImageBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowserCell.m; sourceTree = "<group>"; };
 		B040EB551C72D31800EA29CF /* CALayer+LazySetContents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+LazySetContents.h"; sourceTree = "<group>"; };
 		B040EB561C72D31800EA29CF /* CALayer+LazySetContents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+LazySetContents.m"; sourceTree = "<group>"; };
 		B040EB571C72D31800EA29CF /* CALayer+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+WebCache.h"; sourceTree = "<group>"; };
@@ -141,8 +147,6 @@
 		B04E5D4C1C5F5EF000C8F1E6 /* LWLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWLabel.m; sourceTree = "<group>"; };
 		B04E5D4F1C5F5F6C00C8F1E6 /* LWRunLoopObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWRunLoopObserver.h; sourceTree = "<group>"; };
 		B04E5D501C5F5F6C00C8F1E6 /* LWRunLoopObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWRunLoopObserver.m; sourceTree = "<group>"; };
-		B085F1201C72FCD400054A6A /* LWImageBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowser.h; sourceTree = "<group>"; };
-		B085F1211C72FCD400054A6A /* LWImageBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowser.m; sourceTree = "<group>"; };
 		B0B9C9911C5F63BD008A7526 /* LWAsyncDisplayKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LWAsyncDisplayKit.h; sourceTree = "<group>"; };
 		B0B9CE1E1C50B93200C81916 /* LWAsyncLayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LWAsyncLayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B9CE221C50B93200C81916 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -157,10 +161,6 @@
 		B0B9CE421C50B93200C81916 /* LWAsyncLayerDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LWAsyncLayerDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B9CE461C50B93200C81916 /* LWAsyncLayerDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWAsyncLayerDemoUITests.m; sourceTree = "<group>"; };
 		B0B9CE481C50B93200C81916 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B0C02ACD1C741A3600B03C8F /* LWImageBrowserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageBrowserModel.h; sourceTree = "<group>"; };
-		B0C02ACE1C741A3600B03C8F /* LWImageBrowserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageBrowserModel.m; sourceTree = "<group>"; };
-		B0C02AD01C7420C600B03C8F /* LWImageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWImageItem.h; sourceTree = "<group>"; };
-		B0C02AD11C7420C600B03C8F /* LWImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWImageItem.m; sourceTree = "<group>"; };
 		B0CFDFB51C60506D00E4291F /* LWAsyncDisplayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWAsyncDisplayLayer.h; sourceTree = "<group>"; };
 		B0CFDFB61C60506D00E4291F /* LWAsyncDisplayLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWAsyncDisplayLayer.m; sourceTree = "<group>"; };
 		B0CFDFBB1C605FBA00E4291F /* ContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerView.h; sourceTree = "<group>"; };
@@ -334,16 +334,16 @@
 		B0B9C98F1C5F622F008A7526 /* LWImageBrowser */ = {
 			isa = PBXGroup;
 			children = (
-				B0C02ACD1C741A3600B03C8F /* LWImageBrowserModel.h */,
-				B0C02ACE1C741A3600B03C8F /* LWImageBrowserModel.m */,
-				B006E5771C76F596004718AC /* LWImageBrowserFlowLayout.h */,
-				B006E5781C76F596004718AC /* LWImageBrowserFlowLayout.m */,
-				B085F1201C72FCD400054A6A /* LWImageBrowser.h */,
-				B085F1211C72FCD400054A6A /* LWImageBrowser.m */,
-				B006E57A1C76F741004718AC /* LWImageBrowserCell.h */,
-				B006E57B1C76F741004718AC /* LWImageBrowserCell.m */,
-				B0C02AD01C7420C600B03C8F /* LWImageItem.h */,
-				B0C02AD11C7420C600B03C8F /* LWImageItem.m */,
+				010AC56D1C79C3AF0025CC85 /* LWImageBrowser.h */,
+				010AC56E1C79C3AF0025CC85 /* LWImageBrowser.m */,
+				010AC56F1C79C3AF0025CC85 /* LWImageBrowserCell.h */,
+				010AC5701C79C3AF0025CC85 /* LWImageBrowserCell.m */,
+				010AC5711C79C3AF0025CC85 /* LWImageBrowserFlowLayout.h */,
+				010AC5721C79C3AF0025CC85 /* LWImageBrowserFlowLayout.m */,
+				010AC5731C79C3AF0025CC85 /* LWImageBrowserModel.h */,
+				010AC5741C79C3AF0025CC85 /* LWImageBrowserModel.m */,
+				010AC5751C79C3AF0025CC85 /* LWImageItem.h */,
+				010AC5761C79C3AF0025CC85 /* LWImageItem.m */,
 			);
 			name = LWImageBrowser;
 			sourceTree = "<group>";
@@ -571,17 +571,17 @@
 				B040EB8F1C72D31800EA29CF /* UIImageView+HighlightedWebCache.m in Sources */,
 				01347F2B1C5DED180014D9EF /* DiscoverViewController.m in Sources */,
 				B040EB891C72D31800EA29CF /* SDWebImagePrefetcher.m in Sources */,
+				010AC5781C79C3AF0025CC85 /* LWImageBrowserCell.m in Sources */,
 				01347F401C5DF7B00014D9EF /* ProfileModel.m in Sources */,
 				B040EB871C72D31800EA29CF /* SDWebImageDownloaderOperation.m in Sources */,
 				B040EB941C72D7ED00EA29CF /* UIImageView+LazySetContents.m in Sources */,
 				01347F3A1C5DF43F0014D9EF /* DiscoverHeader.m in Sources */,
 				B040EB7F1C72D31800EA29CF /* CALayer+WebCache.m in Sources */,
 				B040EB8B1C72D31800EA29CF /* UIButton+WebCache.m in Sources */,
-				B085F1221C72FCD400054A6A /* LWImageBrowser.m in Sources */,
+				010AC5771C79C3AF0025CC85 /* LWImageBrowser.m in Sources */,
 				B040EB851C72D31800EA29CF /* SDWebImageDecoder.m in Sources */,
 				B040EB821C72D31800EA29CF /* NSData+ImageContentType.m in Sources */,
 				B040EB8E1C72D31800EA29CF /* UIImage+WebP.m in Sources */,
-				B006E5791C76F596004718AC /* LWImageBrowserFlowLayout.m in Sources */,
 				B04E5D511C5F5F6C00C8F1E6 /* LWRunLoopObserver.m in Sources */,
 				B040EB801C72D31800EA29CF /* CALayer+WebCacheOperation.m in Sources */,
 				B040EB831C72D31800EA29CF /* SDImageCache.m in Sources */,
@@ -597,17 +597,17 @@
 				B04E5D4D1C5F5EF000C8F1E6 /* LWLabel.m in Sources */,
 				01347F341C5DF39F0014D9EF /* DiscoverStatuModel.m in Sources */,
 				B040EB811C72D31800EA29CF /* MKAnnotationView+WebCache.m in Sources */,
+				010AC57B1C79C3AF0025CC85 /* LWImageItem.m in Sources */,
+				010AC5791C79C3AF0025CC85 /* LWImageBrowserFlowLayout.m in Sources */,
 				B0CFDFBD1C605FBA00E4291F /* ContainerView.m in Sources */,
 				B0B9CE261C50B93200C81916 /* AppDelegate.m in Sources */,
-				B006E57C1C76F741004718AC /* LWImageBrowserCell.m in Sources */,
-				B0C02AD21C7420C600B03C8F /* LWImageItem.m in Sources */,
 				01347F251C5DE6DD0014D9EF /* LWFPSLabel.m in Sources */,
 				B040EB841C72D31800EA29CF /* SDWebImageCompat.m in Sources */,
+				010AC57A1C79C3AF0025CC85 /* LWImageBrowserModel.m in Sources */,
 				B040EB7E1C72D31800EA29CF /* CALayer+LazySetContents.m in Sources */,
 				B040EB901C72D31800EA29CF /* UIImageView+WebCache.m in Sources */,
 				B0B9CE231C50B93200C81916 /* main.m in Sources */,
 				B04E5D481C5F5EB500C8F1E6 /* LWFlag.m in Sources */,
-				B0C02ACF1C741A3600B03C8F /* LWImageBrowserModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,7 @@ const CGFloat kMaximumZoomScale = 3.0f;
 const CGFloat kMinimumZoomScale = 1.0f;
 const CGFloat kDuration = 0.25f;
 
+
 @interface LWImageItem ()<UIScrollViewDelegate,UIActionSheetDelegate>
 
 @end
@@ -113,8 +114,8 @@ const CGFloat kDuration = 0.25f;
 
 - (void)downloadImageWithDestinationRect:(CGRect)destinationRect {
     __weak typeof(self) weakSelf = self;
-    //    MBProgressHUD* progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-    //    progressHUD.mode = MBProgressHUDModeDeterminate;
+//    MBProgressHUD* progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+//    progressHUD.mode = MBProgressHUDModeDeterminate;
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -122,9 +123,10 @@ const CGFloat kDuration = 0.25f;
                               options:options
                              progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                                  //TODO:加载动画
+//                                 progressHUD.progress = [[NSNumber numberWithInteger:receivedSize] floatValue] / [[NSNumber numberWithInteger:expectedSize] floatValue];
                              } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
                                  if (finished) {
-                                     //                [MBProgressHUD hideAllHUDsForView:weakSelf animated:NO];
+//                                     [MBProgressHUD hideAllHUDsForView:weakSelf animated:NO];
                                      weakSelf.imageView.image = image;
                                      weakSelf.imageModel.thumbnailImage = image;
                                      // 通知刷新

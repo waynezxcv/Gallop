@@ -19,7 +19,6 @@
 #define kCellIdentifier @"LWImageBroserCellIdentifier"
 
 
-
 @interface LWImageBrowser ()
 <UICollectionViewDataSource,
 UICollectionViewDelegate,
@@ -27,6 +26,9 @@ UIScrollViewDelegate,
 LWImageItemEventDelegate>
 
 @property (nonatomic,strong) UIImageView* screenshotImageView;
+@property (nonatomic,strong) UIVisualEffectView* blurView;
+@property (nonatomic,strong) UILabel* descriptionLabel;
+@property (nonatomic,strong) UIView* tooBar;
 @property (nonatomic,strong) UIImage* screenshot;
 @property (nonatomic,strong) LWImageBrowserFlowLayout* flowLayout;
 @property (nonatomic,strong) UICollectionView* collectionView;
@@ -51,18 +53,14 @@ LWImageItemEventDelegate>
         self.style = style;
         self.imageModels = imageModels;
         self.currentIndex = index;
-        self.firstShow = YES;
         self.backgroundStyle = backgroundStyle;
-        switch (self.backgroundStyle) {
-            case LWImageBrowserBackgroundStyleBlack:
-                self.screenshot = [self _screenshotFromView:self.parentVC.view];
+        self.screenshot = [self _screenshotFromView:self.parentVC.view];
+        switch (self.style) {
+            case LWImageBrowserStyleDefault:
+                self.firstShow = YES;
                 break;
-            default:{
-//                UIImage* screenshot = [self _screenshotFromView:self.parentVC.view];
-//                if (screenshot) {
-                    self.screenshot = [self _blurryImage:[UIImage imageNamed:@"loading"] withBlurLevel:0.5f];
-//                }
-            }
+            default:
+                self.firstShow = NO;
                 break;
         }
     }
@@ -131,20 +129,84 @@ LWImageItemEventDelegate>
     return _screenshotImageView;
 }
 
+- (UIVisualEffectView *)blurView {
+    if (!_blurView) {
+        _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+        _blurView.frame = SCREEN_BOUNDS;
+        _blurView.alpha = 1.0f;
+    }
+    return _blurView;
+}
 
+- (UILabel *)descriptionLabel {
+    if (!_descriptionLabel) {
+        _descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, SCREEN_HEIGHT - 88.0f, SCREEN_WIDTH, 44.0f)];
+        _descriptionLabel.backgroundColor = RGB(0, 0, 0, 0.35f);
+        _descriptionLabel.textColor = [UIColor whiteColor];
+        _descriptionLabel.font = [UIFont systemFontOfSize:14.0f];
+        _descriptionLabel.textAlignment = NSTextAlignmentLeft;
+        _descriptionLabel.numberOfLines = 0;
+    }
+    return _descriptionLabel;
+}
+    
+- (UIView *)tooBar {
+    if (!_tooBar) {
+        _tooBar = [[UIView alloc] initWithFrame:CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f, SCREEN_WIDTH, 44.0f)];
+        _tooBar.backgroundColor = RGB(24, 24, 24, 1);
+    }
+    return _tooBar;
+}
 #pragma mark - ViewControllerLifeCycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view addSubview:self.screenshotImageView];
+    switch (self.backgroundStyle) {
+        case LWImageBrowserBackgroundStyleBlack:
+            break;
+        default:
+            [self.view addSubview:self.blurView];
+            break;
+    }
     [self.view addSubview:self.collectionView];
-    [self.view addSubview:self.pageControl];
+    if (self.style == LWImageBrowserStyleDetail) {
+        self.navigationItem.hidesBackButton = YES;
+        UIButton* leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        leftButton.frame = CGRectMake(0, 0, 50, 40);
+        leftButton.backgroundColor = [UIColor clearColor];
+        leftButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+        [leftButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [leftButton setTitle:@"返回" forState:UIControlStateNormal];
+        [leftButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+        UIBarButtonItem* leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+        self.navigationItem.leftBarButtonItem = leftButtonItem;
+        [leftButton addTarget:self action:@selector(_didClickedLeftButton) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIButton* rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        rightButton.frame = CGRectMake(0, 0, 50, 40);
+        rightButton.backgroundColor = [UIColor clearColor];
+        rightButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+        [rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [rightButton setTitle:@"•••" forState:UIControlStateNormal];
+        UIBarButtonItem* rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+        self.navigationItem.rightBarButtonItem = rightButtonItem;
+        [leftButton addTarget:self action:@selector(_didClickedRightButton) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.view addSubview:self.descriptionLabel];
+        [self.view addSubview:self.tooBar];
+        
+    } else {
+        [self.view addSubview:self.pageControl];
+    }
     [self.collectionView setContentOffset:CGPointMake(self.currentIndex * (SCREEN_WIDTH + 10.0f), 0.0f) animated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    if (self.style == LWImageBrowserStyleDefault) {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    }
     [self _setCurrentItem];
     self.firstShow = NO;
 }
@@ -179,9 +241,13 @@ LWImageItemEventDelegate>
 #pragma mark - LWImageItemDelegate
 
 - (void)didClickedItemToHide {
-    [self _hide];
+    if (self.style == LWImageBrowserStyleDefault) {
+        [self _hide];
+    }
+    else {
+        [self _hideNavigationBar];
+    }
 }
-
 
 - (void)didFinishRefreshThumbnailImageIfNeed {
     if ([self.delegate respondsToSelector:@selector(imageBrowserDidFnishDownloadImageToRefreshThumbnialImageIfNeed)]
@@ -191,6 +257,15 @@ LWImageItemEventDelegate>
 }
 
 #pragma mark - Private
+
+- (void)_didClickedLeftButton {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)_didClickedRightButton {
+    
+}
+
 - (UIImage *)_screenshotFromView:(UIView *)aView {
     UIGraphicsBeginImageContextWithOptions(aView.bounds.size,aView.opaque, 0.0f);
     [aView.layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -211,18 +286,36 @@ LWImageItemEventDelegate>
             if (self.currentImageItem.zoomScale != 1.0f) {
                 self.currentImageItem.zoomScale = 1.0f;
             }
-            self.collectionView.backgroundColor = [UIColor clearColor];
-            self.currentImageItem.backgroundColor = [UIColor clearColor];
+            //            self.collectionView.backgroundColor = [UIColor clearColor];
+            //            self.currentImageItem.backgroundColor = [UIColor clearColor];
             [UIView animateWithDuration:0.25f
                                   delay:0.0f
                                 options:UIViewAnimationOptionCurveEaseOut
                              animations:^{
-                weakSelf.currentImageItem.imageView.frame = weakSelf.currentImageItem.imageModel.originPosition;
-            } completion:^(BOOL finished) {
-                [weakSelf dismissViewControllerAnimated:NO completion:^{}];
-            }];
+                                 weakSelf.currentImageItem.imageView.frame = weakSelf.currentImageItem.imageModel.originPosition;
+                             } completion:^(BOOL finished) {
+                                 [weakSelf dismissViewControllerAnimated:NO completion:^{}];
+                             }];
         }
             break;
+    }
+}
+
+- (void)_hideNavigationBar {
+    if (self.navigationController.navigationBarHidden == NO) {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+        [UIView animateWithDuration:0.2f animations:^{
+            self.navigationController.navigationBarHidden = YES;
+            self.tooBar.frame = CGRectMake(0.0f, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f);
+            self.descriptionLabel.frame = CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f, SCREEN_WIDTH, 44.0f);
+        }];
+    } else {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        [UIView animateWithDuration:0.2f animations:^{
+            self.navigationController.navigationBarHidden = NO;
+            self.tooBar.frame = CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f, SCREEN_WIDTH, 44.0f);
+            self.descriptionLabel.frame = CGRectMake(0.0f, SCREEN_HEIGHT - 88.0f, SCREEN_WIDTH, 44.0f);
+        }];
     }
 }
 
@@ -233,6 +326,10 @@ LWImageItemEventDelegate>
         if (self.currentImageItem != cell.imageItem) {
             self.currentImageItem = cell.imageItem;
             [self _preDownLoadImageWithIndex:self.currentIndex];
+            if (self.style == LWImageBrowserStyleDetail) {
+                self.title = self.currentImageItem.imageModel.title;
+                self.descriptionLabel.text = self.currentImageItem.imageModel.contentDescription;
+            }
         }
     }
 }
@@ -304,7 +401,7 @@ LWImageItemEventDelegate>
     outBuffer2.width = CGImageGetWidth(img);
     outBuffer2.height = CGImageGetHeight(img);
     outBuffer2.rowBytes = CGImageGetBytesPerRow(img);
-
+    
     error = vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer2, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend);
     error = vImageBoxConvolve_ARGB8888(&outBuffer2, &inBuffer, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend);
     error = vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend);

@@ -12,6 +12,8 @@
 #define kImageBrowserWidth ([UIScreen mainScreen].bounds.size.width + 10.0f)
 #define kImageBrowserHeight [UIScreen mainScreen].bounds.size.height
 
+
+
 @interface LWImageBrowserModel ()
 
 /**
@@ -41,6 +43,8 @@
         self.thumbnailURL = thumbnailURL;
         self.HDURL = HDURL;
         self.index = index;
+        self.title = @"";
+        self.contentDescription = @"";
         if (superView != nil) {
             UIWindow* window = [UIApplication sharedApplication].keyWindow;
             CGRect originRect = [superView convertRect:positionAtSuperView toView:window];
@@ -68,7 +72,6 @@
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     [manager downloadImageWithURL:[NSURL URLWithString:self.thumbnailURL]
                           options:0
-                       processing:nil
                          progress:nil
                         completed:^(UIImage *image, NSError *error,
                                     SDImageCacheType cacheType,

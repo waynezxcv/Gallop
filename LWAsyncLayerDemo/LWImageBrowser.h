@@ -55,6 +55,8 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserBackgroundStyle){
  */
 - (void)imageBrowserDidFnishDownloadImageToRefreshThumbnialImageIfNeed;
 
+
+
 @end
 
 
