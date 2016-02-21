@@ -7,35 +7,72 @@
 //
 
 #import "LWLabel.h"
+#import "LWAsyncDisplayLayer.h"
+#import "LWRunLoopObserver.h"
 
+@interface LWLabel ()<LWAsyncDisplayLayerDelegate>
+
+@property (nonatomic,strong) LWAsyncDisplayLayer* asyncDisplayLayer;
+
+@end
 
 @implementation LWLabel
-
 
 #pragma mark - Initialization
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor clearColor];
-        [self setup];
+        self.backgroundColor = [UIColor whiteColor];
+        self.asyncDisplayLayer = [[LWAsyncDisplayLayer alloc] init];
+        self.asyncDisplayLayer.asyncDisplayDelegate = self;
+        [self.layer addSublayer:self.asyncDisplayLayer];
     }
     return self;
 }
 
-- (void)setup {
-    self.text = @"";
-    self.font = [UIFont systemFontOfSize:13.0f];
-    self.textColor = [UIColor blackColor];
-    self.shadowColor = [UIColor blackColor];
-    self.shadowOffset = CGSizeMake(5.0f, 5.0f);
-    self.textAlignment = NSTextAlignmentLeft;
-    self.lineBreakMode = NSLineBreakByWordWrapping;
-    NSDictionary* attributesDict = @{NSFontAttributeName:[UIFont systemFontOfSize:13.0f],
-                                     NSForegroundColorAttributeName:[UIColor blackColor]};
-    self.attributedText = [[NSAttributedString alloc] initWithString:self.text attributes:attributesDict];
+#pragma mark - Setter & Getter
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    [self.asyncDisplayLayer setFrame:frame];
 }
 
-#pragma mark - Setter & Getter
+
+- (void)setTextLayout:(LWTextLayout *)textLayout {
+    if (_textLayout != textLayout) {
+        _textLayout = textLayout;
+    }
+    [self.asyncDisplayLayer asyncDisplayContent];
+}
+
+- (void)cleanUp {
+    [self.asyncDisplayLayer cleanUp];
+}
+
+#pragma mark - LWAsyncDisplayLayerDelegate
+
+- (BOOL)willBeginAsyncDisplay:(LWAsyncDisplayLayer *)layer {
+    return YES;
+}
+
+- (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
+    [self.textLayout drawTextLayoutIncontext:context];
+}
+
+- (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL) isFinished {
+    
+}
+
+#pragma mark - Private
+static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
+    CGContextSaveGState(context);
+    CGContextTranslateCTM(context, rect.origin.x, rect.origin.y);
+    CGContextTranslateCTM(context, 0, rect.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    CGContextTranslateCTM(context, -rect.origin.x, -rect.origin.y);
+    CGContextDrawImage(context, rect, image.CGImage);
+    CGContextRestoreGState(context);
+}
 
 @end

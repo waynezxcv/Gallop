@@ -19,7 +19,6 @@
 
 @end
 
-
 @implementation LWTextLayout
 
 - (LWTextLayout *)initWithText:(NSString *)text
