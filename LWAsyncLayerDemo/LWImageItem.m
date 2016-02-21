@@ -120,7 +120,6 @@ const CGFloat kDuration = 0.25f;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [manager downloadImageWithURL:[NSURL URLWithString:self.imageModel.HDURL]
                               options:options
-                           processing:nil
                              progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                                  //TODO:加载动画
                              } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {

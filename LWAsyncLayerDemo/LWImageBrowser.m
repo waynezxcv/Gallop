@@ -245,7 +245,6 @@ LWImageItemEventDelegate>
         LWImageBrowserModel* nextModel = [self.imageModels objectAtIndex:index + 1];
         [manager downloadImageWithURL:[NSURL URLWithString:nextModel.HDURL]
                               options:0
-                           processing:nil
                              progress:nil
                             completed:^(UIImage *image,
                                         NSError *error,
@@ -258,7 +257,6 @@ LWImageItemEventDelegate>
         LWImageBrowserModel* previousModel = [self.imageModels objectAtIndex:index - 1];
         [manager downloadImageWithURL:[NSURL URLWithString:previousModel.HDURL]
                               options:0
-                           processing:nil
                              progress:nil
                             completed:^(UIImage *image,
                                         NSError *error,
