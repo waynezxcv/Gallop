@@ -33,6 +33,7 @@
         self.layer.opaque = NO;
         self.layer.contentsScale = [UIScreen mainScreen].scale;
         ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
+        self.textLayout = [[LWTextLayout alloc] init];
         self.text = nil;
         self.textColor = [UIColor blackColor];
         self.font = [UIFont systemFontOfSize:14.0f];
@@ -120,9 +121,6 @@
     [self.textLayout drawTextLayoutIncontext:context];
 }
 
-- (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL) isFinished {
-}
-
 #pragma mark - Private
 
 - (void)_setNeedDisplay {
@@ -140,17 +138,6 @@
                                                                selector:@selector(asyncDisplayContent)
                                                                  object:nil];
     [observer commit];
-}
-
-
-static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
-    CGContextSaveGState(context);
-    CGContextTranslateCTM(context, rect.origin.x, rect.origin.y);
-    CGContextTranslateCTM(context, 0, rect.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    CGContextTranslateCTM(context, -rect.origin.x, -rect.origin.y);
-    CGContextDrawImage(context, rect, image.CGImage);
-    CGContextRestoreGState(context);
 }
 
 @end
