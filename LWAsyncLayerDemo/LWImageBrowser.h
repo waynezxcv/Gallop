@@ -28,6 +28,22 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserStyle){
 
 
 /**
+ *  图片浏览器背景式样
+ */
+typedef NS_ENUM(NSUInteger, LWImageBrowserBackgroundStyle){
+    /**
+     *  黑色的背景
+     */
+    LWImageBrowserBackgroundStyleBlack,
+    /**
+     *  半透明的背景
+     */
+    LWImageBrowserBackgroundStyleBlur,
+};
+
+
+
+/**
  *  LWImageBrowser协议
  */
 @protocol LWImageBrowserDelegate <NSObject>
@@ -53,6 +69,12 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserStyle){
  *  浏览器式样
  */
 @property (nonatomic,assign) LWImageBrowserStyle style;
+
+
+/**
+ *  浏览器背景式样
+ */
+@property (nonatomic,assign) LWImageBrowserBackgroundStyle backgroundStyle;
 
 /**
  *  存放图片模型的数组
@@ -82,6 +104,7 @@ typedef NS_ENUM(NSUInteger, LWImageBrowserStyle){
  */
 - (id)initWithParentViewController:(UIViewController *)parentVC
                              style:(LWImageBrowserStyle)style
+                   backgroundStyle:(LWImageBrowserBackgroundStyle)backgroundStyle
                        imageModels:(NSArray *)imageModels
                       currentIndex:(NSInteger)index;
 

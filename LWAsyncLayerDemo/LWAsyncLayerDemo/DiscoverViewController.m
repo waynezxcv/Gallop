@@ -265,7 +265,7 @@
     }
     LWImageBrowser* browser = [[LWImageBrowser alloc] initWithParentViewController:self
                                                                              style:LWImageBrowserStyleDefault
-                                                                       imageModels:tmpArray
+                                                                   backgroundStyle:LWImageBrowserBackgroundStyleBlack                                                                        imageModels:tmpArray
                                                                       currentIndex:index];
     [browser show];
 }
