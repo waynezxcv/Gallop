@@ -10,10 +10,12 @@
 #import "ContainerView.h"
 #import "LWRunLoopObserver.h"
 #import "UIImageView+WebCache.h"
+#import "LWLabel.h"
 
 @interface DiscoverTableViewCell ()
 
 @property (nonatomic,strong) ContainerView* backgroundImageView;
+@property (nonatomic,strong) LWLabel* label;
 @property (nonatomic,strong) UIImageView* avatarImageView;
 @property (nonatomic,strong) MenuView* menuView;
 @property (nonatomic,strong) NSMutableArray* imageViews;
@@ -29,6 +31,9 @@
 
         self.backgroundImageView = [[ContainerView alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.backgroundImageView];
+        
+        self.label = [[LWLabel alloc] initWithFrame:CGRectZero];
+        [self.contentView addSubview:self.label];
 
         self.avatarImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         self.avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -71,12 +76,21 @@
                                                 0,
                                                 SCREEN_WIDTH,
                                                 self.layout.cellHeight);
+    self.label.frame = CGRectMake(0,
+                                  0,
+                                  SCREEN_WIDTH,
+                                  self.layout.cellHeight);
+    
+    self.label.textLayout = self.layout.textTextLayout;
+    
     self.avatarImageView.frame = self.layout.avatarPosition;
     [self.avatarImageView sd_setImageWithURL:self.layout.statusModel.user.avatarURL];
     self.menuView.frame = CGRectMake(self.layout.menuPosition.origin.x,
                                      self.layout.menuPosition.origin.y - 12.5f,
                                      0.0f,
                                      40.0f);
+    
+    
 
     //懒加载图片
     LWRunLoopObserver* obeserver = [LWRunLoopObserver observerWithTarget:self

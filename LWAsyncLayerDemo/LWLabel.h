@@ -9,23 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "LWTextLayout.h"
 
-/**
- *  垂直方向对齐方式
- */
-typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
-    /**
-     *  顶部对齐
-     */
-    LWVerticalAlignmentTop,
-    /**
-     *  居中
-     */
-    LWVerticalAlignmentCenter,
-    /**
-     *  底部对齐
-     */
-    LWVerticalAlignmentBottom,
-};
 
 /**
  *  LWLabel 支持属性文本、图文混排、点击链接、异步绘制。

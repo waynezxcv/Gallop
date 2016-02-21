@@ -12,34 +12,32 @@
 
 @interface ContainerView ()<LWAsyncDisplayLayerDelegate>
 
-@property (nonatomic,strong) LWAsyncDisplayLayer* asyncDisplayLayer;
-
 @end
 
 @implementation ContainerView
+
++ (Class)layerClass {
+    return [LWAsyncDisplayLayer class];
+}
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-        self.asyncDisplayLayer = [[LWAsyncDisplayLayer alloc] init];
-        self.asyncDisplayLayer.asyncDisplayDelegate = self;
-        [self.layer addSublayer:self.asyncDisplayLayer];
+        self.layer.opaque = NO;
+        self.layer.contentsScale = [UIScreen mainScreen].scale;
+        self.backgroundColor = [UIColor clearColor];
+        ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
     }
     return self;
 }
 
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
-    [self.asyncDisplayLayer setFrame:frame];
-}
-
 - (void)cleanUp {
-    [self.asyncDisplayLayer cleanUp];
+    [(LWAsyncDisplayLayer *)self.layer cleanUp];
 }
 
 - (void)drawConent {
-    [self.asyncDisplayLayer asyncDisplayContent];
+    [(LWAsyncDisplayLayer *)self.layer asyncDisplayContent];
 }
 
 #pragma mark - LWAsyncDisplayLayerDelegate
@@ -50,7 +48,7 @@
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size{
     [_layout.nameTextLayout drawTextLayoutIncontext:context];
-    [_layout.textTextLayout drawTextLayoutIncontext:context];
+//    [_layout.textTextLayout drawTextLayoutIncontext:context];
     [_layout.timeStampTextLayout drawTextLayoutIncontext:context];
     [self drawImage:[UIImage imageNamed:@"menu"] rect:_layout.menuPosition context:context];
     CGContextAddRect(context,_layout.avatarPosition);

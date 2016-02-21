@@ -73,8 +73,6 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 }
 
 
-
-
 #pragma mark - Private
 - (void)_asyncDisplay {
     [self lazySetContent:nil];
