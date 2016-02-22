@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "LWTextLayout.h"
 
-
 /**
  *  LWLabel 支持属性文本、图文混排、点击链接、异步绘制。
  */
@@ -73,6 +72,40 @@
  *  @return LWLabel实例
  */
 - (id)initWithFrame:(CGRect)frame;
+
+
+
+/**
+ *  在指定位置插入一个图片
+ *
+ */
+- (void)insertImage:(UIImage *)image inRange:(NSRange)range;
+
+
+/**
+ *  在指定多个位置插入图片
+ *
+ */
+- (void)inserImages:(NSArray *)images inRanges:(NSArray *)ranges;
+
+/**
+ *  用图片替换掉指定位置的文字
+ *
+ */
+- (void)replaceTextWithImage:(UIImage *)image inRange:(NSRange)range;
+
+/**
+ *  在多个位置用图片替换掉指定位置的文字
+ *
+ */
+- (void)replaceTextWithImages:(NSArray *)images inRanges:(NSArray *)ranges;
+
+
+/**
+ *  为指定位置的文本添加链接
+ *
+ */
+- (void)addLinkWithData:(id)data inRange:(NSRange)range;
 
 
 

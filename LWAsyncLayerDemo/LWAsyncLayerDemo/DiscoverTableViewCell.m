@@ -89,8 +89,6 @@
                                      self.layout.menuPosition.origin.y - 12.5f,
                                      0.0f,
                                      40.0f);
-    
-    
 
     //懒加载图片
     LWRunLoopObserver* obeserver = [LWRunLoopObserver observerWithTarget:self

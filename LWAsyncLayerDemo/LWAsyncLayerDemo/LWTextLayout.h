@@ -10,8 +10,6 @@
 #import <CoreText/CoreText.h>
 #import <UIKit/UIKit.h>
 
-
-
 /**
  *  垂直方向对齐方式
  */
@@ -31,13 +29,41 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 };
 
 
+/**
+ *  下划线式样
+ */
+typedef NS_ENUM(NSUInteger, LWUnderlineStyle){
+    /**
+     *  无下划线
+     */
+    LWUnderlineStyleNone,
+    /**
+     *  单下划线
+     */
+    LWUnderlineStyleSingle,
+    /**
+     *  加粗下划线
+     */
+    LWUnderlineStyleThick,
+    /**
+     *  双下划线
+     */
+    LWUnderlineStyleDouble
+};
+
+
+
 @interface LWTextLayout : NSObject
 
+/**
+ *  文本内容，默认为nil
+ */
+@property (nonatomic,copy) NSString* text;
 
-///**
-// *  文本内容，默认为nil
-// */
-//@property (nonatomic,copy) NSString* text;
+/**
+ *  属性文本，默认为nil
+ */
+@property (nonatomic,copy) NSAttributedString* attributedText;
 
 /**
  *  文本颜色，默认为RGB(0,0,0,1)
@@ -48,6 +74,16 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  *  字体，默认为[UIFont systemFontOfSize:14.0f]
  */
 @property (nonatomic,strong) UIFont* font;
+
+/**
+ *  行间距
+ */
+@property (nonatomic,assign) CGFloat linespace;
+
+/**
+ *  字间距
+ */
+@property (nonatomic, assign) unichar characterSpacing;
 
 /**
  *  文本行数
@@ -70,26 +106,32 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 @property (nonatomic) NSLineBreakMode lineBreakMode;
 
 /**
- *  属性文本，默认为nil
+ *  ctFrameSetter
  */
-@property (nonatomic,copy) NSAttributedString* attributedText;
+@property (nonatomic,assign) CTFramesetterRef frameSetter;
 
-@property (nonatomic,readonly,strong) NSAttributedString* text;
-@property (nonatomic,readonly) CTFramesetterRef frameSetter;
-@property (nonatomic,readonly) CTFrameRef frame;
-@property (nonatomic,readonly) CGSize boundsSize;
-@property (nonatomic,readonly) CGRect boundsRect;
-@property (nonatomic,readonly) CGMutablePathRef textPath;
+/**
+ *  ctFrameRef
+ */
+@property (nonatomic,assign) CTFrameRef frame;
+
+/**
+ *  text路径
+ */
+@property (nonatomic,assign) CGMutablePathRef textPath;
+
+/**
+ *  文字高度
+ */
+@property (nonatomic,assign) CGFloat textHeight;
+
+/**
+ *
+ */
+@property (nonatomic,assign) CGRect boundsRect;
 
 
+- (void)drawInContext:(CGContextRef)context;
 
-- (LWTextLayout *)initWithText:(NSString *)text
-                          font:(UIFont *)font
-                 textAlignment:(NSTextAlignment)textAlignment
-                     linespace:(CGFloat)linespace
-                     textColor:(UIColor *)textColor
-                          rect:(CGRect)rect;
-
-- (void)drawTextLayoutIncontext:(CGContextRef)context;
 
 @end

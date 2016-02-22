@@ -34,6 +34,7 @@
         self.layer.contentsScale = [UIScreen mainScreen].scale;
         ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
         self.textLayout = [[LWTextLayout alloc] init];
+
         self.text = nil;
         self.textColor = [UIColor blackColor];
         self.font = [UIFont systemFontOfSize:14.0f];
@@ -118,10 +119,11 @@
 }
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
-    [self.textLayout drawTextLayoutIncontext:context];
+    [self.textLayout drawInContext:context];
+    NSLog(@"asyncDisplay");
 }
 
-#pragma mark - Private
+#pragma mark - Private 
 
 - (void)_setNeedDisplay {
     [self _cleanUp];
@@ -133,11 +135,5 @@
 }
 
 
-- (void)_lazySetNeedDisplay {
-    LWRunLoopObserver* observer = [LWRunLoopObserver observerWithTarget:self.layer
-                                                               selector:@selector(asyncDisplayContent)
-                                                                 object:nil];
-    [observer commit];
-}
 
 @end
