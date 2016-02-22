@@ -58,7 +58,6 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     CGContextRestoreGState(context);
 }
 
-
 #pragma mark - Getter
 
 - (NSString *)text {
