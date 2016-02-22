@@ -63,7 +63,7 @@ typedef NS_ENUM(NSUInteger, LWUnderlineStyle){
 /**
  *  属性文本，默认为nil
  */
-@property (nonatomic,copy) NSAttributedString* attributedText;
+@property (nonatomic,strong) NSMutableAttributedString* attributedText;
 
 /**
  *  文本颜色，默认为RGB(0,0,0,1)
