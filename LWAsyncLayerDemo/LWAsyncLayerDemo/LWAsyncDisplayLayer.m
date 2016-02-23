@@ -85,7 +85,6 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         return ;
     }
     CGSize size = self.bounds.size;
-    NSLog(@"size.width %f ...size.height %f ",size.width,size.height);
     BOOL opaque = self.opaque;
     CGFloat scale = self.contentsScale;
     if (size.width < 1 || size.height < 1) {

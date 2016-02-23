@@ -8,7 +8,33 @@
 
 #import "LWTextLayout.h"
 
+static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstraints(CTFramesetterRef framesetter, NSAttributedString *attributedString, CGSize size, NSUInteger numberOfLines) {
+    CFRange rangeToSize = CFRangeMake(0, (CFIndex)[attributedString length]);
+    CGSize constraints = CGSizeMake(size.width, MAXFLOAT);
+    if (numberOfLines > 0) {
+        // If the line count of the label more than 1, limit the range to size to the number of lines that have been set
+        CGMutablePathRef path = CGPathCreateMutable();
+        CGPathAddRect(path, NULL, CGRectMake(0.0f, 0.0f, constraints.width, MAXFLOAT));
+        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+        CFArrayRef lines = CTFrameGetLines(frame);
+
+        if (CFArrayGetCount(lines) > 0) {
+            NSInteger lastVisibleLineIndex = MIN((CFIndex)numberOfLines, CFArrayGetCount(lines)) - 1;
+            CTLineRef lastVisibleLine = CFArrayGetValueAtIndex(lines, lastVisibleLineIndex);
+
+            CFRange rangeToLayout = CTLineGetStringRange(lastVisibleLine);
+            rangeToSize = CFRangeMake(0, rangeToLayout.location + rangeToLayout.length);
+        }
+        CFRelease(frame);
+        CFRelease(path);
+    }
+    CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, rangeToSize, NULL, constraints, NULL);
+    return CGSizeMake(ceil(suggestedSize.width), ceil(suggestedSize.height));
+}
+
+
 @interface LWTextLayout ()
+
 
 @end
 
@@ -33,9 +59,33 @@
     return self;
 }
 
+
+/**
+ *  创建CTFrameRef
+ *
+ */
+- (void)creatCTFrameRef {
+    if (_attributedText == nil || self.boundsRect.size.width <= 0) {
+        return ;
+    }
+    if (_textHeight > 0) {
+        return ;
+    }
+    NSLog(@"creat");
+    CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedText);
+    CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter, CFRangeMake(0, _attributedText.length),NULL, CGSizeMake(self.boundsRect.size.width, CGFLOAT_MAX), NULL);
+    self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, suggestSize.width, suggestSize.height);
+    CGMutablePathRef textPath = CGPathCreateMutable();
+    CGPathAddRect(textPath, NULL, self.boundsRect);
+     _frame = CTFramesetterCreateFrame(ctFrameSetter, CFRangeMake(0, 0), textPath, NULL);
+    CFRelease(ctFrameSetter);
+    CFRelease(textPath);
+}
+
 #pragma mark - Draw
 
 - (void)drawInContext:(CGContextRef)context {
+//    NSLog(@"displayIn:%@",[NSThread currentThread]);
     @autoreleasepool {
         CGContextSaveGState(context);
         CGContextSetTextMatrix(context,CGAffineTransformIdentity);
@@ -191,11 +241,18 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     // 创建属性文本
     NSMutableAttributedString* attbutedString = [[NSMutableAttributedString alloc]initWithString:text];
     // 添加颜色属性
-    [self _mutableAttributedString:attbutedString addAttributesWithTextColor:_textColor inRange:NSMakeRange(0, text.length)];
+    [self _mutableAttributedString:attbutedString
+        addAttributesWithTextColor:_textColor
+                           inRange:NSMakeRange(0, text.length)];
     // 添加字体属性
-    [self _mutableAttributedString:attbutedString addAttributesWithFont:_font inRange:NSMakeRange(0, text.length)];
+    [self _mutableAttributedString:attbutedString
+             addAttributesWithFont:_font
+                           inRange:NSMakeRange(0, text.length)];
     // 添加文本段落样式
-    [self _mutableAttributedString:attbutedString addAttributesWithLineSpacing:_linespace textAlignment:_textAlignment lineBreakMode:_lineBreakMode inRange:NSMakeRange(0, text.length)];
+    [self _mutableAttributedString:attbutedString addAttributesWithLineSpacing:_linespace
+                     textAlignment:_textAlignment
+                     lineBreakMode:_lineBreakMode
+                           inRange:NSMakeRange(0, text.length)];
     return attbutedString;
 }
 

@@ -44,7 +44,8 @@
     self.textTextLayout.textAlignment = NSTextAlignmentNatural;
     self.textTextLayout.linespace = 2.0f;
     self.textTextLayout.textColor = RGB(40, 40, 40, 1);
-    self.textTextLayout.boundsRect = CGRectMake(60.0f,50.0f,SCREEN_WIDTH - 80.0f,300);
+    self.textTextLayout.boundsRect = CGRectMake(60.0f,50.0f,SCREEN_WIDTH - 80.0f,MAXFLOAT);
+    [self.textTextLayout creatCTFrameRef];
 
     //pics
     NSInteger imageCount = [self.statusModel.imageModels count];

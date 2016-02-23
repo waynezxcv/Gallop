@@ -126,9 +126,15 @@ typedef NS_ENUM(NSUInteger, LWUnderlineStyle){
 @property (nonatomic,assign) CGFloat textHeight;
 
 /**
- *
+ * 计算后的文字绘制范围
  */
 @property (nonatomic,assign) CGRect boundsRect;
+
+/**
+ *  创建CTFrameRef
+ *
+ */
+- (void)creatCTFrameRef;
 
 
 - (void)drawInContext:(CGContextRef)context;

@@ -120,7 +120,6 @@
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
     [self.textLayout drawInContext:context];
-    NSLog(@"asyncDisplay");
 }
 
 #pragma mark - Private 
