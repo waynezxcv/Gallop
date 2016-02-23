@@ -45,10 +45,6 @@
     self.textTextLayout.boundsRect = CGRectMake(60.0f,50.0f,SCREEN_WIDTH - 80.0f,MAXFLOAT);
     [self.textTextLayout creatCTFrameRef];
 
-    if (self.textTextLayout.text.length >= 25) {
-        [self.textTextLayout addLinkWithData:@"linkURL" inRange:NSMakeRange(0, 25) linkColor:[UIColor redColor]];
-    }
-
 
     //pics
     NSInteger imageCount = [self.statusModel.imageModels count];

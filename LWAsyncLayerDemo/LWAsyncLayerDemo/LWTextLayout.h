@@ -144,7 +144,25 @@ typedef NS_ENUM(NSUInteger, LWUnderlineStyle){
  *  为指定位置的文本添加链接
  *
  */
-- (void)addLinkWithData:(id)data inRange:(NSRange)range linkColor:(UIColor *)linkColor;
+- (void)addLinkWithData:(id)data
+                inRange:(NSRange)range
+              linkColor:(UIColor *)linkColor
+               highLigt:(UIColor *)highLight
+         UnderLineStyle:(NSUnderlineStyle)underlineStyle;
+
+
+/**
+ *  在指定位置插入一个图片
+ *
+ */
+- (void)insertImage:(UIImage *)image inRange:(NSRange)range;
+
+/**
+ *  用图片替换掉指定位置的文字
+ *
+ */
+- (void)replaceTextWithImage:(UIImage *)image inRange:(NSRange)range;
+
 
 
 

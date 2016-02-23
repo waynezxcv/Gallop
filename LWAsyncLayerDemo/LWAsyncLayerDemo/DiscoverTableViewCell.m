@@ -31,7 +31,7 @@
 
         self.backgroundImageView = [[ContainerView alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.backgroundImageView];
-        
+
         self.label = [[LWLabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.label];
 
@@ -72,24 +72,11 @@
 }
 
 - (void)drawContent {
-    self.backgroundImageView.frame = CGRectMake(0,
-                                                0,
-                                                SCREEN_WIDTH,
-                                                self.layout.cellHeight);
-    self.label.frame = CGRectMake(0,
-                                  0,
-                                  SCREEN_WIDTH,
-                                  self.layout.cellHeight);
-    
+    self.backgroundImageView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
+    self.label.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
     self.label.layouts = @[self.layout.nameTextLayout,self.layout.textTextLayout,self.layout.timeStampTextLayout] ;
-    
     self.avatarImageView.frame = self.layout.avatarPosition;
     [self.avatarImageView sd_setImageWithURL:self.layout.statusModel.user.avatarURL];
-    self.menuView.frame = CGRectMake(self.layout.menuPosition.origin.x,
-                                     self.layout.menuPosition.origin.y - 12.5f,
-                                     0.0f,
-                                     40.0f);
-
     //懒加载图片
     LWRunLoopObserver* obeserver = [LWRunLoopObserver observerWithTarget:self
                                                                 selector:@selector(setupImages)

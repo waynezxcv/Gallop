@@ -109,7 +109,11 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
 
 #pragma mark - Link
 
-- (void)addLinkWithData:(id)data inRange:(NSRange)range linkColor:(UIColor *)linkColor {
+- (void)addLinkWithData:(id)data
+                inRange:(NSRange)range
+              linkColor:(UIColor *)linkColor
+               highLigt:(UIColor *)highLight
+         UnderLineStyle:(NSUnderlineStyle)underlineStyle {
     if (_attributedText == nil || _attributedText.length == 0) {
         return;
     }
@@ -121,6 +125,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     if (!lines || numbersOfLines == 0) {
         return;
     }
+    float height = 0.0f;
     CGPoint origins[numbersOfLines];
     CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), origins);
     for (NSInteger i = 0; i < numbersOfLines; i ++) {
@@ -137,10 +142,12 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
                 CGRect runRect;
                 runRect.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0,0), &runAscent, &runDescent, NULL);
                 float offset = CTLineGetOffsetForStringIndex(line, range.location, NULL);
-                float height = runAscent;
-                runRect=CGRectMake(lineOrigin.x + offset, (self.boundsRect.size.height) - lineOrigin.y - height + runDescent/2, runRect.size.width, height);
-                NSRange nRange = NSMakeRange(range.location, range.length);
-
+                height = runAscent > height?runAscent:height;
+                runRect= CGRectMake (self.boundsRect.origin.x + lineOrigin.x + offset,
+                                     self.boundsRect.origin.y + (self.boundsRect.size.height) - lineOrigin.y - height + runDescent/2,
+                                     runRect.size.width,
+                                     height);
+                //                NSRange nRange = NSMakeRange(range.location, range.length);
                 LWTextAttach* attach = [[LWTextAttach alloc] init];
                 attach.position = runRect;
                 attach.data = data;
@@ -215,7 +222,9 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
 - (void)setCharacterSpacing:(unichar)characterSpacing {
     if (characterSpacing >= 0 && _characterSpacing != characterSpacing) {
         _characterSpacing = characterSpacing;
-        [self _mutableAttributedString:_attributedText addAttributesWithCharacterSpacing:characterSpacing inRange:NSMakeRange(0, _attributedText.length)];
+        [self _mutableAttributedString:_attributedText
+     addAttributesWithCharacterSpacing:characterSpacing
+                               inRange:NSMakeRange(0, _attributedText.length)];
         [self resetFrameRef];
     }
 }

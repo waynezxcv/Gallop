@@ -136,14 +136,23 @@
 //- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
 //    UITouch* touch = [touches anyObject];
 //    CGPoint point = [touch locationInView:self];
-//    NSLog(@"touchbegan%@",NSStringFromCGPoint(point));
 //    for (LWTextLayout* layout in self.layouts) {
 //        for (LWTextAttach* attach in layout.attachs) {
-//            NSLog(@"%@",NSStringFromCGRect(attach.position));
 //            if (CGRectContainsPoint(attach.position, point)) {
-////                NSLog(@"点击了。。:%@",attach.data);
+//                for (LWTextAttach* attach in layout.attachs) {
+//                    UIView* view = [[UIView alloc] initWithFrame:attach.position];
+//                    view.backgroundColor = [UIColor grayColor];
+//                    view.alpha = 0.5f;
+//                    [self addSubview:view];
+//                }
 //            }
 //        }
+//    }
+//}
+//
+//- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+//    for (UIView* view in self.subviews) {
+//        [view removeFromSuperview];
 //    }
 //}
 
