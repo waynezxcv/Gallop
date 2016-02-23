@@ -33,7 +33,6 @@
         self.layer.opaque = NO;
         self.layer.contentsScale = [UIScreen mainScreen].scale;
         ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
-        self.textLayout = [[LWTextLayout alloc] init];
 
         self.text = nil;
         self.textColor = [UIColor blackColor];
@@ -48,67 +47,68 @@
 }
 
 #pragma mark - Setter & Getter
+//
+//- (void)setAttributedText:(NSAttributedString *)attributedText {
+//    if ([_attributedText isEqual:attributedText] || _attributedText == attributedText) {
+//        return;
+//    }
+//    _attributedText  = [attributedText copy];
+//    self.textLayout.attributedText = [self.attributedText copy];
+//}
+//
+//- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode {
+//    if (_lineBreakMode == lineBreakMode) {
+//        return;
+//    }
+//    _lineBreakMode = lineBreakMode;
+//    self.textLayout.lineBreakMode = self.lineBreakMode;
+//}
+//
+//- (void)setVeriticalAlignment:(LWVerticalAlignment)veriticalAlignment {
+//    if (_veriticalAlignment == veriticalAlignment) {
+//        return;
+//    }
+//    _veriticalAlignment = veriticalAlignment;
+//    self.textLayout.veriticalAlignment = self.veriticalAlignment;
+//}
+//
+//- (void)setTextAlignment:(NSTextAlignment)textAlignment {
+//    if (_textAlignment == textAlignment) {
+//        return;
+//    }
+//    _textAlignment = textAlignment;
+//    self.textLayout.textAlignment = self.textAlignment;
+//}
+//
+//- (void)setFont:(UIFont *)font {
+//    if ([_font isEqual:font] || _font == font) {
+//        return;
+//    }
+//    _font = font;
+//    self.textLayout.font = self.font;
+//}
+//
+//- (void)setTextColor:(UIColor *)textColor {
+//    if ([_textColor isEqual:textColor] || _textColor == textColor) {
+//        return;
+//    }
+//    _textColor = textColor;
+//    self.textLayout.textColor = self.textColor;
+//}
+//
+//- (void)setText:(NSString *)text {
+//    if ([_text isEqualToString:text] || _text == text) {
+//        return;
+//    }
+//    _text = [text copy];
+//    self.text = [self.text copy];
+//}
 
-- (void)setAttributedText:(NSAttributedString *)attributedText {
-    if ([_attributedText isEqual:attributedText] || _attributedText == attributedText) {
+- (void)setLayouts:(NSArray *)layouts {
+    if (_layouts == layouts) {
         return;
     }
-    _attributedText  = [attributedText copy];
-    self.textLayout.attributedText = [self.attributedText copy];
-}
-
-- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode {
-    if (_lineBreakMode == lineBreakMode) {
-        return;
-    }
-    _lineBreakMode = lineBreakMode;
-    self.textLayout.lineBreakMode = self.lineBreakMode;
-}
-
-- (void)setVeriticalAlignment:(LWVerticalAlignment)veriticalAlignment {
-    if (_veriticalAlignment == veriticalAlignment) {
-        return;
-    }
-    _veriticalAlignment = veriticalAlignment;
-    self.textLayout.veriticalAlignment = self.veriticalAlignment;
-}
-
-- (void)setTextAlignment:(NSTextAlignment)textAlignment {
-    if (_textAlignment == textAlignment) {
-        return;
-    }
-    _textAlignment = textAlignment;
-    self.textLayout.textAlignment = self.textAlignment;
-}
-
-- (void)setFont:(UIFont *)font {
-    if ([_font isEqual:font] || _font == font) {
-        return;
-    }
-    _font = font;
-    self.textLayout.font = self.font;
-}
-
-- (void)setTextColor:(UIColor *)textColor {
-    if ([_textColor isEqual:textColor] || _textColor == textColor) {
-        return;
-    }
-    _textColor = textColor;
-    self.textLayout.textColor = self.textColor;
-}
-
-- (void)setText:(NSString *)text {
-    if ([_text isEqualToString:text] || _text == text) {
-        return;
-    }
-    _text = [text copy];
-    self.text = [self.text copy];
-}
-
-- (void)setTextLayout:(LWTextLayout *)textLayout {
-    if (_textLayout != textLayout) {
-        _textLayout = textLayout;
-    }
+    _layouts = layouts;
     [self _setNeedDisplay];
 }
 
@@ -119,20 +119,32 @@
 }
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
-    [self.textLayout drawInContext:context];
+    for (LWTextLayout* layout in self.layouts) {
+        [layout drawInContext:context];
+    }
 }
 
-#pragma mark - Private 
+#pragma mark - Private
 
 - (void)_setNeedDisplay {
-    [self _cleanUp];
+    [(LWAsyncDisplayLayer *)self.layer cleanUp];
     [(LWAsyncDisplayLayer *)self.layer asyncDisplayContent];
 }
 
-- (void)_cleanUp {
-    [(LWAsyncDisplayLayer *)self.layer cleanUp];
-}
-
-
+#pragma mark - Touch
+//
+//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+//    UITouch* touch = [touches anyObject];
+//    CGPoint point = [touch locationInView:self];
+//    NSLog(@"touchbegan%@",NSStringFromCGPoint(point));
+//    for (LWTextLayout* layout in self.layouts) {
+//        for (LWTextAttach* attach in layout.attachs) {
+//            NSLog(@"%@",NSStringFromCGRect(attach.position));
+//            if (CGRectContainsPoint(attach.position, point)) {
+////                NSLog(@"点击了。。:%@",attach.data);
+//            }
+//        }
+//    }
+//}
 
 @end

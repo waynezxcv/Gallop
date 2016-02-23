@@ -60,9 +60,9 @@
 @property (nonatomic,copy) NSAttributedString* attributedText;
 
 /**
- *  文字排版属性
+ *  存放文字盘版的数组
  */
-@property (nonatomic,strong) LWTextLayout* textLayout;
+@property (nonatomic,copy) NSArray* layouts;
 
 /**
  *  初始化一个LWLabel
@@ -72,8 +72,6 @@
  *  @return LWLabel实例
  */
 - (id)initWithFrame:(CGRect)frame;
-
-
 
 /**
  *  在指定位置插入一个图片

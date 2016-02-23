@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 #import <UIKit/UIKit.h>
+#import "LWTextAttach.h"
 
 /**
  *  垂直方向对齐方式
@@ -106,19 +107,9 @@ typedef NS_ENUM(NSUInteger, LWUnderlineStyle){
 @property (nonatomic) NSLineBreakMode lineBreakMode;
 
 /**
- *  ctFrameSetter
- */
-@property (nonatomic,assign) CTFramesetterRef frameSetter;
-
-/**
  *  ctFrameRef
  */
 @property (nonatomic,assign) CTFrameRef frame;
-
-/**
- *  text路径
- */
-@property (nonatomic,assign) CGMutablePathRef textPath;
 
 /**
  *  文字高度
@@ -131,13 +122,30 @@ typedef NS_ENUM(NSUInteger, LWUnderlineStyle){
 @property (nonatomic,assign) CGRect boundsRect;
 
 /**
+ *  存放附件的数组
+ */
+@property (nonatomic,strong) NSMutableArray* attachs;
+
+/**
  *  创建CTFrameRef
  *
  */
 - (void)creatCTFrameRef;
 
 
+/**
+ *  绘制
+ *
+ */
 - (void)drawInContext:(CGContextRef)context;
+
+
+/**
+ *  为指定位置的文本添加链接
+ *
+ */
+- (void)addLinkWithData:(id)data inRange:(NSRange)range linkColor:(UIColor *)linkColor;
+
 
 
 @end

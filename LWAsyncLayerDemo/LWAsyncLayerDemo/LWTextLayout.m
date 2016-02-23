@@ -59,7 +59,6 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
     return self;
 }
 
-
 /**
  *  创建CTFrameRef
  *
@@ -71,13 +70,13 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
     if (_textHeight > 0) {
         return ;
     }
-    NSLog(@"creat");
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedText);
     CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter, CFRangeMake(0, _attributedText.length),NULL, CGSizeMake(self.boundsRect.size.width, CGFLOAT_MAX), NULL);
     self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, suggestSize.width, suggestSize.height);
+    _textHeight = suggestSize.height;
     CGMutablePathRef textPath = CGPathCreateMutable();
     CGPathAddRect(textPath, NULL, self.boundsRect);
-     _frame = CTFramesetterCreateFrame(ctFrameSetter, CFRangeMake(0, 0), textPath, NULL);
+    _frame = CTFramesetterCreateFrame(ctFrameSetter, CFRangeMake(0, 0), textPath, NULL);
     CFRelease(ctFrameSetter);
     CFRelease(textPath);
 }
@@ -85,7 +84,6 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
 #pragma mark - Draw
 
 - (void)drawInContext:(CGContextRef)context {
-//    NSLog(@"displayIn:%@",[NSThread currentThread]);
     @autoreleasepool {
         CGContextSaveGState(context);
         CGContextSetTextMatrix(context,CGAffineTransformIdentity);
@@ -108,7 +106,60 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     CGContextRestoreGState(context);
 }
 
+
+#pragma mark - Link
+
+- (void)addLinkWithData:(id)data inRange:(NSRange)range linkColor:(UIColor *)linkColor {
+    if (_attributedText == nil || _attributedText.length == 0) {
+        return;
+    }
+    [self resetFrameRef];
+    [self _mutableAttributedString:_attributedText addAttributesWithTextColor:linkColor inRange:range];
+    [self creatCTFrameRef];
+    CFArrayRef lines = CTFrameGetLines(_frame);
+    CFIndex numbersOfLines = CFArrayGetCount(lines);
+    if (!lines || numbersOfLines == 0) {
+        return;
+    }
+    CGPoint origins[numbersOfLines];
+    CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), origins);
+    for (NSInteger i = 0; i < numbersOfLines; i ++) {
+        CGPoint lineOrigin = origins[i];
+        CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+        CFArrayRef runs = CTLineGetGlyphRuns(line);
+        for (int j = 0; j < CFArrayGetCount(runs); j++) {
+            CGFloat runAscent;
+            CGFloat runDescent;
+            CTRunRef run = CFArrayGetValueAtIndex(runs, j);
+            NSDictionary* attributes = (__bridge NSDictionary*)CTRunGetAttributes(run);
+            if (CGColorEqualToColor((__bridge CGColorRef)([attributes valueForKey:@"CTForegroundColor"]),linkColor.CGColor)) {
+                CFRange range = CTRunGetStringRange(run);
+                CGRect runRect;
+                runRect.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0,0), &runAscent, &runDescent, NULL);
+                float offset = CTLineGetOffsetForStringIndex(line, range.location, NULL);
+                float height = runAscent;
+                runRect=CGRectMake(lineOrigin.x + offset, (self.boundsRect.size.height) - lineOrigin.y - height + runDescent/2, runRect.size.width, height);
+                NSRange nRange = NSMakeRange(range.location, range.length);
+
+                LWTextAttach* attach = [[LWTextAttach alloc] init];
+                attach.position = runRect;
+                attach.data = data;
+                [self.attachs addObject:attach];
+            }
+        }
+    }
+}
+
+
+
 #pragma mark - Getter
+
+- (NSMutableArray *)attachs {
+    if (!_attachs) {
+        _attachs = [[NSMutableArray alloc] init];
+    }
+    return _attachs;
+}
 
 - (NSString *)text {
     return _attributedText.string;
@@ -122,6 +173,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
         _frame = nil;
     }
     _textHeight = 0;
+    [_attachs removeAllObjects];
 }
 
 - (void)setText:(NSString *)text {
@@ -143,7 +195,9 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
 - (void)setTextColor:(UIColor *)textColor {
     if (textColor && _textColor != textColor){
         _textColor = textColor;
-        [self _mutableAttributedString:_attributedText addAttributesWithTextColor:_textColor inRange:NSMakeRange(0, _attributedText.length)];
+        [self _mutableAttributedString:_attributedText
+            addAttributesWithTextColor:_textColor
+                               inRange:NSMakeRange(0, _attributedText.length)];
         [self resetFrameRef];
     }
 }
@@ -151,7 +205,9 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
 - (void)setFont:(UIFont *)font {
     if (font && _font != font){
         _font = font;
-        [self _mutableAttributedString:_attributedText addAttributesWithFont:_font inRange:NSMakeRange(0, _attributedText.length)];
+        [self _mutableAttributedString:_attributedText
+                 addAttributesWithFont:_font
+                               inRange:NSMakeRange(0, _attributedText.length)];
         [self resetFrameRef];
     }
 }
@@ -164,9 +220,9 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     }
 }
 
-- (void)setLinesSpacing:(CGFloat)linesSpacing {
-    if (_linespace != linesSpacing) {
-        _linespace = linesSpacing;
+- (void)setLinespace:(CGFloat)linespace {
+    if (_linespace != linespace) {
+        _linespace = linespace;
         [self _mutableAttributedString:_attributedText
           addAttributesWithLineSpacing:_linespace
                          textAlignment:_textAlignment
@@ -200,31 +256,9 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     }
 }
 
-- (void)setFrameSetter:(CTFramesetterRef)frameSetter {
-    if (_frameSetter != frameSetter) {
-        if (frameSetter) CFRetain(frameSetter);
-        if (_frameSetter) CFRelease(_frameSetter);
-        _frameSetter = frameSetter;
-    }
-}
-
-- (void)setFrame:(CTFrameRef)frame {
-    if (_frame != frame) {
-        if (frame) CFRetain(frame);
-        if (_frame) CFRelease(_frame);
-        _frame = frame;
-    }
-}
-
 - (void)dealloc {
     if (self.frame) {
         CFRelease(self.frame);
-    }
-    if (self.frameSetter) {
-        CFRelease(self.frameSetter);
-    }
-    if (self.textPath) {
-        CFRelease(self.textPath);
     }
 }
 

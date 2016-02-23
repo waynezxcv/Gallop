@@ -47,9 +47,6 @@
 }
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size{
-//    [_layout.nameTextLayout drawTextLayoutIncontext:context];
-////    [_layout.textTextLayout drawTextLayoutIncontext:context];
-//    [_layout.timeStampTextLayout drawTextLayoutIncontext:context];
     [self drawImage:[UIImage imageNamed:@"menu"] rect:_layout.menuPosition context:context];
     CGContextAddRect(context,_layout.avatarPosition);
     CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);

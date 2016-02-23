@@ -81,7 +81,7 @@
                                   SCREEN_WIDTH,
                                   self.layout.cellHeight);
     
-    self.label.textLayout = self.layout.textTextLayout;
+    self.label.layouts = @[self.layout.nameTextLayout,self.layout.textTextLayout,self.layout.timeStampTextLayout] ;
     
     self.avatarImageView.frame = self.layout.avatarPosition;
     [self.avatarImageView sd_setImageWithURL:self.layout.statusModel.user.avatarURL];
