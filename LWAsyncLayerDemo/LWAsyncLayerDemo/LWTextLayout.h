@@ -113,13 +113,11 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  */
 - (void)creatCTFrameRef;
 
-
 /**
  *  绘制
  *
  */
 - (void)drawInContext:(CGContextRef)context;
-
 
 /**
  *  为指定位置的文本添加链接
@@ -128,8 +126,8 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 - (void)addLinkWithData:(id)data
                 inRange:(NSRange)range
               linkColor:(UIColor *)linkColor
+         highLightColor:(UIColor *)highLightColor
          UnderLineStyle:(NSUnderlineStyle)underlineStyle;
-
 /**
  *  在指定位置插入一个图片
  *

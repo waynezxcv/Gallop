@@ -22,6 +22,6 @@ typedef NS_ENUM(NSUInteger, LWTextAttachType) {
 @property (nonatomic,strong) id data;
 @property (nonatomic,assign) NSRange range;
 @property (nonatomic,assign) CGRect imagePosition;
-
+@property (nonatomic,strong) UIColor* highLightColor;
 
 @end

@@ -54,7 +54,6 @@ static CGFloat widthCallback(void* ref){
     return self;
 }
 
-
 - (void)creatCTFrameRef {
     if (_attributedText == nil || self.boundsRect.size.width <= 0) {
         return ;
@@ -78,7 +77,6 @@ static CGFloat widthCallback(void* ref){
 }
 
 #pragma mark - Draw
-
 - (void)drawInContext:(CGContextRef)context {
     @autoreleasepool {
         CGContextSaveGState(context);
@@ -86,88 +84,26 @@ static CGFloat widthCallback(void* ref){
         CGContextTranslateCTM(context, self.boundsRect.origin.x, self.boundsRect.origin.y);
         CGContextTranslateCTM(context, 0, self.boundsRect.size.height);
         CGContextScaleCTM(context, 1.0, -1.0);
-        CGContextTranslateCTM(context, -self.boundsRect.origin.x, -self.boundsRect.origin.y);
+        CGContextTranslateCTM(context, - self.boundsRect.origin.x, -self.boundsRect.origin.y);
         CTFrameDraw(self.frame, context);
         CGContextRestoreGState(context);
-        if (self.attachs.count != 0) {
-            for (LWTextAttach* attach in self.attachs) {
-                if (attach.type == LWTextAttachTypeImage) {
-                    NSArray* lines = (NSArray *)CTFrameGetLines(_frame);
-                    NSUInteger lineCount = [lines count];
-                    CGPoint lineOrigins[lineCount];
-                    CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), lineOrigins);
-                    int imgIndex = 0;
-                    for (int i = 0; i < lineCount; i++) {
-                        if (attach == nil) {
-                            break;
-                        }
-                        CTLineRef line = (__bridge CTLineRef)lines[i];
-                        NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
-                        for (id runObj in runObjArray) {
-                            //遍历每一行中的每一个CTRun
-                            CTRunRef run = (__bridge CTRunRef)runObj;
-                            //获取CTRun的属性
-                            NSDictionary* runAttributes = (NSDictionary *)CTRunGetAttributes(run);
-                            //获取Key为kCTRunDelegateAttributeName的属性值
-                            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes valueForKey:(id)kCTRunDelegateAttributeName];
-                            if (delegate == nil) {
-                                continue;
-                            }
-                            //若kCTRunDelegateAttributeName的值不为空，获取CTRun的bounds
-                            CGRect runBounds;
-                            CGFloat ascent;
-                            CGFloat descent;
-
-                            runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
-                            runBounds.size.height = ascent + descent;
-
-                            //获取CTRun在每一行中的偏移量
-                            CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
-                            runBounds.origin.x = lineOrigins[i].x + xOffset;
-                            runBounds.origin.y = lineOrigins[i].y;
-                            runBounds.origin.y -= descent;
-
-                            //获取CTRun在CTFrame中的位置
-                            CGPathRef pathRef = CTFrameGetPath(_frame);
-                            CGRect colRect = CGPathGetBoundingBox(pathRef);
-                            CGRect delegateBounds = CGRectOffset(runBounds, colRect.origin.x , colRect.origin.y);
-                            attach.imagePosition = delegateBounds;
-                            //根据图片大小调整位置
-                            if (attach.imagePosition.size.width < self.boundsRect.size.width) {
-                                CGRect adjustRect = CGRectMake((self.boundsRect.size.width - attach.imagePosition.size.width)/2 + attach.imagePosition.origin.x,
-                                                               attach.imagePosition.origin.y,
-                                                               attach.imagePosition.size.width,
-                                                               attach.imagePosition.size.height);
-                                attach.imagePosition = adjustRect;
-                            }
-//                            if (imgIndex == self.attachs.count) {
-//                                attach = nil;
-//                                break;
-//                            } else {
-//                                attach = self.attachs[imgIndex];
-//                            }
-                            imgIndex++;
-                        }
-                    }
-                    for (LWTextAttach* attach in self.attachs) {
-                        if (attach.type == LWTextAttachTypeImage) {
-                            _drawImage(attach.data, attach.imagePosition, context);
-                        }
-                    }
-                }
+        if (self.attachs.count == 0) {
+            return;
+        }
+        for (NSInteger i = 0; i < self.attachs.count; i ++) {
+            LWTextAttach* attach = self.attachs[i];
+            if (attach.type == LWTextAttachTypeImage) {
+                UIImage* image = attach.data;
+                CGContextSaveGState(context);
+                CGContextTranslateCTM(context, self.boundsRect.origin.x, self.boundsRect.origin.y);
+                CGContextTranslateCTM(context, 0, self.boundsRect.size.height);
+                CGContextScaleCTM(context, 1.0, -1.0);
+                CGContextTranslateCTM(context, - self.boundsRect.origin.x, -self.boundsRect.origin.y);
+                CGContextDrawImage(context,attach.imagePosition,image.CGImage);
+                CGContextRestoreGState(context);
             }
         }
     }
-}
-
-static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
-    CGContextSaveGState(context);
-    CGContextTranslateCTM(context, rect.origin.x, rect.origin.y);
-    CGContextTranslateCTM(context, 0, rect.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    CGContextTranslateCTM(context, -rect.origin.x, -rect.origin.y);
-    CGContextDrawImage(context, rect, image.CGImage);
-    CGContextRestoreGState(context);
 }
 
 #pragma mark - Add Link
@@ -175,6 +111,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
 - (void)addLinkWithData:(id)data
                 inRange:(NSRange)range
               linkColor:(UIColor *)linkColor
+         highLightColor:(UIColor *)highLightColor
          UnderLineStyle:(NSUnderlineStyle)underlineStyle {
     if (_attributedText == nil || _attributedText.length == 0) {
         return;
@@ -193,6 +130,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     attach.type = LWTextAttachTypeLink;
     attach.data = data;
     attach.range = range;
+    attach.highLightColor = highLightColor;
     [self.attachs addObject:attach];
 }
 
@@ -205,13 +143,13 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     [self _resetFrameRef];
     CGFloat width = image.size.width;
     CGFloat height = image.size.height;
-    NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width
-                                                                                    imageHeight:height]];
+    NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width imageHeight:height]];
     [_attributedText insertAttributedString:placeholder atIndex:index];
     [self creatCTFrameRef];
     LWTextAttach* attach = [[LWTextAttach alloc] init];
     attach.type = LWTextAttachTypeImage;
     attach.data = image;
+    [self _setupImageAttachPositionWithAttach:attach];
     [self.attachs addObject:attach];
 }
 
@@ -230,7 +168,57 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     LWTextAttach* attach = [[LWTextAttach alloc] init];
     attach.type = LWTextAttachTypeImage;
     attach.data = image;
+    [self _setupImageAttachPositionWithAttach:attach];
     [self.attachs addObject:attach];
+}
+
+
+
+- (void)_setupImageAttachPositionWithAttach:(LWTextAttach *)attach {
+    if (attach.type == LWTextAttachTypeImage) {
+        NSArray* lines = (NSArray *)CTFrameGetLines(_frame);
+        NSUInteger lineCount = [lines count];
+        CGPoint lineOrigins[lineCount];
+        CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), lineOrigins);
+        for (int i = 0; i < lineCount; i++) {
+            if (attach == nil) {
+                break;
+            }
+            CTLineRef line = (__bridge CTLineRef)lines[i];
+            NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
+            for (id runObj in runObjArray) {
+                //遍历每一行中的每一个CTRun
+                CTRunRef run = (__bridge CTRunRef)runObj;
+                //获取CTRun的属性
+                NSDictionary* runAttributes = (NSDictionary *)CTRunGetAttributes(run);
+                //获取Key为kCTRunDelegateAttributeName的属性值
+                CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes valueForKey:(id)kCTRunDelegateAttributeName];
+                if (delegate == nil) {
+                    continue;
+                }
+                //若kCTRunDelegateAttributeName的值不为空，获取CTRun的bounds
+                CGRect runBounds;
+                CGFloat ascent;
+                CGFloat descent;
+                runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
+                runBounds.size.height = ascent + descent;
+
+                //获取CTRun在每一行中的偏移量
+                CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
+                runBounds.origin.x = lineOrigins[i].x+ xOffset;
+                runBounds.origin.y = lineOrigins[i].y - descent;
+
+                //获取CTRun在CTFrame中的位置
+                CGPathRef pathRef = CTFrameGetPath(_frame);
+                CGRect colRect = CGPathGetBoundingBox(pathRef);
+                CGRect delegateRect = CGRectMake(runBounds.origin.x + colRect.origin.x,
+                                                 runBounds.origin.y + colRect.origin.y,
+                                                 runBounds.size.width,
+                                                 runBounds.size.height);
+                attach.imagePosition = delegateRect;
+            }
+        }
+    }
 }
 
 - (NSString *)_jsonWithImageWith:(CGFloat)width
@@ -521,16 +509,14 @@ addAttributesWithCharacterSpacing:(unichar)characterSpacing
  kCTParagraphStyleSpecifierMaximumLineHeight = 8,         //最大行高
  kCTParagraphStyleSpecifierMinimumLineHeight = 9,         //最小行高
  kCTParagraphStyleSpecifierLineSpacing = 10,              //行距*
- kCTParagraphStyleSpecifierParagraphSpacing = 11,         //段落间距  在段的未尾（Bottom）加上间隔，这个值为负数。
+ kCTParagraphStyleSpecifierParagraphSpacing = 11,         //段落间距在段的未尾（Bottom）加上间隔，这个值为负数。
  kCTParagraphStyleSpecifierParagraphSpacingBefore = 12,   //段落前间距 在一个段落的前面加上间隔。TOP
  kCTParagraphStyleSpecifierBaseWritingDirection = 13,     //基本书写方向
  kCTParagraphStyleSpecifierMaximumLineSpacing = 14,       //最大行距
  kCTParagraphStyleSpecifierMinimumLineSpacing = 15,       //最小行距
  kCTParagraphStyleSpecifierLineSpacingAdjustment = 16,    //行距调整
- kCTParagraphStyleSpecifierCount = 17,        //
+ kCTParagraphStyleSpecifierCount = 17,
  */
-
-
 /********************************* ParagraphStyle *********************************************/
 
 /**
@@ -556,8 +542,6 @@ static CTTextAlignment _coreTextAlignmentFromNSTextAlignment(NSTextAlignment ali
  kCTLineBreakByTruncatingTail = 4,      //截除后面部份，只保留前面一行的数据，后部份以...代替。
  kCTLineBreakByTruncatingMiddle = 5     //在一行中显示段文字的前面和后面文字，中间文字使用...代替。
  */
-
-
 /**
  *  将NSLineBreakMode转换成CTLineBreakMode
  *
@@ -573,17 +557,16 @@ static CTLineBreakMode _coreTextLineBreakModeFromNSLineBreakModel(NSLineBreakMod
     }
 }
 
-//NSUnderlineStyleNone                                    = 0x00,
-//NSUnderlineStyleSingle                                  = 0x01,
-//NSUnderlineStyleThick NS_ENUM_AVAILABLE(10_0, 7_0)      = 0x02,
-//NSUnderlineStyleDouble NS_ENUM_AVAILABLE(10_0, 7_0)     = 0x09,
-//
-//NSUnderlinePatternSolid NS_ENUM_AVAILABLE(10_0, 7_0)      = 0x0000,
-//NSUnderlinePatternDot NS_ENUM_AVAILABLE(10_0, 7_0)        = 0x0100,
-//NSUnderlinePatternDash NS_ENUM_AVAILABLE(10_0, 7_0)       = 0x0200,
-//NSUnderlinePatternDashDot NS_ENUM_AVAILABLE(10_0, 7_0)    = 0x0300,
+//NSUnderlineStyleNone = 0x00,
+//NSUnderlineStyleSingle = 0x01,
+//NSUnderlineStyleThick NS_ENUM_AVAILABLE(10_0, 7_0) = 0x02,
+//NSUnderlineStyleDouble NS_ENUM_AVAILABLE(10_0, 7_0) = 0x09,
+//NSUnderlinePatternSolid NS_ENUM_AVAILABLE(10_0, 7_0) = 0x0000,
+//NSUnderlinePatternDot NS_ENUM_AVAILABLE(10_0, 7_0) = 0x0100,
+//NSUnderlinePatternDash NS_ENUM_AVAILABLE(10_0, 7_0) = 0x0200,
+//NSUnderlinePatternDashDot NS_ENUM_AVAILABLE(10_0, 7_0) = 0x0300,
 //NSUnderlinePatternDashDotDot NS_ENUM_AVAILABLE(10_0, 7_0) = 0x0400,
-//NSUnderlineByWord NS_ENUM_AVAILABLE(10_0, 7_0)            = 0x8000
+//NSUnderlineByWord NS_ENUM_AVAILABLE(10_0, 7_0) = 0x8000
 
 static CTUnderlineStyle _coreTextUnderlineStyleFromNSUnderlineStyle(NSUnderlineStyle underlineStyle) {
     switch (underlineStyle) {

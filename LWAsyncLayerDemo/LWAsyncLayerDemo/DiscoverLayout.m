@@ -40,7 +40,8 @@
     [self.nameTextLayout addLinkWithData:@"touch name link"
                                  inRange:NSMakeRange(0, self.statusModel.user.name.length)
                                linkColor:nil
-                          UnderLineStyle:NSUnderlineStyleSingle];
+                          highLightColor:[UIColor grayColor]
+                          UnderLineStyle:NSUnderlineStyleNone];
 
 
     //text
@@ -53,10 +54,16 @@
 
     [self.textTextLayout addLinkWithData:@"touch text link"
                                  inRange:NSMakeRange(0, 5)
-                               linkColor:[UIColor blueColor]
+                               linkColor:[UIColor redColor]
+                          highLightColor:[UIColor blueColor]
                           UnderLineStyle:NSUnderlineStyleSingle];
-    [self.textTextLayout insertImage:[UIImage imageNamed:@"loading"] atIndex:1];
 
+    if (self.textTextLayout.text.length >= 50) {
+        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:30];
+        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:30];
+        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:50];
+        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:50];
+    }
     //pics
     NSInteger imageCount = [self.statusModel.imageModels count];
     switch (imageCount) {
@@ -84,7 +91,7 @@
             break;
     }
 
-//    image detail Position
+    //    image detail Position
     NSMutableArray* tmpArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
     NSInteger row = 0;
     NSInteger column = 0;
