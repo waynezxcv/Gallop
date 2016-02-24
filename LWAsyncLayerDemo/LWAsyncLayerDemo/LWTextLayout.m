@@ -202,12 +202,10 @@ static CGFloat widthCallback(void* ref){
                 CGFloat descent;
                 runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
                 runBounds.size.height = ascent + descent;
-
                 //获取CTRun在每一行中的偏移量
                 CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
                 runBounds.origin.x = lineOrigins[i].x+ xOffset;
                 runBounds.origin.y = lineOrigins[i].y - descent;
-
                 //获取CTRun在CTFrame中的位置
                 CGPathRef pathRef = CTFrameGetPath(_frame);
                 CGRect colRect = CGPathGetBoundingBox(pathRef);

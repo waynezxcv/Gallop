@@ -141,6 +141,4 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 - (void)replaceTextWithImage:(UIImage *)image inRange:(NSRange)range;
 
 
-
-
 @end

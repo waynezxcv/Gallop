@@ -100,7 +100,12 @@
             // 获得每一行的 CGRect 信息
             CGRect flippedRect = [self _getLineBounds:line point:linePoint];
             CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-            CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x, rect.origin.y + boundsRect.origin.y, rect.size.width, rect.size.height);
+
+            CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                           rect.origin.y + boundsRect.origin.y,
+                                           rect.size.width,
+                                           rect.size.height);
+
             if (CGRectContainsPoint(adjustRect, touchPoint)) {
                 // 将点击的坐标转换成相对于当前行的坐标
                 CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),

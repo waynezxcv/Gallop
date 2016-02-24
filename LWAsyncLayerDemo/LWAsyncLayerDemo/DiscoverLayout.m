@@ -59,10 +59,8 @@
                           UnderLineStyle:NSUnderlineStyleSingle];
 
     if (self.textTextLayout.text.length >= 50) {
-        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:30];
-        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:30];
-        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:50];
-        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:50];
+        [self.textTextLayout insertImage:[UIImage imageNamed:@"emoji"] atIndex:50];
+
     }
     //pics
     NSInteger imageCount = [self.statusModel.imageModels count];

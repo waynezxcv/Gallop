@@ -45,6 +45,11 @@
             UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
             imageView.clipsToBounds = YES;
             imageView.contentMode = UIViewContentModeScaleAspectFill;
+
+            imageView.userInteractionEnabled = YES;
+            [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(didClickedImageView:)]];
+
             [self.contentView addSubview:imageView];
             [self.imageViews addObject:imageView];
         }
@@ -97,22 +102,9 @@
     }
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    UITouch* touch = [touches anyObject];
-    CGPoint point = [touch locationInView:self];
-    [self touchMenuHandlerIfNeedWithPoint:point];
-    [self touchImageHandlerIfNeedWithPoint:point];
-}
-
-//点击菜单按钮
-- (void)touchMenuHandlerIfNeedWithPoint:(CGPoint)point {
-    if (CGRectContainsPoint(self.layout.menuPosition, point)) {
-
-    }
-}
-
 //点击图片
-- (void)touchImageHandlerIfNeedWithPoint:(CGPoint)point {
+- (void)didClickedImageView:(UITapGestureRecognizer *)tap {
+    CGPoint point = [tap locationInView:self];
     for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.layout.imagePostionArray[i]);
         if (CGRectContainsPoint(imagePosition, point)) {
@@ -121,8 +113,8 @@
             }
         }
     }
-}
 
+}
 
 - (void)menuViewShow {
     [UIView animateWithDuration:0.2f animations:^{
