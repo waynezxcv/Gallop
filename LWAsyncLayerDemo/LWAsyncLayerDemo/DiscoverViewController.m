@@ -15,7 +15,7 @@
 #import "DiscoverLayout.h"
 #import "LWImageBrowser.h"
 
-@interface DiscoverViewController ()<UITableViewDataSource,UITableViewDelegate,DiscoverTableViewCellDelegate>
+@interface DiscoverViewController ()<UITableViewDataSource,UITableViewDelegate,DiscoverTableViewCellDelegate,LWLabelDelegate>
 
 @property (nonatomic,strong) LWFPSLabel* fpsLabel;
 @property (nonatomic,strong) DiscoverHeader* discoverHeader;
@@ -239,6 +239,7 @@
     cell.delegate = self;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.layout = [self.dataSource objectAtIndex:indexPath.row];
+    cell.label.delegate = self;
     [cell drawContent];
     return cell;
 }
@@ -268,6 +269,16 @@
                                                                    backgroundStyle:LWImageBrowserBackgroundStyleBlack                                                                        imageModels:tmpArray
                                                                       currentIndex:index];
     [browser show];
+}
+
+
+#pragma mark - LWLabelDelegate
+
+- (void)lwLabel:(LWLabel *)lwLabel didCilickedLinkWithfData:(id)data {
+    UIViewController* controller = [[UIViewController alloc] init];
+    controller.view.backgroundColor = [UIColor whiteColor];
+    controller.title = data;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 @end

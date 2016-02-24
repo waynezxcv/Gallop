@@ -12,6 +12,8 @@
 
 @interface LWLabel ()<LWAsyncDisplayLayerDelegate>
 
+@property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
+
 @end
 
 @implementation LWLabel
@@ -33,76 +35,12 @@
         self.layer.opaque = NO;
         self.layer.contentsScale = [UIScreen mainScreen].scale;
         ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
-
-        self.text = nil;
-        self.textColor = [UIColor blackColor];
-        self.font = [UIFont systemFontOfSize:14.0f];
-        self.backgroundColor = [UIColor clearColor];
-        self.textAlignment = NSTextAlignmentLeft;
-        self.veriticalAlignment = LWVerticalAlignmentCenter;
-        self.lineBreakMode = NSLineBreakByWordWrapping;
-        self.attributedText = nil;
+        [self addGestureRecognizer:self.tapGestureRecognizer];
     }
     return self;
 }
 
 #pragma mark - Setter & Getter
-//
-//- (void)setAttributedText:(NSAttributedString *)attributedText {
-//    if ([_attributedText isEqual:attributedText] || _attributedText == attributedText) {
-//        return;
-//    }
-//    _attributedText  = [attributedText copy];
-//    self.textLayout.attributedText = [self.attributedText copy];
-//}
-//
-//- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode {
-//    if (_lineBreakMode == lineBreakMode) {
-//        return;
-//    }
-//    _lineBreakMode = lineBreakMode;
-//    self.textLayout.lineBreakMode = self.lineBreakMode;
-//}
-//
-//- (void)setVeriticalAlignment:(LWVerticalAlignment)veriticalAlignment {
-//    if (_veriticalAlignment == veriticalAlignment) {
-//        return;
-//    }
-//    _veriticalAlignment = veriticalAlignment;
-//    self.textLayout.veriticalAlignment = self.veriticalAlignment;
-//}
-//
-//- (void)setTextAlignment:(NSTextAlignment)textAlignment {
-//    if (_textAlignment == textAlignment) {
-//        return;
-//    }
-//    _textAlignment = textAlignment;
-//    self.textLayout.textAlignment = self.textAlignment;
-//}
-//
-//- (void)setFont:(UIFont *)font {
-//    if ([_font isEqual:font] || _font == font) {
-//        return;
-//    }
-//    _font = font;
-//    self.textLayout.font = self.font;
-//}
-//
-//- (void)setTextColor:(UIColor *)textColor {
-//    if ([_textColor isEqual:textColor] || _textColor == textColor) {
-//        return;
-//    }
-//    _textColor = textColor;
-//    self.textLayout.textColor = self.textColor;
-//}
-//
-//- (void)setText:(NSString *)text {
-//    if ([_text isEqualToString:text] || _text == text) {
-//        return;
-//    }
-//    _text = [text copy];
-//    self.text = [self.text copy];
-//}
 
 - (void)setLayouts:(NSArray *)layouts {
     if (_layouts == layouts) {
@@ -110,6 +48,13 @@
     }
     _layouts = layouts;
     [self _setNeedDisplay];
+}
+
+- (UITapGestureRecognizer *)tapGestureRecognizer {
+    if (!_tapGestureRecognizer) {
+        _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_didSingleTapThisView:)];
+    }
+    return _tapGestureRecognizer;
 }
 
 #pragma mark - LWAsyncDisplayLayerDelegate
@@ -131,29 +76,63 @@
     [(LWAsyncDisplayLayer *)self.layer asyncDisplayContent];
 }
 
-#pragma mark - Touch
-//
-//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-//    UITouch* touch = [touches anyObject];
-//    CGPoint point = [touch locationInView:self];
-//    for (LWTextLayout* layout in self.layouts) {
-//        for (LWTextAttach* attach in layout.attachs) {
-//            if (CGRectContainsPoint(attach.position, point)) {
-//                for (LWTextAttach* attach in layout.attachs) {
-//                    UIView* view = [[UIView alloc] initWithFrame:attach.position];
-//                    view.backgroundColor = [UIColor grayColor];
-//                    view.alpha = 0.5f;
-//                    [self addSubview:view];
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-//    for (UIView* view in self.subviews) {
-//        [view removeFromSuperview];
-//    }
-//}
+#pragma mark - SignleTapGesture
+
+- (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
+    CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
+    for (LWTextLayout* layout in self.layouts) {
+        CTFrameRef textFrame = layout.frame;
+        //获取每一行
+        CFArrayRef lines = CTFrameGetLines(textFrame);
+        CGPoint origins[CFArrayGetCount(lines)];
+        //获取每行的原点坐标
+        CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
+        // 翻转坐标系
+        CGPathRef path = CTFrameGetPath(textFrame);
+        //获取整个CTFrame的大小
+        CGRect boundsRect = CGPathGetBoundingBox(path);
+        CGAffineTransform transform = CGAffineTransformIdentity;
+        transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
+        transform = CGAffineTransformScale(transform, 1.f, -1.f);
+        for (int i= 0; i < CFArrayGetCount(lines); i++) {
+            CGPoint linePoint = origins[i];
+            CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+            // 获得每一行的 CGRect 信息
+            CGRect flippedRect = [self _getLineBounds:line point:linePoint];
+            CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
+            CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x, rect.origin.y + boundsRect.origin.y, rect.size.width, rect.size.height);
+            if (CGRectContainsPoint(adjustRect, touchPoint)) {
+                // 将点击的坐标转换成相对于当前行的坐标
+                CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
+                                                    touchPoint.y - CGRectGetMinY(adjustRect));
+                // 获得当前点击坐标对应的字符串偏移
+                CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
+                // 判断这个偏移是否在我们的链接列表中
+                if (CGRectContainsPoint(adjustRect, touchPoint)) {
+                    for (LWTextAttach* attach in layout.attachs) {
+                        if (NSLocationInRange(index, attach.range)) {
+                            if ([self.delegate respondsToSelector:@selector(lwLabel:didCilickedLinkWithfData:)] &&
+                                [self.delegate conformsToProtocol:@protocol(LWLabelDelegate)]) {
+                                [self.delegate lwLabel:self didCilickedLinkWithfData:attach.data];
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+- (CGRect)_getLineBounds:(CTLineRef)line point:(CGPoint)point {
+    CGFloat ascent = 0.0f;
+    CGFloat descent = 0.0f;
+    CGFloat leading = 0.0f;
+    CGFloat width = (CGFloat)CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+    CGFloat height = ascent + descent;
+    return CGRectMake(point.x, point.y - descent, width, height);
+}
+
+
 
 @end

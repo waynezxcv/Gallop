@@ -30,30 +30,6 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 };
 
 
-/**
- *  下划线式样
- */
-typedef NS_ENUM(NSUInteger, LWUnderlineStyle){
-    /**
-     *  无下划线
-     */
-    LWUnderlineStyleNone,
-    /**
-     *  单下划线
-     */
-    LWUnderlineStyleSingle,
-    /**
-     *  加粗下划线
-     */
-    LWUnderlineStyleThick,
-    /**
-     *  双下划线
-     */
-    LWUnderlineStyleDouble
-};
-
-
-
 @interface LWTextLayout : NSObject
 
 /**
@@ -102,6 +78,11 @@ typedef NS_ENUM(NSUInteger, LWUnderlineStyle){
 @property (nonatomic,assign) LWVerticalAlignment veriticalAlignment;
 
 /**
+ *  下划线式样
+ */
+@property (nonatomic,assign) NSUnderlineStyle underlineStyle;
+
+/**
  *  换行方式，默认为NSLineBreakByWordWrapping
  */
 @property (nonatomic) NSLineBreakMode lineBreakMode;
@@ -147,15 +128,13 @@ typedef NS_ENUM(NSUInteger, LWUnderlineStyle){
 - (void)addLinkWithData:(id)data
                 inRange:(NSRange)range
               linkColor:(UIColor *)linkColor
-               highLigt:(UIColor *)highLight
          UnderLineStyle:(NSUnderlineStyle)underlineStyle;
-
 
 /**
  *  在指定位置插入一个图片
  *
  */
-- (void)insertImage:(UIImage *)image inRange:(NSRange)range;
+- (void)insertImage:(UIImage *)image atIndex:(NSInteger)index;
 
 /**
  *  用图片替换掉指定位置的文字

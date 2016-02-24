@@ -8,35 +8,29 @@
 
 #import "LWTextLayout.h"
 
-static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstraints(CTFramesetterRef framesetter, NSAttributedString *attributedString, CGSize size, NSUInteger numberOfLines) {
-    CFRange rangeToSize = CFRangeMake(0, (CFIndex)[attributedString length]);
-    CGSize constraints = CGSizeMake(size.width, MAXFLOAT);
-    if (numberOfLines > 0) {
-        // If the line count of the label more than 1, limit the range to size to the number of lines that have been set
-        CGMutablePathRef path = CGPathCreateMutable();
-        CGPathAddRect(path, NULL, CGRectMake(0.0f, 0.0f, constraints.width, MAXFLOAT));
-        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
-        CFArrayRef lines = CTFrameGetLines(frame);
-
-        if (CFArrayGetCount(lines) > 0) {
-            NSInteger lastVisibleLineIndex = MIN((CFIndex)numberOfLines, CFArrayGetCount(lines)) - 1;
-            CTLineRef lastVisibleLine = CFArrayGetValueAtIndex(lines, lastVisibleLineIndex);
-
-            CFRange rangeToLayout = CTLineGetStringRange(lastVisibleLine);
-            rangeToSize = CFRangeMake(0, rangeToLayout.location + rangeToLayout.length);
-        }
-        CFRelease(frame);
-        CFRelease(path);
-    }
-    CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, rangeToSize, NULL, constraints, NULL);
-    return CGSizeMake(ceil(suggestedSize.width), ceil(suggestedSize.height));
+static CGFloat descentCallback(void *ref){
+    return 0;
 }
 
+static CGFloat ascentCallback(void *ref){
+    NSString* callback = (__bridge NSString *)(ref);
+    NSData* jsonData = [callback dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingMutableContainers
+                                                          error:&err];
+    return [[dic objectForKey:@"height"] floatValue];
+}
 
-@interface LWTextLayout ()
-
-
-@end
+static CGFloat widthCallback(void* ref){
+    NSString* callback = (__bridge NSString *)(ref);
+    NSData* jsonData = [callback dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingMutableContainers
+                                                          error:&err];
+    return [[dic objectForKey:@"width"] floatValue];
+}
 
 @implementation LWTextLayout
 
@@ -55,14 +49,12 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
         self.boundsRect = CGRectZero;
         self.linespace = 2.0f;
         self.characterSpacing = 1.0f;
+        self.underlineStyle = NSUnderlineStyleNone;
     }
     return self;
 }
 
-/**
- *  创建CTFrameRef
- *
- */
+
 - (void)creatCTFrameRef {
     if (_attributedText == nil || self.boundsRect.size.width <= 0) {
         return ;
@@ -71,7 +63,11 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
         return ;
     }
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedText);
-    CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter, CFRangeMake(0, _attributedText.length),NULL, CGSizeMake(self.boundsRect.size.width, CGFLOAT_MAX), NULL);
+    CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,
+                                                                      CFRangeMake(0, _attributedText.length),
+                                                                      NULL,
+                                                                      CGSizeMake(self.boundsRect.size.width, CGFLOAT_MAX),
+                                                                      NULL);
     self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, suggestSize.width, suggestSize.height);
     _textHeight = suggestSize.height;
     CGMutablePathRef textPath = CGPathCreateMutable();
@@ -93,6 +89,74 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
         CGContextTranslateCTM(context, -self.boundsRect.origin.x, -self.boundsRect.origin.y);
         CTFrameDraw(self.frame, context);
         CGContextRestoreGState(context);
+        if (self.attachs.count != 0) {
+            for (LWTextAttach* attach in self.attachs) {
+                if (attach.type == LWTextAttachTypeImage) {
+                    NSArray* lines = (NSArray *)CTFrameGetLines(_frame);
+                    NSUInteger lineCount = [lines count];
+                    CGPoint lineOrigins[lineCount];
+                    CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), lineOrigins);
+                    int imgIndex = 0;
+                    for (int i = 0; i < lineCount; i++) {
+                        if (attach == nil) {
+                            break;
+                        }
+                        CTLineRef line = (__bridge CTLineRef)lines[i];
+                        NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
+                        for (id runObj in runObjArray) {
+                            //遍历每一行中的每一个CTRun
+                            CTRunRef run = (__bridge CTRunRef)runObj;
+                            //获取CTRun的属性
+                            NSDictionary* runAttributes = (NSDictionary *)CTRunGetAttributes(run);
+                            //获取Key为kCTRunDelegateAttributeName的属性值
+                            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes valueForKey:(id)kCTRunDelegateAttributeName];
+                            if (delegate == nil) {
+                                continue;
+                            }
+                            //若kCTRunDelegateAttributeName的值不为空，获取CTRun的bounds
+                            CGRect runBounds;
+                            CGFloat ascent;
+                            CGFloat descent;
+
+                            runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
+                            runBounds.size.height = ascent + descent;
+
+                            //获取CTRun在每一行中的偏移量
+                            CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
+                            runBounds.origin.x = lineOrigins[i].x + xOffset;
+                            runBounds.origin.y = lineOrigins[i].y;
+                            runBounds.origin.y -= descent;
+
+                            //获取CTRun在CTFrame中的位置
+                            CGPathRef pathRef = CTFrameGetPath(_frame);
+                            CGRect colRect = CGPathGetBoundingBox(pathRef);
+                            CGRect delegateBounds = CGRectOffset(runBounds, colRect.origin.x , colRect.origin.y);
+                            attach.imagePosition = delegateBounds;
+                            //根据图片大小调整位置
+                            if (attach.imagePosition.size.width < self.boundsRect.size.width) {
+                                CGRect adjustRect = CGRectMake((self.boundsRect.size.width - attach.imagePosition.size.width)/2 + attach.imagePosition.origin.x,
+                                                               attach.imagePosition.origin.y,
+                                                               attach.imagePosition.size.width,
+                                                               attach.imagePosition.size.height);
+                                attach.imagePosition = adjustRect;
+                            }
+//                            if (imgIndex == self.attachs.count) {
+//                                attach = nil;
+//                                break;
+//                            } else {
+//                                attach = self.attachs[imgIndex];
+//                            }
+                            imgIndex++;
+                        }
+                    }
+                    for (LWTextAttach* attach in self.attachs) {
+                        if (attach.type == LWTextAttachTypeImage) {
+                            _drawImage(attach.data, attach.imagePosition, context);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -106,58 +170,105 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     CGContextRestoreGState(context);
 }
 
-
-#pragma mark - Link
+#pragma mark - Add Link
 
 - (void)addLinkWithData:(id)data
                 inRange:(NSRange)range
               linkColor:(UIColor *)linkColor
-               highLigt:(UIColor *)highLight
          UnderLineStyle:(NSUnderlineStyle)underlineStyle {
     if (_attributedText == nil || _attributedText.length == 0) {
         return;
     }
-    [self resetFrameRef];
-    [self _mutableAttributedString:_attributedText addAttributesWithTextColor:linkColor inRange:range];
+    [self _resetFrameRef];
+    if (linkColor != nil) {
+        [self _mutableAttributedString:_attributedText addAttributesWithTextColor:linkColor
+                               inRange:range];
+    }
+    if (underlineStyle != NSUnderlineStyleNone) {
+        [self _mutableAttributedString:_attributedText addAttributesWithUnderlineStyle:underlineStyle
+                               inRange:range];
+    }
     [self creatCTFrameRef];
-    CFArrayRef lines = CTFrameGetLines(_frame);
-    CFIndex numbersOfLines = CFArrayGetCount(lines);
-    if (!lines || numbersOfLines == 0) {
-        return;
-    }
-    float height = 0.0f;
-    CGPoint origins[numbersOfLines];
-    CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), origins);
-    for (NSInteger i = 0; i < numbersOfLines; i ++) {
-        CGPoint lineOrigin = origins[i];
-        CTLineRef line = CFArrayGetValueAtIndex(lines, i);
-        CFArrayRef runs = CTLineGetGlyphRuns(line);
-        for (int j = 0; j < CFArrayGetCount(runs); j++) {
-            CGFloat runAscent;
-            CGFloat runDescent;
-            CTRunRef run = CFArrayGetValueAtIndex(runs, j);
-            NSDictionary* attributes = (__bridge NSDictionary*)CTRunGetAttributes(run);
-            if (CGColorEqualToColor((__bridge CGColorRef)([attributes valueForKey:@"CTForegroundColor"]),linkColor.CGColor)) {
-                CFRange range = CTRunGetStringRange(run);
-                CGRect runRect;
-                runRect.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0,0), &runAscent, &runDescent, NULL);
-                float offset = CTLineGetOffsetForStringIndex(line, range.location, NULL);
-                height = runAscent > height?runAscent:height;
-                runRect= CGRectMake (self.boundsRect.origin.x + lineOrigin.x + offset,
-                                     self.boundsRect.origin.y + (self.boundsRect.size.height) - lineOrigin.y - height + runDescent/2,
-                                     runRect.size.width,
-                                     height);
-                //                NSRange nRange = NSMakeRange(range.location, range.length);
-                LWTextAttach* attach = [[LWTextAttach alloc] init];
-                attach.position = runRect;
-                attach.data = data;
-                [self.attachs addObject:attach];
-            }
-        }
-    }
+    LWTextAttach* attach = [[LWTextAttach alloc] init];
+    attach.type = LWTextAttachTypeLink;
+    attach.data = data;
+    attach.range = range;
+    [self.attachs addObject:attach];
 }
 
+#pragma mark - Add Image
 
+- (void)insertImage:(UIImage *)image atIndex:(NSInteger)index {
+    if (_attributedText == nil || _attributedText.length == 0) {
+        return;
+    }
+    [self _resetFrameRef];
+    CGFloat width = image.size.width;
+    CGFloat height = image.size.height;
+    NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width
+                                                                                    imageHeight:height]];
+    [_attributedText insertAttributedString:placeholder atIndex:index];
+    [self creatCTFrameRef];
+    LWTextAttach* attach = [[LWTextAttach alloc] init];
+    attach.type = LWTextAttachTypeImage;
+    attach.data = image;
+    [self.attachs addObject:attach];
+}
+
+- (void)replaceTextWithImage:(UIImage *)image
+                     inRange:(NSRange)range {
+    if (_attributedText == nil || _attributedText.length == 0) {
+        return;
+    }
+    [self _resetFrameRef];
+    CGFloat width = image.size.width;
+    CGFloat height = image.size.height;
+    NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width
+                                                                                    imageHeight:height]];
+    [_attributedText replaceCharactersInRange:range withAttributedString:placeholder];
+    [self creatCTFrameRef];
+    LWTextAttach* attach = [[LWTextAttach alloc] init];
+    attach.type = LWTextAttachTypeImage;
+    attach.data = image;
+    [self.attachs addObject:attach];
+}
+
+- (NSString *)_jsonWithImageWith:(CGFloat)width
+                     imageHeight:(CGFloat)height {
+    NSString* jsonString = [NSString stringWithFormat:@"{\"width\":\"%f\",\"height\":\"%f\"}",width,height];
+    return jsonString;
+}
+
+- (NSAttributedString *)_placeHolderStringWithJson:(NSString *)json {
+    CTRunDelegateCallbacks callbacks;
+    memset(&callbacks, 0, sizeof(CTRunDelegateCallbacks));
+    callbacks.version = kCTRunDelegateVersion1;
+    callbacks.getAscent = ascentCallback;
+    callbacks.getDescent = descentCallback;
+    callbacks.getWidth = widthCallback;
+    CTRunDelegateRef delegate = CTRunDelegateCreate(&callbacks, (__bridge void *)(json));
+    unichar objectReplacementChar = 0xFFFC;
+    NSString* content = [NSString stringWithCharacters:&objectReplacementChar length:1];
+    NSMutableAttributedString* space = [[NSMutableAttributedString alloc] initWithString:content];
+    //为NSAttributedString设置key为kCTRunDelegateAttributeName值为delegate的属性
+    CFAttributedStringSetAttribute((CFMutableAttributedStringRef)space, CFRangeMake(0, 1),
+                                   kCTRunDelegateAttributeName, delegate);
+    CFRelease(delegate);
+    return space;
+}
+
+#pragma mark - Reset
+- (void)_resetAttachs {
+    [self.attachs removeAllObjects];
+}
+
+- (void)_resetFrameRef {
+    if (_frame) {
+        CFRelease(_frame);
+        _frame = nil;
+    }
+    _textHeight = 0;
+}
 
 #pragma mark - Getter
 
@@ -174,18 +285,10 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
 
 #pragma mark - Setter
 
-- (void)resetFrameRef {
-    if (_frame) {
-        CFRelease(_frame);
-        _frame = nil;
-    }
-    _textHeight = 0;
-    [_attachs removeAllObjects];
-}
-
 - (void)setText:(NSString *)text {
     _attributedText = [self _createAttributedStringWithText:text];
-    [self resetFrameRef];
+    [self _resetAttachs];
+    [self _resetFrameRef];
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
@@ -196,7 +299,8 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
     }else {
         _attributedText = [[NSMutableAttributedString alloc]initWithAttributedString:attributedText];
     }
-    [self resetFrameRef];
+    [self _resetAttachs];
+    [self _resetFrameRef];
 }
 
 - (void)setTextColor:(UIColor *)textColor {
@@ -205,7 +309,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
         [self _mutableAttributedString:_attributedText
             addAttributesWithTextColor:_textColor
                                inRange:NSMakeRange(0, _attributedText.length)];
-        [self resetFrameRef];
+        [self _resetFrameRef];
     }
 }
 
@@ -215,7 +319,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
         [self _mutableAttributedString:_attributedText
                  addAttributesWithFont:_font
                                inRange:NSMakeRange(0, _attributedText.length)];
-        [self resetFrameRef];
+        [self _resetFrameRef];
     }
 }
 
@@ -225,7 +329,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
         [self _mutableAttributedString:_attributedText
      addAttributesWithCharacterSpacing:characterSpacing
                                inRange:NSMakeRange(0, _attributedText.length)];
-        [self resetFrameRef];
+        [self _resetFrameRef];
     }
 }
 
@@ -237,7 +341,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
                          textAlignment:_textAlignment
                          lineBreakMode:_lineBreakMode
                                inRange:NSMakeRange(0, _attributedText.length)];
-        [self resetFrameRef];
+        [self _resetFrameRef];
     }
 }
 
@@ -249,7 +353,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
                          textAlignment:_textAlignment
                          lineBreakMode:_lineBreakMode
                                inRange:NSMakeRange(0, _attributedText.length)];
-        [self resetFrameRef];
+        [self _resetFrameRef];
     }
 }
 
@@ -261,7 +365,7 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
                          textAlignment:_textAlignment
                          lineBreakMode:_lineBreakMode
                                inRange:NSMakeRange(0, _attributedText.length)];
-        [self resetFrameRef];
+        [self _resetFrameRef];
     }
 }
 
@@ -296,9 +400,30 @@ static void _drawImage(UIImage* image,CGRect rect,CGContextRef context) {
                      textAlignment:_textAlignment
                      lineBreakMode:_lineBreakMode
                            inRange:NSMakeRange(0, text.length)];
+    //添加下划线式样
+    [self _mutableAttributedString:attbutedString addAttributesWithUnderlineStyle:_underlineStyle
+                           inRange:NSMakeRange(0, text.length)];
     return attbutedString;
 }
 
+/**
+ *  添加下划线式样
+ *
+ */
+- (void)_mutableAttributedString:(NSMutableAttributedString *)attributedString
+ addAttributesWithUnderlineStyle:(NSUnderlineStyle)underlineStyle
+                         inRange:(NSRange)range {
+    if (attributedString == nil) {
+        return;
+    }
+    [attributedString removeAttribute:(NSString *)kCTUnderlineStyleAttributeName range:range];
+    CTUnderlineStyle ctUnderlineStyle = _coreTextUnderlineStyleFromNSUnderlineStyle(underlineStyle);
+    if (ctUnderlineStyle != kCTUnderlineStyleNone) {
+        [attributedString addAttribute:(NSString *)kCTUnderlineStyleAttributeName
+                                 value:[NSNumber numberWithInt:(ctUnderlineStyle)]
+                                 range:range];
+    }
+}
 
 /**
  * 添加段落相关属性
@@ -445,6 +570,27 @@ static CTLineBreakMode _coreTextLineBreakModeFromNSLineBreakModel(NSLineBreakMod
         case NSLineBreakByTruncatingHead: return kCTLineBreakByTruncatingHead;
         case NSLineBreakByTruncatingTail: return kCTLineBreakByTruncatingTail;
         case NSLineBreakByTruncatingMiddle: return kCTLineBreakByTruncatingMiddle;
+    }
+}
+
+//NSUnderlineStyleNone                                    = 0x00,
+//NSUnderlineStyleSingle                                  = 0x01,
+//NSUnderlineStyleThick NS_ENUM_AVAILABLE(10_0, 7_0)      = 0x02,
+//NSUnderlineStyleDouble NS_ENUM_AVAILABLE(10_0, 7_0)     = 0x09,
+//
+//NSUnderlinePatternSolid NS_ENUM_AVAILABLE(10_0, 7_0)      = 0x0000,
+//NSUnderlinePatternDot NS_ENUM_AVAILABLE(10_0, 7_0)        = 0x0100,
+//NSUnderlinePatternDash NS_ENUM_AVAILABLE(10_0, 7_0)       = 0x0200,
+//NSUnderlinePatternDashDot NS_ENUM_AVAILABLE(10_0, 7_0)    = 0x0300,
+//NSUnderlinePatternDashDotDot NS_ENUM_AVAILABLE(10_0, 7_0) = 0x0400,
+//NSUnderlineByWord NS_ENUM_AVAILABLE(10_0, 7_0)            = 0x8000
+
+static CTUnderlineStyle _coreTextUnderlineStyleFromNSUnderlineStyle(NSUnderlineStyle underlineStyle) {
+    switch (underlineStyle) {
+        case NSUnderlineStyleNone: return kCTUnderlineStyleNone;
+        case NSUnderlineStyleSingle: return kCTUnderlineStyleSingle;
+        case NSUnderlineStyleThick: return kCTUnderlineStyleThick;
+        default:return kCTUnderlineStyleNone;
     }
 }
 

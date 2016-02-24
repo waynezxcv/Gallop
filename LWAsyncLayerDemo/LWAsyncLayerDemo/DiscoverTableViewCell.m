@@ -10,12 +10,10 @@
 #import "ContainerView.h"
 #import "LWRunLoopObserver.h"
 #import "UIImageView+WebCache.h"
-#import "LWLabel.h"
 
 @interface DiscoverTableViewCell ()
 
 @property (nonatomic,strong) ContainerView* backgroundImageView;
-@property (nonatomic,strong) LWLabel* label;
 @property (nonatomic,strong) UIImageView* avatarImageView;
 @property (nonatomic,strong) MenuView* menuView;
 @property (nonatomic,strong) NSMutableArray* imageViews;
@@ -92,7 +90,10 @@
         ImageModels* imageModel = [self.layout.statusModel.imageModels objectAtIndex:i];
         NSURL* URL = imageModel.thumbnailURL;
         [imageView sd_setImageWithURL:URL
-                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
+                            completed:^(UIImage *image,
+                                        NSError *error,
+                                        SDImageCacheType cacheType,
+                                        NSURL *imageURL) {}];
     }
 }
 
