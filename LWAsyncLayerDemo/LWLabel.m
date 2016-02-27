@@ -64,6 +64,10 @@
 }
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
+    if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:)] &&
+        [self.delegate conformsToProtocol:@protocol(LWLabelDelegate)]) {
+        [self.delegate extraAsyncDisplayIncontext:context size:size];
+    }
     for (LWTextLayout* layout in self.layouts) {
         [layout drawInContext:context];
     }

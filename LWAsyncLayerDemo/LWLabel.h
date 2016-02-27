@@ -18,6 +18,7 @@
 
 - (void)lwLabel:(LWLabel *)lwLabel didCilickedLinkWithfData:(id)data;
 
+- (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size;
 
 @end
 
