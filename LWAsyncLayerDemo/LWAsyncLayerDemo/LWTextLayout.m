@@ -32,6 +32,12 @@ static CGFloat widthCallback(void* ref){
     return [[dic objectForKey:@"width"] floatValue];
 }
 
+
+@interface LWTextLayout ()
+
+
+@end
+
 @implementation LWTextLayout
 
 #pragma mark - Initialization

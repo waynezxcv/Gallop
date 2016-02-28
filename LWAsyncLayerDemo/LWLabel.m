@@ -91,7 +91,7 @@
         CGPoint origins[CFArrayGetCount(lines)];
         //获取每行的原点坐标
         CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
-        // 翻转坐标系
+        //翻转坐标系
         CGPathRef path = CTFrameGetPath(textFrame);
         //获取整个CTFrame的大小
         CGRect boundsRect = CGPathGetBoundingBox(path);
@@ -123,6 +123,7 @@
                             if ([self.delegate respondsToSelector:@selector(lwLabel:didCilickedLinkWithfData:)] &&
                                 [self.delegate conformsToProtocol:@protocol(LWLabelDelegate)]) {
                                 [self.delegate lwLabel:self didCilickedLinkWithfData:attach.data];
+                                [self _layout:layout drawHighLightWithAttach:attach];
                             }
                             break;
                         }
@@ -142,6 +143,9 @@
     return CGRectMake(point.x, point.y - descent, width, height);
 }
 
+- (void)_layout:(LWTextLayout *)layout drawHighLightWithAttach:(LWTextAttach *)attach {
+    
+}
 
 
 @end
