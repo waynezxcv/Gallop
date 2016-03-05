@@ -11,6 +11,8 @@
 #import <UIKit/UIKit.h>
 #import "LWTextAttach.h"
 
+
+
 /**
  *  垂直方向对齐方式
  */
@@ -128,6 +130,8 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
               linkColor:(UIColor *)linkColor
          highLightColor:(UIColor *)highLightColor
          UnderLineStyle:(NSUnderlineStyle)underlineStyle;
+
+
 /**
  *  在指定位置插入一个图片
  *
@@ -141,5 +145,6 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 - (void)replaceTextWithImage:(UIImage *)image inRange:(NSRange)range;
 
 
+#define kLWTextLinkAttributedName @"LWTextLinkAttributedName"
 
 @end

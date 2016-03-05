@@ -13,10 +13,9 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.type = LWTextAttachTypeLink;
         self.range = NSMakeRange(0, 0);
         self.imagePosition = CGRectZero;
-        self.data = nil;
+        self.image = nil;
     }
     return self;
 }

@@ -30,7 +30,7 @@
         self.backgroundImageView = [[ContainerView alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.backgroundImageView];
 
-        self.label = [[LWLabel alloc] initWithFrame:CGRectZero];
+        self.label = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.label];
 
         self.avatarImageView = [[UIImageView alloc] initWithFrame:CGRectZero];

@@ -52,14 +52,25 @@
     self.textTextLayout.boundsRect = CGRectMake(60.0f,50.0f,SCREEN_WIDTH - 80.0f,MAXFLOAT);
     [self.textTextLayout creatCTFrameRef];
 
-    [self.textTextLayout addLinkWithData:@"touch text link"
-                                 inRange:NSMakeRange(0, 5)
-                               linkColor:[UIColor redColor]
-                          highLightColor:[UIColor blueColor]
-                          UnderLineStyle:NSUnderlineStyleSingle];
+    if (self.textTextLayout.text.length >= 11) {
+        
+        [self.textTextLayout addLinkWithData:@"touch text link  - 1"
+                                     inRange:NSMakeRange(6, 5)
+                                   linkColor:[UIColor redColor]
+                              highLightColor:[UIColor blueColor]
+                              UnderLineStyle:NSUnderlineStyleSingle];
+        
+        [self.textTextLayout addLinkWithData:@"touch text link - 2"
+                                     inRange:NSMakeRange(0, 5)
+                                   linkColor:[UIColor redColor]
+                              highLightColor:[UIColor blueColor]
+                              UnderLineStyle:NSUnderlineStyleSingle];
+    }
 
-    if (self.textTextLayout.text.length >= 50) {
-        [self.textTextLayout insertImage:[UIImage imageNamed:@"emoji"] atIndex:50];
+    if (self.textTextLayout.text.length >= 70) {
+        [self.textTextLayout insertImage:[UIImage imageNamed:@"loading"] atIndex:4];
+        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:8];
+        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:6];
 
     }
     //pics

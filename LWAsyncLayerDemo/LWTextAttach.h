@@ -10,18 +10,10 @@
 #import <UIKit/UIKit.h>
 
 
-
-typedef NS_ENUM(NSUInteger, LWTextAttachType) {
-    LWTextAttachTypeLink,
-    LWTextAttachTypeImage,
-};
-
 @interface LWTextAttach : NSObject
 
-@property (nonatomic,assign) LWTextAttachType type;
-@property (nonatomic,strong) id data;
+@property (nonatomic,strong) UIImage* image;
 @property (nonatomic,assign) NSRange range;
 @property (nonatomic,assign) CGRect imagePosition;
-@property (nonatomic,strong) UIColor* highLightColor;
 
 @end

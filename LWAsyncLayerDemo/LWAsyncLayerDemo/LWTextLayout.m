@@ -8,6 +8,7 @@
 
 #import "LWTextLayout.h"
 
+
 static CGFloat descentCallback(void *ref){
     return 0;
 }
@@ -98,16 +99,13 @@ static CGFloat widthCallback(void* ref){
         }
         for (NSInteger i = 0; i < self.attachs.count; i ++) {
             LWTextAttach* attach = self.attachs[i];
-            if (attach.type == LWTextAttachTypeImage) {
-                UIImage* image = attach.data;
-                CGContextSaveGState(context);
-                CGContextTranslateCTM(context, self.boundsRect.origin.x, self.boundsRect.origin.y);
-                CGContextTranslateCTM(context, 0, self.boundsRect.size.height);
-                CGContextScaleCTM(context, 1.0, -1.0);
-                CGContextTranslateCTM(context, - self.boundsRect.origin.x, -self.boundsRect.origin.y);
-                CGContextDrawImage(context,attach.imagePosition,image.CGImage);
-                CGContextRestoreGState(context);
-            }
+            CGContextSaveGState(context);
+            CGContextTranslateCTM(context, self.boundsRect.origin.x, self.boundsRect.origin.y);
+            CGContextTranslateCTM(context, 0, self.boundsRect.size.height);
+            CGContextScaleCTM(context, 1.0, -1.0);
+            CGContextTranslateCTM(context, - self.boundsRect.origin.x, -self.boundsRect.origin.y);
+            CGContextDrawImage(context,attach.imagePosition,attach.image.CGImage);
+            CGContextRestoreGState(context);
         }
     }
 }
@@ -131,13 +129,10 @@ static CGFloat widthCallback(void* ref){
         [self _mutableAttributedString:_attributedText addAttributesWithUnderlineStyle:underlineStyle
                                inRange:range];
     }
+    if (data != nil) {
+        [self _mutableAttributedString:_attributedText addLinkAttributesNameWithValue:data inRange:range];
+    }
     [self creatCTFrameRef];
-    LWTextAttach* attach = [[LWTextAttach alloc] init];
-    attach.type = LWTextAttachTypeLink;
-    attach.data = data;
-    attach.range = range;
-    attach.highLightColor = highLightColor;
-    [self.attachs addObject:attach];
 }
 
 #pragma mark - Add Image
@@ -152,9 +147,9 @@ static CGFloat widthCallback(void* ref){
     NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width imageHeight:height]];
     [_attributedText insertAttributedString:placeholder atIndex:index];
     [self creatCTFrameRef];
+    
     LWTextAttach* attach = [[LWTextAttach alloc] init];
-    attach.type = LWTextAttachTypeImage;
-    attach.data = image;
+    attach.image = image;
     [self _setupImageAttachPositionWithAttach:attach];
     [self.attachs addObject:attach];
 }
@@ -172,8 +167,7 @@ static CGFloat widthCallback(void* ref){
     [_attributedText replaceCharactersInRange:range withAttributedString:placeholder];
     [self creatCTFrameRef];
     LWTextAttach* attach = [[LWTextAttach alloc] init];
-    attach.type = LWTextAttachTypeImage;
-    attach.data = image;
+    attach.image = image;
     [self _setupImageAttachPositionWithAttach:attach];
     [self.attachs addObject:attach];
 }
@@ -181,46 +175,44 @@ static CGFloat widthCallback(void* ref){
 
 
 - (void)_setupImageAttachPositionWithAttach:(LWTextAttach *)attach {
-    if (attach.type == LWTextAttachTypeImage) {
-        NSArray* lines = (NSArray *)CTFrameGetLines(_frame);
-        NSUInteger lineCount = [lines count];
-        CGPoint lineOrigins[lineCount];
-        CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), lineOrigins);
-        for (int i = 0; i < lineCount; i++) {
-            if (attach == nil) {
-                break;
+    NSArray* lines = (NSArray *)CTFrameGetLines(_frame);
+    NSUInteger lineCount = [lines count];
+    CGPoint lineOrigins[lineCount];
+    CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), lineOrigins);
+    for (int i = 0; i < lineCount; i++) {
+        if (attach == nil) {
+            break;
+        }
+        CTLineRef line = (__bridge CTLineRef)lines[i];
+        NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
+        for (id runObj in runObjArray) {
+            //遍历每一行中的每一个CTRun
+            CTRunRef run = (__bridge CTRunRef)runObj;
+            //获取CTRun的属性
+            NSDictionary* runAttributes = (NSDictionary *)CTRunGetAttributes(run);
+            //获取Key为kCTRunDelegateAttributeName的属性值
+            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes valueForKey:(id)kCTRunDelegateAttributeName];
+            if (delegate == nil) {
+                continue;
             }
-            CTLineRef line = (__bridge CTLineRef)lines[i];
-            NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
-            for (id runObj in runObjArray) {
-                //遍历每一行中的每一个CTRun
-                CTRunRef run = (__bridge CTRunRef)runObj;
-                //获取CTRun的属性
-                NSDictionary* runAttributes = (NSDictionary *)CTRunGetAttributes(run);
-                //获取Key为kCTRunDelegateAttributeName的属性值
-                CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes valueForKey:(id)kCTRunDelegateAttributeName];
-                if (delegate == nil) {
-                    continue;
-                }
-                //若kCTRunDelegateAttributeName的值不为空，获取CTRun的bounds
-                CGRect runBounds;
-                CGFloat ascent;
-                CGFloat descent;
-                runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
-                runBounds.size.height = ascent + descent;
-                //获取CTRun在每一行中的偏移量
-                CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
-                runBounds.origin.x = lineOrigins[i].x+ xOffset;
-                runBounds.origin.y = lineOrigins[i].y - descent;
-                //获取CTRun在CTFrame中的位置
-                CGPathRef pathRef = CTFrameGetPath(_frame);
-                CGRect colRect = CGPathGetBoundingBox(pathRef);
-                CGRect delegateRect = CGRectMake(runBounds.origin.x + colRect.origin.x,
-                                                 runBounds.origin.y + colRect.origin.y,
-                                                 runBounds.size.width,
-                                                 runBounds.size.height);
-                attach.imagePosition = delegateRect;
-            }
+            //若kCTRunDelegateAttributeName的值不为空，获取CTRun的bounds
+            CGRect runBounds;
+            CGFloat ascent;
+            CGFloat descent;
+            runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
+            runBounds.size.height = ascent + descent;
+            //获取CTRun在每一行中的偏移量
+            CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
+            runBounds.origin.x = lineOrigins[i].x+ xOffset;
+            runBounds.origin.y = lineOrigins[i].y - descent;
+            //获取CTRun在CTFrame中的位置
+            CGPathRef pathRef = CTFrameGetPath(_frame);
+            CGRect colRect = CGPathGetBoundingBox(pathRef);
+            CGRect delegateRect = CGRectMake(runBounds.origin.x + colRect.origin.x,
+                                             runBounds.origin.y + colRect.origin.y,
+                                             runBounds.size.width,
+                                             runBounds.size.height);
+            attach.imagePosition = delegateRect;
         }
     }
 }
@@ -248,6 +240,7 @@ static CGFloat widthCallback(void* ref){
     CFRelease(delegate);
     return space;
 }
+
 
 #pragma mark - Reset
 - (void)_resetAttachs {
@@ -398,6 +391,27 @@ static CGFloat widthCallback(void* ref){
     return attbutedString;
 }
 
+
+/**
+ *  添加Link属性
+ *
+ */
+
+- (void)_mutableAttributedString:(NSMutableAttributedString *)attributedString
+  addLinkAttributesNameWithValue:(id)value
+                         inRange:(NSRange)range {
+    
+    if (attributedString == nil) {
+        return;
+    }
+    if (value != nil) {
+        [attributedString addAttribute:kLWTextLinkAttributedName
+                                 value:value
+                                 range:range];
+    }
+}
+
+
 /**
  *  添加下划线式样
  *
@@ -491,7 +505,7 @@ addAttributesWithCharacterSpacing:(unichar)characterSpacing
         return;
     }
     [attributedString removeAttribute:(NSString *)kCTKernAttributeName range:range];
-
+    
     CFNumberRef charSpacingNum =  CFNumberCreate(kCFAllocatorDefault,kCFNumberSInt8Type,&characterSpacing);
     if (charSpacingNum != nil) {
         [attributedString addAttribute:(NSString *)kCTKernAttributeName value:(__bridge id)charSpacingNum range:range];

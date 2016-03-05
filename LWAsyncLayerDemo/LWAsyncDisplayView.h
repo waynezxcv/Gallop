@@ -10,13 +10,13 @@
 #import "LWTextLayout.h"
 
 
-@class LWLabel;
+@class LWAsyncDisplayView;
 
 @protocol LWLabelDelegate <NSObject>
 
 @optional
 
-- (void)lwLabel:(LWLabel *)lwLabel didCilickedLinkWithfData:(id)data;
+- (void)lwAsyncDicsPlayView:(LWAsyncDisplayView *)lwLabel didCilickedLinkWithfData:(id)data;
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size;
 
@@ -26,7 +26,7 @@
 /**
  *  LWLabel 支持属性文本、图文混排、点击链接、异步绘制。
  */
-@interface LWLabel : UIView
+@interface LWAsyncDisplayView : UIView
 
 @property (nonatomic,weak) id <LWLabelDelegate> delegate;
 

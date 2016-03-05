@@ -274,7 +274,7 @@
 
 #pragma mark - LWLabelDelegate
 
-- (void)lwLabel:(LWLabel *)lwLabel didCilickedLinkWithfData:(id)data {
+- (void)lwAsyncDicsPlayView:(LWAsyncDisplayView *)lwLabel didCilickedLinkWithfData:(id)data {
     UIViewController* controller = [[UIViewController alloc] init];
     controller.view.backgroundColor = [UIColor whiteColor];
     controller.title = data;
