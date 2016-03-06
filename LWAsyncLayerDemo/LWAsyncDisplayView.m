@@ -52,7 +52,8 @@
 
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {
-        _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_didSingleTapThisView:)];
+        _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                        action:@selector(_didSingleTapThisView:)];
         _tapGestureRecognizer.delegate = self;
     }
     return _tapGestureRecognizer;

@@ -15,9 +15,16 @@
 @protocol LWLabelDelegate <NSObject>
 
 @optional
-
+/**
+ *  点击链接回调
+ *
+ */
 - (void)lwAsyncDicsPlayView:(LWAsyncDisplayView *)lwLabel didCilickedLinkWithfData:(id)data;
 
+/**
+ *  额外的绘制任务在这里实现
+ *
+ */
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size;
 
 @end

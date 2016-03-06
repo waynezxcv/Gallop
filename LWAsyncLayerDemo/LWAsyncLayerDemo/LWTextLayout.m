@@ -392,7 +392,6 @@ static CGFloat widthCallback(void* ref){
     }
 }
 
-
 /**
  *  添加下划线式样
  *
@@ -424,7 +423,8 @@ static CGFloat widthCallback(void* ref){
     if (attributedString == nil) {
         return;
     }
-    [attributedString removeAttribute:(NSString *)kCTParagraphStyleAttributeName range:range];
+    [attributedString removeAttribute:(NSString *)kCTParagraphStyleAttributeName
+                                range:range];
     //文字对齐方式
     CTTextAlignment ctTextAlignment = _coreTextAlignmentFromNSTextAlignment(textAlignment);
     //换行方式
