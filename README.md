@@ -56,7 +56,7 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
       //一些额外的绘制工作
      }
 
-    ```
+```
 
 ![image][image-1]
 
