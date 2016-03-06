@@ -22,6 +22,9 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
 如果需要更加详细的内容，请看各个头文件，有详细的注释
 
 * **Example**
+例如试下如图布局
+![image](https://github.com/waynezxcv/LWAsyncDisplayKit/blob/master/LWAsyncLayerDemo/image-1.png)
+
 ```objc
     //创建一个LWTextLayout实例（要实现更多的布局，可以继承LWTextLayout，并添加相关属性）
     LWTextLayout* textLayout = [[LWTextLayout alloc] init];
@@ -57,6 +60,3 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
      }
 
 ```
-
-![image](https://github.com/waynezxcv/LWAsyncDisplayKit/blob/master/LWAsyncLayerDemo/image-1.png)
-
