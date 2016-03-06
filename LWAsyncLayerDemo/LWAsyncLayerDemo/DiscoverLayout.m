@@ -66,12 +66,10 @@
                               highLightColor:[UIColor blueColor]
                               UnderLineStyle:NSUnderlineStyleSingle];
     }
-
     if (self.textTextLayout.text.length >= 70) {
-        [self.textTextLayout insertImage:[UIImage imageNamed:@"loading"] atIndex:4];
-        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:8];
-        [self.textTextLayout insertImage:[UIImage imageNamed:@"menu"] atIndex:6];
-
+        [self.textTextLayout replaceTextWithImage:[UIImage imageNamed:@"menu"] inRange:NSMakeRange(0, 2)];
+        [self.textTextLayout replaceTextWithImage:[UIImage imageNamed:@"loading"] inRange:NSMakeRange(2, 2)];
+        [self.textTextLayout replaceTextWithImage:[UIImage imageNamed:@"menu"] inRange:NSMakeRange(30, 2)];
     }
     //pics
     NSInteger imageCount = [self.statusModel.imageModels count];

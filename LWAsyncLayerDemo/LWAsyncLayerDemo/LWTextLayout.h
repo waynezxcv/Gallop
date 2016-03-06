@@ -131,18 +131,17 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
          highLightColor:(UIColor *)highLightColor
          UnderLineStyle:(NSUnderlineStyle)underlineStyle;
 
-
 /**
- *  在指定位置插入一个图片
- *
- */
-- (void)insertImage:(UIImage *)image atIndex:(NSInteger)index;
-
-/**
- *  用图片替换掉指定位置的文字
+ *  用本地图片替换掉指定位置的文字
  *
  */
 - (void)replaceTextWithImage:(UIImage *)image inRange:(NSRange)range;
+
+/**
+ *  用网络图片替换掉指定位置的文字
+ *
+ */
+- (void)replaceTextWithImageURL:(NSURL *)URL inRange:(NSRange)range;
 
 
 #define kLWTextLinkAttributedName @"LWTextLinkAttributedName"

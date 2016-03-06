@@ -159,18 +159,4 @@
     return YES;
 }
 
-
-// 判断这个偏移是否在我们的链接列表中
-//                if (CGRectContainsPoint(adjustRect, touchPoint)) {
-//                    for (LWTextAttach* attach in layout.attachs) {
-//                        if (NSLocationInRange(index, attach.range)) {
-//                            if ([self.delegate respondsToSelector:@selector(lwAsyncDicsPlayView:didCilickedLinkWithfData:)] &&
-//                                [self.delegate conformsToProtocol:@protocol(LWLabelDelegate)]) {
-//                                [self.delegate lwAsyncDicsPlayView:self didCilickedLinkWithfData:attach.data];
-//                                [self _layout:layout drawHighLightWithAttach:attach];
-//                            }
-//                            break;
-//                        }
-//                    }
-//                }
 @end

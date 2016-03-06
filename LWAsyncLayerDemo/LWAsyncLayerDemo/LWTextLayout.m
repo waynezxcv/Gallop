@@ -137,23 +137,6 @@ static CGFloat widthCallback(void* ref){
 
 #pragma mark - Add Image
 
-- (void)insertImage:(UIImage *)image atIndex:(NSInteger)index {
-    if (_attributedText == nil || _attributedText.length == 0) {
-        return;
-    }
-    [self _resetFrameRef];
-    CGFloat width = image.size.width;
-    CGFloat height = image.size.height;
-    NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width imageHeight:height]];
-    [_attributedText insertAttributedString:placeholder atIndex:index];
-    [self creatCTFrameRef];
-    
-    LWTextAttach* attach = [[LWTextAttach alloc] init];
-    attach.image = image;
-    [self _setupImageAttachPositionWithAttach:attach];
-    [self.attachs addObject:attach];
-}
-
 - (void)replaceTextWithImage:(UIImage *)image
                      inRange:(NSRange)range {
     if (_attributedText == nil || _attributedText.length == 0) {
@@ -171,8 +154,6 @@ static CGFloat widthCallback(void* ref){
     [self _setupImageAttachPositionWithAttach:attach];
     [self.attachs addObject:attach];
 }
-
-
 
 - (void)_setupImageAttachPositionWithAttach:(LWTextAttach *)attach {
     NSArray* lines = (NSArray *)CTFrameGetLines(_frame);
@@ -203,7 +184,7 @@ static CGFloat widthCallback(void* ref){
             runBounds.size.height = ascent + descent;
             //获取CTRun在每一行中的偏移量
             CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
-            runBounds.origin.x = lineOrigins[i].x+ xOffset;
+            runBounds.origin.x = lineOrigins[i].x + xOffset;
             runBounds.origin.y = lineOrigins[i].y - descent;
             //获取CTRun在CTFrame中的位置
             CGPathRef pathRef = CTFrameGetPath(_frame);
@@ -235,7 +216,7 @@ static CGFloat widthCallback(void* ref){
     NSString* content = [NSString stringWithCharacters:&objectReplacementChar length:1];
     NSMutableAttributedString* space = [[NSMutableAttributedString alloc] initWithString:content];
     //为NSAttributedString设置key为kCTRunDelegateAttributeName值为delegate的属性
-    CFAttributedStringSetAttribute((CFMutableAttributedStringRef)space, CFRangeMake(0, 1),
+    CFAttributedStringSetAttribute((CFMutableAttributedStringRef)space, CFRangeMake(0, content.length),
                                    kCTRunDelegateAttributeName, delegate);
     CFRelease(delegate);
     return space;
