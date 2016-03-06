@@ -58,5 +58,5 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
 
 ```
 
-![image][image-1]
+![image](https://github.com/waynezxcv/LWAsyncDisplayKit/blob/master/LWAsyncLayerDemo/image-1.png)
 
