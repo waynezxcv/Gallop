@@ -10,7 +10,8 @@
 #import "LWAsyncDisplayLayer.h"
 #import "LWRunLoopObserver.h"
 
-@interface LWAsyncDisplayView ()<LWAsyncDisplayLayerDelegate,UIGestureRecognizerDelegate>
+@interface LWAsyncDisplayView ()
+<LWAsyncDisplayLayerDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
 

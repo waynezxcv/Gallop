@@ -52,25 +52,14 @@
     self.textTextLayout.boundsRect = CGRectMake(60.0f,50.0f,SCREEN_WIDTH - 80.0f,MAXFLOAT);
     [self.textTextLayout creatCTFrameRef];
 
-    if (self.textTextLayout.text.length >= 11) {
-        
-        [self.textTextLayout addLinkWithData:@"touch text link  - 1"
-                                     inRange:NSMakeRange(6, 5)
-                                   linkColor:[UIColor redColor]
-                              highLightColor:[UIColor blueColor]
-                              UnderLineStyle:NSUnderlineStyleSingle];
-        
-        [self.textTextLayout addLinkWithData:@"touch text link - 2"
-                                     inRange:NSMakeRange(0, 5)
-                                   linkColor:[UIColor redColor]
-                              highLightColor:[UIColor blueColor]
-                              UnderLineStyle:NSUnderlineStyleSingle];
-    }
-    if (self.textTextLayout.text.length >= 70) {
-        [self.textTextLayout replaceTextWithImage:[UIImage imageNamed:@"menu"] inRange:NSMakeRange(0, 2)];
-        [self.textTextLayout replaceTextWithImage:[UIImage imageNamed:@"loading"] inRange:NSMakeRange(2, 2)];
-        [self.textTextLayout replaceTextWithImage:[UIImage imageNamed:@"menu"] inRange:NSMakeRange(30, 2)];
-    }
+    [self.textTextLayout replaceTextWithImage:[UIImage imageNamed:@"微笑"] inRange:NSMakeRange(27, 4)];
+
+    [self.textTextLayout addLinkWithData:@"点击链接"
+                                 inRange:NSMakeRange(30,4)
+                               linkColor:[UIColor redColor]
+                          highLightColor:[UIColor grayColor]
+                          UnderLineStyle:NSUnderlineStyleSingle];
+    
     //pics
     NSInteger imageCount = [self.statusModel.imageModels count];
     switch (imageCount) {
