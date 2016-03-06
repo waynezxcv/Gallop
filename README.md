@@ -1,5 +1,5 @@
 # LWAsyncDisplayView V0.1
-LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布局预加载缓存、支持图文混排显示，支持添加链接、支持自定义排版<br>
+LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布局预加载缓存、支持图文混排显示，支持添加链接、支持自定义排版。使用在UITableViewCell上时，可以保持帧数在60<br>
 
 ## Features
 * 支持文本布局绘制预加载，并使用异步绘制的方式，保持界面的流畅性
