@@ -7,6 +7,7 @@
 //
 
 #import "DiscoverLayout.h"
+#import "LWTextParser.h"
 
 @interface DiscoverLayout ()
 
@@ -36,14 +37,14 @@
     self.nameTextLayout.textColor = RGB(113, 129, 161, 1);
     self.nameTextLayout.boundsRect = CGRectMake(60, 20, SCREEN_WIDTH, 20);
     [self.nameTextLayout creatCTFrameRef];
-
+    
     [self.nameTextLayout addLinkWithData:@"touch name link"
                                  inRange:NSMakeRange(0, self.statusModel.user.name.length)
                                linkColor:nil
                           highLightColor:[UIColor grayColor]
                           UnderLineStyle:NSUnderlineStyleNone];
-
-
+    
+    
     //text
     self.textTextLayout = [[LWTextLayout alloc] init];
     self.textTextLayout.text = self.statusModel.text;
@@ -52,13 +53,25 @@
     self.textTextLayout.boundsRect = CGRectMake(60.0f,50.0f,SCREEN_WIDTH - 80.0f,MAXFLOAT);
     [self.textTextLayout creatCTFrameRef];
 
-    [self.textTextLayout replaceTextWithImage:[UIImage imageNamed:@"微笑"] inRange:NSMakeRange(27, 4)];
-
-    [self.textTextLayout addLinkWithData:@"点击链接"
-                                 inRange:NSMakeRange(30,4)
-                               linkColor:[UIColor redColor]
-                          highLightColor:[UIColor grayColor]
-                          UnderLineStyle:NSUnderlineStyleSingle];
+    
+    [LWTextParser parseEmojiWithTextLayout:self.textTextLayout];
+    
+    [LWTextParser parseHttpURLWithTextLayout:self.textTextLayout
+                                   linkColor:[UIColor blueColor]
+                              highlightColor:nil
+                              underlineStyle:NSUnderlineStyleSingle];
+    
+    
+    
+    [LWTextParser parseAccountWithTextLayout:self.textTextLayout
+                                   linkColor:[UIColor redColor]
+                              highlightColor:nil
+                              underlineStyle:NSUnderlineStyleNone];
+    
+    [LWTextParser parseTopicWithTextLayout:self.textTextLayout
+                                 linkColor:[UIColor redColor]
+                            highlightColor:nil
+                            underlineStyle:NSUnderlineStyleNone];
     
     //pics
     NSInteger imageCount = [self.statusModel.imageModels count];
@@ -86,7 +99,7 @@
         default:self.imagesPosition = CGRectMake(60.0f, 60.0f + self.textTextLayout.textHeight, 250.0f, 0.0f);
             break;
     }
-
+    
     //    image detail Position
     NSMutableArray* tmpArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
     NSInteger row = 0;
@@ -112,7 +125,7 @@
     self.timeStampTextLayout.textColor = [UIColor grayColor];
     self.timeStampTextLayout.boundsRect = CGRectMake(60, 70 + self.imagesPosition.size.height + self.textTextLayout.textHeight, SCREEN_WIDTH - 80, 20.0f);
     [self.timeStampTextLayout creatCTFrameRef];
-
+    
     //menu
     self.menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f, 70.0f + self.textTextLayout.boundsRect.size.height + self.imagesPosition.size.height, 20.0f, 15.0f);
     //cellHeight

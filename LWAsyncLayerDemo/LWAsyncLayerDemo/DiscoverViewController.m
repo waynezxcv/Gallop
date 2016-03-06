@@ -153,7 +153,9 @@
         }
         DiscoverLayout* layout = [[DiscoverLayout alloc] initWithStatusModel:statuModel];
         [self.dataSource addObject:layout];
-        [self.dataSource addObjectsFromArray:self.dataSource];
+        for (NSInteger i = 0; i < 5; i ++) {
+            [self.dataSource addObjectsFromArray:self.dataSource];
+        }
     }
 }
 

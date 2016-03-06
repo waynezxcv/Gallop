@@ -21,6 +21,7 @@
 		01347F401C5DF7B00014D9EF /* ProfileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F3F1C5DF7B00014D9EF /* ProfileModel.m */; };
 		01347F561C5E258C0014D9EF /* discoverTimeline.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01347F551C5E258C0014D9EF /* discoverTimeline.plist */; };
 		01347F5C1C5E717C0014D9EF /* LWTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 01347F5B1C5E717C0014D9EF /* LWTextLayout.m */; };
+		013DDE441C8C9FB900964753 /* LWTextParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 013DDE431C8C9FB900964753 /* LWTextParser.m */; };
 		B0392CCF1C7C616C00642EEB /* LWTextAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = B0392CCE1C7C616C00642EEB /* LWTextAttach.m */; };
 		B040EB7E1C72D31800EA29CF /* CALayer+LazySetContents.m in Sources */ = {isa = PBXBuildFile; fileRef = B040EB561C72D31800EA29CF /* CALayer+LazySetContents.m */; };
 		B040EB7F1C72D31800EA29CF /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B040EB581C72D31800EA29CF /* CALayer+WebCache.m */; };
@@ -101,6 +102,8 @@
 		01347F551C5E258C0014D9EF /* discoverTimeline.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = discoverTimeline.plist; sourceTree = "<group>"; };
 		01347F5A1C5E717C0014D9EF /* LWTextLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextLayout.h; path = LWAsyncLayerDemo/LWTextLayout.h; sourceTree = "<group>"; };
 		01347F5B1C5E717C0014D9EF /* LWTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextLayout.m; path = LWAsyncLayerDemo/LWTextLayout.m; sourceTree = "<group>"; };
+		013DDE421C8C9FB900964753 /* LWTextParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWTextParser.h; sourceTree = "<group>"; };
+		013DDE431C8C9FB900964753 /* LWTextParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWTextParser.m; sourceTree = "<group>"; };
 		B0392CCD1C7C616C00642EEB /* LWTextAttach.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWTextAttach.h; sourceTree = "<group>"; };
 		B0392CCE1C7C616C00642EEB /* LWTextAttach.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWTextAttach.m; sourceTree = "<group>"; };
 		B040EB551C72D31800EA29CF /* CALayer+LazySetContents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+LazySetContents.h"; sourceTree = "<group>"; };
@@ -310,6 +313,8 @@
 				B0CFDFB61C60506D00E4291F /* LWAsyncDisplayLayer.m */,
 				01347F5A1C5E717C0014D9EF /* LWTextLayout.h */,
 				01347F5B1C5E717C0014D9EF /* LWTextLayout.m */,
+				013DDE421C8C9FB900964753 /* LWTextParser.h */,
+				013DDE431C8C9FB900964753 /* LWTextParser.m */,
 				B0392CCD1C7C616C00642EEB /* LWTextAttach.h */,
 				B0392CCE1C7C616C00642EEB /* LWTextAttach.m */,
 				B04E5D4F1C5F5F6C00C8F1E6 /* LWRunLoopObserver.h */,
@@ -564,6 +569,7 @@
 				B040EB8E1C72D31800EA29CF /* UIImage+WebP.m in Sources */,
 				B04E5D511C5F5F6C00C8F1E6 /* LWRunLoopObserver.m in Sources */,
 				B040EB801C72D31800EA29CF /* CALayer+WebCacheOperation.m in Sources */,
+				013DDE441C8C9FB900964753 /* LWTextParser.m in Sources */,
 				B040EB831C72D31800EA29CF /* SDImageCache.m in Sources */,
 				B040EB8C1C72D31800EA29CF /* UIImage+GIF.m in Sources */,
 				B040EB911C72D31800EA29CF /* UIView+WebCacheOperation.m in Sources */,

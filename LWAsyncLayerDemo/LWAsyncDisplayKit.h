@@ -14,5 +14,6 @@
 #import "CALayer+LazySetContents.h"
 #import "LWRunLoopObserver.h"
 #import "LWFlag.h"
+#import "LWTextParser.h"
 
 #endif /* LWAsyncDisplayKit_h */

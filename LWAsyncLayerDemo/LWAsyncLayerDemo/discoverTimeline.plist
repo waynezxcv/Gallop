@@ -35,7 +35,7 @@
 				avatar = "";
 			},
 		);
-		text = "\U4f7f\U7528LWAsyncDisplayView\U6765\U5b9e\U73b0\U56fe\U6587\U6df7\U6392[\U5fae\U7b11]\Uff0c\U548c\U70b9\U51fb\U94fe\U63a5\Uff0c\U5f88\U7b80\U5355\U3002\U5e76\U4e14\U5f02\U6b65\U7ed8\U5236\U4e0e\U9884\U52a0\U8f7d\U7f13\U5b58\U5e03\U5c40\Uff0c\U80fd\U4fdd\U8bc1\U754c\U9762\U6eda\U52a8\U7684\U6d41\U7545\U6027~";
+		text = "#iOS#\U4f7f\U7528LWAsyncDisplayView\U6765\U5b9e\U73b0\U56fe\U6587\U6df7\U6392[\U5fae\U7b11]\Uff0c\U548c\U70b9\U51fb\U94fe\U63a5 https://github.com/waynezxcv/LWAsyncDisplayView\Uff0c\U5341\U5206\U5f88\U7b80\U5355\U3002@waynezxcv \U5e76\U4e14\U5f02\U6b65\U7ed8\U5236\U4e0e\U9884\U52a0\U8f7d\U7f13\U5b58\U5e03\U5c40\Uff0c\U80fd\U4fdd\U8bc1\U754c\U9762\U6eda\U52a8\U7684\U6d41\U7545\U6027~";
 		timeStamp = 1453660395;
 		user = {
 			name = Waynezxcv;
