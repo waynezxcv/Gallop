@@ -1,4 +1,4 @@
-# LWAsyncDisplayView
+# LWAsyncDisplayView V0.1
 LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布局预加载缓存、支持图文混排显示，支持添加链接、支持自定义排版<br>
 
 ## Features
