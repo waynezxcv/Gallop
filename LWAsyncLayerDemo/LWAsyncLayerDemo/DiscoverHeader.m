@@ -90,7 +90,7 @@
         [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.profileModel.backgroundImageURL]];
     }
     if (self.profileModel.avatarURL.length != 0) {
-        [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.profileModel.avatarURL]];
+        [self.avatarView sd_setImageWithURL:[NSURL URLWithString:self.profileModel.avatarURL]];
     }
     if (self.profileModel.name.length != 0) {
         self.nameLabel.text = self.profileModel.name;
