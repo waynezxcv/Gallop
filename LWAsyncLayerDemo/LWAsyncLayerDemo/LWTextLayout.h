@@ -110,6 +110,11 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 @property (nonatomic,strong) NSMutableArray* attachs;
 
 /**
+ *  是否自动适配宽度
+ */
+@property (nonatomic,assign,getter=isWidthToFit) BOOL widthToFit;
+
+/**
  *  创建CTFrameRef
  *
  */

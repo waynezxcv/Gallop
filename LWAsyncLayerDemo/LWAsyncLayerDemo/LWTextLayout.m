@@ -57,6 +57,7 @@ static CGFloat widthCallback(void* ref){
         self.linespace = 2.0f;
         self.characterSpacing = 1.0f;
         self.underlineStyle = NSUnderlineStyleNone;
+        self.widthToFit = YES;
     }
     return self;
 }
@@ -74,7 +75,12 @@ static CGFloat widthCallback(void* ref){
                                                                       NULL,
                                                                       CGSizeMake(self.boundsRect.size.width, CGFLOAT_MAX),
                                                                       NULL);
-    self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, suggestSize.width, suggestSize.height);
+    if (self.isWidthToFit) {
+        self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, suggestSize.width, suggestSize.height);
+    }
+    else {
+        self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, self.boundsRect.size.width, suggestSize.height);
+    }
     _textHeight = suggestSize.height;
     CGMutablePathRef textPath = CGPathCreateMutable();
     CGPathAddRect(textPath, NULL, self.boundsRect);
@@ -153,6 +159,10 @@ static CGFloat widthCallback(void* ref){
     attach.image = image;
     [self _setupImageAttachPositionWithAttach:attach];
     [self.attachs addObject:attach];
+}
+
+- (void)replaceTextWithImageURL:(NSURL *)URL inRange:(NSRange)range {
+
 }
 
 - (void)_setupImageAttachPositionWithAttach:(LWTextAttach *)attach {
@@ -314,6 +324,7 @@ static CGFloat widthCallback(void* ref){
 - (void)setTextAlignment:(NSTextAlignment)textAlignment {
     if (_textAlignment != textAlignment) {
         _textAlignment = textAlignment;
+        self.widthToFit = NO;
         [self _mutableAttributedString:_attributedText
           addAttributesWithLineSpacing:_linespace
                          textAlignment:_textAlignment
@@ -381,7 +392,7 @@ static CGFloat widthCallback(void* ref){
 - (void)_mutableAttributedString:(NSMutableAttributedString *)attributedString
   addLinkAttributesNameWithValue:(id)value
                          inRange:(NSRange)range {
-    
+
     if (attributedString == nil) {
         return;
     }
@@ -486,7 +497,7 @@ addAttributesWithCharacterSpacing:(unichar)characterSpacing
         return;
     }
     [attributedString removeAttribute:(NSString *)kCTKernAttributeName range:range];
-    
+
     CFNumberRef charSpacingNum =  CFNumberCreate(kCFAllocatorDefault,kCFNumberSInt8Type,&characterSpacing);
     if (charSpacingNum != nil) {
         [attributedString addAttribute:(NSString *)kCTKernAttributeName value:(__bridge id)charSpacingNum range:range];
