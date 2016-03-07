@@ -15,7 +15,7 @@
 #import "DiscoverLayout.h"
 #import "LWImageBrowser.h"
 
-@interface DiscoverViewController ()<UITableViewDataSource,UITableViewDelegate,DiscoverTableViewCellDelegate,LWLabelDelegate>
+@interface DiscoverViewController ()<UITableViewDataSource,UITableViewDelegate,DiscoverTableViewCellDelegate,LWAsyncDisplayViewDelegate>
 
 @property (nonatomic,strong) LWFPSLabel* fpsLabel;
 @property (nonatomic,strong) DiscoverHeader* discoverHeader;

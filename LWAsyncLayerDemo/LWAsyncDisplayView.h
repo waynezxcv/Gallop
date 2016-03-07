@@ -12,7 +12,7 @@
 
 @class LWAsyncDisplayView;
 
-@protocol LWLabelDelegate <NSObject>
+@protocol LWAsyncDisplayViewDelegate <NSObject>
 
 @optional
 /**
@@ -34,7 +34,7 @@
  */
 @interface LWAsyncDisplayView : UIView
 
-@property (nonatomic,weak) id <LWLabelDelegate> delegate;
+@property (nonatomic,weak) id <LWAsyncDisplayViewDelegate> delegate;
 
 /**
  *  存放文字排版的数组

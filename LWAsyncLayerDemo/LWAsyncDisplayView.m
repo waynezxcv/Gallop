@@ -68,7 +68,7 @@
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
     if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:)] &&
-        [self.delegate conformsToProtocol:@protocol(LWLabelDelegate)]) {
+        [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
         [self.delegate extraAsyncDisplayIncontext:context size:size];
     }
     for (LWTextLayout* layout in self.layouts) {
@@ -130,7 +130,7 @@
                         NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
                         if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
                             if ([self.delegate respondsToSelector:@selector(lwAsyncDicsPlayView:didCilickedLinkWithfData:)] &&
-                                [self.delegate conformsToProtocol:@protocol(LWLabelDelegate)]) {
+                                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
                                 [self.delegate lwAsyncDicsPlayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
                                 break;
                             }
