@@ -34,15 +34,8 @@
         
         
         for (NSInteger i = 0; i < 9;i ++) {
-            UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-            imageView.backgroundColor = [UIColor grayColor];
-            imageView.clipsToBounds = YES;
-            imageView.contentMode = UIViewContentModeScaleAspectFill;
-            imageView.userInteractionEnabled = YES;
-            [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                    action:@selector(didClickedImageView:)]];
+            UIImageView* imageView = [self.imageViews objectAtIndex:i];
             [self.contentView addSubview:imageView];
-            [self.imageViews addObject:imageView];
         }
     }
     return self;
@@ -132,7 +125,7 @@
 }
 
 - (UIImageView *)avatarImageView {
-    if (_avatarImageView) {
+    if (!_avatarImageView) {
         _avatarImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         _avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
     }
@@ -140,8 +133,18 @@
 }
 
 - (NSMutableArray *)imageViews {
-    if (_imageViews) {
+    if (!_imageViews) {
         _imageViews = [[NSMutableArray alloc] initWithCapacity:9];
+        for (NSInteger i = 0; i < 9; i ++) {
+            UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+            imageView.backgroundColor = [UIColor grayColor];
+            imageView.clipsToBounds = YES;
+            imageView.contentMode = UIViewContentModeScaleAspectFill;
+            imageView.userInteractionEnabled = YES;
+            [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(didClickedImageView:)]];
+            [_imageViews addObject:imageView];
+        }
     }
     return _imageViews;
 }
