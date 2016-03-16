@@ -64,6 +64,3 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
 
 ```
 
-1.    [self setNeedsDisplayInRect:<#(CGRect)#>]实现局部绘制
-2. 重写isequal实现懒绘制
-3. 

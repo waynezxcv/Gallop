@@ -21,7 +21,6 @@
 @property (nonatomic,strong) LWTextLayout* dateTextLayout;
 
 @property (nonatomic,assign) CGRect avatarPosition;
-@property (nonatomic,assign) CGRect imagesPosition;
 @property (nonatomic,assign) CGRect menuPosition;
 @property (nonatomic,assign) CGRect likesAndCommentsPosition;
 @property (nonatomic,copy) NSArray* imagePostionArray;
