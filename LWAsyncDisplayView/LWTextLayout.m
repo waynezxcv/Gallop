@@ -54,6 +54,24 @@ static CGFloat widthCallback(void* ref){
 
 #pragma mark - Initialization
 
+- (NSUInteger)hash {
+    NSUInteger value = 0;
+    value ^= [_attributedText hash];
+    return value;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (self == object) return YES;
+    if (![object isMemberOfClass:self.class]) return NO;
+    id selfValue = _attributedText;
+    LWTextLayout* other = (LWTextLayout *)object;
+    id modelValue = other.attributedText;
+    BOOL valuesEqual = ((selfValue == nil && modelValue == nil) || [selfValue isEqual:modelValue]);
+    if (!valuesEqual) return NO;
+    return YES;
+}
+
+
 - (id)init {
     self = [super init];
     if (self) {

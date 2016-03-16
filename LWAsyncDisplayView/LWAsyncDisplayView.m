@@ -53,15 +53,13 @@
 #pragma mark - Setter & Getter
 
 - (void)setLayouts:(NSArray *)layouts {
-    if ([_layouts isEqual:layouts] || _layouts == layouts) {
+    if ([_layouts isEqual:layouts]) {
         return;
     }
     _layouts = layouts;
     [(LWAsyncDisplayLayer *)self.layer cleanUp];
     [(LWAsyncDisplayLayer *)self.layer drawContent];
 }
-
-
 
 
 - (UITapGestureRecognizer *)tapGestureRecognizer {
