@@ -48,6 +48,12 @@
     [self setupCell];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.avatarImageView.frame = self.layout.avatarPosition;
+    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
+}
+
 - (void)setupCell {
     self.avatarImageView.frame = self.layout.avatarPosition;
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);

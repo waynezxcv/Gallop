@@ -80,14 +80,11 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 
 - (void)drawContent {
     [self _asyncDisplay];
-
 }
 
 - (void)cleanUp {
     [self _cancelDisplay];
 }
-
-
 
 #pragma mark - Private
 - (void)_asyncDisplay {

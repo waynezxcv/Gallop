@@ -57,6 +57,7 @@
         return;
     }
     _layouts = layouts;
+    [(LWAsyncDisplayLayer *)self.layer cleanUp];
     [(LWAsyncDisplayLayer *)self.layer drawContent];
 }
 
