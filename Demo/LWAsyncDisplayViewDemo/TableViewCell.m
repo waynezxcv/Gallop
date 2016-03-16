@@ -41,19 +41,16 @@
 }
 
 - (void)setLayout:(CellLayout *)layout {
-    if (_layout != layout && ![_layout isEqual:layout]) {
-        _layout = layout;
-        [self setupCell];
+    if (_layout == layout || [_layout isEqual:layout]) {
+        return;
     }
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    self.avatarImageView.frame = self.layout.avatarPosition;
-    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
+    _layout = layout;
+    [self setupCell];
 }
 
 - (void)setupCell {
+    self.avatarImageView.frame = self.layout.avatarPosition;
+    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
     [self.avatarImageView sd_setImageWithURL:self.layout.statusModel.avatar];
     self.asyncDisplayView.layouts = @[self.layout.nameTextLayout,
                                       self.layout.contentTextLayout,

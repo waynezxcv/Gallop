@@ -74,15 +74,20 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
     return self;
 }
 
-- (void)setNeedsDisplay {
+- (void)dealloc {
     [self _cancelDisplay];
-    [super setNeedsDisplay];
 }
 
-- (void)display {
-    super.contents = super.contents;
+- (void)drawContent {
     [self _asyncDisplay];
+
 }
+
+- (void)cleanUp {
+    [self _cancelDisplay];
+}
+
+
 
 #pragma mark - Private
 - (void)_asyncDisplay {

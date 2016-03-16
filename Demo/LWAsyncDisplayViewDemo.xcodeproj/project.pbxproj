@@ -218,7 +218,7 @@
 		011DFA1C1C987CD6000410D7 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				017F673C1C98978900309E92 /* Ignore */,
+				017F673C1C98978900309E92 /* Others */,
 				011DFABA1C9883F3000410D7 /* Resource */,
 				0154CB831C988AE4002CAF12 /* ViewController.h */,
 				0154CB841C988AE4002CAF12 /* ViewController.m */,
@@ -393,7 +393,7 @@
 			name = Class;
 			sourceTree = "<group>";
 		};
-		017F673C1C98978900309E92 /* Ignore */ = {
+		017F673C1C98978900309E92 /* Others */ = {
 			isa = PBXGroup;
 			children = (
 				011DFA201C987CD6000410D7 /* AppDelegate.h */,
@@ -403,7 +403,7 @@
 				017F67331C988BD800309E92 /* StatusModel.h */,
 				017F67341C988BD800309E92 /* StatusModel.m */,
 			);
-			name = Ignore;
+			name = Others;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

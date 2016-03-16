@@ -52,6 +52,17 @@
 
 #pragma mark - Setter & Getter
 
+- (void)setLayouts:(NSArray *)layouts {
+    if ([_layouts isEqual:layouts] || _layouts == layouts) {
+        return;
+    }
+    _layouts = layouts;
+    [(LWAsyncDisplayLayer *)self.layer drawContent];
+}
+
+
+
+
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {
         _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
@@ -75,11 +86,6 @@
     for (LWTextLayout* layout in self.layouts) {
         [layout drawInContext:context];
     }
-}
-
-- (void)setNeedsDisplay {
-    [super setNeedsDisplay];
-    [self.layer setNeedsDisplay];
 }
 
 #pragma mark - SignleTapGesture
@@ -106,12 +112,12 @@
             // 获得每一行的 CGRect 信息
             CGRect flippedRect = [self _getLineBounds:line point:linePoint];
             CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-            
+
             CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
                                            rect.origin.y + boundsRect.origin.y,
                                            rect.size.width,
                                            rect.size.height);
-            
+
             if (CGRectContainsPoint(adjustRect, touchPoint)) {
                 // 将点击的坐标转换成相对于当前行的坐标
                 CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
@@ -151,7 +157,7 @@
 }
 
 - (void)_layout:(LWTextLayout *)layout drawHighLightWithAttach:(LWTextAttach *)attach {
-    
+
 }
 
 #pragma mark - UIGestrueRecognizer
