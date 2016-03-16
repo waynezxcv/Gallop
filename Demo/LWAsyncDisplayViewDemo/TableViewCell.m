@@ -48,12 +48,6 @@
     [self setupCell];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    self.avatarImageView.frame = self.layout.avatarPosition;
-    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
-}
-
 - (void)setupCell {
     self.avatarImageView.frame = self.layout.avatarPosition;
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
@@ -96,7 +90,6 @@
 }
 
 - (void)setupImages {
-    NSLog(@"setupImages");
     for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
         UIImageView* imageView = [self.imageViews objectAtIndex:i];
         imageView.frame = CGRectFromString([self.layout.imagePostionArray objectAtIndex:i]);
