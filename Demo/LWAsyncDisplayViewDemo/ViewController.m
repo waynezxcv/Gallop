@@ -128,7 +128,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                             initWithJSON:dataDict
                                             JSONKeyPathsByPropertyKey:mapDict];
                 CellLayout* cellLayout = [[CellLayout alloc] initWithStatusModel:statusModel];
-                [self.dataSource addObject:cellLayout];
+                    [self.dataSource addObject:cellLayout];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self refreshComplete];

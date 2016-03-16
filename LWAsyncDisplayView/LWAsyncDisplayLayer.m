@@ -74,15 +74,15 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
     return self;
 }
 
-
-- (void)cleanUp {
+- (void)setNeedsDisplay {
     [self _cancelDisplay];
+    [super setNeedsDisplay];
 }
 
-- (void)asyncDisplayContent {
+- (void)display {
+    super.contents = super.contents;
     [self _asyncDisplay];
 }
-
 
 #pragma mark - Private
 - (void)_asyncDisplay {

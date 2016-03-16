@@ -33,7 +33,6 @@
 
 /**
  *  “default is [CALayer class]. Used when creating the underlying layer for the view.”
- *  让self.layer为LWAsyncDisplayLayer
  *
  */
 + (Class)layerClass {
@@ -52,14 +51,6 @@
 }
 
 #pragma mark - Setter & Getter
-
-- (void)setLayouts:(NSArray *)layouts {
-    if (_layouts == layouts) {
-        return;
-    }
-    _layouts = layouts;
-    [self _setNeedDisplay];
-}
 
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {
@@ -86,11 +77,9 @@
     }
 }
 
-#pragma mark - Private
-
-- (void)_setNeedDisplay {
-    [(LWAsyncDisplayLayer *)self.layer cleanUp];
-    [(LWAsyncDisplayLayer *)self.layer asyncDisplayContent];
+- (void)setNeedsDisplay {
+    [super setNeedsDisplay];
+    [self.layer setNeedsDisplay];
 }
 
 #pragma mark - SignleTapGesture

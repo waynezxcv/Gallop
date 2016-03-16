@@ -31,8 +31,7 @@
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
         [self.contentView addSubview:self.avatarImageView];
-        
-        
+
         for (NSInteger i = 0; i < 9;i ++) {
             UIImageView* imageView = [self.imageViews objectAtIndex:i];
             [self.contentView addSubview:imageView];
@@ -48,14 +47,17 @@
     }
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.avatarImageView.frame = self.layout.avatarPosition;
+    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
+}
+
 - (void)setupCell {
     [self.avatarImageView sd_setImageWithURL:self.layout.statusModel.avatar];
-    
-    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
     self.asyncDisplayView.layouts = @[self.layout.nameTextLayout,
                                       self.layout.contentTextLayout,
-                                      self.layout.dateTextLayout] ;
-    self.avatarImageView.frame = self.layout.avatarPosition;
+                                      self.layout.dateTextLayout];
     [self resetImageView];
     LWRunLoopObserver* obeserver = [LWRunLoopObserver observerWithTarget:self
                                                                 selector:@selector(setupImages)
@@ -91,6 +93,7 @@
 }
 
 - (void)setupImages {
+    NSLog(@"setupImages");
     for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
         UIImageView* imageView = [self.imageViews objectAtIndex:i];
         imageView.frame = CGRectFromString([self.layout.imagePostionArray objectAtIndex:i]);
@@ -112,7 +115,6 @@
         }
     }
 }
-
 
 #pragma mark - Getter
 

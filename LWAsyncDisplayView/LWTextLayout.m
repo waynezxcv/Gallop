@@ -27,7 +27,7 @@ static CGFloat descentCallback(void *ref){
 static CGFloat ascentCallback(void *ref){
     NSString* callback = (__bridge NSString *)(ref);
     NSData* jsonData = [callback dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err;
+    NSError* err;
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];
@@ -37,7 +37,7 @@ static CGFloat ascentCallback(void *ref){
 static CGFloat widthCallback(void* ref){
     NSString* callback = (__bridge NSString *)(ref);
     NSData* jsonData = [callback dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err;
+    NSError* err;
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];

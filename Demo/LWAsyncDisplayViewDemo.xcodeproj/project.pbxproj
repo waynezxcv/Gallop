@@ -246,24 +246,24 @@
 		011DFA341C987DF6000410D7 /* LWAsyncDisplayView */ = {
 			isa = PBXGroup;
 			children = (
-				017F673D1C98A04F00309E92 /* CALayer+LazySetContents.h */,
-				017F673E1C98A04F00309E92 /* CALayer+LazySetContents.m */,
-				017F673F1C98A04F00309E92 /* LWAsyncDisplayLayer.h */,
-				017F67401C98A04F00309E92 /* LWAsyncDisplayLayer.m */,
-				017F67411C98A04F00309E92 /* LWAsyncDisplayView.h */,
-				017F67421C98A04F00309E92 /* LWAsyncDisplayView.m */,
-				017F67431C98A04F00309E92 /* LWFlag.h */,
-				017F67441C98A04F00309E92 /* LWFlag.m */,
-				017F67451C98A04F00309E92 /* LWRunLoopObserver.h */,
-				017F67461C98A04F00309E92 /* LWRunLoopObserver.m */,
-				017F67471C98A04F00309E92 /* LWTextAttach.h */,
-				017F67481C98A04F00309E92 /* LWTextAttach.m */,
 				017F67491C98A04F00309E92 /* LWTextLayout.h */,
 				017F674A1C98A04F00309E92 /* LWTextLayout.m */,
+				017F67411C98A04F00309E92 /* LWAsyncDisplayView.h */,
+				017F67421C98A04F00309E92 /* LWAsyncDisplayView.m */,
+				017F673F1C98A04F00309E92 /* LWAsyncDisplayLayer.h */,
+				017F67401C98A04F00309E92 /* LWAsyncDisplayLayer.m */,
+				017F67471C98A04F00309E92 /* LWTextAttach.h */,
+				017F67481C98A04F00309E92 /* LWTextAttach.m */,
 				017F674B1C98A04F00309E92 /* LWTextParser.h */,
 				017F674C1C98A04F00309E92 /* LWTextParser.m */,
 				017F674D1C98A04F00309E92 /* UIImageView+LazySetContents.h */,
 				017F674E1C98A04F00309E92 /* UIImageView+LazySetContents.m */,
+				017F673D1C98A04F00309E92 /* CALayer+LazySetContents.h */,
+				017F673E1C98A04F00309E92 /* CALayer+LazySetContents.m */,
+				017F67451C98A04F00309E92 /* LWRunLoopObserver.h */,
+				017F67461C98A04F00309E92 /* LWRunLoopObserver.m */,
+				017F67431C98A04F00309E92 /* LWFlag.h */,
+				017F67441C98A04F00309E92 /* LWFlag.m */,
 				0154CB821C9887EA002CAF12 /* LWDefine.h */,
 			);
 			name = LWAsyncDisplayView;
@@ -437,6 +437,7 @@
 				TargetAttributes = {
 					011DFA191C987CD6000410D7 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = N29J3PPND9;
 					};
 				};
 			};
@@ -636,6 +637,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -648,6 +650,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
