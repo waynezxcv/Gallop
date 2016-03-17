@@ -92,7 +92,13 @@
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
     for (LWTextLayout* layout in self.layouts) {
+        if (layout == nil) {
+            continue;
+        }
         CTFrameRef textFrame = layout.frame;
+        if (textFrame == NULL) {
+            continue;
+        }
         //获取每一行
         CFArrayRef lines = CTFrameGetLines(textFrame);
         CGPoint origins[CFArrayGetCount(lines)];

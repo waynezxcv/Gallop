@@ -130,13 +130,14 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         }
         [self.asyncDisplayDelegate didAsyncDisplay:self context:context size:self.bounds.size];
         UIImage* screenshotImage = UIGraphicsGetImageFromCurrentImageContext();
+        CGImageRef content = screenshotImage.CGImage;
         if (isCancelled()) {
             UIGraphicsEndImageContext();
             return;
         }
         UIGraphicsEndImageContext();
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self lazySetContent:(__bridge id)screenshotImage.CGImage];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self lazySetContent:(__bridge id)content];
             if ([self.asyncDisplayDelegate respondsToSelector:@selector(didFinishAsyncDisplay:isFiniedsh:)]) {
                 [self.asyncDisplayDelegate didFinishAsyncDisplay:self isFiniedsh:YES];
             }

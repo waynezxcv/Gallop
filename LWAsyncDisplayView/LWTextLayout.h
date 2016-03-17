@@ -112,6 +112,12 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 @property (nonatomic,assign) CGFloat textHeight;
 
 /**
+ *  文字宽度
+ *
+ */
+@property (nonatomic,assign) CGFloat textWidth;
+
+/**
  * 计算后的文字绘制范围
  */
 @property (nonatomic,assign) CGRect boundsRect;

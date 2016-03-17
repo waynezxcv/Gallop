@@ -92,7 +92,7 @@ static CGFloat widthCallback(void* ref){
 }
 
 - (void)creatCTFrameRef {
-    if (_attributedText == nil || self.boundsRect.size.width <= 0) {
+    if (_attributedText == nil) {
         return ;
     }
     if (_textHeight > 0) {
@@ -104,13 +104,14 @@ static CGFloat widthCallback(void* ref){
                                                                       NULL,
                                                                       CGSizeMake(self.boundsRect.size.width, CGFLOAT_MAX),
                                                                       NULL);
+    _textHeight = suggestSize.height;
+    _textWidth = suggestSize.width;
     if (self.isWidthToFit) {
         self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, suggestSize.width, suggestSize.height);
     }
     else {
         self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, self.boundsRect.size.width, suggestSize.height);
     }
-    _textHeight = suggestSize.height;
     CGMutablePathRef textPath = CGPathCreateMutable();
     CGPathAddRect(textPath, NULL, self.boundsRect);
     _frame = CTFramesetterCreateFrame(ctFrameSetter, CFRangeMake(0, 0), textPath, NULL);
@@ -291,12 +292,15 @@ static CGFloat widthCallback(void* ref){
 #pragma mark - Setter
 
 - (void)setText:(NSString *)text {
-    _attributedText = [self _createAttributedStringWithText:text];
     [self _resetAttachs];
     [self _resetFrameRef];
+    _attributedText = [self _createAttributedStringWithText:text];
+
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
+    [self _resetAttachs];
+    [self _resetFrameRef];
     if (attributedText == nil) {
         _attributedText = [[NSMutableAttributedString alloc]init];
     }else if ([attributedText isKindOfClass:[NSMutableAttributedString class]]) {
@@ -304,8 +308,7 @@ static CGFloat widthCallback(void* ref){
     }else {
         _attributedText = [[NSMutableAttributedString alloc]initWithAttributedString:attributedText];
     }
-    [self _resetAttachs];
-    [self _resetFrameRef];
+    [self creatCTFrameRef];
 }
 
 - (void)setTextColor:(UIColor *)textColor {
