@@ -64,15 +64,27 @@
 - (void)insertNSManagedObjectWithObjectClass:(Class)objectClass
                                         JSON:(id)json
                          uiqueAttributesName:(NSString *)uniqueAttributesName {
-    [self existingObjectForEntity:objectClass
-          withUniquAttributesName:uniqueAttributesName
-            uniqueAttributesValue:[[self dictionaryWithJSON:json]objectForKey:uniqueAttributesName]
-                    existedObject:^(NSManagedObject *existedObject) {
-        if (existedObject) {
-            [self updateNSManagedObjectWithObjectID:existedObject.objectID JSON:json];
+    NSManagedObjectContext* ctx = [self createPrivateObjectContext];
+    [ctx performBlock:^{
+        NSError* error = nil;
+        NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
+        [fetchRequest setEntity:[NSEntityDescription entityForName:NSStringFromClass(objectClass) inManagedObjectContext:self.managedObjectContext]];
+        NSPredicate* predicate = [NSPredicate predicateWithFormat:@"%K == %@", uniqueAttributesName, [[self dictionaryWithJSON:json]objectForKey:uniqueAttributesName]];
+        if (predicate) {
+            [fetchRequest setPredicate:predicate];
         }
-        else {
-            [self insertNSManagedObjectWithObjectClass:objectClass JSON:json];
+        NSInteger count = [ctx countForFetchRequest:fetchRequest error:&error];
+        if (count != 0) {
+            NSArray* results = [ctx executeFetchRequest:fetchRequest error:&error];
+            NSManagedObject* object = [results lastObject];
+            [self.managedObjectContext performBlock:^{
+                //objectID是线程安全的。
+                [self updateNSManagedObjectWithObjectID:object.objectID JSON:json];
+            }];
+        } else {
+            [self.managedObjectContext performBlock:^{
+                [self insertNSManagedObjectWithObjectClass:objectClass JSON:json];
+            }];
         }
     }];
 }
@@ -100,6 +112,8 @@
         if (limit > 0) {
             [fetchRequest setFetchLimit:limit];
         }
+        
+        
         NSArray* results = [ctx executeFetchRequest:fetchRequest error:&error];
         if (error) {
             NSLog(@"error: %@", error);
@@ -116,6 +130,7 @@
         for (NSManagedObject* object  in results) {
             [result_ids addObject:object.objectID];
         }
+        NSLog(@"fetch:%@",[NSThread currentThread]);
         [self.managedObjectContext performBlockAndWait:^{
             NSMutableArray* final_results = [[NSMutableArray alloc] init];
             for (NSManagedObjectID* objectID in result_ids) {
@@ -126,28 +141,9 @@
     }];
 }
 
-- (void)existingObjectForEntity:(Class)objectClass
-        withUniquAttributesName:(NSString *)uniqueAttributesName
-          uniqueAttributesValue:(id)uniqueAttributesValue
-                  existedObject:(ExistingObject)existedBlock {
-    
-    
-    if (!uniqueAttributesName || !uniqueAttributesValue) {
-        return;
-    }
-    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"%K == %@", uniqueAttributesName, uniqueAttributesValue];
-    [self fetchNSManagedObjectWithObjectClass:objectClass predicate:predicate sortDescriptor:nil fetchOffset:0 fetchLimit:0 fetchReults:^(NSArray *results, NSError *error) {
-        if (results.count == 0) {
-            NSManagedObject* existedObject = [results lastObject];
-            existedBlock(existedObject);
-        } else {
-            existedBlock(nil);
-        }
-    }];
-}
-
 
 - (void)updateNSManagedObjectWithObjectID:(NSManagedObjectID *)objectID JSON:(id)json {
+    NSLog(@"update");
     NSManagedObject* object = [self.managedObjectContext objectWithID:objectID];
     if ([json isKindOfClass:[NSDictionary class]]) {
         object = [object nsManagedObject:object modelWithDictionary:json context:self.managedObjectContext];

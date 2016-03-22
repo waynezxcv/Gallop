@@ -50,7 +50,7 @@ typedef void(^ExistingObject)(NSManagedObject* existedObject);
 
 
 /**
- *  增加一条数据，并指定UniqueAttributesNAme
+ *  增加一条数据，并指定UniqueAttributesName，若存在则重复插入，改为更新数据
  *
  */
 - (void)insertNSManagedObjectWithObjectClass:(Class)objectClass
@@ -64,17 +64,6 @@ typedef void(^ExistingObject)(NSManagedObject* existedObject);
                                 fetchOffset:(NSInteger)offset
                                  fetchLimit:(NSInteger)limit
                                 fetchReults:(FetchResults)resultsBlock;
-
-
-/**
- *  查询是否存在UniqueAttributes值为uniqueAttributesValue的NSManagedObject
- *
- */
-- (void)existingObjectForEntity:(Class)objectClass
-                     withUniquAttributesName:(NSString *)uniqueAttributesName
-                       uniqueAttributesValue:(id)uniqueAttributesValue
-                  existedObject:(ExistingObject)existedBlock;
-
 
 /**
  *  删
