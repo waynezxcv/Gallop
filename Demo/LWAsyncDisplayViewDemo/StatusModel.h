@@ -8,12 +8,14 @@
 
 #import "LWAlchemy.h"
 
-@interface StatusModel : LWAlchemy
+@interface StatusModel : NSObject
 
 @property (nonatomic,copy) NSString* name;
 @property (nonatomic,strong) NSURL* avatar;
 @property (nonatomic,copy) NSString* content;
 @property (nonatomic,strong) NSDate* date;
 @property (nonatomic,copy) NSArray* imgs;
+@property (nonatomic,assign) NSInteger statusID;
+
 
 @end

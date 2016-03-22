@@ -14,11 +14,15 @@
 //  See LICENSE for this sample’s licensing information
 //
 
-#ifndef LWAlchemy_h
-#define LWAlchemy_h
 
-#import "NSObject+LWAlchemy.h"
-#import "LWAlchemyCoreDataManager.h"
-#import "LWAlchemyValueTransformer.h"
+#import <Foundation/Foundation.h>
 
-#endif /* LWAlchemy_h */
+typedef id (^LWAlchemyValueTransformerBlock)(id value, BOOL* success, NSError **error);
+
+@interface LWAlchemyValueTransformer : NSValueTransformer
+
++ (instancetype)transformerUsingForwardBlock:(LWAlchemyValueTransformerBlock)transformation;
++ (instancetype)transformerUsingReversibleBlock:(LWAlchemyValueTransformerBlock)transformation;
+
+
+@end

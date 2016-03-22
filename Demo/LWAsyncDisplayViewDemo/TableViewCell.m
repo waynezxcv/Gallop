@@ -41,11 +41,10 @@
 }
 
 - (void)setLayout:(CellLayout *)layout {
-    if (_layout == layout || [_layout isEqual:layout]) {
-        return;
+    if (_layout != layout) {
+        _layout = layout;
+        [self setupCell];
     }
-    _layout = layout;
-    [self setupCell];
 }
 
 - (void)setupCell {

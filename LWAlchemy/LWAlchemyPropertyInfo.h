@@ -1,66 +1,96 @@
+//
 //  The MIT License (MIT)
-//  Copyright (c) 2016 Wayne Liu <liuweself@126.com>
+//  Copyright (c) 2016 Wayne Liu <liuweiself@126.com>
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to
-//  deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-//  sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-//  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-//  IN THE SOFTWARE.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//　　The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 //
 //
-//  Created by 刘微 on 16/3/14.
-//  Copyright © 2016年 Warm+. All rights reserved.
+//
+//  Copyright © 2016年 Wayne Liu. All rights reserved.
+//  https://github.com/waynezxcv/LWAlchemy
+//  See LICENSE for this sample’s licensing information
 //
 
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-typedef NS_ENUM(NSUInteger, LWType) {
-    LWTypeUnkonw        = 0,//未知类型
-    LWTypeVoid          = 1,//void类型
-    LWTypeBool          = 2,//布尔类型
-    LWTypeInt8          = 3,//Int8类型
-    LWTypeUInt8         = 4,//无符号Int8类型
-    LWTypeInt16         = 5,//Int16类型
-    LWTypeUInt16        = 6,//无符号Int16类型
-    LWTypeInt32         = 7,//Int32类型
-    LWTypeUInt32        = 8,//无符号Int32类型
-    LWTypeInt64         = 9,//Int64类型
-    LWTypeUInt64        = 10,//无符号Int64类型
-    LWTypeFloat         = 11,//浮点型
-    LWTypeDouble        = 12,//双精度浮点型
-    LWTypeLongDouble    = 13,//长双精度浮点型
-    LWTypeClass         = 14,//Class类型（类）
-    LWTypeSEL           = 15,//SEL类型（方法）
-    LWTypeCFString      = 16,//CFStringRef const char*
-    LWTypePointer       = 17,//Pointer
-    LWTypeCFArray       = 18,//CFArrayRef
-    LWTypeUnion         = 19,//联合体类型
-    LWTypeStruct        = 20,//结构体类型
-    LWTypeObject        = 21,//对象类型（类的实例对象）
-    LWTypeBlock         = 22,//Block类型
+typedef NS_ENUM(NSUInteger, LWPropertyType) {
+    LWPropertyTypeUnkonw        = 0,
+    LWPropertyTypeVoid          = 1,
+    LWPropertyTypeBool          = 2,
+    LWPropertyTypeInt8          = 3,
+    LWPropertyTypeUInt8         = 4,
+    LWPropertyTypeInt16         = 5,
+    LWPropertyTypeUInt16        = 6,
+    LWPropertyTypeInt32         = 7,
+    LWPropertyTypeUInt32        = 8,
+    LWPropertyTypeInt64         = 9,
+    LWPropertyTypeUInt64        = 10,
+    LWPropertyTypeFloat         = 11,
+    LWPropertyTypeDouble        = 12,
+    LWPropertyTypeLongDouble    = 13,
+    LWPropertyTypeClass         = 14,
+    LWPropertyTypeSEL           = 15,
+    LWPropertyTypeCFString      = 16,
+    LWPropertyTypePointer       = 17,
+    LWPropertyTypeCFArray       = 18,
+    LWPropertyTypeUnion         = 19,
+    LWPropertyTypeStruct        = 20,
+    LWPropertyTypeObject        = 21,
+    LWPropertyTypeBlock         = 22,
+
+    LWPropertyReadonly     = 1 << 16,
+    LWPropertyCopy         = 1 << 17,
+    LWPropertyRetain       = 1 << 18,
+    LWPropertyNonatomic    = 1 << 19,
+    LWPropertyWeak         = 1 << 20,
+    LWPropertyCustomGetter = 1 << 21,
+    LWPropertyCustomSetter = 1 << 22,
+    LWPropertyDynamic      = 1 << 23,
 };
 
-/**
- *  一个Property的抽象
- */
+
+typedef NS_ENUM (NSUInteger, LWPropertyNSObjectType) {
+    LWPropertyNSObjectTypeNSUnknown             = 0,
+    LWPropertyNSObjectTypeNSString              = 1,
+    LWPropertyNSObjectTypeNSMutableString       = 2,
+    LWPropertyNSObjectTypeNSValue               = 3,
+    LWPropertyNSObjectTypeNSNumber              = 4,
+    LWPropertyNSObjectTypeNSDecimalNumber       = 5,
+    LWPropertyNSObjectTypeNSData                = 6,
+    LWPropertyNSObjectTypeNSMutableData         = 7,
+    LWPropertyNSObjectTypeNSDate                = 8,
+    LWPropertyNSObjectTypeNSURL                 = 9,
+    LWPropertyNSObjectTypeNSArray               = 10,
+    LWPropertyNSObjectTypeNSMutableArray        = 11,
+    LWPropertyNSObjectTypeNSDictionary          = 12,
+    LWPropertyNSObjectTypeNSMutableDictionary   = 13,
+    LWPropertyNSObjectTypeNSSet                 = 14,
+    LWPropertyNSObjectTypeNSMutableSet          = 15
+};
+
+
 @interface LWAlchemyPropertyInfo : NSObject
 
-@property (nonatomic,assign,readonly) objc_property_t property;//属性
-@property (nonatomic,strong,readonly) NSString* propertyName;//属性名称
-@property (nonatomic,strong,readonly) NSString* ivarName;//实例对象名称
-@property (nonatomic,assign,readonly) Ivar ivar;//实例对象
-@property (nonatomic,assign,readonly) LWType type;//类型
-@property (nonatomic,assign,readonly) Class cls;//如果是LWTypeObject类型，用来表示该对象所属的类,否则为nil
-@property (nonatomic,strong,readonly) NSString* getter;//getter方法
-@property (nonatomic,strong,readonly) NSString* setter;//setter方法
-@property (nonatomic,assign,readonly,getter=isReadonly) BOOL readonly;//是否是只读属性
+@property (nonatomic,assign,readonly) objc_property_t property;
+@property (nonatomic,strong,readonly) NSString* propertyName;
+@property (nonatomic,strong,readonly) NSString* ivarName;
+@property (nonatomic,assign,readonly) Ivar ivar;
+@property (nonatomic,assign,readonly) LWPropertyType type;
+@property (nonatomic,assign,readonly) LWPropertyNSObjectType nsType;
+@property (nonatomic,copy,readonly) NSString* typeEncoding;
+@property (nonatomic,assign,readonly) Class cls;
+@property (nonatomic,strong,readonly) NSString* getter;
+@property (nonatomic,strong,readonly) NSString* setter;
+@property (nonatomic,assign,readonly,getter=isReadonly) BOOL readonly;
 @property (nonatomic,assign,readonly,getter=isDynamic) BOOL dynamic;
+@property (nonatomic,assign,readonly,getter=isNumberType) BOOL numberType;
+@property (nonatomic,assign,readonly,getter=isObjectType) BOOL objectType;
+@property (nonatomic,assign,readonly,getter=isIdType) BOOL idType;
+@property (nonatomic,assign,readonly,getter=isFoundationType) BOOL foundationType;
 
 - (id)initWithProperty:(objc_property_t)property;
 

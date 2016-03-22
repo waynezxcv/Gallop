@@ -13,6 +13,8 @@
 #import "TableViewHeader.h"
 #import "LWDefine.h"
 #import "CellLayout.h"
+#import "LWAlchemy.h"
+#import "CDStatus.h"
 
 
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate>
@@ -21,7 +23,7 @@
 @property (nonatomic,strong) UITableView* tableView;
 @property (nonatomic,strong) NSMutableArray* dataSource;
 @property (nonatomic,assign,getter=isNeedRefresh) BOOL needRefresh;
-
+@property (nonatomic,assign) NSInteger index;
 @end
 
 const CGFloat kRefreshBoundary = 170.0f;
@@ -45,6 +47,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 - (void)setup {
+    self.index = 0;
     self.needRefresh = YES;
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
@@ -112,38 +115,133 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 - (void)downloadData {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSBundle* bundle = [NSBundle mainBundle];
-        NSString* path = [bundle pathForResource:@"timeline" ofType:@"plist"];
-        NSArray* dataArray = [NSArray arrayWithContentsOfFile:path];
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [self.dataSource removeAllObjects];
-            for (NSDictionary* dataDict in dataArray) {
-                NSDictionary* mapDict = @{@"name":@"name",
-                                          @"avatar":@"avatar",
-                                          @"date":@"timeStamp",
-                                          @"content":@"text",
-                                          @"imgs":@"imgs"};
-                StatusModel* statusModel = [[StatusModel alloc]
-                                            initWithJSON:dataDict
-                                            JSONKeyPathsByPropertyKey:mapDict];
-                CellLayout* cellLayout = [[CellLayout alloc] initWithStatusModel:statusModel];
-                for (NSInteger i = 0; i < 40; i ++) {
-                    [self.dataSource addObject:cellLayout];
-                }
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self refreshComplete];
-            });
-        });
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self refreshComplete];
-            });
-        });
-    });
+    
+    self.index ++;
+    
+    NSString* content1 = [NSString stringWithFormat:@"statusID == 1...下拉刷新更新内容。。%ld",self.index];
+    NSString* content2 = [NSString stringWithFormat:@"statusID == 2...下拉刷新更新内容。。%ld",self.index + 1];
+    NSString* content3 = [NSString stringWithFormat:@"statusID == 3...下拉刷新更新内容。。%ld",self.index + 2];
+    NSString* content4 = [NSString stringWithFormat:@"statusID == 4...下拉刷新更新内容。。%ld",self.index + 3];
+    NSString* content5 = [NSString stringWithFormat:@"statusID == 5...下拉刷新更新内容。。%ld",self.index + 4];
+    
+    
+    
+    NSArray* arr = @[@{@"name":@"waynezxcv",
+                       @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
+                       @"content":content1,
+                       @"date":@"1458666454",
+                       @"imgs":@[@"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg"],
+                       @"statusID":@1},
+                     
+                     @{@"name":@"waynezxcv",
+                       @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
+                       @"content":content2,
+                       @"date":@"1458666454",
+                       @"imgs":@[@"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg"],
+                       @"statusID":@2},
+                     
+                     
+                     @{@"name":@"waynezxcv",
+                       @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
+                       @"content":content3,
+                       @"date":@"1458666454",
+                       @"imgs":@[@"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg"],
+                       @"statusID":@3},
+                     
+                     
+                     @{@"name":@"waynezxcv",
+                       @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
+                       @"content":content4,
+                       @"date":@"1458666454",
+                       @"imgs":@[@"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg"],
+                       @"statusID":@4},
+                     
+                     @{@"name":@"waynezxcv",
+                       @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
+                       @"content":content5,
+                       @"date":@"1458666454",
+                       @"imgs":@[@"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
+                                 @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg"],
+                       @"statusID":@5},
+                     ];
+    [self.dataSource removeAllObjects];
+    LWAlchemyCoreDataManager* manager = [LWAlchemyCoreDataManager sharedManager];
+    for (NSDictionary* dict in arr) {
+        [manager insertNSManagedObjectWithObjectClass:[CDStatus class] JSON:dict uiqueAttributesName:@"statusID"];
+    }
+    [manager commit:^(NSError *error) {}];
+    NSSortDescriptor* sort = [NSSortDescriptor sortDescriptorWithKey:@"statusID" ascending:YES];
+    [manager fetchNSManagedObjectWithObjectClass:[CDStatus class] predicate:nil sortDescriptor:@[sort] fetchOffset:0 fetchLimit:0 fetchReults:^(NSArray *results, NSError *error) {
+        for (CDStatus* status in results) {
+            CellLayout* cellLayout = [[CellLayout alloc] initWithCDStatusModel:status];
+            [self.dataSource addObject:cellLayout];
+        }
+        [self refreshComplete];
+    }];
 }
+
+//dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    NSBundle* bundle = [NSBundle mainBundle];
+//    NSString* path = [bundle pathForResource:@"timeline" ofType:@"plist"];
+//    NSArray* dataArray = [NSArray arrayWithContentsOfFile:path];
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//        [self.dataSource removeAllObjects];
+//        for (NSDictionary* dataDict in dataArray) {
+//            StatusModel* statusModel = [StatusModel objectModelWithJSON:dataDict];
+//            CellLayout* cellLayout = [[CellLayout alloc] initWithStatusModel:statusModel];
+//            for (NSInteger i = 0; i < 40; i ++) {
+//                [self.dataSource addObject:cellLayout];
+//            }
+//        }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self refreshComplete];
+//        });
+//    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            [self refreshComplete];
+//        });
+//    });
+//});
 
 #pragma mark - Getter
 
