@@ -80,10 +80,15 @@
             [self.managedObjectContext performBlock:^{
                 //objectID是线程安全的。
                 [self updateNSManagedObjectWithObjectID:object.objectID JSON:json];
+                [self saveContext:^{
+                }];
+
             }];
         } else {
             [self.managedObjectContext performBlock:^{
                 [self insertNSManagedObjectWithObjectClass:objectClass JSON:json];
+                [self saveContext:^{
+                }];
             }];
         }
     }];
@@ -112,11 +117,8 @@
         if (limit > 0) {
             [fetchRequest setFetchLimit:limit];
         }
-        
-        
         NSArray* results = [ctx executeFetchRequest:fetchRequest error:&error];
         if (error) {
-            NSLog(@"error: %@", error);
             [self.managedObjectContext performBlock:^{
                 resultsBlock(@[],error);
             }];
@@ -167,23 +169,21 @@
 
 #pragma mark - CoreData Stack
 
-- (NSError *)commit:(SaveOperationResult)handler{
-    NSError *error;
-    if ([self.managedObjectContext hasChanges]) {
-        [self.managedObjectContext save:&error];
+- (void)saveContext:(Completion)completionBlock {
+    NSError *error = nil;
+    if ([self.managedObjectContext hasChanges] && ![self.managedObjectContext save:&error]) {
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    } else {
         [self.parentContext performBlock:^{
-            __block NSError *inner_error = nil;
+            __block NSError* inner_error = nil;
             [self.parentContext save:&inner_error];
-            if (handler){
-                [self.managedObjectContext performBlock:^{
-                    handler(error);
-                }];
-            }
+            [self.managedObjectContext performBlock:^{
+                completionBlock();
+            }];
         }];
     }
-    return error;
 }
-
 
 - (NSManagedObjectContext *)createPrivateObjectContext {
     NSManagedObjectContext *ctx = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
@@ -250,7 +250,7 @@
             [_parentContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
             [_parentContext setUndoManager:nil];
         }];
-        
+
     }
     return _parentContext;
     

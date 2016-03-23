@@ -123,9 +123,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     NSString* content3 = [NSString stringWithFormat:@"statusID == 3...下拉刷新更新内容。。%ld",self.index + 2];
     NSString* content4 = [NSString stringWithFormat:@"statusID == 4...下拉刷新更新内容。。%ld",self.index + 3];
     NSString* content5 = [NSString stringWithFormat:@"statusID == 5...下拉刷新更新内容。。%ld",self.index + 4];
-    
-    
-    
+
     NSArray* arr = @[@{@"name":@"waynezxcv",
                        @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
                        @"content":content1,
@@ -203,45 +201,32 @@ const CGFloat kRefreshBoundary = 170.0f;
                                  @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg"],
                        @"statusID":@5},
                      ];
+
+    NSMutableArray* tmp = [[NSMutableArray alloc] init];
+
+    for (NSInteger i = 0; i < 5; i ++) {
+        [tmp addObjectsFromArray:arr];
+    }
+
     [self.dataSource removeAllObjects];
     LWAlchemyCoreDataManager* manager = [LWAlchemyCoreDataManager sharedManager];
-    for (NSDictionary* dict in arr) {
+    for (NSDictionary* dict in tmp) {
         [manager insertNSManagedObjectWithObjectClass:[CDStatus class] JSON:dict uiqueAttributesName:@"statusID"];
     }
-    [manager commit:^(NSError *error) {}];
-    NSSortDescriptor* sort = [NSSortDescriptor sortDescriptorWithKey:@"statusID" ascending:YES];
-    [manager fetchNSManagedObjectWithObjectClass:[CDStatus class] predicate:nil sortDescriptor:@[sort] fetchOffset:0 fetchLimit:0 fetchReults:^(NSArray *results, NSError *error) {
-        for (CDStatus* status in results) {
-            CellLayout* cellLayout = [[CellLayout alloc] initWithCDStatusModel:status];
-            [self.dataSource addObject:cellLayout];
-        }
-        [self refreshComplete];
+    [manager saveContext:^{
+        NSLog(@"handler:%@",[NSThread currentThread]);
+        NSSortDescriptor* sort = [NSSortDescriptor sortDescriptorWithKey:@"statusID" ascending:YES];
+        [manager fetchNSManagedObjectWithObjectClass:[CDStatus class] predicate:nil sortDescriptor:@[sort] fetchOffset:0 fetchLimit:0 fetchReults:^(NSArray *results, NSError *error) {
+            for (CDStatus* status in results) {
+                CellLayout* cellLayout = [[CellLayout alloc] initWithCDStatusModel:status];
+                [self.dataSource addObject:cellLayout];
+            }
+            [self refreshComplete];
+        }];
     }];
 }
 
-//dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//    NSBundle* bundle = [NSBundle mainBundle];
-//    NSString* path = [bundle pathForResource:@"timeline" ofType:@"plist"];
-//    NSArray* dataArray = [NSArray arrayWithContentsOfFile:path];
-//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//        [self.dataSource removeAllObjects];
-//        for (NSDictionary* dataDict in dataArray) {
-//            StatusModel* statusModel = [StatusModel objectModelWithJSON:dataDict];
-//            CellLayout* cellLayout = [[CellLayout alloc] initWithStatusModel:statusModel];
-//            for (NSInteger i = 0; i < 40; i ++) {
-//                [self.dataSource addObject:cellLayout];
-//            }
-//        }
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self refreshComplete];
-//        });
-//    });
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            [self refreshComplete];
-//        });
-//    });
-//});
+
 
 #pragma mark - Getter
 

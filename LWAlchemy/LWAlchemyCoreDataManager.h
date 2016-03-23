@@ -26,7 +26,7 @@
 @class NSManagedObject;
 @class NSFetchRequest;
 
-typedef void(^SaveOperationResult)(NSError* error);
+typedef void(^Completion)(void);
 typedef void(^FetchResults)(NSArray* results, NSError *error);
 typedef void(^ExistingObject)(NSManagedObject* existedObject);
 
@@ -84,6 +84,6 @@ typedef void(^ExistingObject)(NSManagedObject* existedObject);
  *  提交修改
  *
  */
-- (NSError *)commit:(SaveOperationResult)handler;
+- (void)saveContext:(Completion)completionBlock;
 
 @end
