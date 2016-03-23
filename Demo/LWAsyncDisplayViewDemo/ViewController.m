@@ -141,7 +141,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                      
                      @{@"name":@"waynezxcv",
                        @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
-                       @"content":content2,
+                       @"content":content1,
                        @"date":@"1458666454",
                        @"imgs":@[@"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
                                  @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg",
@@ -201,20 +201,14 @@ const CGFloat kRefreshBoundary = 170.0f;
                                  @"http://cdn.duitang.com/uploads/item/201308/30/20130830011805_dCHBT.jpeg"],
                        @"statusID":@5},
                      ];
-
     NSMutableArray* tmp = [[NSMutableArray alloc] init];
-
-    for (NSInteger i = 0; i < 5; i ++) {
+    for (NSInteger i = 0; i <100000; i ++) {
         [tmp addObjectsFromArray:arr];
     }
-
     [self.dataSource removeAllObjects];
     LWAlchemyCoreDataManager* manager = [LWAlchemyCoreDataManager sharedManager];
-    for (NSDictionary* dict in tmp) {
-        [manager insertNSManagedObjectWithObjectClass:[CDStatus class] JSON:dict uiqueAttributesName:@"statusID"];
-    }
+    [manager insertNSManagedObjectWithObjectClass:[CDStatus class] JSONsArray:tmp uiqueAttributesName:@"statusID"];
     [manager saveContext:^{
-        NSLog(@"handler:%@",[NSThread currentThread]);
         NSSortDescriptor* sort = [NSSortDescriptor sortDescriptorWithKey:@"statusID" ascending:YES];
         [manager fetchNSManagedObjectWithObjectClass:[CDStatus class] predicate:nil sortDescriptor:@[sort] fetchOffset:0 fetchLimit:0 fetchReults:^(NSArray *results, NSError *error) {
             for (CDStatus* status in results) {

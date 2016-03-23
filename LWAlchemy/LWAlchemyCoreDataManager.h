@@ -57,7 +57,18 @@ typedef void(^ExistingObject)(NSManagedObject* existedObject);
                                         JSON:(id)json
                          uiqueAttributesName:(NSString *)uniqueAttributesName;
 
-//查
+
+/**
+ *  批量增加数据，并指定UniqueAttributesName，若存在则重复插入，改为更新数据
+ *
+ */
+- (void)insertNSManagedObjectWithObjectClass:(Class)objectClass
+                                  JSONsArray:(NSArray *)JSONsArray
+                         uiqueAttributesName:(NSString *)uniqueAttributesName;
+
+/**
+ *  查
+ */
 - (void)fetchNSManagedObjectWithObjectClass:(Class)objectClass
                                   predicate:(NSPredicate *)predicate
                              sortDescriptor:(NSArray<NSSortDescriptor *> *)sortDescriptors
@@ -68,7 +79,6 @@ typedef void(^ExistingObject)(NSManagedObject* existedObject);
 /**
  *  删
  */
-
 - (void)deleteNSManagedObjectWithObjectWithObjectIdsArray:(NSArray<NSManagedObjectID *> *)objectIDs;
 
 

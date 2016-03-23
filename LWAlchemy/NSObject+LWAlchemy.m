@@ -78,9 +78,8 @@ static void* LWAlechmyMapDictionaryKey = &LWAlechmyMapDictionaryKey;
 + (id)nsManagedObjectModelWithJSON:(id)json context:(NSManagedObjectContext *)context {
     if ([self isSubclassOfClass:[NSManagedObject class]] && context) {
         
-        NSEntityDescription* description = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
-//        description.uniquenessConstraints =
-        
+//        NSEntityDescription* description = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
+
         NSManagedObject* model = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(self)
                                                                inManagedObjectContext:context];
         

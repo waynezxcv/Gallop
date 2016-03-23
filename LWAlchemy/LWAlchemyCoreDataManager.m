@@ -55,10 +55,41 @@
 #pragma mark - CURD
 
 - (id)insertNSManagedObjectWithObjectClass:(Class)objectClass JSON:(id)json {
-    NSLog(@"insert");
     NSManagedObject* model = [objectClass nsManagedObjectModelWithJSON:json
                                                                context:self.managedObjectContext];
     return model;
+}
+
+
+- (void)insertNSManagedObjectWithObjectClass:(Class)objectClass
+                                  JSONsArray:(NSArray *)JSONsArray
+                         uiqueAttributesName:(NSString *)uniqueAttributesName {
+
+    NSManagedObjectContext* ctx = [self createPrivateObjectContext];
+    [ctx performBlock:^{
+//        NSLog(@"查询的线程:%@",[NSThread currentThread]);
+        for (id json in JSONsArray) {
+            NSError* error = nil;
+            NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
+            [fetchRequest setEntity:[NSEntityDescription entityForName:NSStringFromClass(objectClass) inManagedObjectContext:ctx]];
+            NSPredicate* predicate = [NSPredicate predicateWithFormat:@"%K == %@", uniqueAttributesName, [[self dictionaryWithJSON:json]objectForKey:uniqueAttributesName]];
+            if (predicate) {
+                [fetchRequest setPredicate:predicate];
+            }
+            NSArray* results = [ctx executeFetchRequest:fetchRequest error:&error];
+            NSManagedObject* object = [results lastObject];
+            if (object) {
+                [self.managedObjectContext performBlockAndWait:^{
+//                    NSLog(@"修改内从中内容的线程:%@",[NSThread currentThread]);
+                    [self updateNSManagedObjectWithObjectID:object.objectID JSON:json];
+                }];
+            } else {
+                [self.managedObjectContext performBlockAndWait:^{
+                    [self insertNSManagedObjectWithObjectClass:objectClass JSON:json];
+                }];
+            }
+        }
+    }];
 }
 
 - (void)insertNSManagedObjectWithObjectClass:(Class)objectClass
@@ -68,27 +99,20 @@
     [ctx performBlock:^{
         NSError* error = nil;
         NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
-        [fetchRequest setEntity:[NSEntityDescription entityForName:NSStringFromClass(objectClass) inManagedObjectContext:self.managedObjectContext]];
+        [fetchRequest setEntity:[NSEntityDescription entityForName:NSStringFromClass(objectClass) inManagedObjectContext:ctx]];
         NSPredicate* predicate = [NSPredicate predicateWithFormat:@"%K == %@", uniqueAttributesName, [[self dictionaryWithJSON:json]objectForKey:uniqueAttributesName]];
         if (predicate) {
             [fetchRequest setPredicate:predicate];
         }
-        NSInteger count = [ctx countForFetchRequest:fetchRequest error:&error];
-        if (count != 0) {
-            NSArray* results = [ctx executeFetchRequest:fetchRequest error:&error];
-            NSManagedObject* object = [results lastObject];
-            [self.managedObjectContext performBlock:^{
-                //objectID是线程安全的。
+        NSArray* results = [ctx executeFetchRequest:fetchRequest error:&error];
+        NSManagedObject* object = [results lastObject];
+        if (object) {
+            [self.managedObjectContext performBlockAndWait:^{
                 [self updateNSManagedObjectWithObjectID:object.objectID JSON:json];
-                [self saveContext:^{
-                }];
-
             }];
         } else {
-            [self.managedObjectContext performBlock:^{
+            [self.managedObjectContext performBlockAndWait:^{
                 [self insertNSManagedObjectWithObjectClass:objectClass JSON:json];
-                [self saveContext:^{
-                }];
             }];
         }
     }];
@@ -132,7 +156,6 @@
         for (NSManagedObject* object  in results) {
             [result_ids addObject:object.objectID];
         }
-        NSLog(@"fetch:%@",[NSThread currentThread]);
         [self.managedObjectContext performBlockAndWait:^{
             NSMutableArray* final_results = [[NSMutableArray alloc] init];
             for (NSManagedObjectID* objectID in result_ids) {
@@ -145,7 +168,6 @@
 
 
 - (void)updateNSManagedObjectWithObjectID:(NSManagedObjectID *)objectID JSON:(id)json {
-    NSLog(@"update");
     NSManagedObject* object = [self.managedObjectContext objectWithID:objectID];
     if ([json isKindOfClass:[NSDictionary class]]) {
         object = [object nsManagedObject:object modelWithDictionary:json context:self.managedObjectContext];
@@ -176,6 +198,7 @@
         abort();
     } else {
         [self.parentContext performBlock:^{
+//            NSLog(@"写入到数据库的线程:%@",[NSThread currentThread]);
             __block NSError* inner_error = nil;
             [self.parentContext save:&inner_error];
             [self.managedObjectContext performBlock:^{
@@ -187,7 +210,9 @@
 
 - (NSManagedObjectContext *)createPrivateObjectContext {
     NSManagedObjectContext *ctx = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [ctx setParentContext:self.managedObjectContext];
+    [ctx performBlockAndWait:^{
+        [ctx setParentContext:self.managedObjectContext];
+    }];
     return ctx;
 }
 
