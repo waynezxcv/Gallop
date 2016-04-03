@@ -23,8 +23,8 @@
 		011DFA651C98810E000410D7 /* LWWebTooBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA601C98810E000410D7 /* LWWebTooBar.m */; };
 		011DFA661C98810E000410D7 /* LWWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA621C98810E000410D7 /* LWWebViewController.m */; };
 		011DFA671C98810E000410D7 /* LWWebViewProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA641C98810E000410D7 /* LWWebViewProgress.m */; };
-		011DFAC71C988479000410D7 /* 微笑@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABB1C988479000410D7 /* 微笑@2x.png */; };
-		011DFAC81C988479000410D7 /* 微笑@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABC1C988479000410D7 /* 微笑@3x.png */; };
+		011DFAC71C988479000410D7 /* [心]@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABB1C988479000410D7 /* [心]@2x.png */; };
+		011DFAC81C988479000410D7 /* [心]@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABC1C988479000410D7 /* [心]@3x.png */; };
 		011DFAC91C988479000410D7 /* comment.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABD1C988479000410D7 /* comment.png */; };
 		011DFACB1C988479000410D7 /* image-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABF1C988479000410D7 /* image-1.png */; };
 		011DFACC1C988479000410D7 /* like.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFAC01C988479000410D7 /* like.png */; };
@@ -47,7 +47,6 @@
 		017F67541C98A04F00309E92 /* LWTextAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67481C98A04F00309E92 /* LWTextAttach.m */; };
 		017F67551C98A04F00309E92 /* LWTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F674A1C98A04F00309E92 /* LWTextLayout.m */; };
 		017F67561C98A04F00309E92 /* LWTextParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F674C1C98A04F00309E92 /* LWTextParser.m */; };
-		017F67571C98A04F00309E92 /* UIImageView+LazySetContents.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F674E1C98A04F00309E92 /* UIImageView+LazySetContents.m */; };
 		01AE7F521CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4C1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m */; };
 		01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4E1CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m */; };
 		01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */; };
@@ -109,8 +108,8 @@
 		011DFA621C98810E000410D7 /* LWWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWWebViewController.m; path = ../LWWebViewController/LWWebViewController.m; sourceTree = "<group>"; };
 		011DFA631C98810E000410D7 /* LWWebViewProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWWebViewProgress.h; path = ../LWWebViewController/LWWebViewProgress.h; sourceTree = "<group>"; };
 		011DFA641C98810E000410D7 /* LWWebViewProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWWebViewProgress.m; path = ../LWWebViewController/LWWebViewProgress.m; sourceTree = "<group>"; };
-		011DFABB1C988479000410D7 /* 微笑@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "微笑@2x.png"; path = "Resource/微笑@2x.png"; sourceTree = SOURCE_ROOT; };
-		011DFABC1C988479000410D7 /* 微笑@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "微笑@3x.png"; path = "Resource/微笑@3x.png"; sourceTree = SOURCE_ROOT; };
+		011DFABB1C988479000410D7 /* [心]@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "[心]@2x.png"; path = "Resource/[心]@2x.png"; sourceTree = SOURCE_ROOT; };
+		011DFABC1C988479000410D7 /* [心]@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "[心]@3x.png"; path = "Resource/[心]@3x.png"; sourceTree = SOURCE_ROOT; };
 		011DFABD1C988479000410D7 /* comment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = comment.png; path = Resource/comment.png; sourceTree = SOURCE_ROOT; };
 		011DFABF1C988479000410D7 /* image-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "image-1.png"; path = "Resource/image-1.png"; sourceTree = SOURCE_ROOT; };
 		011DFAC01C988479000410D7 /* like.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = like.png; path = Resource/like.png; sourceTree = SOURCE_ROOT; };
@@ -147,8 +146,6 @@
 		017F674A1C98A04F00309E92 /* LWTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextLayout.m; path = ../LWAsyncDisplayView/LWTextLayout.m; sourceTree = "<group>"; };
 		017F674B1C98A04F00309E92 /* LWTextParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextParser.h; path = ../LWAsyncDisplayView/LWTextParser.h; sourceTree = "<group>"; };
 		017F674C1C98A04F00309E92 /* LWTextParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextParser.m; path = ../LWAsyncDisplayView/LWTextParser.m; sourceTree = "<group>"; };
-		017F674D1C98A04F00309E92 /* UIImageView+LazySetContents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+LazySetContents.h"; path = "../LWAsyncDisplayView/UIImageView+LazySetContents.h"; sourceTree = "<group>"; };
-		017F674E1C98A04F00309E92 /* UIImageView+LazySetContents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+LazySetContents.m"; path = "../LWAsyncDisplayView/UIImageView+LazySetContents.m"; sourceTree = "<group>"; };
 		01AE7F481CA1AEAF00E9F862 /* LWAlchemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemy.h; path = ../LWAlchemy/LWAlchemy.h; sourceTree = "<group>"; };
 		01AE7F4B1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyPropertyInfo.h; path = ../LWAlchemy/LWAlchemyPropertyInfo.h; sourceTree = "<group>"; };
 		01AE7F4C1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyPropertyInfo.m; path = ../LWAlchemy/LWAlchemyPropertyInfo.m; sourceTree = "<group>"; };
@@ -275,8 +272,6 @@
 				017F67481C98A04F00309E92 /* LWTextAttach.m */,
 				017F674B1C98A04F00309E92 /* LWTextParser.h */,
 				017F674C1C98A04F00309E92 /* LWTextParser.m */,
-				017F674D1C98A04F00309E92 /* UIImageView+LazySetContents.h */,
-				017F674E1C98A04F00309E92 /* UIImageView+LazySetContents.m */,
 				017F673D1C98A04F00309E92 /* CALayer+LazySetContents.h */,
 				017F673E1C98A04F00309E92 /* CALayer+LazySetContents.m */,
 				017F67451C98A04F00309E92 /* LWRunLoopObserver.h */,
@@ -391,8 +386,8 @@
 		011DFABA1C9883F3000410D7 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				011DFABB1C988479000410D7 /* 微笑@2x.png */,
-				011DFABC1C988479000410D7 /* 微笑@3x.png */,
+				011DFABB1C988479000410D7 /* [心]@2x.png */,
+				011DFABC1C988479000410D7 /* [心]@3x.png */,
 				011DFABD1C988479000410D7 /* comment.png */,
 				011DFABF1C988479000410D7 /* image-1.png */,
 				011DFAC01C988479000410D7 /* like.png */,
@@ -505,9 +500,9 @@
 				011DFACF1C988479000410D7 /* loading@3x.png in Resources */,
 				011DFAC91C988479000410D7 /* comment.png in Resources */,
 				011DFAD01C988479000410D7 /* menu.png in Resources */,
-				011DFAC81C988479000410D7 /* 微笑@3x.png in Resources */,
+				011DFAC81C988479000410D7 /* [心]@3x.png in Resources */,
 				011DFACB1C988479000410D7 /* image-1.png in Resources */,
-				011DFAC71C988479000410D7 /* 微笑@2x.png in Resources */,
+				011DFAC71C988479000410D7 /* [心]@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,7 +558,6 @@
 				B0D9EB461CB0F436009FDCCF /* UIButton+WebCache.m in Sources */,
 				017F67351C988BD800309E92 /* StatusModel.m in Sources */,
 				B0D9EB4B1CB0F436009FDCCF /* UIImageView+WebCache.m in Sources */,
-				017F67571C98A04F00309E92 /* UIImageView+LazySetContents.m in Sources */,
 				B0D9EB421CB0F435009FDCCF /* SDWebImageDownloader.m in Sources */,
 				B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */,
 				B0D9EB3B1CB0F435009FDCCF /* CALayer+WebCacheOperation.m in Sources */,

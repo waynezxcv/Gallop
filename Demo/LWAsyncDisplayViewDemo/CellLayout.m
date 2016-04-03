@@ -8,6 +8,7 @@
 
 #import "CellLayout.h"
 #import "LWDefine.h"
+#import "LWTextParser.h"
 
 
 
@@ -23,9 +24,7 @@
             dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"MM月dd日 hh:mm"];
         });
-
         self.statusModel = statusModel;
-
         //avatar
         self.avatarPosition = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
         //name
@@ -37,6 +36,8 @@
         self.nameTextLayout.textColor = RGB(113, 129, 161, 1);
         self.nameTextLayout.boundsRect = CGRectMake(60, 20, SCREEN_WIDTH, 20);
         [self.nameTextLayout creatCTFrameRef];
+
+
         [self.nameTextLayout addLinkWithData:[NSString stringWithFormat:@"%@",self.statusModel.name]
                                      inRange:NSMakeRange(0, self.statusModel.name.length)
                                    linkColor:nil
@@ -51,6 +52,12 @@
         self.contentTextLayout.boundsRect = CGRectMake(60.0f,50.0f,SCREEN_WIDTH - 80.0f,MAXFLOAT);
         self.contentTextLayout.linespace = 2.0f;
         [self.contentTextLayout creatCTFrameRef];
+        
+        [LWTextParser parseEmojiWithTextLayout:self.contentTextLayout];
+        [LWTextParser parseTopicWithTextLayout:self.contentTextLayout
+                                     linkColor:RGB(113, 129, 161, 1)
+                                highlightColor:nil
+                                underlineStyle:NSUnderlineStyleNone];
 
         //imgs
         NSInteger imageCount = [self.statusModel.imgs count];
