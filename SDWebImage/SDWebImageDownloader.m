@@ -112,12 +112,7 @@ static NSString *const kCompletedCallbackKey = @"completed";
     _operationClass = operationClass ?: [SDWebImageDownloaderOperation class];
 }
 
-- (id <SDWebImageOperation>)downloadImageWithURL:(NSURL *)url
-                                         options:(SDWebImageDownloaderOptions)options
-                                      processing:(SDWebImageDownloaderProcessingImageBlock)processingBlock
-                                        progress:(SDWebImageDownloaderProgressBlock)progressBlock
-                                       completed:(SDWebImageDownloaderCompletedBlock)completedBlock {
-
+- (id <SDWebImageOperation>)downloadImageWithURL:(NSURL *)url options:(SDWebImageDownloaderOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageDownloaderCompletedBlock)completedBlock {
     __block SDWebImageDownloaderOperation *operation;
     __weak __typeof(self)wself = self;
 
@@ -139,7 +134,6 @@ static NSString *const kCompletedCallbackKey = @"completed";
         }
         operation = [[wself.operationClass alloc] initWithRequest:request
                                                           options:options
-                                                       processing:processingBlock
                                                          progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                                                              SDWebImageDownloader *sself = wself;
                                                              if (!sself) return;
@@ -177,13 +171,13 @@ static NSString *const kCompletedCallbackKey = @"completed";
                                                             });
                                                         }];
         operation.shouldDecompressImages = wself.shouldDecompressImages;
-
+        
         if (wself.urlCredential) {
             operation.credential = wself.urlCredential;
         } else if (wself.username && wself.password) {
             operation.credential = [NSURLCredential credentialWithUser:wself.username password:wself.password persistence:NSURLCredentialPersistenceForSession];
         }
-
+        
         if (options & SDWebImageDownloaderHighPriority) {
             operation.queuePriority = NSOperationQueuePriorityHigh;
         } else if (options & SDWebImageDownloaderLowPriority) {

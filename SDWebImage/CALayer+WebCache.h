@@ -115,7 +115,6 @@
  *                       The fourth parameter is the original image url.
  */
 - (void)sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options
-                processing:(SDWebImageDownloaderProcessingImageBlock)processingBlock
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock;
 /**
@@ -144,7 +143,6 @@
 - (void)sd_setImageWithPreviousCachedImageWithURL:(NSURL *)url
                                  placeholderImage:(UIImage *)placeholder
                                           options:(SDWebImageOptions)options
-                                       processing:(SDWebImageDownloaderProcessingImageBlock)processingBlock
                                          progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                         completed:(SDWebImageCompletionBlock)completedBlock;
 

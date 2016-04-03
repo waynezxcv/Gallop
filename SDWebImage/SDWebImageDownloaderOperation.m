@@ -19,7 +19,6 @@ NSString *const SDWebImageDownloadFinishNotification = @"SDWebImageDownloadFinis
 
 @interface SDWebImageDownloaderOperation () <NSURLConnectionDataDelegate>
 
-@property (copy,nonatomic) SDWebImageDownloaderProcessingImageBlock processingBlock;
 @property (copy, nonatomic) SDWebImageDownloaderProgressBlock progressBlock;
 @property (copy, nonatomic) SDWebImageDownloaderCompletedBlock completedBlock;
 @property (copy, nonatomic) SDWebImageNoParamsBlock cancelBlock;
@@ -47,17 +46,14 @@ NSString *const SDWebImageDownloadFinishNotification = @"SDWebImageDownloadFinis
 
 - (id)initWithRequest:(NSURLRequest *)request
               options:(SDWebImageDownloaderOptions)options
-           processing:(SDWebImageDownloaderProcessingImageBlock)processingBlock
              progress:(SDWebImageDownloaderProgressBlock)progressBlock
             completed:(SDWebImageDownloaderCompletedBlock)completedBlock
             cancelled:(SDWebImageNoParamsBlock)cancelBlock {
-
     if ((self = [super init])) {
         _request = request;
         _shouldDecompressImages = YES;
         _shouldUseCredentialStorage = YES;
         _options = options;
-        _processingBlock = [processingBlock copy];
         _progressBlock = [progressBlock copy];
         _completedBlock = [completedBlock copy];
         _cancelBlock = [cancelBlock copy];
@@ -380,9 +376,6 @@ NSString *const SDWebImageDownloadFinishNotification = @"SDWebImageDownloadFinis
     if (![[NSURLCache sharedURLCache] cachedResponseForRequest:_request]) {
         responseFromCached = NO;
     }
-
-
-
     
     if (completionBlock) {
         if (self.options & SDWebImageDownloaderIgnoreCachedResponse && responseFromCached) {
@@ -391,16 +384,7 @@ NSString *const SDWebImageDownloadFinishNotification = @"SDWebImageDownloadFinis
             UIImage *image = [UIImage sd_imageWithData:self.imageData];
             NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:self.request.URL];
             image = [self scaledImageForKey:key image:image];
-
-            //processing image
-
-            if (self.processingBlock) {
-                UIImage* newImage = self.processingBlock(image);
-                if (newImage != nil) {
-                    image = newImage;
-                }
-            }
-
+            
             // Do not force decoding animated GIFs
             if (!image.images) {
                 if (self.shouldDecompressImages) {

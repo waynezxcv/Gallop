@@ -14,10 +14,7 @@
 //  See LICENSE for this sample’s licensing information
 //
 
-
-
 #import <UIKit/UIKit.h>
-
 
 @class NSPersistentStoreCoordinator;
 @class NSManagedObjectContext;
@@ -31,40 +28,55 @@ typedef void(^FetchResults)(NSArray* results, NSError *error);
 typedef void(^ExistingObject)(NSManagedObject* existedObject);
 
 
-@interface LWAlchemyCoreDataManager : NSObject
+@interface LWAlchemyManager : NSObject
 
 @property (readonly, strong, nonatomic) NSManagedObjectModel* managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator* persistentStoreCoordinator;
+@property (readonly, strong, nonatomic) NSManagedObjectContext* managedObjectContext;//主线程Context，用户增，改，删（在内存中操作）。
+@property (readonly, strong, nonatomic) NSManagedObjectContext* parentContext;//用来写入数据到SQLite的Context，在一个后台线程中操作。
 
-@property (readonly, strong, nonatomic) NSManagedObjectContext* managedObjectContext;//主线程Context，用户增，改，删。
-@property (readonly, strong, nonatomic) NSManagedObjectContext* parentContext;//用来保存到persistentStoreCoordinator的Context
 
 
-+ (LWAlchemyCoreDataManager *)sharedManager;
 
-/**
- *  增
- *
- */
-- (id)insertNSManagedObjectWithObjectClass:(Class)objectClass JSON:(id)json;
++ (LWAlchemyManager *)sharedManager;
 
 
 /**
- *  增加一条数据，并指定UniqueAttributesName，若存在则重复插入，改为更新数据
+ *  批量插入数据，并指定UniqueAttributesName，
+ *  若存在则重复插入，改为更新数据（总共新开一个线程）
  *
+ *  @param cls                  Entity的类(如：[Student Class])
+ *  @param jsonArray            包含JSON的数组
+ *  @param uniqueAttributesName unique约束的属性名
+ *  @param isSave               是否保存
+ *  @param completeBlock        完成回调
  */
-- (void)insertNSManagedObjectWithObjectClass:(Class)objectClass
-                                        JSON:(id)json
-                         uiqueAttributesName:(NSString *)uniqueAttributesName;
+- (void)insertEntitysWithClass:(Class)cls
+                    JSONsArray:(NSArray *)jsonArray
+           uiqueAttributesName:(NSString *)uniqueAttributesName
+                          save:(BOOL)isSave
+                    completion:(Completion)completeBlock;
 
 
 /**
- *  批量增加数据，并指定UniqueAttributesName，若存在则重复插入，改为更新数据
+ *  增入一条数据。
  *
  */
-- (void)insertNSManagedObjectWithObjectClass:(Class)objectClass
-                                  JSONsArray:(NSArray *)JSONsArray
-                         uiqueAttributesName:(NSString *)uniqueAttributesName;
+- (void)insertEntityWithClass:(Class)cls
+                         JSON:(id)json
+                         save:(BOOL)isSave
+                   completion:(Completion)completeBlock;
+
+
+/**
+ *  批量插入数据。
+ *
+ */
+- (void)insertEntitysWithClass:(Class)cls
+                    JSONsArray:(NSArray *)jsonArray
+                          save:(BOOL)isSave
+                    completion:(Completion)completeBlock;
+
 
 /**
  *  查
@@ -75,12 +87,10 @@ typedef void(^ExistingObject)(NSManagedObject* existedObject);
                                 fetchOffset:(NSInteger)offset
                                  fetchLimit:(NSInteger)limit
                                 fetchReults:(FetchResults)resultsBlock;
-
 /**
  *  删
  */
 - (void)deleteNSManagedObjectWithObjectWithObjectIdsArray:(NSArray<NSManagedObjectID *> *)objectIDs;
-
 
 
 /**
@@ -91,9 +101,11 @@ typedef void(^ExistingObject)(NSManagedObject* existedObject);
 
 
 /**
- *  提交修改
+ *  保存
  *
  */
 - (void)saveContext:(Completion)completionBlock;
+
+
 
 @end

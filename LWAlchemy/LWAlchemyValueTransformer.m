@@ -47,7 +47,9 @@
     return self;
 }
 
+
 #pragma mark - Transformer
+
 + (BOOL)allowsReverseTransformation {
     return NO;
 }
@@ -57,7 +59,7 @@
 }
 
 - (id)transformedValue:(id)value {
-    NSError *error = nil;
+    NSError* error = nil;
     BOOL success = YES;
     return self.forwardBlock(value, &success, &error);
 }

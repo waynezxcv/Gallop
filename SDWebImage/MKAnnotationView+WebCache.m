@@ -46,21 +46,19 @@ static char imageURLKey;
 
     if (url) {
         __weak __typeof(self)wself = self;
-        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadImageWithURL:url options:options
-                                                                                        processing:nil
-                                                                                          progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                                                                                              if (!wself) return;
-                                                                                              dispatch_main_sync_safe(^{
-                                                                                                  __strong MKAnnotationView *sself = wself;
-                                                                                                  if (!sself) return;
-                                                                                                  if (image) {
-                                                                                                      sself.image = image;
-                                                                                                  }
-                                                                                                  if (completedBlock && finished) {
-                                                                                                      completedBlock(image, error, cacheType, url);
-                                                                                                  }
-                                                                                              });
-                                                                                          }];
+        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadImageWithURL:url options:options progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            if (!wself) return;
+            dispatch_main_sync_safe(^{
+                __strong MKAnnotationView *sself = wself;
+                if (!sself) return;
+                if (image) {
+                    sself.image = image;
+                }
+                if (completedBlock && finished) {
+                    completedBlock(image, error, cacheType, url);
+                }
+            });
+        }];
         [self sd_setImageLoadOperation:operation forKey:@"MKAnnotationViewImage"];
     } else {
         dispatch_main_async_safe(^{

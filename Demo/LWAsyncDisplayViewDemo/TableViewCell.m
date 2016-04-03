@@ -10,19 +10,22 @@
 #import "LWAsyncDisplayView.h"
 #import "LWDefine.h"
 #import "LWRunLoopObserver.h"
-#import "UIImageView+WebCache.h"
+#import "CALayer+WebCache.h"
 
 
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate>
 
+@property (nonatomic,strong) CALayer* avatarLayer;
+@property (nonatomic,strong) NSMutableArray* imageLayers;
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
-@property (nonatomic,strong) UIImageView* avatarImageView;
-@property (nonatomic,strong) NSMutableArray* imageViews;
 @property (nonatomic,assign,getter=isNeedLayoutImageViews) BOOL needLayoutImageViews;
 
 @end
 
 @implementation TableViewCell
+
+
+#pragma mark - Init
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -30,35 +33,67 @@
         self.needLayoutImageViews = YES;
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
-        [self.contentView addSubview:self.avatarImageView];
-
-        for (NSInteger i = 0; i < 9;i ++) {
-            UIImageView* imageView = [self.imageViews objectAtIndex:i];
-            [self.contentView addSubview:imageView];
-        }
+        [self.asyncDisplayView.layer addSublayer:self.avatarLayer];
+        [self.asyncDisplayView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didClickedImageView:)]];
     }
     return self;
 }
 
+#pragma mark - Actions
+
+//点击图片
+- (void)didClickedImageView:(UITapGestureRecognizer *)tap {
+    CGPoint point = [tap locationInView:self];
+    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
+        CGRect imagePosition = CGRectFromString(self.layout.imagePostionArray[i]);
+        if (CGRectContainsPoint(imagePosition, point)) {
+            if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedImageWithCellLayout:atIndex:)] &&
+                [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
+                [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.layout atIndex:i];
+            }
+        }
+    }
+}
+
+
+#pragma mark - Draw and setup
+
 - (void)setLayout:(CellLayout *)layout {
-    if (_layout != layout) {
-        _layout = layout;
-        [self setupCell];
+    if (_layout == layout) {
+        return;
+    }
+    if (_layout.imagePostionArray.count != layout.imagePostionArray.count) {
+        self.needLayoutImageViews = YES;
+    }
+    else {
+        self.needLayoutImageViews = NO;
+    }
+    _layout = layout;
+    [self setupCell];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
+    self.avatarLayer.frame = self.layout.avatarPosition;
+    if (self.isNeedLayoutImageViews) {
+        [self resetImageLayers];
+    }
+    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
+        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
+        imageLayer.frame = CGRectFromString([self.layout.imagePostionArray objectAtIndex:i]);
     }
 }
 
 - (void)setupCell {
-    self.avatarImageView.frame = self.layout.avatarPosition;
-    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
-    [self.avatarImageView sd_setImageWithURL:self.layout.statusModel.avatar];
+    [self.avatarLayer sd_setImageWithURL:self.layout.statusModel.avatar
+                        placeholderImage:nil
+                                 options:SDWebImageDelaySetContents];
+
     self.asyncDisplayView.layouts = @[self.layout.nameTextLayout,
                                       self.layout.contentTextLayout,
                                       self.layout.dateTextLayout];
-    [self resetImageView];
-    LWRunLoopObserver* obeserver = [LWRunLoopObserver observerWithTarget:self
-                                                                selector:@selector(setupImages)
-                                                                  object:nil];
-    [obeserver commit];
+    [self setupImages];
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size {
@@ -81,33 +116,18 @@
     CGContextRestoreGState(context);
 }
 
-- (void)resetImageView {
+- (void)resetImageLayers {
     for (NSInteger i = 0; i < 9; i ++) {
-        UIImageView* imageView = [self.imageViews objectAtIndex:i];
-        imageView.frame = CGRectZero;
+        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
+        imageLayer.frame = CGRectZero;
     }
 }
 
 - (void)setupImages {
     for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        UIImageView* imageView = [self.imageViews objectAtIndex:i];
-        imageView.frame = CGRectFromString([self.layout.imagePostionArray objectAtIndex:i]);
+        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
         NSString* img = [self.layout.statusModel.imgs objectAtIndex:i];
-        [imageView sd_setImageWithURL:[NSURL URLWithString:img]];
-    }
-}
-
-//点击图片
-- (void)didClickedImageView:(UITapGestureRecognizer *)tap {
-    CGPoint point = [tap locationInView:self];
-    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        CGRect imagePosition = CGRectFromString(self.layout.imagePostionArray[i]);
-        if (CGRectContainsPoint(imagePosition, point)) {
-            if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedImageWithCellLayout:atIndex:)] &&
-                [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-                [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.layout atIndex:i];
-            }
-        }
+        [imageLayer sd_setImageWithURL:[NSURL URLWithString:img] placeholderImage:nil options:SDWebImageDelaySetContents];
     }
 }
 
@@ -121,29 +141,30 @@
     return _asyncDisplayView;
 }
 
-- (UIImageView *)avatarImageView {
-    if (!_avatarImageView) {
-        _avatarImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        _avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+- (NSMutableArray *)imageLayers {
+    if (_imageLayers) {
+        return _imageLayers;
     }
-    return _avatarImageView;
+    _imageLayers = [[NSMutableArray alloc] initWithCapacity:9];
+    for (NSInteger i = 0; i < 9; i ++) {
+        CALayer* imageLayer = [CALayer layer];
+        imageLayer.contentsScale = [UIScreen mainScreen].scale;
+        imageLayer.contentsGravity = kCAGravityResizeAspectFill;
+        imageLayer.masksToBounds = YES;
+        [self.asyncDisplayView.layer addSublayer:imageLayer];
+        [_imageLayers addObject:imageLayer];
+    }
+    return _imageLayers ;
 }
 
-- (NSMutableArray *)imageViews {
-    if (!_imageViews) {
-        _imageViews = [[NSMutableArray alloc] initWithCapacity:9];
-        for (NSInteger i = 0; i < 9; i ++) {
-            UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-            imageView.backgroundColor = [UIColor grayColor];
-            imageView.clipsToBounds = YES;
-            imageView.contentMode = UIViewContentModeScaleAspectFill;
-            imageView.userInteractionEnabled = YES;
-            [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                    action:@selector(didClickedImageView:)]];
-            [_imageViews addObject:imageView];
-        }
+- (CALayer *)avatarLayer {
+    if (_avatarLayer) {
+        return _avatarLayer;
     }
-    return _imageViews;
+    _avatarLayer = [CALayer layer];
+    _avatarLayer.contentsScale = [UIScreen mainScreen].scale;
+    _avatarLayer.contentsGravity = kCAGravityResizeAspect;
+    return _avatarLayer;
 }
 
 @end

@@ -15,7 +15,7 @@ typedef NS_OPTIONS(NSUInteger, SDWebImageDownloaderOptions) {
     SDWebImageDownloaderProgressiveDownload = 1 << 1,
 
     /**
-     * By default, request prevent the of NSURLCache. With this flag, NSURLCache
+     * By default, request prevent the use of NSURLCache. With this flag, NSURLCache
      * is used with default policies.
      */
     SDWebImageDownloaderUseNSURLCache = 1 << 2,
@@ -71,16 +71,6 @@ typedef void(^SDWebImageDownloaderProgressBlock)(NSInteger receivedSize, NSInteg
 typedef void(^SDWebImageDownloaderCompletedBlock)(UIImage *image, NSData *data, NSError *error, BOOL finished);
 
 typedef NSDictionary *(^SDWebImageDownloaderHeadersFilterBlock)(NSURL *url, NSDictionary *headers);
-
-
-
-
-/**
- * 在子线程对下载的图片进行处理
- */
-
-typedef UIImage*(^SDWebImageDownloaderProcessingImageBlock)(UIImage* needProcessImage);
-
 
 /**
  * Asynchronous downloader dedicated and optimized for image loading.
@@ -188,12 +178,8 @@ typedef UIImage*(^SDWebImageDownloaderProcessingImageBlock)(UIImage* needProcess
  *
  * @return A cancellable SDWebImageOperation
  */
-
-
-
 - (id <SDWebImageOperation>)downloadImageWithURL:(NSURL *)url
                                          options:(SDWebImageDownloaderOptions)options
-                                      processing:(SDWebImageDownloaderProcessingImageBlock)processingBlock
                                         progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                        completed:(SDWebImageDownloaderCompletedBlock)completedBlock;
 

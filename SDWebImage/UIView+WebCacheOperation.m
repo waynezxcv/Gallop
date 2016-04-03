@@ -29,7 +29,6 @@ static char loadOperationKey;
     [operationDictionary setObject:operation forKey:key];
 }
 
-
 - (void)sd_cancelImageLoadOperationWithKey:(NSString *)key {
     // Cancel in progress downloader from queue
     NSMutableDictionary *operationDictionary = [self operationDictionary];

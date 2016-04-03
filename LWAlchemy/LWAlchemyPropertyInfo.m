@@ -15,14 +15,13 @@
 //
 
 
-
 #import "LWAlchemyPropertyInfo.h"
-
 
 @interface LWAlchemyPropertyInfo ()
 
 @property (nonatomic,assign) objc_property_t property;
 @property (nonatomic,strong) NSString* propertyName;
+@property (nonatomic,strong) NSArray* mapperName;
 @property (nonatomic,strong) NSString* ivarName;
 @property (nonatomic,assign) LWPropertyType type;
 @property (nonatomic,assign) LWPropertyNSObjectType nsType;
@@ -41,7 +40,7 @@
 
 @implementation LWAlchemyPropertyInfo
 
-- (id)initWithProperty:(objc_property_t)property {
+- (id)initWithProperty:(objc_property_t)property customMapper:(NSDictionary *)mapper {
     self = [super init];
     if (self) {
         self.readonly = NO;
@@ -57,19 +56,13 @@
             switch (attributes[i].name[0]) {
                 case 'T': {
                     if (attributes[i].value) {
-                        LWPropertyType type = _GetPropertyInfoType(self, attributes[i].value);
-                        self.type = type;
+                        self.type = _GetPropertyInfoType(self, attributes[i].value);
                         if (self.type == LWPropertyTypeObject) {
                             self.cls = _GetPropertyInfoClass(attributes[i].value);
                             self.nsType = _GetObjectNSType(self.cls);
                             if (self.nsType != LWPropertyNSObjectTypeNSUnknown) {
                                 self.foundationType = YES;
                             }
-                            else {
-                                self.foundationType = NO;
-                            }
-                        } else {
-                            self.cls = nil;
                         }
                     }
                 } break;
@@ -89,11 +82,9 @@
                     }
                 }break;
                 case 'R': {
-                    self.type |= LWPropertyReadonly;
                     self.readonly = YES;
                 } break;
                 case 'D': {
-                    self.type |= LWPropertyDynamic;
                     self.dynamic = YES;
                 } break;
                 default:break;
@@ -104,6 +95,19 @@
             attributes = NULL;
         }
         self.propertyName =  @(property_getName(property));
+        self.mapperName = @[@(property_getName(property))];
+        if (mapper[self.propertyName]) {
+            NSMutableArray* mappedToKeyArray = [[NSMutableArray alloc] init];
+            NSArray* keyPath = [mapper[self.propertyName] componentsSeparatedByString:@"."];
+            if (keyPath.count > 1) {
+                for (NSString* oneKey in keyPath) {
+                    [mappedToKeyArray addObject:oneKey];
+                }
+            } else {
+                [mappedToKeyArray addObject:mapper[self.propertyName]];
+            }
+            self.mapperName = mappedToKeyArray;
+        }
         if (self.propertyName) {
             if (!self.getter) {
                 self.getter = self.propertyName;
@@ -201,9 +205,6 @@ static LWPropertyType _GetPropertyInfoType(LWAlchemyPropertyInfo* propertyInfo, 
             } else {
                 if (len == 1) {
                     propertyInfo.idType = YES;
-                }
-                else {
-                    propertyInfo.idType = NO;
                 }
                 return LWPropertyTypeObject;
             }

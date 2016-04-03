@@ -16,47 +16,56 @@
 
 #import <Foundation/Foundation.h>
 
-
-
-@protocol LWAlchemyDelegate <NSObject>
-
-+ (NSDictionary *)mapDictionary;
-
-@end
-
 @class NSManagedObject;
 @class NSManagedObjectContext;
 
 @interface NSObject(LWAlchemy)
 
-
 /**
- *  NSObject
+ *  由JSON生成model
  *
  */
-+ (id)objectModelWithJSON:(id)json;
-+ (id)nsManagedObjectModelWithJSON:(id)json context:(NSManagedObjectContext *)context;
++ (id)modelWithJSON:(id)json;
+
 
 /**
- *  NSManagedObject
+ *  由JSON生成entity（CoreData）
+ *
+ */
++ (id)entityWithJSON:(id)json context:(NSManagedObjectContext *)context;
+
+/**
+ *  由NSDictionary生成Model
  *
  */
 - (instancetype)modelWithDictionary:(NSDictionary *)dictionary;
 
-- (instancetype)nsManagedObject:(NSManagedObject *)object
-            modelWithDictionary:(NSDictionary *)dictionary
-                        context:(NSManagedObjectContext *)contxt;
+/**
+ *  由NSDictionary生成Entity（CoreData）
+ *
+ */
+- (instancetype)entity:(NSManagedObject *)object
+   modelWithDictionary:(NSDictionary *)dictionary
+               context:(NSManagedObjectContext *)contxt;
 
+/**
+ *  由JSON生成NSDictionary
+ *
+ */
 - (NSDictionary *)dictionaryWithJSON:(id)json;
 
 
-//唯一属性名。设置一个属性为unique，来保证唯一性
-+ (NSString *)uniqueAttributesName;
-+ (void)setUniqueAttributesName:(NSString *)uniqueAttributesName;
+/**
+ *  自定义的映射
+ *
+ */
++ (NSDictionary *)mapper;
 
 
-+ (NSSet *)propertysSet;
-+ (NSDictionary *)mapDictionary;
+/**
+ *  获取对象的描述
+ *
+ */
 - (NSString *)lwDescription;
 
 @end

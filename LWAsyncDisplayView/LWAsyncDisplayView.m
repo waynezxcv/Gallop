@@ -52,15 +52,18 @@
 
 #pragma mark - Setter & Getter
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [(LWAsyncDisplayLayer *)self.layer cleanUp];
+    [(LWAsyncDisplayLayer *)self.layer drawContent];
+}
+
 - (void)setLayouts:(NSArray *)layouts {
     if ([_layouts isEqual:layouts]) {
         return;
     }
     _layouts = layouts;
-    [(LWAsyncDisplayLayer *)self.layer cleanUp];
-    [(LWAsyncDisplayLayer *)self.layer drawContent];
 }
-
 
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {

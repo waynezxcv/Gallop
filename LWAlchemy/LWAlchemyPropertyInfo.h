@@ -40,16 +40,7 @@ typedef NS_ENUM(NSUInteger, LWPropertyType) {
     LWPropertyTypeUnion         = 19,
     LWPropertyTypeStruct        = 20,
     LWPropertyTypeObject        = 21,
-    LWPropertyTypeBlock         = 22,
-
-    LWPropertyReadonly     = 1 << 16,
-    LWPropertyCopy         = 1 << 17,
-    LWPropertyRetain       = 1 << 18,
-    LWPropertyNonatomic    = 1 << 19,
-    LWPropertyWeak         = 1 << 20,
-    LWPropertyCustomGetter = 1 << 21,
-    LWPropertyCustomSetter = 1 << 22,
-    LWPropertyDynamic      = 1 << 23,
+    LWPropertyTypeBlock         = 22
 };
 
 
@@ -77,6 +68,7 @@ typedef NS_ENUM (NSUInteger, LWPropertyNSObjectType) {
 
 @property (nonatomic,assign,readonly) objc_property_t property;
 @property (nonatomic,strong,readonly) NSString* propertyName;
+@property (nonatomic,strong,readonly) NSArray* mapperName;
 @property (nonatomic,strong,readonly) NSString* ivarName;
 @property (nonatomic,assign,readonly) Ivar ivar;
 @property (nonatomic,assign,readonly) LWPropertyType type;
@@ -92,6 +84,6 @@ typedef NS_ENUM (NSUInteger, LWPropertyNSObjectType) {
 @property (nonatomic,assign,readonly,getter=isIdType) BOOL idType;
 @property (nonatomic,assign,readonly,getter=isFoundationType) BOOL foundationType;
 
-- (id)initWithProperty:(objc_property_t)property;
+- (id)initWithProperty:(objc_property_t)property customMapper:(NSDictionary *)mapper;
 
 @end

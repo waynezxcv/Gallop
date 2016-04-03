@@ -25,9 +25,7 @@
 @interface CALayer(LazySetContents)
 
 
-/**
- *  在MainRunLoop足够空闲的情况下set内容
- */
+
 - (void)lazySetContent:(id)contents;
 
 @end

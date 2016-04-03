@@ -14,8 +14,10 @@
 
 
 @interface CellLayout : NSObject
+
+
+
 @property (nonatomic,strong) CDStatus* statusModel;
-//@property (nonatomic,strong) StatusModel* statusModel;
 @property (nonatomic,strong) LWTextLayout* nameTextLayout;
 @property (nonatomic,strong) LWTextLayout* contentTextLayout;
 @property (nonatomic,strong) LWTextLayout* dateTextLayout;
@@ -30,7 +32,7 @@
 @property (nonatomic,assign) CGFloat likesAndCommentsHeight;
 @property (nonatomic,assign) CGFloat cellHeight;
 
-- (id)initWithStatusModel:(StatusModel *)statusModel;
 - (id)initWithCDStatusModel:(CDStatus *)statusModel;
+
 
 @end
