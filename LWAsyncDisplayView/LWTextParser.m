@@ -73,7 +73,10 @@ static inline NSRegularExpression* TopicRegularExpression() {
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-        [textLayout replaceTextWithImage:[UIImage imageNamed:content] inRange:range];
+        
+        if (textLayout.text.length >= range.location + range.length) {
+            [textLayout replaceTextWithImage:[UIImage imageNamed:content] inRange:range];
+        }
     }
 }
 
@@ -83,8 +86,8 @@ static inline NSRegularExpression* TopicRegularExpression() {
                     underlineStyle:(NSUnderlineStyle)underlineStyle {
     NSString* text = textLayout.text;
     NSArray* resultArray = [URLRegularExpression() matchesInString:text
-                                                             options:0
-                                                               range:NSMakeRange(0,text.length)];
+                                                           options:0
+                                                             range:NSMakeRange(0,text.length)];
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
@@ -104,8 +107,8 @@ static inline NSRegularExpression* TopicRegularExpression() {
     
     NSString* text = textLayout.text;
     NSArray* resultArray = [AccountRegularExpression() matchesInString:text
-                                                           options:0
-                                                             range:NSMakeRange(0,text.length)];
+                                                               options:0
+                                                                 range:NSMakeRange(0,text.length)];
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
@@ -119,14 +122,14 @@ static inline NSRegularExpression* TopicRegularExpression() {
 
 
 + (void)parseTopicWithTextLayout:(LWTextLayout *)textLayout
-                         linkColor:(UIColor *)linkColor
-                    highlightColor:(UIColor *)higlightColor
-                    underlineStyle:(NSUnderlineStyle)underlineStyle {
+                       linkColor:(UIColor *)linkColor
+                  highlightColor:(UIColor *)higlightColor
+                  underlineStyle:(NSUnderlineStyle)underlineStyle {
     
     NSString* text = textLayout.text;
     NSArray* resultArray = [TopicRegularExpression() matchesInString:text
-                                                               options:0
-                                                                 range:NSMakeRange(0,text.length)];
+                                                             options:0
+                                                               range:NSMakeRange(0,text.length)];
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];

@@ -68,8 +68,7 @@ static void* LWAlechmyMapDictionaryKey = &LWAlechmyMapDictionaryKey;
             if (![json isKindOfClass:[NSDictionary class]]) {
                 NSDictionary* dic = [model dictionaryWithJSON:json];
                 model = [model entity:model modelWithDictionary:dic context:context];
-            }
-            else {
+            } else {
                 model = [model entity:model modelWithDictionary:json context:context];
             }
         }
@@ -77,7 +76,6 @@ static void* LWAlechmyMapDictionaryKey = &LWAlechmyMapDictionaryKey;
     }
     return [self modelWithJSON:json];
 }
-
 
 - (instancetype)modelWithDictionary:(NSDictionary *)dictionary {
     if (!dictionary || dictionary == (id)kCFNull) return nil;

@@ -24,7 +24,6 @@
 
 @implementation TableViewCell
 
-
 #pragma mark - Init
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -86,6 +85,8 @@
     [super layoutSubviews];
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
     self.avatarLayer.frame = self.layout.avatarPosition;
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];//设置是否启动隐式动画
     if (self.isNeedLayoutImageViews) {
         [self resetImageLayers];
     }
@@ -93,6 +94,7 @@
         CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
         imageLayer.frame = CGRectFromString([self.layout.imagePostionArray objectAtIndex:i]);
     }
+    [CATransaction commit];
 }
 
 - (void)setupCell {
