@@ -55,6 +55,16 @@
     }
 }
 
+/**
+ *  点击链接回调
+ *
+ */
+- (void)lwAsyncDicsPlayView:(LWAsyncDisplayView *)lwLabel didCilickedLinkWithfData:(id)data {
+    if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLinkWithData:)] &&
+        [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
+        [self.delegate tableViewCell:self didClickedLinkWithData:data];
+    }
+}
 
 #pragma mark - Draw and setup
 

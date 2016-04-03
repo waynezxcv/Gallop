@@ -58,6 +58,10 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 #pragma mark - Actions
 
+/**
+ *  点击图片
+ *
+ */
 - (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index {
     NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:layout.imagePostionArray.count];
     for (NSInteger i = 0; i < layout.statusModel.imgs.count; i ++) {
@@ -74,6 +78,17 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                                             imageModels:tmp
                                                                            currentIndex:index];
     [imageBrowser show];
+}
+
+/**
+ *  点击链接
+ *
+ */
+- (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
+    UIViewController* vc = [[UIViewController alloc] init];
+    vc.view.backgroundColor = [UIColor whiteColor];
+    vc.title = data;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - UITableViewDataSource

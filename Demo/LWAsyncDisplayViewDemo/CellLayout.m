@@ -37,7 +37,7 @@
         self.nameTextLayout.textColor = RGB(113, 129, 161, 1);
         self.nameTextLayout.boundsRect = CGRectMake(60, 20, SCREEN_WIDTH, 20);
         [self.nameTextLayout creatCTFrameRef];
-        [self.nameTextLayout addLinkWithData:@"touch name link"
+        [self.nameTextLayout addLinkWithData:[NSString stringWithFormat:@"%@",self.statusModel.name]
                                      inRange:NSMakeRange(0, self.statusModel.name.length)
                                    linkColor:nil
                               highLightColor:[UIColor grayColor]
@@ -70,10 +70,9 @@
                 row = row + 1;
             }
         }
-
-        CGFloat imagesHeight = (row + 1) * 85.0f;
+        CGFloat imagesHeight = 0.0f;
+        row < 3 ? (imagesHeight = (row + 1) * 85.0f):(imagesHeight = row  * 85.0f);
         self.imagePostionArray = tmpArray;
-
         //timeStamp
         self.dateTextLayout = [[LWTextLayout alloc] init];
         self.dateTextLayout.text = [dateFormatter stringFromDate:self.statusModel.date];
