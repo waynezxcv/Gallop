@@ -32,9 +32,13 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 #pragma mark - ViewControllerLifeCycle
 
+- (void)loadView {
+    [super loadView];
+    [self setup];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setup];
     [self.view addSubview:self.tableView];
 }
 
@@ -51,7 +55,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     self.navigationController.navigationBar.titleTextAttributes = attributes;
     self.navigationItem.title = @"朋友圈";
 }
-
 
 #pragma mark - Actions
 
@@ -212,32 +215,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
     return _dataSource;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  *  模拟数据
