@@ -20,9 +20,6 @@
 		011DFA5B1C9880D2000410D7 /* LWImageBrowserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA501C9880D2000410D7 /* LWImageBrowserModel.m */; };
 		011DFA5C1C9880D2000410D7 /* LWImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA521C9880D2000410D7 /* LWImageItem.m */; };
 		011DFA5D1C9880D2000410D7 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA541C9880D2000410D7 /* UIImage+ImageEffects.m */; };
-		011DFA651C98810E000410D7 /* LWWebTooBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA601C98810E000410D7 /* LWWebTooBar.m */; };
-		011DFA661C98810E000410D7 /* LWWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA621C98810E000410D7 /* LWWebViewController.m */; };
-		011DFA671C98810E000410D7 /* LWWebViewProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA641C98810E000410D7 /* LWWebViewProgress.m */; };
 		011DFAC71C988479000410D7 /* [心]@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABB1C988479000410D7 /* [心]@2x.png */; };
 		011DFAC81C988479000410D7 /* [心]@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABC1C988479000410D7 /* [心]@3x.png */; };
 		011DFAC91C988479000410D7 /* comment.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABD1C988479000410D7 /* comment.png */; };
@@ -103,12 +100,6 @@
 		011DFA521C9880D2000410D7 /* LWImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWImageItem.m; path = ../LWImageBrowser/LWImageItem.m; sourceTree = "<group>"; };
 		011DFA531C9880D2000410D7 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageEffects.h"; path = "../LWImageBrowser/UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		011DFA541C9880D2000410D7 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageEffects.m"; path = "../LWImageBrowser/UIImage+ImageEffects.m"; sourceTree = "<group>"; };
-		011DFA5F1C98810E000410D7 /* LWWebTooBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWWebTooBar.h; path = ../LWWebViewController/LWWebTooBar.h; sourceTree = "<group>"; };
-		011DFA601C98810E000410D7 /* LWWebTooBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWWebTooBar.m; path = ../LWWebViewController/LWWebTooBar.m; sourceTree = "<group>"; };
-		011DFA611C98810E000410D7 /* LWWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWWebViewController.h; path = ../LWWebViewController/LWWebViewController.h; sourceTree = "<group>"; };
-		011DFA621C98810E000410D7 /* LWWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWWebViewController.m; path = ../LWWebViewController/LWWebViewController.m; sourceTree = "<group>"; };
-		011DFA631C98810E000410D7 /* LWWebViewProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWWebViewProgress.h; path = ../LWWebViewController/LWWebViewProgress.h; sourceTree = "<group>"; };
-		011DFA641C98810E000410D7 /* LWWebViewProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWWebViewProgress.m; path = ../LWWebViewController/LWWebViewProgress.m; sourceTree = "<group>"; };
 		011DFABB1C988479000410D7 /* [心]@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "[心]@2x.png"; path = "Resource/[心]@2x.png"; sourceTree = SOURCE_ROOT; };
 		011DFABC1C988479000410D7 /* [心]@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "[心]@3x.png"; path = "Resource/[心]@3x.png"; sourceTree = SOURCE_ROOT; };
 		011DFABD1C988479000410D7 /* comment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = comment.png; path = Resource/comment.png; sourceTree = SOURCE_ROOT; };
@@ -325,19 +316,6 @@
 			name = LWAlchemy;
 			sourceTree = "<group>";
 		};
-		011DFA5E1C9880F2000410D7 /* LWWebViewController */ = {
-			isa = PBXGroup;
-			children = (
-				011DFA5F1C98810E000410D7 /* LWWebTooBar.h */,
-				011DFA601C98810E000410D7 /* LWWebTooBar.m */,
-				011DFA611C98810E000410D7 /* LWWebViewController.h */,
-				011DFA621C98810E000410D7 /* LWWebViewController.m */,
-				011DFA631C98810E000410D7 /* LWWebViewProgress.h */,
-				011DFA641C98810E000410D7 /* LWWebViewProgress.m */,
-			);
-			name = LWWebViewController;
-			sourceTree = "<group>";
-		};
 		011DFA681C9881AE000410D7 /* SDWebImage */ = {
 			isa = PBXGroup;
 			children = (
@@ -409,7 +387,6 @@
 			children = (
 				011DFA341C987DF6000410D7 /* LWAsyncDisplayView */,
 				011DFA361C987DFC000410D7 /* LWAlchemy */,
-				011DFA5E1C9880F2000410D7 /* LWWebViewController */,
 				011DFA351C987DF8000410D7 /* LWImageBrowser */,
 				011DFA681C9881AE000410D7 /* SDWebImage */,
 			);
@@ -540,7 +517,6 @@
 				011DFA571C9880D2000410D7 /* LWImageBrowser.m in Sources */,
 				B0D9EB401CB0F435009FDCCF /* SDWebImageCompat.m in Sources */,
 				B0D9EB481CB0F436009FDCCF /* UIImage+MultiFormat.m in Sources */,
-				011DFA661C98810E000410D7 /* LWWebViewController.m in Sources */,
 				017F67561C98A04F00309E92 /* LWTextParser.m in Sources */,
 				B0D9EB491CB0F436009FDCCF /* UIImage+WebP.m in Sources */,
 				B0D9EB441CB0F435009FDCCF /* SDWebImageManager.m in Sources */,
@@ -554,7 +530,6 @@
 				017F67521C98A04F00309E92 /* LWFlag.m in Sources */,
 				011DFA591C9880D2000410D7 /* LWImageBrowserCell.m in Sources */,
 				B0D9EB411CB0F435009FDCCF /* SDWebImageDecoder.m in Sources */,
-				011DFA651C98810E000410D7 /* LWWebTooBar.m in Sources */,
 				B0D9EB4A1CB0F436009FDCCF /* UIImageView+HighlightedWebCache.m in Sources */,
 				017F67551C98A04F00309E92 /* LWTextLayout.m in Sources */,
 				011DFA561C9880D2000410D7 /* LWActionSheetView.m in Sources */,
@@ -567,7 +542,6 @@
 				0154CB851C988AE4002CAF12 /* ViewController.m in Sources */,
 				011DFA581C9880D2000410D7 /* LWImageBrowserButton.m in Sources */,
 				011DFA5B1C9880D2000410D7 /* LWImageBrowserModel.m in Sources */,
-				011DFA671C98810E000410D7 /* LWWebViewProgress.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

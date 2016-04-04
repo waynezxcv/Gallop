@@ -40,7 +40,10 @@
 
 #pragma mark - Actions
 
-//点击图片
+/**
+ *  点击图片查看大图
+ *
+ */
 - (void)didClickedImageView:(UITapGestureRecognizer *)tap {
     CGPoint point = [tap locationInView:self];
     for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
@@ -84,9 +87,9 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
-    self.avatarLayer.frame = self.layout.avatarPosition;
     [CATransaction begin];
     [CATransaction setDisableActions:YES];//设置是否启动隐式动画
+    self.avatarLayer.frame = self.layout.avatarPosition;
     if (self.isNeedLayoutImageViews) {
         [self resetImageLayers];
     }
@@ -101,26 +104,34 @@
     [self.avatarLayer sd_setImageWithURL:self.layout.statusModel.avatar
                         placeholderImage:nil
                                  options:SDWebImageDelaySetContents];
-
-    self.asyncDisplayView.layouts = @[self.layout.nameTextLayout,
-                                      self.layout.contentTextLayout,
-                                      self.layout.dateTextLayout];
+    NSMutableArray* layouts = [[NSMutableArray alloc] init];
+    [layouts addObject:self.layout.nameTextLayout];
+    [layouts addObject:self.layout.contentTextLayout];
+    [layouts addObject:self.layout.dateTextLayout];
+    [layouts addObjectsFromArray:self.layout.commentTextLayouts];
+    self.asyncDisplayView.layouts = layouts;
     [self setupImages];
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size {
-    [self _drawImage:[UIImage imageNamed:@"menu"] rect:_layout.menuPosition context:context];
-    CGContextAddRect(context,_layout.avatarPosition);
+    //绘制头像外框
+    CGContextAddRect(context,self.layout.avatarPosition);
     CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
     CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
     CGContextSetLineWidth(context, 0.3f);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextStrokePath(context);
-    
-    [self _drawImage:[[UIImage imageNamed:@"comment"]
-                      resizableImageWithCapInsets:UIEdgeInsetsMake(15, 55, 5, 5)]
-                rect:_layout.commentBgPosition
-             context:context];
+    //绘制图片背景
+    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
+        CGContextAddRect(context, CGRectFromString(self.layout.imagePostionArray[i]));
+        CGContextSetFillColorWithColor(context, [UIColor grayColor].CGColor);
+        CGContextFillPath(context);
+    }
+    //绘制菜单按钮
+    [self _drawImage:[UIImage imageNamed:@"menu"] rect:_layout.menuPosition context:context];
+    //绘制评论背景
+    UIImage*commentBgImage = [[UIImage imageNamed:@"comment"] stretchableImageWithLeftCapWidth:40.0f topCapHeight:15.0f];
+    [commentBgImage drawInRect:self.layout.commentBgPosition];
 }
 
 - (void)_drawImage:(UIImage *)image rect:(CGRect)rect context:(CGContextRef)context {

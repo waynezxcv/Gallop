@@ -19,8 +19,9 @@
 
 #import "LWTextParser.h"
 
-#define EmojiRegular @"\\[[a-zA-Z0-9\\u4e00-\\u9fa5]+\\]"
+
 #define URLRegular @""
+#define EmojiRegular @"\\[[a-zA-Z0-9\\u4e00-\\u9fa5]+\\]"
 #define AccountRegular @"@[\u4e00-\u9fa5a-zA-Z0-9_-]{2,30}"
 #define TopicRegular @"#[^#]+#"
 
