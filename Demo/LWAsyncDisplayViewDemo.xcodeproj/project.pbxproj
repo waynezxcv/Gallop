@@ -34,9 +34,12 @@
 		011DFAD01C988479000410D7 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFAC41C988479000410D7 /* menu.png */; };
 		011DFAD11C988479000410D7 /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFAC51C988479000410D7 /* menu@2x.png */; };
 		011DFAD21C988479000410D7 /* menu@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFAC61C988479000410D7 /* menu@3x.png */; };
+		0152F8C41CB233F90062CB32 /* CDStatus+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 0152F8C11CB233F90062CB32 /* CDStatus+CoreDataProperties.m */; };
+		0152F8C51CB233F90062CB32 /* CDStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 0152F8C31CB233F90062CB32 /* CDStatus.m */; };
+		0152F8C81CB239010062CB32 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0152F8C61CB239010062CB32 /* comment@2x.png */; };
+		0152F8C91CB239010062CB32 /* comment@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0152F8C71CB239010062CB32 /* comment@3x.png */; };
 		0154CB851C988AE4002CAF12 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0154CB841C988AE4002CAF12 /* ViewController.m */; };
 		017F67321C988BB700309E92 /* TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67311C988BB700309E92 /* TableViewCell.m */; };
-		017F67351C988BD800309E92 /* StatusModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67341C988BD800309E92 /* StatusModel.m */; };
 		017F67381C988C5800309E92 /* TableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67371C988C5800309E92 /* TableViewHeader.m */; };
 		017F673B1C988E1200309E92 /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F673A1C988E1200309E92 /* CellLayout.m */; };
 		017F674F1C98A04F00309E92 /* CALayer+LazySetContents.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F673E1C98A04F00309E92 /* CALayer+LazySetContents.m */; };
@@ -51,8 +54,6 @@
 		01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4E1CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m */; };
 		01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */; };
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
-		01F51A131CA1B25300463571 /* CDStatus+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A101CA1B25300463571 /* CDStatus+CoreDataProperties.m */; };
-		01F51A141CA1B25300463571 /* CDStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A121CA1B25300463571 /* CDStatus.m */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
 		B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */; };
 		B0D9EB3A1CB0F435009FDCCF /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB141CB0F435009FDCCF /* CALayer+WebCache.m */; };
@@ -119,13 +120,17 @@
 		011DFAC41C988479000410D7 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menu.png; path = Resource/menu.png; sourceTree = SOURCE_ROOT; };
 		011DFAC51C988479000410D7 /* menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "menu@2x.png"; path = "Resource/menu@2x.png"; sourceTree = SOURCE_ROOT; };
 		011DFAC61C988479000410D7 /* menu@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "menu@3x.png"; path = "Resource/menu@3x.png"; sourceTree = SOURCE_ROOT; };
+		0152F8C01CB233F90062CB32 /* CDStatus+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDStatus+CoreDataProperties.h"; path = "../CDStatus+CoreDataProperties.h"; sourceTree = "<group>"; };
+		0152F8C11CB233F90062CB32 /* CDStatus+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDStatus+CoreDataProperties.m"; path = "../CDStatus+CoreDataProperties.m"; sourceTree = "<group>"; };
+		0152F8C21CB233F90062CB32 /* CDStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDStatus.h; path = ../CDStatus.h; sourceTree = "<group>"; };
+		0152F8C31CB233F90062CB32 /* CDStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDStatus.m; path = ../CDStatus.m; sourceTree = "<group>"; };
+		0152F8C61CB239010062CB32 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
+		0152F8C71CB239010062CB32 /* comment@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@3x.png"; sourceTree = "<group>"; };
 		0154CB821C9887EA002CAF12 /* LWDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWDefine.h; path = ../LWAsyncDisplayView/LWDefine.h; sourceTree = "<group>"; };
 		0154CB831C988AE4002CAF12 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		0154CB841C988AE4002CAF12 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		017F67301C988BB700309E92 /* TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCell.h; sourceTree = "<group>"; };
 		017F67311C988BB700309E92 /* TableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewCell.m; sourceTree = "<group>"; };
-		017F67331C988BD800309E92 /* StatusModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusModel.h; sourceTree = "<group>"; };
-		017F67341C988BD800309E92 /* StatusModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusModel.m; sourceTree = "<group>"; };
 		017F67361C988C5800309E92 /* TableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewHeader.h; sourceTree = "<group>"; };
 		017F67371C988C5800309E92 /* TableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewHeader.m; sourceTree = "<group>"; };
 		017F67391C988E1200309E92 /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
@@ -154,10 +159,6 @@
 		01AE7F4F1CA1AEAF00E9F862 /* NSObject+LWAlchemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+LWAlchemy.h"; path = "../LWAlchemy/NSObject+LWAlchemy.h"; sourceTree = "<group>"; };
 		01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+LWAlchemy.m"; path = "../LWAlchemy/NSObject+LWAlchemy.m"; sourceTree = "<group>"; };
 		01F51A0D1CA1B1CE00463571 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
-		01F51A0F1CA1B25300463571 /* CDStatus+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CDStatus+CoreDataProperties.h"; sourceTree = "<group>"; };
-		01F51A101CA1B25300463571 /* CDStatus+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CDStatus+CoreDataProperties.m"; sourceTree = "<group>"; };
-		01F51A111CA1B25300463571 /* CDStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDStatus.h; sourceTree = "<group>"; };
-		01F51A121CA1B25300463571 /* CDStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDStatus.m; sourceTree = "<group>"; };
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B0C503EA1CAE4FC300B6D3FB /* LWAlchemyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyManager.h; path = ../LWAlchemy/LWAlchemyManager.h; sourceTree = "<group>"; };
 		B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyManager.m; path = ../LWAlchemy/LWAlchemyManager.m; sourceTree = "<group>"; };
@@ -386,6 +387,8 @@
 		011DFABA1C9883F3000410D7 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				0152F8C61CB239010062CB32 /* comment@2x.png */,
+				0152F8C71CB239010062CB32 /* comment@3x.png */,
 				011DFABB1C988479000410D7 /* [心]@2x.png */,
 				011DFABC1C988479000410D7 /* [心]@3x.png */,
 				011DFABD1C988479000410D7 /* comment.png */,
@@ -417,17 +420,15 @@
 			isa = PBXGroup;
 			children = (
 				01F51A171CA1B7A400463571 /* CoreData.framework */,
+				01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */,
+				0152F8C01CB233F90062CB32 /* CDStatus+CoreDataProperties.h */,
+				0152F8C11CB233F90062CB32 /* CDStatus+CoreDataProperties.m */,
+				0152F8C21CB233F90062CB32 /* CDStatus.h */,
+				0152F8C31CB233F90062CB32 /* CDStatus.m */,
 				011DFA201C987CD6000410D7 /* AppDelegate.h */,
 				011DFA211C987CD6000410D7 /* AppDelegate.m */,
 				017F67361C988C5800309E92 /* TableViewHeader.h */,
 				017F67371C988C5800309E92 /* TableViewHeader.m */,
-				017F67331C988BD800309E92 /* StatusModel.h */,
-				017F67341C988BD800309E92 /* StatusModel.m */,
-				01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */,
-				01F51A0F1CA1B25300463571 /* CDStatus+CoreDataProperties.h */,
-				01F51A101CA1B25300463571 /* CDStatus+CoreDataProperties.m */,
-				01F51A111CA1B25300463571 /* CDStatus.h */,
-				01F51A121CA1B25300463571 /* CDStatus.m */,
 			);
 			name = Others;
 			sourceTree = "<group>";
@@ -498,8 +499,10 @@
 				011DFACE1C988479000410D7 /* loading@2x.png in Resources */,
 				011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */,
 				011DFACF1C988479000410D7 /* loading@3x.png in Resources */,
+				0152F8C81CB239010062CB32 /* comment@2x.png in Resources */,
 				011DFAC91C988479000410D7 /* comment.png in Resources */,
 				011DFAD01C988479000410D7 /* menu.png in Resources */,
+				0152F8C91CB239010062CB32 /* comment@3x.png in Resources */,
 				011DFAC81C988479000410D7 /* [心]@3x.png in Resources */,
 				011DFACB1C988479000410D7 /* image-1.png in Resources */,
 				011DFAC71C988479000410D7 /* [心]@2x.png in Resources */,
@@ -524,13 +527,13 @@
 				011DFA5C1C9880D2000410D7 /* LWImageItem.m in Sources */,
 				017F674F1C98A04F00309E92 /* CALayer+LazySetContents.m in Sources */,
 				017F67321C988BB700309E92 /* TableViewCell.m in Sources */,
-				01F51A141CA1B25300463571 /* CDStatus.m in Sources */,
 				01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */,
 				01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */,
 				017F67381C988C5800309E92 /* TableViewHeader.m in Sources */,
 				017F67541C98A04F00309E92 /* LWTextAttach.m in Sources */,
 				B0D9EB4C1CB0F436009FDCCF /* UIView+WebCacheOperation.m in Sources */,
 				017F67501C98A04F00309E92 /* LWAsyncDisplayLayer.m in Sources */,
+				0152F8C51CB233F90062CB32 /* CDStatus.m in Sources */,
 				017F673B1C988E1200309E92 /* CellLayout.m in Sources */,
 				B0D9EB3C1CB0F435009FDCCF /* MKAnnotationView+WebCache.m in Sources */,
 				B0D9EB3D1CB0F435009FDCCF /* NSData+ImageContentType.m in Sources */,
@@ -556,14 +559,13 @@
 				017F67551C98A04F00309E92 /* LWTextLayout.m in Sources */,
 				011DFA561C9880D2000410D7 /* LWActionSheetView.m in Sources */,
 				B0D9EB461CB0F436009FDCCF /* UIButton+WebCache.m in Sources */,
-				017F67351C988BD800309E92 /* StatusModel.m in Sources */,
 				B0D9EB4B1CB0F436009FDCCF /* UIImageView+WebCache.m in Sources */,
 				B0D9EB421CB0F435009FDCCF /* SDWebImageDownloader.m in Sources */,
 				B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */,
+				0152F8C41CB233F90062CB32 /* CDStatus+CoreDataProperties.m in Sources */,
 				B0D9EB3B1CB0F435009FDCCF /* CALayer+WebCacheOperation.m in Sources */,
 				0154CB851C988AE4002CAF12 /* ViewController.m in Sources */,
 				011DFA581C9880D2000410D7 /* LWImageBrowserButton.m in Sources */,
-				01F51A131CA1B25300463571 /* CDStatus+CoreDataProperties.m in Sources */,
 				011DFA5B1C9880D2000410D7 /* LWImageBrowserModel.m in Sources */,
 				011DFA671C98810E000410D7 /* LWWebViewProgress.m in Sources */,
 			);

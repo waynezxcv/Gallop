@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "StatusModel.h"
 #import "LWTextLayout.h"
 #import "LWTextParser.h"
 #import "CDStatus.h"
@@ -30,6 +29,7 @@
 @property (nonatomic,assign) CGFloat textHeight;
 @property (nonatomic,assign) CGFloat imagesHeight;
 @property (nonatomic,assign) CGFloat likesAndCommentsHeight;
+@property (nonatomic,assign) CGRect commentBgPosition;
 @property (nonatomic,assign) CGFloat cellHeight;
 
 - (id)initWithCDStatusModel:(CDStatus *)statusModel;

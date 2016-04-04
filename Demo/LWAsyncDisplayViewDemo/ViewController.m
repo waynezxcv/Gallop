@@ -9,7 +9,6 @@
 #import "ViewController.h"
 #import "LWImageBrowser.h"
 #import "TableViewCell.h"
-#import "StatusModel.h"
 #import "TableViewHeader.h"
 #import "LWDefine.h"
 #import "CellLayout.h"
@@ -168,7 +167,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                                                                 initWithCDStatusModel:status];
                                                                       [strongSelf.dataSource addObject:cellLayout];
                                                                   }
-                                                                  //让列表更长
                                                                   [strongSelf.dataSource addObjectsFromArray:strongSelf.dataSource];
                                                                   [strongSelf refreshComplete];
                                                               }];
@@ -227,7 +225,16 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww1.sinaimg.cn/mw690/6d0bb361gw1f2jim2d7nfj20lo0eg40q.jpg",
                                     @"http://ww1.sinaimg.cn/mw690/6d0bb361gw1f2jim2hka3j20lo0egdhw.jpg",
                                     @"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hq61j20lo0eg769.jpg"],
-                          @"statusID":@"1"},
+                          @"statusID":@"1",
+                          @"commentList":@[@{@"from":@"SIZE潮流生活",
+                                             @"to":@"",
+                                             @"content":@"使用LWAsyncDisplay来布局。"},
+                                           @{@"from":@"waynezxcv",
+                                             @"to":@"SIZE潮流生活",
+                                             @"content":@"[强]"},
+                                           @{@"from":@"SIZE潮流生活",
+                                             @"to":@"waynezxcv",
+                                             @"content":@"nice~采用白色透气Primeknit针织材质制作，再将Stan Smith代表性的绿、红、深蓝三个元年色调融入到鞋舌和后跟点缀，最后搭载上米白色大底来保留其复古风味。"}]},
                         @{@"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
                           @"content":@"出国留学的儿子为思念自己的家人们寄来一个用自己照片做成的人形立牌",
@@ -240,7 +247,10 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww2.sinaimg.cn/mw690/8245bf01jw1f2jhh4mutgj20jg0ly0xt.jpg",
                                     @"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh4vc7pj20jg0px41m.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/8245bf01jw1f2jhh2mgkgj20jg0pxn2z.jpg"],
-                          @"statusID":@"2"},
+                          @"statusID":@"2",
+                          @"commentList":@{@"from":@"waynezxcv",
+                                           @"to":@"妖妖小精",
+                                           @"content":@"[强]"}},
                         @{@"name":@"Instagram热门",
                           @"avatar":@"http://tp4.sinaimg.cn/5074408479/50/5706839595/0",
                           @"content":@"Austin Butler & Vanessa Hudgens  想试试看扑到一个一米八几的人怀里是有多舒服[心]",

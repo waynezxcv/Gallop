@@ -116,6 +116,9 @@
     CGContextSetLineWidth(context, 0.3f);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextStrokePath(context);
+    
+    [self _drawImage:[UIImage imageNamed:@"comment"] rect:_layout.commentBgPosition context:context];
+    
 }
 
 - (void)_drawImage:(UIImage *)image rect:(CGRect)rect context:(CGContextRef)context {

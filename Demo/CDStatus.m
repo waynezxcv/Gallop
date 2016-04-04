@@ -2,7 +2,7 @@
 //  CDStatus.m
 //  LWAsyncDisplayViewDemo
 //
-//  Created by 刘微 on 16/3/23.
+//  Created by 刘微 on 16/4/4.
 //  Copyright © 2016年 WayneInc. All rights reserved.
 //
 

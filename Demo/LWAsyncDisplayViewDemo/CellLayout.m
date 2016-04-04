@@ -36,14 +36,14 @@
         self.nameTextLayout.textColor = RGB(113, 129, 161, 1);
         self.nameTextLayout.boundsRect = CGRectMake(60, 20, SCREEN_WIDTH, 20);
         [self.nameTextLayout creatCTFrameRef];
-
-
+        
+        
         [self.nameTextLayout addLinkWithData:[NSString stringWithFormat:@"%@",self.statusModel.name]
                                      inRange:NSMakeRange(0, self.statusModel.name.length)
                                    linkColor:nil
                               highLightColor:[UIColor grayColor]
                               UnderLineStyle:NSUnderlineStyleNone];
-
+        
         //content
         self.contentTextLayout = [[LWTextLayout alloc] init];
         self.contentTextLayout.text = self.statusModel.content;
@@ -58,7 +58,7 @@
                                      linkColor:RGB(113, 129, 161, 1)
                                 highlightColor:nil
                                 underlineStyle:NSUnderlineStyleNone];
-
+        
         //imgs
         NSInteger imageCount = [self.statusModel.imgs count];
         NSMutableArray* tmpArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
@@ -94,8 +94,15 @@
                                        70.0f + self.contentTextLayout.textHeight + imagesHeight,
                                        20.0f,
                                        15.0f);
+        //comment
+        NSLog(@"%@",self.statusModel.commentList);
+        self.commentBgPosition = CGRectZero;
+        if (self.statusModel.commentList.count != 0 && self.statusModel.commentList != nil) {
+            self.commentBgPosition = CGRectMake(60.0f, 70.0f + self.contentTextLayout.textHeight + imagesHeight + 25.0f, 60, 20);
+        }
+        
         //cellHeight
-        self.cellHeight = 100.0f + imagesHeight + self.contentTextLayout.textHeight;
+        self.cellHeight = 100.0f + imagesHeight + self.contentTextLayout.textHeight + self.commentBgPosition.size.height;
     }
     return self;
 }
