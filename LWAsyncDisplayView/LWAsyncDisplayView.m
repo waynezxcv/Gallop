@@ -102,14 +102,10 @@
         if (textFrame == NULL) {
             continue;
         }
-        //获取每一行
         CFArrayRef lines = CTFrameGetLines(textFrame);
         CGPoint origins[CFArrayGetCount(lines)];
-        //获取每行的原点坐标
         CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
-        //翻转坐标系
         CGPathRef path = CTFrameGetPath(textFrame);
-        //获取整个CTFrame的大小
         CGRect boundsRect = CGPathGetBoundingBox(path);
         CGAffineTransform transform = CGAffineTransformIdentity;
         transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
@@ -117,7 +113,6 @@
         for (int i= 0; i < CFArrayGetCount(lines); i++) {
             CGPoint linePoint = origins[i];
             CTLineRef line = CFArrayGetValueAtIndex(lines, i);
-            // 获得每一行的 CGRect 信息
             CGRect flippedRect = [self _getLineBounds:line point:linePoint];
             CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
 
@@ -127,12 +122,9 @@
                                            rect.size.height);
 
             if (CGRectContainsPoint(adjustRect, touchPoint)) {
-                // 将点击的坐标转换成相对于当前行的坐标
                 CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
                                                     touchPoint.y - CGRectGetMinY(adjustRect));
-                // 获得当前点击坐标对应的字符串偏移
                 CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
-                //获取点击的Run
                 CTRunRef touchedRun;
                 NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
                 for (NSInteger i = 0; i < runObjArray.count; i ++) {

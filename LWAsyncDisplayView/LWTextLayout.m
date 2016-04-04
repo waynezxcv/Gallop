@@ -108,8 +108,7 @@ static CGFloat widthCallback(void* ref){
     _textWidth = suggestSize.width;
     if (self.isWidthToFit) {
         self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, suggestSize.width, suggestSize.height);
-    }
-    else {
+    } else {
         self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, self.boundsRect.size.width, suggestSize.height);
     }
     CGMutablePathRef textPath = CGPathCreateMutable();
@@ -207,26 +206,23 @@ static CGFloat widthCallback(void* ref){
         CTLineRef line = (__bridge CTLineRef)lines[i];
         NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
         for (id runObj in runObjArray) {
-            //遍历每一行中的每一个CTRun
             CTRunRef run = (__bridge CTRunRef)runObj;
-            //获取CTRun的属性
             NSDictionary* runAttributes = (NSDictionary *)CTRunGetAttributes(run);
-            //获取Key为kCTRunDelegateAttributeName的属性值
             CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes valueForKey:(id)kCTRunDelegateAttributeName];
             if (delegate == nil) {
                 continue;
             }
-            //若kCTRunDelegateAttributeName的值不为空，获取CTRun的bounds
+
             CGRect runBounds;
             CGFloat ascent;
             CGFloat descent;
             runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
             runBounds.size.height = ascent + descent;
-            //获取CTRun在每一行中的偏移量
+
             CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
             runBounds.origin.x = lineOrigins[i].x + xOffset;
             runBounds.origin.y = lineOrigins[i].y - descent;
-            //获取CTRun在CTFrame中的位置
+
             CGPathRef pathRef = CTFrameGetPath(_frame);
             CGRect colRect = CGPathGetBoundingBox(pathRef);
             CGRect delegateRect = CGRectMake(runBounds.origin.x + colRect.origin.x,

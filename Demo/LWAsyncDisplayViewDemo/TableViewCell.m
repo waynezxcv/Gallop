@@ -117,8 +117,10 @@
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextStrokePath(context);
     
-    [self _drawImage:[UIImage imageNamed:@"comment"] rect:_layout.commentBgPosition context:context];
-    
+    [self _drawImage:[[UIImage imageNamed:@"comment"]
+                      resizableImageWithCapInsets:UIEdgeInsetsMake(15, 55, 5, 5)]
+                rect:_layout.commentBgPosition
+             context:context];
 }
 
 - (void)_drawImage:(UIImage *)image rect:(CGRect)rect context:(CGContextRef)context {

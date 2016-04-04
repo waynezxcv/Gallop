@@ -98,7 +98,7 @@
         NSLog(@"%@",self.statusModel.commentList);
         self.commentBgPosition = CGRectZero;
         if (self.statusModel.commentList.count != 0 && self.statusModel.commentList != nil) {
-            self.commentBgPosition = CGRectMake(60.0f, 70.0f + self.contentTextLayout.textHeight + imagesHeight + 25.0f, 60, 20);
+            self.commentBgPosition = CGRectMake(60.0f, 70.0f + self.contentTextLayout.textHeight + imagesHeight + 25.0f, SCREEN_WIDTH - 80, 20);
         }
         
         //cellHeight
