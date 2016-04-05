@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "LWTextLayout.h"
 #import "LWTextParser.h"
-#import "CDStatus.h"
+#import "StatusModel.h"
 
 
 @interface CellLayout : NSObject
 
-@property (nonatomic,strong) CDStatus* statusModel;
+@property (nonatomic,strong) StatusModel* statusModel;
 @property (nonatomic,strong) LWTextLayout* nameTextLayout;
 @property (nonatomic,strong) LWTextLayout* contentTextLayout;
 @property (nonatomic,strong) LWTextLayout* dateTextLayout;
@@ -31,6 +31,6 @@
 @property (nonatomic,copy) NSArray* commentTextLayouts;
 @property (nonatomic,assign) CGFloat cellHeight;
 
-- (id)initWithCDStatusModel:(CDStatus *)statusModel;
+- (id)initWithCDStatusModel:(StatusModel *)statusModel;
 
 @end

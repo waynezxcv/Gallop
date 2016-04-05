@@ -13,7 +13,7 @@
 #import "LWDefine.h"
 #import "CellLayout.h"
 #import "LWAlchemy.h"
-#import "CDStatus.h"
+#import "StatusModel.h"
 
 
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
@@ -151,31 +151,20 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 
 - (void)downloadData {
-    __weak typeof(self) weakSelf = self;
-    LWAlchemyManager* manager = [LWAlchemyManager sharedManager];
-    [manager insertEntitysWithClass:[CDStatus class]
-                         JSONsArray:self.fakeDatasource
-                uiqueAttributesName:@"statusID"
-                               save:YES
-                         completion:^{
-                             __strong typeof(weakSelf) strongSelf = weakSelf;
-                             NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"statusID" ascending:YES];
-                             [manager fetchNSManagedObjectWithObjectClass:[CDStatus class]
-                                                                predicate:nil
-                                                           sortDescriptor:@[sortDescriptor]
-                                                              fetchOffset:0
-                                                               fetchLimit:0
-                                                              fetchReults:^(NSArray *results, NSError *error) {
-                                                                  [strongSelf.dataSource removeAllObjects];
-                                                                  for (CDStatus* status in results) {
-                                                                      CellLayout* cellLayout = [[CellLayout alloc]
-                                                                                                initWithCDStatusModel:status];
-                                                                      [strongSelf.dataSource addObject:cellLayout];
-                                                                  }
-                                                                  [strongSelf.dataSource addObjectsFromArray:strongSelf.dataSource];
-                                                                  [strongSelf refreshComplete];
-                                                              }];
-                         }];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self.dataSource removeAllObjects];
+        for (NSInteger i = 0; i < self.fakeDatasource.count; i ++) {
+            StatusModel* statusModel = [StatusModel modelWithJSON:self.fakeDatasource[i]];
+            CellLayout* cellLayout = [[CellLayout alloc]
+                                      initWithCDStatusModel:statusModel];
+            [self.dataSource addObject:cellLayout];
+
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.dataSource addObjectsFromArray:self.dataSource];
+            [self refreshComplete];
+        });
+    });
 }
 
 - (void)refreshComplete {

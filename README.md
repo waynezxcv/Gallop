@@ -47,7 +47,7 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
     LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,textLayout.textHeight)];
     //赋值，开始异步绘制
     view.layouts = @[textLayout];
-    [self.view addSubview:self.label];
+    [self.view addSubview:view];
     
     //Delegate
     //点击链接文本回调

@@ -15,7 +15,7 @@
 @implementation CellLayout
 
 
-- (id)initWithCDStatusModel:(CDStatus *)statusModel {
+- (id)initWithCDStatusModel:(StatusModel *)statusModel {
     self = [super init];
     if (self) {
         static NSDateFormatter* dateFormatter;
