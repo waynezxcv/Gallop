@@ -151,7 +151,6 @@ LWActionSheetViewDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     if (self.style == LWImageBrowserAnimationStylePush) {
-        
         self.view.backgroundColor = [UIColor blackColor];
         [self.view addSubview:self.collectionView];
         UIButton* rightButton = [UIButton buttonWithType:UIButtonTypeCustom];

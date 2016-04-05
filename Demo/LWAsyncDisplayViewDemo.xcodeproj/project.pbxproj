@@ -10,7 +10,6 @@
 		011DFA1F1C987CD6000410D7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA1E1C987CD6000410D7 /* main.m */; };
 		011DFA221C987CD6000410D7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA211C987CD6000410D7 /* AppDelegate.m */; };
 		011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 011DFA291C987CD6000410D7 /* Assets.xcassets */; };
-		011DFA2D1C987CD6000410D7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 011DFA2B1C987CD6000410D7 /* LaunchScreen.storyboard */; };
 		011DFA551C9880D2000410D7 /* LWActionSheetTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA441C9880D2000410D7 /* LWActionSheetTableViewCell.m */; };
 		011DFA561C9880D2000410D7 /* LWActionSheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA461C9880D2000410D7 /* LWActionSheetView.m */; };
 		011DFA571C9880D2000410D7 /* LWImageBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA481C9880D2000410D7 /* LWImageBrowser.m */; };
@@ -79,7 +78,6 @@
 		011DFA201C987CD6000410D7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		011DFA211C987CD6000410D7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		011DFA291C987CD6000410D7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		011DFA2C1C987CD6000410D7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		011DFA2E1C987CD6000410D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		011DFA431C9880D2000410D7 /* LWActionSheetTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWActionSheetTableViewCell.h; path = ../LWImageBrowser/LWActionSheetTableViewCell.h; sourceTree = "<group>"; };
 		011DFA441C9880D2000410D7 /* LWActionSheetTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWActionSheetTableViewCell.m; path = ../LWImageBrowser/LWActionSheetTableViewCell.m; sourceTree = "<group>"; };
@@ -241,7 +239,6 @@
 			isa = PBXGroup;
 			children = (
 				011DFA291C987CD6000410D7 /* Assets.xcassets */,
-				011DFA2B1C987CD6000410D7 /* LaunchScreen.storyboard */,
 				011DFA2E1C987CD6000410D7 /* Info.plist */,
 				011DFA1E1C987CD6000410D7 /* main.m */,
 			);
@@ -467,7 +464,6 @@
 				011DFACC1C988479000410D7 /* like.png in Resources */,
 				011DFAD21C988479000410D7 /* menu@3x.png in Resources */,
 				011DFAD11C988479000410D7 /* menu@2x.png in Resources */,
-				011DFA2D1C987CD6000410D7 /* LaunchScreen.storyboard in Resources */,
 				011DFACE1C988479000410D7 /* loading@2x.png in Resources */,
 				011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */,
 				011DFACF1C988479000410D7 /* loading@3x.png in Resources */,
@@ -540,17 +536,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		011DFA2B1C987CD6000410D7 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				011DFA2C1C987CD6000410D7 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		011DFA2F1C987CD6000410D7 /* Debug */ = {
@@ -637,6 +622,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -650,6 +636,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

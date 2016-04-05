@@ -77,6 +77,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                                                   style:LWImageBrowserAnimationStyleScale
                                                                             imageModels:tmp
                                                                            currentIndex:index];
+    imageBrowser.view.backgroundColor = [UIColor blackColor];
     [imageBrowser show];
 }
 
@@ -148,7 +149,6 @@ const CGFloat kRefreshBoundary = 170.0f;
         });
     }];
 }
-
 
 - (void)downloadData {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
