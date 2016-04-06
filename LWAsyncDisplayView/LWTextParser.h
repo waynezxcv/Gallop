@@ -18,7 +18,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LWTextLayout.h"
+#import "LWTextStorage.h"
 
 @interface LWTextParser : NSObject
 
@@ -28,14 +28,14 @@
  *  格式：text：@“hello,world~![微笑]”  ----> @"hello，world~！（[UIImage imageNamed：@“[微笑]”]）"
  *
  */
-+ (void)parseEmojiWithTextLayout:(LWTextLayout *)textLayout;
++ (void)parseEmojiWithTextStorage:(LWTextStorage *)textStorage;
 
 
 /**
  *  解析HTTP(s):// 并添加链接
  *
  */
-+ (void)parseHttpURLWithTextLayout:(LWTextLayout *)textLayout
++ (void)parseHttpURLWithTextStorage:(LWTextStorage *)textStorage
                          linkColor:(UIColor *)linkColor
                     highlightColor:(UIColor *)higlightColor
                     underlineStyle:(NSUnderlineStyle)underlineStyle;
@@ -45,7 +45,7 @@
  *
  */
 
-+ (void)parseAccountWithTextLayout:(LWTextLayout *)textLayout
++ (void)parseAccountWithTextStorage:(LWTextStorage *)textStorage
                          linkColor:(UIColor *)linkColor
                     highlightColor:(UIColor *)higlightColor
                     underlineStyle:(NSUnderlineStyle)underlineStyle;
@@ -55,7 +55,7 @@
  *  解析 #主题# 并添加链接
  *
  */
-+ (void)parseTopicWithTextLayout:(LWTextLayout *)textLayout
++ (void)parseTopicWithLWTextStorage:(LWTextStorage *)textStorage
                        linkColor:(UIColor *)linkColor
                   highlightColor:(UIColor *)higlightColor
                   underlineStyle:(NSUnderlineStyle)underlineStyle;

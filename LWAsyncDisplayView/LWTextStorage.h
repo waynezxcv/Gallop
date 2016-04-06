@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 };
 
 
-@interface LWTextLayout : NSObject
+@interface LWTextStorage : NSObject
 
 /**
  *  文本内容，默认为nil

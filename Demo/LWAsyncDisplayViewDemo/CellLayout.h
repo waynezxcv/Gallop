@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LWTextLayout.h"
+#import "LWTextStorage.h"
 #import "LWTextParser.h"
 #import "StatusModel.h"
 
@@ -15,9 +15,9 @@
 @interface CellLayout : NSObject
 
 @property (nonatomic,strong) StatusModel* statusModel;
-@property (nonatomic,strong) LWTextLayout* nameTextLayout;
-@property (nonatomic,strong) LWTextLayout* contentTextLayout;
-@property (nonatomic,strong) LWTextLayout* dateTextLayout;
+@property (nonatomic,strong) LWTextStorage* nameTextLayout;
+@property (nonatomic,strong) LWTextStorage* contentTextLayout;
+@property (nonatomic,strong) LWTextStorage* dateTextLayout;
 
 @property (nonatomic,assign) CGRect avatarPosition;
 @property (nonatomic,assign) CGRect menuPosition;

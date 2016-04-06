@@ -74,8 +74,8 @@ static inline NSRegularExpression* TopicRegularExpression() {
 
 @implementation LWTextParser
 
-+ (void)parseEmojiWithTextLayout:(LWTextLayout *)textLayout {
-    NSString* text = textLayout.text;
++ (void)parseEmojiWithTextStorage:(LWTextStorage *)textStorage {
+    NSString* text = textStorage.text;
     NSArray* resultArray = [EmojiRegularExpression() matchesInString:text
                                                              options:0
                                                                range:NSMakeRange(0,text.length)];
@@ -83,24 +83,24 @@ static inline NSRegularExpression* TopicRegularExpression() {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
 
-        if (textLayout.text.length >= range.location + range.length) {
-            [textLayout replaceTextWithImage:[UIImage imageNamed:content] inRange:range];
+        if (textStorage.text.length >= range.location + range.length) {
+            [textStorage replaceTextWithImage:[UIImage imageNamed:content] inRange:range];
         }
     }
 }
 
-+ (void)parseHttpURLWithTextLayout:(LWTextLayout *)textLayout
-                         linkColor:(UIColor *)linkColor
-                    highlightColor:(UIColor *)higlightColor
-                    underlineStyle:(NSUnderlineStyle)underlineStyle {
-    NSString* text = textLayout.text;
++ (void)parseHttpURLWithTextStorage:(LWTextStorage *)textStorage
+                          linkColor:(UIColor *)linkColor
+                     highlightColor:(UIColor *)higlightColor
+                     underlineStyle:(NSUnderlineStyle)underlineStyle {
+    NSString* text = textStorage.text;
     NSArray* resultArray = [URLRegularExpression() matchesInString:text
                                                            options:0
                                                              range:NSMakeRange(0,text.length)];
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-        [textLayout addLinkWithData:content
+        [textStorage addLinkWithData:content
                             inRange:range
                           linkColor:linkColor
                      highLightColor:higlightColor
@@ -109,19 +109,19 @@ static inline NSRegularExpression* TopicRegularExpression() {
 }
 
 
-+ (void)parseAccountWithTextLayout:(LWTextLayout *)textLayout
-                         linkColor:(UIColor *)linkColor
-                    highlightColor:(UIColor *)higlightColor
-                    underlineStyle:(NSUnderlineStyle)underlineStyle {
++ (void)parseAccountWithTextStorage:(LWTextStorage *)textStorage
+                          linkColor:(UIColor *)linkColor
+                     highlightColor:(UIColor *)higlightColor
+                     underlineStyle:(NSUnderlineStyle)underlineStyle {
 
-    NSString* text = textLayout.text;
+    NSString* text = textStorage.text;
     NSArray* resultArray = [AccountRegularExpression() matchesInString:text
                                                                options:0
                                                                  range:NSMakeRange(0,text.length)];
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-        [textLayout addLinkWithData:content
+        [textStorage addLinkWithData:content
                             inRange:range
                           linkColor:linkColor
                      highLightColor:higlightColor
@@ -130,19 +130,19 @@ static inline NSRegularExpression* TopicRegularExpression() {
 }
 
 
-+ (void)parseTopicWithTextLayout:(LWTextLayout *)textLayout
-                       linkColor:(UIColor *)linkColor
-                  highlightColor:(UIColor *)higlightColor
-                  underlineStyle:(NSUnderlineStyle)underlineStyle {
++ (void)parseTopicWithLWTextStorage:(LWTextStorage *)textStorage
+                          linkColor:(UIColor *)linkColor
+                     highlightColor:(UIColor *)higlightColor
+                     underlineStyle:(NSUnderlineStyle)underlineStyle {
 
-    NSString* text = textLayout.text;
+    NSString* text = textStorage.text;
     NSArray* resultArray = [TopicRegularExpression() matchesInString:text
                                                              options:0
                                                                range:NSMakeRange(0,text.length)];
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-        [textLayout addLinkWithData:content
+        [textStorage addLinkWithData:content
                             inRange:range
                           linkColor:linkColor
                      highLightColor:higlightColor

@@ -112,7 +112,7 @@
     [layouts addObject:self.layout.contentTextLayout];
     [layouts addObject:self.layout.dateTextLayout];
     [layouts addObjectsFromArray:self.layout.commentTextLayouts];
-    self.asyncDisplayView.layouts = layouts;
+    self.asyncDisplayView.storages = layouts;
     [self setupImages];
 }
 

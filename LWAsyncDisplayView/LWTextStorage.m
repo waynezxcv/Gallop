@@ -17,7 +17,7 @@
 //  See LICENSE for this sample’s licensing information
 //
 
-#import "LWTextLayout.h"
+#import "LWTextStorage.h"
 
 
 static CGFloat descentCallback(void *ref){
@@ -45,7 +45,7 @@ static CGFloat widthCallback(void* ref){
 }
 
 
-@interface LWTextLayout ()
+@interface LWTextStorage ()
 
 @property (nonatomic,assign) CGFloat textHeight;
 @property (nonatomic,assign) CGFloat textWidth;
@@ -57,7 +57,7 @@ static CGFloat widthCallback(void* ref){
 
 @end
 
-@implementation LWTextLayout
+@implementation LWTextStorage
 
 #pragma mark - Initialization
 
@@ -71,7 +71,7 @@ static CGFloat widthCallback(void* ref){
     if (self == object) return YES;
     if (![object isMemberOfClass:self.class]) return NO;
     id selfValue = _attributedText;
-    LWTextLayout* other = (LWTextLayout *)object;
+    LWTextStorage* other = (LWTextStorage *)object;
     id modelValue = other.attributedText;
     BOOL valuesEqual = ((selfValue == nil && modelValue == nil) || [selfValue isEqual:modelValue]);
     if (!valuesEqual) return NO;
@@ -87,7 +87,7 @@ static CGFloat widthCallback(void* ref){
         self.textColor = [UIColor blackColor];
         self.font = [UIFont systemFontOfSize:14.0f];
         self.textAlignment = NSTextAlignmentLeft;
-        self.veriticalAlignment = LWVerticalAlignmentCenter;
+        self.veriticalAlignment = LWVerticalAlignmentTop;
         self.lineBreakMode = NSLineBreakByWordWrapping;
         self.boundsRect = CGRectZero;
         self.linespace = 2.0f;

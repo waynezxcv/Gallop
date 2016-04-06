@@ -17,7 +17,8 @@
 //  See LICENSE for this sample’s licensing information
 //
 #import <Foundation/Foundation.h>
-#import "LWTextLayout.h"
+#import "LWTextStorage.h"
+#import "LWImageStorage.h"
 
 
 @class LWAsyncDisplayView;
@@ -49,6 +50,6 @@
 /**
  *  存放文字排版的数组
  */
-@property (nonatomic,copy) NSArray* layouts;
+@property (nonatomic,copy) NSArray* storages;
 
 @end

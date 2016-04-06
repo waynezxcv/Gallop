@@ -32,6 +32,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 @property (nonatomic,assign) LWAsyncDisplayViewState state;
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
+@property (nonatomic,strong) NSMutableArray* imageLayers;
 
 @end
 
@@ -96,13 +97,23 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     [self _displayIfNeed];
 }
 
-- (void)setLayouts:(NSArray *)layouts {
-    if (_layouts && [_layouts isEqualToArray:layouts]) {
+
+- (void)setStorages:(NSArray *)storages {
+    if (_storages && [_storages isEqualToArray:storages]) {
         return;
     }
-    _layouts = [layouts copy];
+    _storages = [storages copy];
+    for (id storage in storages) {
+        if ([storage isKindOfClass:[LWImageStorage class]] ) {
+            LWImageStorage* imageStorage = (LWImageStorage *)storage;
+            if (imageStorage.type == LWImageStorageWebImage) {
+                //TODO:
+            }
+        }
+    }
     [self _displayIfNeed];
 }
+
 
 - (void)_displayIfNeed {
     if (self.state == LWAsyncDisplayViewStateNeedDisplay) {
@@ -120,6 +131,14 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         _tapGestureRecognizer.delegate = self;
     }
     return _tapGestureRecognizer;
+}
+
+- (NSMutableArray *)imageLayers {
+    if (_imageLayers) {
+        return _imageLayers;
+    }
+    _imageLayers = [[NSMutableArray alloc] init];
+    return _imageLayers;
 }
 
 #pragma mark - LWAsyncDisplayLayerDelegate
@@ -140,8 +159,8 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
         [self.delegate extraAsyncDisplayIncontext:context size:size];
     }
-    for (LWTextLayout* layout in self.layouts) {
-        [layout drawInContext:context];
+    for (LWTextStorage* textStorage in self.storages) {
+        [textStorage drawInContext:context];
     }
 }
 
@@ -155,7 +174,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
-    for (LWTextLayout* layout in self.layouts) {
+    for (LWTextStorage* layout in self.storages) {
         if (layout == nil) {
             continue;
         }
@@ -217,7 +236,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     return CGRectMake(point.x, point.y - descent, width, height);
 }
 
-- (void)_layout:(LWTextLayout *)layout drawHighLightWithAttach:(LWTextAttach *)attach {
+- (void)_layout:(LWTextStorage *)layout drawHighLightWithAttach:(LWTextAttach *)attach {
     
 }
 

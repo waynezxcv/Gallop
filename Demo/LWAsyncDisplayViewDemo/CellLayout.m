@@ -28,7 +28,7 @@
         //avatar
         self.avatarPosition = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
         //name
-        self.nameTextLayout = [[LWTextLayout alloc] init];
+        self.nameTextLayout = [[LWTextStorage alloc] init];
         self.nameTextLayout.text = self.statusModel.name;
         self.nameTextLayout.font = [UIFont systemFontOfSize:15.0f];
         self.nameTextLayout.textAlignment = NSTextAlignmentLeft;
@@ -44,7 +44,7 @@
                               UnderLineStyle:NSUnderlineStyleNone];
 
         //content
-        self.contentTextLayout = [[LWTextLayout alloc] init];
+        self.contentTextLayout = [[LWTextStorage alloc] init];
         self.contentTextLayout.text = self.statusModel.content;
         self.contentTextLayout.font = [UIFont systemFontOfSize:15.0f];
         self.contentTextLayout.textColor = RGB(40, 40, 40, 1);
@@ -52,8 +52,8 @@
         self.contentTextLayout.linespace = 2.0f;
         [self.contentTextLayout creatCTFrameRef];
         //解析表情跟主题（[emoji] - > 表情。。#主题# 添加链接）
-        [LWTextParser parseEmojiWithTextLayout:self.contentTextLayout];
-        [LWTextParser parseTopicWithTextLayout:self.contentTextLayout
+        [LWTextParser parseEmojiWithTextStorage:self.contentTextLayout];
+        [LWTextParser parseTopicWithLWTextStorage:self.contentTextLayout
                                      linkColor:RGB(113, 129, 161, 1)
                                 highlightColor:nil
                                 underlineStyle:NSUnderlineStyleNone];
@@ -80,7 +80,7 @@
         row < 3 ? (imagesHeight = (row + 1) * 85.0f):(imagesHeight = row  * 85.0f);
         self.imagePostionArray = tmpArray;
         //timeStamp
-        self.dateTextLayout = [[LWTextLayout alloc] init];
+        self.dateTextLayout = [[LWTextStorage alloc] init];
         self.dateTextLayout.text = [dateFormatter stringFromDate:self.statusModel.date];
         self.dateTextLayout.font = [UIFont systemFontOfSize:13.0f];
         self.dateTextLayout.textColor = [UIColor grayColor];
@@ -104,7 +104,7 @@
                 NSString* to = commentDict[@"to"];
                 if (to.length != 0) {
                     NSString* commentString = [NSString stringWithFormat:@"%@回复%@:%@",commentDict[@"from"],commentDict[@"to"],commentDict[@"content"]];
-                    LWTextLayout* commentLayout = [[LWTextLayout alloc] init];
+                    LWTextStorage* commentLayout = [[LWTextStorage alloc] init];
                     commentLayout.text = commentString;
                     commentLayout.font = [UIFont systemFontOfSize:14.0f];
                     commentLayout.textAlignment = NSTextAlignmentLeft;
@@ -125,8 +125,8 @@
                                     highLightColor:[UIColor grayColor]
                                     UnderLineStyle:NSUnderlineStyleNone];
 
-                    [LWTextParser parseEmojiWithTextLayout:commentLayout];
-                    [LWTextParser parseTopicWithTextLayout:commentLayout
+                    [LWTextParser parseEmojiWithTextStorage:commentLayout];
+                    [LWTextParser parseTopicWithLWTextStorage:commentLayout
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highlightColor:nil
                                             underlineStyle:NSUnderlineStyleNone];
@@ -136,7 +136,7 @@
                     offsetY += commentLayout.textHeight;
                 } else {
                     NSString* commentString = [NSString stringWithFormat:@"%@:%@",commentDict[@"from"],commentDict[@"content"]];
-                    LWTextLayout* commentLayout = [[LWTextLayout alloc] init];
+                    LWTextStorage* commentLayout = [[LWTextStorage alloc] init];
                     commentLayout.text = commentString;
                     commentLayout.font = [UIFont systemFontOfSize:14.0f];
                     commentLayout.textAlignment = NSTextAlignmentLeft;
@@ -151,11 +151,11 @@
                                     highLightColor:[UIColor grayColor]
                                     UnderLineStyle:NSUnderlineStyleNone];
 
-                    [LWTextParser parseEmojiWithTextLayout:commentLayout];
-                    [LWTextParser parseTopicWithTextLayout:commentLayout
-                                                 linkColor:RGB(113, 129, 161, 1)
-                                            highlightColor:nil
-                                            underlineStyle:NSUnderlineStyleNone];
+                    [LWTextParser parseEmojiWithTextStorage:commentLayout];
+                    [LWTextParser parseTopicWithLWTextStorage:commentLayout
+                                                    linkColor:RGB(113, 129, 161, 1)
+                                               highlightColor:nil
+                                               underlineStyle:NSUnderlineStyleNone];
 
                     [tmp addObject:commentLayout];
                     offsetY += commentLayout.textHeight;
