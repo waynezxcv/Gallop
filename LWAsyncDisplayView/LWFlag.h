@@ -23,15 +23,8 @@
 
 @interface LWFlag : NSObject
 
-/**
- *  获取当前Flag的值
- */
-@property (atomic,assign,readonly) int32_t value;
+@property (nonatomic,assign,readonly) int32_t value;
 
-
-/**
- *  Flag的值+1
- */
 - (int32_t)increase;
 
 @end

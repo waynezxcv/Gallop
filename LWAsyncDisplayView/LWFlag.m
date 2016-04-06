@@ -23,28 +23,47 @@
 #import <libkern/OSAtomic.h>
 
 
+
 @interface LWFlag ()
 
-@property (atomic,assign,readwrite) int32_t value;
+@property (nonatomic,assign,readwrite) int32_t value;
 
 @end
 
 
-@implementation LWFlag
+@implementation LWFlag {
+    dispatch_semaphore_t _lock;
 
+}
 
 @synthesize value = _value;
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        _lock = dispatch_semaphore_create(1);
+    }
+    return self;
+}
+
 - (int32_t)value {
-    return _value;
+    dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
+    int32_t value = _value;
+    dispatch_semaphore_signal(_lock);
+    return value;
 }
 
 - (void)setValue:(int32_t)value {
+    dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
     _value = value;
+    dispatch_semaphore_signal(_lock);
 }
 
 - (int32_t)increase {
-    return OSAtomicIncrement32(&_value);
+    dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
+    int32_t increase = OSAtomicIncrement32(&_value);
+    dispatch_semaphore_signal(_lock);
+    return increase;
 }
 
 @end

@@ -75,7 +75,9 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 }
 
 - (void)dealloc {
-    [self _cancelDisplay];
+    dispatch_async(GetAsyncDisplayQueue(), ^{
+        [self _cancelDisplay];
+    });
 }
 
 - (void)drawContentInRect:(CGRect)rect {
@@ -83,7 +85,9 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 }
 
 - (void)cleanUp {
-    [self _cancelDisplay];
+    dispatch_async(GetAsyncDisplayQueue(), ^{
+        [self _cancelDisplay];
+    });
 }
 
 #pragma mark - Private

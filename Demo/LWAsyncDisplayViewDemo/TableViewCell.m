@@ -87,6 +87,10 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    [self _layoutSubViews];
+}
+
+- (void)_layoutSubViews {
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
     [CATransaction begin];
     [CATransaction setDisableActions:YES];//设置是否启动隐式动画

@@ -117,6 +117,11 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"seleted");
+}
+
+
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
@@ -136,16 +141,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     } completion:^(BOOL finished) {
         [self.tableViewHeader refreshingAnimateBegin];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (self.isNeedRefresh) {
-                [self downloadData];
-            } else {
-                [self.tableViewHeader refreshingAnimateStop];
-                [UIView animateWithDuration:0.35f animations:^{
-                    self.tableView.contentInset = UIEdgeInsetsMake(64.0f, 0.0f, 0.0f, 0.0f);
-                } completion:^(BOOL finished) {
-                    self.needRefresh = NO;
-                }];
-            }
+            [self downloadData];
         });
     }];
 }

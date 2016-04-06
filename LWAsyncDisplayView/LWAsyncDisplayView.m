@@ -35,8 +35,8 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 @end
 
-@implementation LWAsyncDisplayView
 
+@implementation LWAsyncDisplayView
 
 #pragma mark - Initialization
 
@@ -96,6 +96,14 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     [self _displayIfNeed];
 }
 
+- (void)setLayouts:(NSArray *)layouts {
+    if (_layouts && [_layouts isEqualToArray:layouts]) {
+        return;
+    }
+    _layouts = [layouts copy];
+    [self _displayIfNeed];
+}
+
 - (void)_displayIfNeed {
     if (self.state == LWAsyncDisplayViewStateNeedDisplay) {
         [(LWAsyncDisplayLayer *)self.layer cleanUp];
@@ -104,14 +112,6 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 }
 
 #pragma mark - Setter & Getter
-
-- (void)setLayouts:(NSArray *)layouts {
-    if (_layouts == layouts) {
-        return;
-    }
-    _layouts = layouts;
-    [self _displayIfNeed];
-}
 
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {
@@ -225,6 +225,10 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    return [super hitTest:point withEvent:event];
 }
 
 @end
