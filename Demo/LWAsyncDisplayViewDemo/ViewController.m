@@ -116,12 +116,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     return cellLayout.cellHeight;
 }
 
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"seleted");
-}
-
-
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;

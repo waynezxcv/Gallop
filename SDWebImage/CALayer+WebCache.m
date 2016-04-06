@@ -72,6 +72,7 @@ static char imageURLKey;
                                                                                                  } else if (image) {
                                                                                                      if ((options & SDWebImageDelaySetContents)) {
                                                                                                          [wself delaySetContents:(__bridge id)image.CGImage];
+                                                                                                        
                                                                                                          [wself setNeedsLayout];
                                                                                                      }
                                                                                                      else {

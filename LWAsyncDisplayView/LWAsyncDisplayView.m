@@ -176,12 +176,12 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
             CTLineRef line = CFArrayGetValueAtIndex(lines, i);
             CGRect flippedRect = [self _getLineBounds:line point:linePoint];
             CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-
+            
             CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
                                            rect.origin.y + boundsRect.origin.y,
                                            rect.size.width,
                                            rect.size.height);
-
+            
             if (CGRectContainsPoint(adjustRect, touchPoint)) {
                 CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
                                                     touchPoint.y - CGRectGetMinY(adjustRect));
@@ -218,7 +218,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 }
 
 - (void)_layout:(LWTextLayout *)layout drawHighLightWithAttach:(LWTextAttach *)attach {
-
+    
 }
 
 #pragma mark - UIGestrueRecognizer

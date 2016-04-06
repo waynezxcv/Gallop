@@ -29,7 +29,7 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.needLayoutImageViews = YES;
+        self.needLayoutImageViews = NO;
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
         [self.asyncDisplayView.layer addSublayer:self.avatarLayer];
@@ -78,16 +78,13 @@
     if (_layout.imagePostionArray.count != layout.imagePostionArray.count) {
         self.needLayoutImageViews = YES;
     }
-    else {
-        self.needLayoutImageViews = NO;
-    }
     _layout = layout;
     [self setupCell];
 }
 
 - (void)layoutSubviews {
-    [super layoutSubviews];
     [self _layoutSubViews];
+    [super layoutSubviews];
 }
 
 - (void)_layoutSubViews {
@@ -101,6 +98,7 @@
     for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
         CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
         imageLayer.frame = CGRectFromString([self.layout.imagePostionArray objectAtIndex:i]);
+        imageLayer.hidden = NO;
     }
     [CATransaction commit];
 }
@@ -108,7 +106,7 @@
 - (void)setupCell {
     [self.avatarLayer sd_setImageWithURL:self.layout.statusModel.avatar
                         placeholderImage:nil
-                                 options:SDWebImageDelaySetContents];
+                                 options:0];
     NSMutableArray* layouts = [[NSMutableArray alloc] init];
     [layouts addObject:self.layout.nameTextLayout];
     [layouts addObject:self.layout.contentTextLayout];
@@ -135,7 +133,9 @@
     //绘制菜单按钮
     [self _drawImage:[UIImage imageNamed:@"menu"] rect:_layout.menuPosition context:context];
     //绘制评论背景
-    UIImage*commentBgImage = [[UIImage imageNamed:@"comment"] stretchableImageWithLeftCapWidth:40.0f topCapHeight:15.0f];
+    UIImage*commentBgImage = [[UIImage imageNamed:@"comment"]
+                              stretchableImageWithLeftCapWidth:40.0f
+                              topCapHeight:15.0f];
     [commentBgImage drawInRect:self.layout.commentBgPosition];
 }
 
@@ -152,7 +152,7 @@
 - (void)resetImageLayers {
     for (NSInteger i = 0; i < 9; i ++) {
         CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
-        imageLayer.frame = CGRectZero;
+        imageLayer.hidden = YES;
     }
 }
 
