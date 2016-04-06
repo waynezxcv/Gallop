@@ -33,7 +33,8 @@
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
         [self.asyncDisplayView.layer addSublayer:self.avatarLayer];
-        [self.asyncDisplayView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didClickedImageView:)]];
+        [self.asyncDisplayView addGestureRecognizer:[[UITapGestureRecognizer alloc]
+                                                     initWithTarget:self action:@selector(didClickedImageView:)]];
     }
     return self;
 }
@@ -155,7 +156,9 @@
     for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
         CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
         NSString* img = [self.layout.statusModel.imgs objectAtIndex:i];
-        [imageLayer sd_setImageWithURL:[NSURL URLWithString:img] placeholderImage:nil options:SDWebImageDelaySetContents];
+        [imageLayer sd_setImageWithURL:[NSURL URLWithString:img]
+                      placeholderImage:nil
+                               options:SDWebImageDelaySetContents];
     }
 }
 

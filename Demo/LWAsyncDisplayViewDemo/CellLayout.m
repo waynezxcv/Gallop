@@ -125,7 +125,6 @@
                                     highLightColor:[UIColor grayColor]
                                     UnderLineStyle:NSUnderlineStyleNone];
 
-
                     [LWTextParser parseEmojiWithTextLayout:commentLayout];
                     [LWTextParser parseTopicWithTextLayout:commentLayout
                                                  linkColor:RGB(113, 129, 161, 1)

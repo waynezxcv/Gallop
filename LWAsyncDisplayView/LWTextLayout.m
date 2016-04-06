@@ -215,7 +215,8 @@ static CGFloat widthCallback(void* ref){
         for (id runObj in runObjArray) {
             CTRunRef run = (__bridge CTRunRef)runObj;
             NSDictionary* runAttributes = (NSDictionary *)CTRunGetAttributes(run);
-            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes valueForKey:(id)kCTRunDelegateAttributeName];
+            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes
+                                                                    valueForKey:(id)kCTRunDelegateAttributeName];
             if (delegate == nil) {
                 continue;
             }
@@ -258,7 +259,6 @@ static CGFloat widthCallback(void* ref){
     unichar objectReplacementChar = 0xFFFC;
     NSString* content = [NSString stringWithCharacters:&objectReplacementChar length:1];
     NSMutableAttributedString* space = [[NSMutableAttributedString alloc] initWithString:content];
-    //为NSAttributedString设置key为kCTRunDelegateAttributeName值为delegate的属性
     CFAttributedStringSetAttribute((CFMutableAttributedStringRef)space, CFRangeMake(0, content.length),
                                    kCTRunDelegateAttributeName, delegate);
     CFRelease(delegate);
@@ -291,7 +291,6 @@ static CGFloat widthCallback(void* ref){
 - (NSString *)text {
     return _attributedText.string;
 }
-
 
 - (CGFloat)left {
     return self.boundsRect.origin.x;
@@ -410,7 +409,8 @@ static CGFloat widthCallback(void* ref){
     if (text.length <= 0) {
         return [[NSMutableAttributedString alloc]init];
     }
-    NSMutableAttributedString* attbutedString = [[NSMutableAttributedString alloc]initWithString:text];
+    NSMutableAttributedString* attbutedString = [[NSMutableAttributedString alloc]
+                                                 initWithString:text];
 
     [self _mutableAttributedString:attbutedString
         addAttributesWithTextColor:_textColor
@@ -474,11 +474,8 @@ static CGFloat widthCallback(void* ref){
     }
     [attributedString removeAttribute:(NSString *)kCTParagraphStyleAttributeName
                                 range:range];
-
     CTTextAlignment ctTextAlignment = _coreTextAlignmentFromNSTextAlignment(textAlignment);
-
     CTLineBreakMode ctLineBreakMode = _coreTextLineBreakModeFromNSLineBreakModel(lineBreakMode);
-    
     CTParagraphStyleSetting theSettings[] = {
         { kCTParagraphStyleSpecifierLineSpacingAdjustment, sizeof(CGFloat), &linespacing},
         { kCTParagraphStyleSpecifierAlignment, sizeof(ctTextAlignment), &ctTextAlignment },

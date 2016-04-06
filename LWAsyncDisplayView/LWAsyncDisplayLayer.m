@@ -78,8 +78,8 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
     [self _cancelDisplay];
 }
 
-- (void)drawContent {
-    [self _asyncDisplay];
+- (void)drawContentInRect:(CGRect)rect {
+    [self _asyncDisplayInRect:rect];
 }
 
 - (void)cleanUp {
@@ -87,32 +87,42 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 }
 
 #pragma mark - Private
-- (void)_asyncDisplay {
-    [self lazySetContent:nil];
-    LWFlag* flag = self.flag;
-    int32_t value = flag.value;
-    BOOL (^isCancelled)() = ^BOOL() {
-        return value != flag.value;
-    };
-    if (isCancelled()) {
-        return ;
-    }
-    CGSize size = self.bounds.size;
-    BOOL opaque = self.opaque;
-    CGFloat scale = self.contentsScale;
-    if (size.width < 1 || size.height < 1) {
-        CGImageRef image = (__bridge_retained CGImageRef)(self.contents);
-        [self lazySetContent:nil];
-        if (image) {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                CFRelease(image);
-            });
-        }
-        return;
-    }
+- (void)_asyncDisplayInRect:(CGRect)rect {
     dispatch_async(GetAsyncDisplayQueue(), ^{
+        LWFlag* flag = self.flag;
+        int32_t value = flag.value;
+        BOOL (^isCancelled)() = ^BOOL() {
+            return value != flag.value;
+        };
         if (isCancelled()) {
-            return ;
+            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
+                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
+                [self.delegate displayDidCancled];
+            }
+            return;
+        }
+        CGSize size = rect.size;
+        BOOL opaque = self.opaque;
+        CGFloat scale = self.contentsScale;
+        if (size.width < 1 || size.height < 1) {
+            CGImageRef image = (__bridge_retained CGImageRef)(self.contents);
+            if (image) {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                    CFRelease(image);
+                });
+            }
+            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
+                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
+                [self.delegate displayDidCancled];
+            }
+            return;
+        }
+        if (isCancelled()) {
+            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
+                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
+                [self.delegate displayDidCancled];
+            }
+            return;
         }
         BOOL isWillDisplay = [self.asyncDisplayDelegate willBeginAsyncDisplay:self];
         if (!isWillDisplay) {
@@ -125,13 +135,21 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         }
         if (isCancelled()) {
             UIGraphicsEndImageContext();
+            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
+                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
+                [self.delegate displayDidCancled];
+            }
             return;
         }
-        [self.asyncDisplayDelegate didAsyncDisplay:self context:context size:self.bounds.size];
+        [self.asyncDisplayDelegate didAsyncDisplay:self context:context size:rect.size];
         UIImage* screenshotImage = UIGraphicsGetImageFromCurrentImageContext();
         CGImageRef content = screenshotImage.CGImage;
         if (isCancelled()) {
             UIGraphicsEndImageContext();
+            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
+                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
+                [self.delegate displayDidCancled];
+            }
             return;
         }
         UIGraphicsEndImageContext();

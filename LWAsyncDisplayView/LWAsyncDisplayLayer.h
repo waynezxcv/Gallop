@@ -27,6 +27,12 @@
 
 @required
 
+
+/**
+ *  绘制被取消
+ */
+- (void)displayDidCancled;
+
 /**
  *  将要开始绘制之前回调函数
  */
@@ -66,7 +72,7 @@
 @property (nonatomic,strong,readonly) LWFlag* flag;
 
 
-- (void)drawContent;
+- (void)drawContentInRect:(CGRect)rect;
 
 - (void)cleanUp;
 @end

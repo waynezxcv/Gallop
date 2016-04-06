@@ -20,79 +20,97 @@
 #import "LWAsyncDisplayLayer.h"
 #import "LWRunLoopObserver.h"
 
+
+typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
+    LWAsyncDisplayViewStateNeedLayout,
+    LWAsyncDisplayViewStateNeedDisplay,
+    LWAsyncDisplayViewStateHasDisplayed
+};
+
 @interface LWAsyncDisplayView ()
 <LWAsyncDisplayLayerDelegate,UIGestureRecognizerDelegate>
 
-@property (nonatomic,assign,getter = isNeedRelayout) BOOL needRelayout;
+@property (nonatomic,assign) LWAsyncDisplayViewState state;
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
 
 @end
 
 @implementation LWAsyncDisplayView
 
+
 #pragma mark - Initialization
 
+
 /**
- *  “default is [CALayer class]. Used when creating the underlying layer for the view.”
+ *  “default is [CALayer class].
+ *  Used when creating the underlying layer for the view.”
  *
  */
 + (Class)layerClass {
     return [LWAsyncDisplayLayer class];
 }
 
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (id)init {
+    self = [super init];
     if (self) {
-        self.needRelayout  = NO;
-        self.layer.opaque = NO;
-        self.layer.contentsScale = [UIScreen mainScreen].scale;
-        ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
-        [self addGestureRecognizer:self.tapGestureRecognizer];
+        [self setup];
     }
     return self;
 }
 
-#pragma mark - Layout
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setup];
+    }
+    return self;
+}
+
+- (void)setup {
+    self.state = LWAsyncDisplayViewStateNeedLayout;
+    self.layer.opaque = NO;
+    self.layer.contentsScale = [UIScreen mainScreen].scale;
+    ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
+    [self addGestureRecognizer:self.tapGestureRecognizer];
+}
+
+#pragma mark - Layout & Display
 
 - (void)setFrame:(CGRect)frame {
     CGSize oldSize = self.bounds.size;
-    [super setFrame:frame];
-    CGSize newSize = self.bounds.size;
+    CGSize newSize = frame.size;
     if (!CGSizeEqualToSize(oldSize, newSize)) {
-        self.needRelayout = YES;
-        [self drawContent];
-    } else {
-        self.needRelayout = NO;
+        [super setFrame:frame];
+        self.state = LWAsyncDisplayViewStateNeedDisplay;
     }
+    [self _displayIfNeed];
 }
 
 - (void)setBounds:(CGRect)bounds {
     CGSize oldSize = self.bounds.size;
-    [super setBounds:bounds];
-    CGSize newSize = self.bounds.size;
+    CGSize newSize = bounds.size;
     if (!CGSizeEqualToSize(oldSize, newSize)) {
-        self.needRelayout = YES;
-        [self drawContent];
+        [super setBounds:bounds];
+        self.state = LWAsyncDisplayViewStateNeedDisplay;
     }
-    else {
-        self.needRelayout = NO;
-    }
+    [self _displayIfNeed];
 }
 
-- (void)drawContent {
-    if (self.needRelayout == YES) {
+- (void)_displayIfNeed {
+    if (self.state == LWAsyncDisplayViewStateNeedDisplay) {
         [(LWAsyncDisplayLayer *)self.layer cleanUp];
-        [(LWAsyncDisplayLayer *)self.layer drawContent];
+        [(LWAsyncDisplayLayer *)self.layer drawContentInRect:self.bounds];
     }
 }
 
 #pragma mark - Setter & Getter
 
 - (void)setLayouts:(NSArray *)layouts {
-    if ([_layouts isEqual:layouts]) {
+    if (_layouts == layouts) {
         return;
     }
     _layouts = layouts;
+    [self _displayIfNeed];
 }
 
 - (UITapGestureRecognizer *)tapGestureRecognizer {
@@ -106,7 +124,14 @@
 
 #pragma mark - LWAsyncDisplayLayerDelegate
 
+- (void)displayDidCancled {
+    self.state = LWAsyncDisplayViewStateNeedLayout;
+}
+
 - (BOOL)willBeginAsyncDisplay:(LWAsyncDisplayLayer *)layer {
+    if (self.state == LWAsyncDisplayViewStateHasDisplayed) {
+        return NO;
+    }
     return YES;
 }
 
@@ -117,6 +142,12 @@
     }
     for (LWTextLayout* layout in self.layouts) {
         [layout drawInContext:context];
+    }
+}
+
+- (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL)isFinished {
+    if (isFinished) {
+        self.state = LWAsyncDisplayViewStateHasDisplayed;
     }
 }
 

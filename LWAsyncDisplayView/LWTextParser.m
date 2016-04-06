@@ -29,7 +29,9 @@ static inline NSRegularExpression* EmojiRegularExpression() {
     static NSRegularExpression* _EmojiRegularExpression = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _EmojiRegularExpression = [[NSRegularExpression alloc] initWithPattern:EmojiRegular options:NSRegularExpressionAnchorsMatchLines error:nil];
+        _EmojiRegularExpression = [[NSRegularExpression alloc]
+                                   initWithPattern:EmojiRegular
+                                   options:NSRegularExpressionAnchorsMatchLines error:nil];
     });
     return _EmojiRegularExpression;
 }
@@ -39,7 +41,9 @@ static inline NSRegularExpression* URLRegularExpression() {
     static NSRegularExpression* _URLRegularExpression = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _URLRegularExpression = [[NSRegularExpression alloc] initWithPattern:URLRegular options:NSRegularExpressionAnchorsMatchLines error:nil];
+        _URLRegularExpression = [[NSRegularExpression alloc]
+                                 initWithPattern:URLRegular
+                                 options:NSRegularExpressionAnchorsMatchLines error:nil];
     });
     return _URLRegularExpression;
 }
@@ -48,7 +52,9 @@ static inline NSRegularExpression* AccountRegularExpression() {
     static NSRegularExpression* _AccountRegularExpression = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _AccountRegularExpression = [[NSRegularExpression alloc] initWithPattern:AccountRegular options:NSRegularExpressionAnchorsMatchLines error:nil];
+        _AccountRegularExpression = [[NSRegularExpression alloc]
+                                     initWithPattern:AccountRegular
+                                     options:NSRegularExpressionAnchorsMatchLines error:nil];
     });
     return _AccountRegularExpression;
 }
@@ -58,7 +64,9 @@ static inline NSRegularExpression* TopicRegularExpression() {
     static NSRegularExpression* _TopicRegularExpression = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _TopicRegularExpression = [[NSRegularExpression alloc] initWithPattern:TopicRegular options:NSRegularExpressionCaseInsensitive error:nil];
+        _TopicRegularExpression = [[NSRegularExpression alloc]
+                                   initWithPattern:TopicRegular
+                                   options:NSRegularExpressionCaseInsensitive error:nil];
     });
     return _TopicRegularExpression;
 }
@@ -74,7 +82,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-        
+
         if (textLayout.text.length >= range.location + range.length) {
             [textLayout replaceTextWithImage:[UIImage imageNamed:content] inRange:range];
         }
@@ -105,7 +113,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
                          linkColor:(UIColor *)linkColor
                     highlightColor:(UIColor *)higlightColor
                     underlineStyle:(NSUnderlineStyle)underlineStyle {
-    
+
     NSString* text = textLayout.text;
     NSArray* resultArray = [AccountRegularExpression() matchesInString:text
                                                                options:0
@@ -126,7 +134,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
                        linkColor:(UIColor *)linkColor
                   highlightColor:(UIColor *)higlightColor
                   underlineStyle:(NSUnderlineStyle)underlineStyle {
-    
+
     NSString* text = textLayout.text;
     NSArray* resultArray = [TopicRegularExpression() matchesInString:text
                                                              options:0

@@ -19,6 +19,7 @@
 
 
 #import "LWRunLoopObserver.h"
+#import <UIKit/UIKit.h>
 
 @interface LWRunLoopObserver()
 
@@ -75,6 +76,7 @@ static void LWRunLoopObserverSetup() {
     return observer;
 }
 
+
 - (void)commit {
     if (!_target || !_selector) {
         return;
@@ -82,6 +84,7 @@ static void LWRunLoopObserverSetup() {
     LWRunLoopObserverSetup();
     [transactionSet addObject:self];
 }
+
 
 - (NSUInteger)hash {
     long v1 = (long)((void *)_selector);
