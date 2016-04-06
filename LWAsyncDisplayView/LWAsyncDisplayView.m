@@ -23,6 +23,7 @@
 @interface LWAsyncDisplayView ()
 <LWAsyncDisplayLayerDelegate,UIGestureRecognizerDelegate>
 
+@property (nonatomic,assign,getter = isNeedRelayout) BOOL needRelayout;
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
 
 @end
@@ -42,6 +43,7 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.needRelayout  = NO;
         self.layer.opaque = NO;
         self.layer.contentsScale = [UIScreen mainScreen].scale;
         ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
@@ -50,13 +52,41 @@
     return self;
 }
 
-#pragma mark - Setter & Getter
+#pragma mark - Layout
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    [(LWAsyncDisplayLayer *)self.layer cleanUp];
-    [(LWAsyncDisplayLayer *)self.layer drawContent];
+- (void)setFrame:(CGRect)frame {
+    CGSize oldSize = self.bounds.size;
+    [super setFrame:frame];
+    CGSize newSize = self.bounds.size;
+    if (!CGSizeEqualToSize(oldSize, newSize)) {
+        self.needRelayout = YES;
+        [self drawContent];
+    } else {
+        self.needRelayout = NO;
+    }
 }
+
+- (void)setBounds:(CGRect)bounds {
+    CGSize oldSize = self.bounds.size;
+    [super setBounds:bounds];
+    CGSize newSize = self.bounds.size;
+    if (!CGSizeEqualToSize(oldSize, newSize)) {
+        self.needRelayout = YES;
+        [self drawContent];
+    }
+    else {
+        self.needRelayout = NO;
+    }
+}
+
+- (void)drawContent {
+    if (self.needRelayout == YES) {
+        [(LWAsyncDisplayLayer *)self.layer cleanUp];
+        [(LWAsyncDisplayLayer *)self.layer drawContent];
+    }
+}
+
+#pragma mark - Setter & Getter
 
 - (void)setLayouts:(NSArray *)layouts {
     if ([_layouts isEqual:layouts]) {

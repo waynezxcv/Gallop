@@ -107,20 +107,27 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 @property (nonatomic,assign) CTFrameRef frame;
 
 /**
+ * 文字绘制范围
+ */
+@property (nonatomic,assign) CGRect boundsRect;
+
+/**
  *  文字高度
  */
-@property (nonatomic,assign) CGFloat textHeight;
+@property (nonatomic,assign,readonly) CGFloat textHeight;
 
 /**
  *  文字宽度
  *
  */
-@property (nonatomic,assign) CGFloat textWidth;
+@property (nonatomic,assign,readonly) CGFloat textWidth;
 
-/**
- * 计算后的文字绘制范围
- */
-@property (nonatomic,assign) CGRect boundsRect;
+
+@property (nonatomic,assign,readonly) CGFloat left;
+@property (nonatomic,assign,readonly) CGFloat right;
+@property (nonatomic,assign,readonly) CGFloat top;
+@property (nonatomic,assign,readonly) CGFloat bottom;
+
 
 /**
  *  存放附件的数组

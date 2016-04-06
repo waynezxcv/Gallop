@@ -47,6 +47,13 @@ static CGFloat widthCallback(void* ref){
 
 @interface LWTextLayout ()
 
+@property (nonatomic,assign) CGFloat textHeight;
+@property (nonatomic,assign) CGFloat textWidth;
+@property (nonatomic,assign) CGFloat left;
+@property (nonatomic,assign) CGFloat right;
+@property (nonatomic,assign) CGFloat top;
+@property (nonatomic,assign) CGFloat bottom;
+
 
 @end
 
@@ -285,6 +292,23 @@ static CGFloat widthCallback(void* ref){
     return _attributedText.string;
 }
 
+
+- (CGFloat)left {
+    return self.boundsRect.origin.x;
+}
+
+- (CGFloat)right {
+    return  self.boundsRect.origin.x + self.textWidth;
+}
+
+- (CGFloat)top {
+    return self.boundsRect.origin.y;
+}
+
+- (CGFloat)bottom {
+    return self.boundsRect.origin.y + self.textHeight;
+}
+
 #pragma mark - Setter
 
 - (void)setText:(NSString *)text {
@@ -382,30 +406,25 @@ static CGFloat widthCallback(void* ref){
 
 #pragma mark - Attributes
 
-/**
- *  创建属性字符串
- *
- */
 - (NSMutableAttributedString *)_createAttributedStringWithText:(NSString *)text {
     if (text.length <= 0) {
         return [[NSMutableAttributedString alloc]init];
     }
-    // 创建属性文本
     NSMutableAttributedString* attbutedString = [[NSMutableAttributedString alloc]initWithString:text];
-    // 添加颜色属性
+
     [self _mutableAttributedString:attbutedString
         addAttributesWithTextColor:_textColor
                            inRange:NSMakeRange(0, text.length)];
-    // 添加字体属性
+
     [self _mutableAttributedString:attbutedString
              addAttributesWithFont:_font
                            inRange:NSMakeRange(0, text.length)];
-    // 添加文本段落样式
+
     [self _mutableAttributedString:attbutedString addAttributesWithLineSpacing:_linespace
                      textAlignment:_textAlignment
                      lineBreakMode:_lineBreakMode
                            inRange:NSMakeRange(0, text.length)];
-    //添加下划线式样
+
     [self _mutableAttributedString:attbutedString addAttributesWithUnderlineStyle:_underlineStyle
                            inRange:NSMakeRange(0, text.length)];
     return attbutedString;
@@ -416,11 +435,9 @@ static CGFloat widthCallback(void* ref){
  *  添加Link属性
  *
  */
-
 - (void)_mutableAttributedString:(NSMutableAttributedString *)attributedString
   addLinkAttributesNameWithValue:(id)value
                          inRange:(NSRange)range {
-
     if (attributedString == nil) {
         return;
     }
@@ -431,10 +448,7 @@ static CGFloat widthCallback(void* ref){
     }
 }
 
-/**
- *  添加下划线式样
- *
- */
+
 - (void)_mutableAttributedString:(NSMutableAttributedString *)attributedString
  addAttributesWithUnderlineStyle:(NSUnderlineStyle)underlineStyle
                          inRange:(NSRange)range {
@@ -450,10 +464,6 @@ static CGFloat widthCallback(void* ref){
     }
 }
 
-/**
- * 添加段落相关属性
- *
- */
 - (void)_mutableAttributedString:(NSMutableAttributedString *)attributedString
     addAttributesWithLineSpacing:(CGFloat)linespacing
                    textAlignment:(NSTextAlignment)textAlignment
@@ -464,11 +474,11 @@ static CGFloat widthCallback(void* ref){
     }
     [attributedString removeAttribute:(NSString *)kCTParagraphStyleAttributeName
                                 range:range];
-    //文字对齐方式
+
     CTTextAlignment ctTextAlignment = _coreTextAlignmentFromNSTextAlignment(textAlignment);
-    //换行方式
+
     CTLineBreakMode ctLineBreakMode = _coreTextLineBreakModeFromNSLineBreakModel(lineBreakMode);
-    //段落式样
+    
     CTParagraphStyleSetting theSettings[] = {
         { kCTParagraphStyleSpecifierLineSpacingAdjustment, sizeof(CGFloat), &linespacing},
         { kCTParagraphStyleSpecifierAlignment, sizeof(ctTextAlignment), &ctTextAlignment },
@@ -481,10 +491,6 @@ static CGFloat widthCallback(void* ref){
     }
 }
 
-/**
- * 添加字体属性
- *
- */
 - (void)_mutableAttributedString:(NSMutableAttributedString *)attributedString
            addAttributesWithFont:(UIFont *)font
                          inRange:(NSRange)range {

@@ -48,7 +48,7 @@
         self.contentTextLayout.text = self.statusModel.content;
         self.contentTextLayout.font = [UIFont systemFontOfSize:15.0f];
         self.contentTextLayout.textColor = RGB(40, 40, 40, 1);
-        self.contentTextLayout.boundsRect = CGRectMake(60.0f,50.0f,SCREEN_WIDTH - 80.0f,MAXFLOAT);
+        self.contentTextLayout.boundsRect = CGRectMake(60.0f,self.nameTextLayout.bottom,SCREEN_WIDTH - 80.0f,MAXFLOAT);
         self.contentTextLayout.linespace = 2.0f;
         [self.contentTextLayout creatCTFrameRef];
         //解析表情跟主题（[emoji] - > 表情。。#主题# 添加链接）
@@ -84,19 +84,19 @@
         self.dateTextLayout.text = [dateFormatter stringFromDate:self.statusModel.date];
         self.dateTextLayout.font = [UIFont systemFontOfSize:13.0f];
         self.dateTextLayout.textColor = [UIColor grayColor];
-        self.dateTextLayout.boundsRect = CGRectMake(60, 70 + imagesHeight + self.contentTextLayout.textHeight,
+        self.dateTextLayout.boundsRect = CGRectMake(60, 20.0f + imagesHeight + self.contentTextLayout.bottom,
                                                     SCREEN_WIDTH - 80,
                                                     20.0f);
         [self.dateTextLayout creatCTFrameRef];
         //menu
         self.menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,
-                                       70.0f + self.contentTextLayout.textHeight + imagesHeight,
+                                       20.0f + imagesHeight + self.contentTextLayout.bottom,
                                        20.0f,
                                        15.0f);
         //comment
         self.commentBgPosition = CGRectZero;
         self.commentTextLayouts = @[];
-        CGRect rect = CGRectMake(60.0f, 70.0f + self.contentTextLayout.textHeight + imagesHeight + 25.0f, SCREEN_WIDTH - 80, 20);
+        CGRect rect = CGRectMake(60.0f,self.dateTextLayout.bottom + 5.0f, SCREEN_WIDTH - 80, 20);
         CGFloat offsetY = 0.0f;
         if (self.statusModel.commentList.count != 0 && self.statusModel.commentList != nil) {
             NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:self.statusModel.commentList.count];
@@ -163,10 +163,10 @@
                 }
             }
             self.commentTextLayouts = tmp;
-            self.commentBgPosition = CGRectMake(60.0f, 70.0f + self.contentTextLayout.textHeight + imagesHeight + 25.0f, SCREEN_WIDTH - 80, offsetY + 15.0f);
+            self.commentBgPosition = CGRectMake(60.0f,self.dateTextLayout.bottom + 5.0f, SCREEN_WIDTH - 80, offsetY + 15.0f);
         }
         //cellHeight
-        self.cellHeight = 100.0f + imagesHeight + self.contentTextLayout.textHeight + self.commentBgPosition.size.height + 5.0f;
+        self.cellHeight = self.dateTextLayout.bottom + self.commentBgPosition.size.height + 15.0f;
     }
     return self;
 }

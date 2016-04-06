@@ -121,7 +121,6 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         UIGraphicsBeginImageContextWithOptions(size,opaque, scale);
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (context == NULL) {
-            NSLog(@"context is NULL");
             return;
         }
         if (isCancelled()) {
