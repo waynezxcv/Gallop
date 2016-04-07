@@ -9,16 +9,11 @@
 #import "TableViewCell.h"
 #import "LWAsyncDisplayView.h"
 #import "LWDefine.h"
-#import "RunLoopTransactions.h"
-#import "CALayer+WebCache.h"
 
 
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate>
 
-@property (nonatomic,strong) CALayer* avatarLayer;
-@property (nonatomic,strong) NSMutableArray* imageLayers;
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
-@property (nonatomic,assign,getter=isNeedLayoutImageViews) BOOL needLayoutImageViews;
 
 @end
 
@@ -29,12 +24,8 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.needLayoutImageViews = NO;
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
-        [self.asyncDisplayView.layer addSublayer:self.avatarLayer];
-        [self.asyncDisplayView addGestureRecognizer:[[UITapGestureRecognizer alloc]
-                                                     initWithTarget:self action:@selector(didClickedImageView:)]];
     }
     return self;
 }
@@ -75,9 +66,6 @@
     if (_layout == layout) {
         return;
     }
-    if (_layout.imagePostionArray.count != layout.imagePostionArray.count) {
-        self.needLayoutImageViews = YES;
-    }
     _layout = layout;
     [self setupCell];
 }
@@ -89,32 +77,10 @@
 
 - (void)_layoutSubViews {
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];//设置是否启动隐式动画
-    self.avatarLayer.frame = self.layout.avatarPosition;
-    if (self.isNeedLayoutImageViews) {
-        [self resetImageLayers];
-    }
-    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
-        imageLayer.frame = CGRectFromString([self.layout.imagePostionArray objectAtIndex:i]);
-        imageLayer.hidden = NO;
-    }
-    [CATransaction commit];
 }
 
 - (void)setupCell {
-    [self.avatarLayer sd_setImageWithURL:self.layout.statusModel.avatar
-                        placeholderImage:nil
-                                 options:0];
-    NSMutableArray* layouts = [[NSMutableArray alloc] init];
-    [layouts addObject:self.layout.nameTextLayout];
-    [layouts addObject:self.layout.contentTextLayout];
-    [layouts addObject:self.layout.dateTextLayout];
-    [layouts addObjectsFromArray:self.layout.commentTextLayouts];
-    [layouts addObjectsFromArray:self.layout.imageStorages];
-    self.asyncDisplayView.storages = layouts;
-//    [self setupImages];
+    self.asyncDisplayView.layout = self.layout.layout;
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size {
@@ -150,23 +116,6 @@
     CGContextRestoreGState(context);
 }
 
-- (void)resetImageLayers {
-    for (NSInteger i = 0; i < 9; i ++) {
-        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
-        imageLayer.hidden = YES;
-    }
-}
-
-//- (void)setupImages {
-//    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-//        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
-//        NSString* img = [self.layout.statusModel.imgs objectAtIndex:i];
-//        [imageLayer sd_setImageWithURL:[NSURL URLWithString:img]
-//                      placeholderImage:nil
-//                               options:SDWebImageDelaySetContents];
-//    }
-//}
-
 #pragma mark - Getter
 
 - (LWAsyncDisplayView *)asyncDisplayView {
@@ -177,30 +126,5 @@
     return _asyncDisplayView;
 }
 
-//- (NSMutableArray *)imageLayers {
-//    if (_imageLayers) {
-//        return _imageLayers;
-//    }
-//    _imageLayers = [[NSMutableArray alloc] initWithCapacity:9];
-//    for (NSInteger i = 0; i < 9; i ++) {
-//        CALayer* imageLayer = [CALayer layer];
-//        imageLayer.contentsScale = [UIScreen mainScreen].scale;
-//        imageLayer.contentsGravity = kCAGravityResizeAspectFill;
-//        imageLayer.masksToBounds = YES;
-//        [self.asyncDisplayView.layer addSublayer:imageLayer];
-//        [_imageLayers addObject:imageLayer];
-//    }
-//    return _imageLayers ;
-//}
-
-- (CALayer *)avatarLayer {
-    if (_avatarLayer) {
-        return _avatarLayer;
-    }
-    _avatarLayer = [CALayer layer];
-    _avatarLayer.contentsScale = [UIScreen mainScreen].scale;
-    _avatarLayer.contentsGravity = kCAGravityResizeAspect;
-    return _avatarLayer;
-}
 
 @end

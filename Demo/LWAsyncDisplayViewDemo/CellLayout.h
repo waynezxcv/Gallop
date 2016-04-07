@@ -11,6 +11,7 @@
 #import "LWImageStorage.h"
 #import "LWTextParser.h"
 #import "StatusModel.h"
+#import "LWLayout.h"
 
 
 @interface CellLayout : NSObject
@@ -33,6 +34,9 @@
 @property (nonatomic,assign) CGFloat cellHeight;
 
 @property (nonatomic,copy) NSArray* imageStorages;
+
+
+@property (nonatomic,strong) LWLayout* layout;
 
 - (id)initWithCDStatusModel:(StatusModel *)statusModel;
 

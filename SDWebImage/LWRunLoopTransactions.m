@@ -6,10 +6,10 @@
 //  Copyright © 2016年 Dailymotion. All rights reserved.
 //
 
-#import "RunLoopTransactions.h"
+#import "LWRunLoopTransactions.h"
 
 
-@interface RunLoopTransactions ()
+@interface LWRunLoopTransactions ()
 
 @property (nonatomic, strong) id target;
 @property (nonatomic, assign) SEL selector;
@@ -26,7 +26,7 @@ static void RunLoopObserverCallBack(CFRunLoopObserverRef observer,
     if (transactionSet.count == 0) return;
     NSSet* currentSet = transactionSet;
     transactionSet = [[NSMutableSet alloc] init];
-    [currentSet enumerateObjectsUsingBlock:^(RunLoopTransactions* transactions, BOOL* stop) {
+    [currentSet enumerateObjectsUsingBlock:^(LWRunLoopTransactions* transactions, BOOL* stop) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [transactions.target performSelector:transactions.selector withObject:transactions.object];
@@ -51,16 +51,16 @@ static void RunLoopTransactionsSetup() {
 }
 
 
-@implementation RunLoopTransactions
+@implementation LWRunLoopTransactions
 
 
-+ (RunLoopTransactions *)transactionsWithTarget:(id)target
++ (LWRunLoopTransactions *)transactionsWithTarget:(id)target
                                        selector:(SEL)selector
                                          object:(id)object {
     if (!target || !selector) {
         return nil;
     }
-    RunLoopTransactions* transactions = [[RunLoopTransactions alloc] init];
+    LWRunLoopTransactions* transactions = [[LWRunLoopTransactions alloc] init];
     transactions.target = target;
     transactions.selector = selector;
     transactions.object = object;
@@ -88,7 +88,7 @@ static void RunLoopTransactionsSetup() {
     if (![object isMemberOfClass:self.class]){
         return NO;
     }
-    RunLoopTransactions* other = object;
+    LWRunLoopTransactions* other = object;
     return other.selector == _selector && other.target == _target;
 }
 

@@ -18,7 +18,7 @@
 
 #import "LWAsyncDisplayView.h"
 #import "LWAsyncDisplayLayer.h"
-#import "RunLoopTransactions.h"
+#import "LWRunLoopTransactions.h"
 #import "CALayer+WebCache.h"
 
 
@@ -79,24 +79,13 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 #pragma mark - Layout & Display
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    NSMutableArray* tmp = [[NSMutableArray alloc] init];
-    for (id storage in _storages) {
-        if ([storage isKindOfClass:[LWImageStorage class]] ) {
-            [tmp addObject:storage];
-        }
+- (void)setLayout:(LWLayout *)layout {
+    if (_layout == layout) {
+        return;
     }
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    for (NSInteger i = 0; i <tmp.count; i++) {
-        LWImageStorage* imageStorage = tmp[i];
-        if (imageStorage.type == LWImageStorageWebImage) {
-            CALayer* subLayer = self.subLayers[i];
-            subLayer.frame = imageStorage.boundsRect;
-        }
-    }
-    [CATransaction commit];
+    _layout = layout;
+    [self _resetImagesIfNeed];
+    [self _displayIfNeed];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -119,60 +108,76 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     [self _displayIfNeed];
 }
 
-- (void)setStorages:(NSArray *)storages {
-    if (_storages && [_storages isEqualToArray:storages]) {
-        return;
-    }
-    _storages = [storages copy];
-    [self _resetSubLayers];
-    NSMutableArray* tmp = [[NSMutableArray alloc] init];
-    for (id storage in _storages) {
-        if ([storage isKindOfClass:[LWImageStorage class]] ) {
-            [tmp addObject:storage];
+- (void)_resetImagesIfNeed {
+    if (self.isNeedResetImages) {
+        if (self.subLayers.count > self.layout.imageStorages.count) {
+            NSInteger delta = self.subLayers.count - self.layout.imageStorages.count;
+            for (NSInteger i = 0 ; i < delta; i ++) {
+                CALayer* subLayer = [self.subLayers lastObject];
+                [subLayer removeFromSuperlayer];
+                [self.subLayers removeLastObject];
+            }
+        } else {
+            NSInteger delta = self.layout.imageStorages.count - self.subLayers.count;
+            for (NSInteger i = 0; i < delta; i ++) {
+                CALayer* subLayer = [CALayer layer];
+                subLayer.contentsGravity = kCAGravityResizeAspectFill;
+                subLayer.contentsScale = [UIScreen mainScreen].scale;
+                subLayer.masksToBounds = YES;
+                [self.layer addSublayer:subLayer];
+                [self.subLayers addObject:subLayer];
+            }
         }
     }
-    for (id storage in tmp) {
-        LWImageStorage* imageStorage = (LWImageStorage *)storage;
-        if (imageStorage.type == LWImageStorageWebImage) {
-            CALayer* subLayer = [CALayer layer];
-            subLayer.contentsGravity = kCAGravityResizeAspectFill;
-            subLayer.contentsScale = [UIScreen mainScreen].scale;
-            subLayer.masksToBounds = YES;
-            [self.layer addSublayer:subLayer];
-            [self.subLayers addObject:subLayer];
-        }
-    }
-    [self _displayIfNeed];
+    LWRunLoopTransactions* transactions = [LWRunLoopTransactions transactionsWithTarget:self
+                                                                               selector:@selector(_setupImages)
+                                                                                 object:nil];
+    [transactions commit];
 }
 
-- (void)_resetSubLayers {
-    for (CALayer* subLayer in self.subLayers) {
-        [subLayer removeFromSuperlayer];
+- (void)_setupImages {
+    for (NSInteger i = 0; i < self.layout.imageStorages.count; i++) {
+        LWImageStorage* imageStorage = self.layout.imageStorages[i];
+        if (imageStorage.type == LWImageStorageWebImage) {
+            CALayer* subLayer = self.subLayers[i];
+            [CATransaction begin];
+            [CATransaction setDisableActions:YES];
+            subLayer.frame = imageStorage.boundsRect;
+            [CATransaction commit];
+            [subLayer sd_setImageWithURL:imageStorage.URL placeholderImage:imageStorage.placeholder
+                                 options:0
+                               completed:^(UIImage *image,
+                                           NSError *error,
+                                           SDImageCacheType
+                                           cacheType,
+                                           NSURL *imageURL) {
+                                   if (imageStorage.fadeShow) {
+                                       CATransition *transition = [CATransition animation];
+                                       transition.duration = 0.2;
+                                       transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                                       transition.type = kCATransitionFade;
+                                       [subLayer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
+                                   }
+                               }];
+        }
     }
-    [self.subLayers removeAllObjects];
 }
 
 - (void)_displayIfNeed {
     if (self.state == LWAsyncDisplayViewStateNeedDisplay) {
         [(LWAsyncDisplayLayer *)self.layer cleanUp];
         [(LWAsyncDisplayLayer *)self.layer drawContentInRect:self.bounds];
-        NSMutableArray* tmp = [[NSMutableArray alloc] init];
-        for (id storage in _storages) {
-            if ([storage isKindOfClass:[LWImageStorage class]] ) {
-                [tmp addObject:storage];
-            }
-        }
-        for (NSInteger i = 0; i <tmp.count; i++) {
-            LWImageStorage* imageStorage = tmp[i];
-            if (imageStorage.type == LWImageStorageWebImage) {
-                CALayer* subLayer = self.subLayers[i];
-                [subLayer sd_setImageWithURL:imageStorage.URL placeholderImage:nil options:0];
-            }
-        }
     }
 }
 
 #pragma mark - Setter & Getter
+
+- (BOOL)isNeedResetImages {
+    if (self.subLayers.count == self.layout.imageStorages.count) {
+        return NO;
+    }
+    return YES;
+}
 
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {
@@ -190,6 +195,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     _subLayers = [[NSMutableArray alloc] init];
     return _subLayers;
 }
+
 
 #pragma mark - LWAsyncDisplayLayerDelegate
 
@@ -209,10 +215,8 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
         [self.delegate extraAsyncDisplayIncontext:context size:size];
     }
-    for (id storage in self.storages) {
-        if ([storage isKindOfClass:[LWTextStorage class]]) {
-            [storage drawInContext:context];
-        }
+    for (LWTextStorage* textStorage in self.layout.textStorages) {
+        [textStorage drawInContext:context];
     }
 }
 
@@ -226,12 +230,11 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
-    for (id storage in self.storages) {
-        if (storage == nil) {
+    for (LWTextStorage* textStorage in self.layout.textStorages) {
+        if (textStorage == nil) {
             continue;
         }
-        if ([storage isKindOfClass:[LWTextStorage class]]) {
-            LWTextStorage* textStorage = (LWTextStorage *)storage;
+        if ([textStorage isKindOfClass:[LWTextStorage class]]) {
             CTFrameRef textFrame = textStorage.frame;
             if (textFrame == NULL) {
                 continue;

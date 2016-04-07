@@ -25,5 +25,7 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
 @property (nonatomic,assign) CGRect boundsRect;
 @property (nonatomic,copy) NSString* contentMode;
 @property (nonatomic,assign) BOOL masksToBounds;
+@property (nonatomic,strong) UIImage* placeholder;
+@property (nonatomic,assign,getter=isFadeShow) BOOL fadeShow;
 
 @end

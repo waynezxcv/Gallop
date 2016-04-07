@@ -9,7 +9,7 @@
 #import "CALayer+WebCache.h"
 #import "objc/runtime.h"
 #import "CALayer+WebCacheOperation.h"
-#import "RunLoopTransactions.h"
+#import "LWRunLoopTransactions.h"
 
 
 
@@ -116,7 +116,7 @@ static char imageURLKey;
 }
 
 - (void)delaySetContents:(id)contents {
-    RunLoopTransactions* transactions = [RunLoopTransactions
+    LWRunLoopTransactions* transactions = [LWRunLoopTransactions
                                          transactionsWithTarget:self
                                          selector:@selector(setContents:)
                                          object:contents];

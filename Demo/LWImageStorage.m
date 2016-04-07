@@ -19,6 +19,8 @@
         self.boundsRect = CGRectZero;
         self.contentMode = kCAGravityResizeAspect;
         self.masksToBounds = YES;
+        self.placeholder = nil;
+        self.fadeShow = NO;
     }
     return self;
 }

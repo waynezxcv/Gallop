@@ -26,7 +26,13 @@
         });
         self.statusModel = statusModel;
         //avatar
-        self.avatarPosition = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
+
+        LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
+        avatarStorage.type = LWImageStorageWebImage;
+        avatarStorage.URL = statusModel.avatar;
+        avatarStorage.boundsRect = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
+
+
         //name
         self.nameTextLayout = [[LWTextStorage alloc] init];
         self.nameTextLayout.text = self.statusModel.name;
@@ -75,6 +81,7 @@
             NSString* U = [self.statusModel.imgs objectAtIndex:i];
             imageStorage.URL = [NSURL URLWithString:U];
             imageStorage.type = LWImageStorageWebImage;
+            imageStorage.fadeShow = YES;
 
 
 //            NSString* rectString = NSStringFromCGRect(imageRect);
@@ -176,6 +183,23 @@
             self.commentTextLayouts = tmp;
             self.commentBgPosition = CGRectMake(60.0f,self.dateTextLayout.bottom + 5.0f, SCREEN_WIDTH - 80, offsetY + 15.0f);
         }
+
+
+        NSMutableArray* textLayouts = [[NSMutableArray alloc] init];
+        [textLayouts addObject:self.nameTextLayout];
+        [textLayouts addObject:self.contentTextLayout];
+        [textLayouts addObject:self.dateTextLayout];
+        [textLayouts addObjectsFromArray:self.commentTextLayouts];
+
+        NSMutableArray* imageStorages = [[NSMutableArray alloc] init];
+        [imageStorages addObjectsFromArray:self.imageStorages];
+        [imageStorages addObject:avatarStorage];
+
+        self.layout = [[LWLayout alloc] initWithTextStorages:textLayouts
+                                               imageStorages:imageStorages];
+
+
+
         //cellHeight
         self.cellHeight = self.dateTextLayout.bottom + self.commentBgPosition.size.height + 15.0f;
     }
