@@ -134,7 +134,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         CALayer* subLayer = self.imageContainers[i];
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
-        subLayer.frame = imageStorage.boundsRect;
+        subLayer.frame = imageStorage.frame;
         [CATransaction commit];
         if (imageStorage.type == LWImageStorageWebImage) {
             [subLayer sd_setImageWithURL:imageStorage.URL
@@ -232,7 +232,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
             continue;
         }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
-            CTFrameRef textFrame = textStorage.frame;
+            CTFrameRef textFrame = textStorage.CTFrame;
             if (textFrame == NULL) {
                 continue;
             }

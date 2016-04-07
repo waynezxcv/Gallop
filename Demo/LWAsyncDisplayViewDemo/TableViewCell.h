@@ -15,7 +15,8 @@
 
 @protocol TableViewCellDelegate <NSObject>
 
-- (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index;
+- (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout
+              atIndex:(NSInteger)index;
 - (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data;
 
 @end

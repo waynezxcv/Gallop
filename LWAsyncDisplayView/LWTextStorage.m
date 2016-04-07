@@ -47,13 +47,6 @@ static CGFloat widthCallback(void* ref){
 
 @interface LWTextStorage ()
 
-@property (nonatomic,assign) CGFloat textHeight;
-@property (nonatomic,assign) CGFloat textWidth;
-@property (nonatomic,assign) CGFloat left;
-@property (nonatomic,assign) CGFloat right;
-@property (nonatomic,assign) CGFloat top;
-@property (nonatomic,assign) CGFloat bottom;
-
 
 @end
 
@@ -88,7 +81,7 @@ static CGFloat widthCallback(void* ref){
         self.textAlignment = NSTextAlignmentLeft;
         self.veriticalAlignment = LWVerticalAlignmentTop;
         self.lineBreakMode = NSLineBreakByWordWrapping;
-        self.boundsRect = CGRectZero;
+        self.frame = CGRectZero;
         self.linespace = 2.0f;
         self.characterSpacing = 1.0f;
         self.underlineStyle = NSUnderlineStyleNone;
@@ -101,25 +94,25 @@ static CGFloat widthCallback(void* ref){
     if (_attributedText == nil) {
         return ;
     }
-    if (_textHeight > 0) {
+    if (self.height > 0) {
         return ;
     }
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedText);
     CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,
                                                                       CFRangeMake(0, _attributedText.length),
                                                                       NULL,
-                                                                      CGSizeMake(self.boundsRect.size.width, CGFLOAT_MAX),
+                                                                      CGSizeMake(self.frame.size.width, CGFLOAT_MAX),
                                                                       NULL);
-    _textHeight = suggestSize.height;
-    _textWidth = suggestSize.width;
+    self.height = suggestSize.height;
+    self.width = suggestSize.width;
     if (self.isWidthToFit) {
-        self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, suggestSize.width, suggestSize.height);
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, suggestSize.width, suggestSize.height);
     } else {
-        self.boundsRect = CGRectMake(self.boundsRect.origin.x, self.boundsRect.origin.y, self.boundsRect.size.width, suggestSize.height);
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, suggestSize.height);
     }
     CGMutablePathRef textPath = CGPathCreateMutable();
-    CGPathAddRect(textPath, NULL, self.boundsRect);
-    _frame = CTFramesetterCreateFrame(ctFrameSetter, CFRangeMake(0, 0), textPath, NULL);
+    CGPathAddRect(textPath, NULL, self.frame);
+    self.CTFrame = CTFramesetterCreateFrame(ctFrameSetter, CFRangeMake(0, 0), textPath, NULL);
     CFRelease(ctFrameSetter);
     CFRelease(textPath);
 }
@@ -129,11 +122,11 @@ static CGFloat widthCallback(void* ref){
     @autoreleasepool {
         CGContextSaveGState(context);
         CGContextSetTextMatrix(context,CGAffineTransformIdentity);
-        CGContextTranslateCTM(context, self.boundsRect.origin.x, self.boundsRect.origin.y);
-        CGContextTranslateCTM(context, 0, self.boundsRect.size.height);
+        CGContextTranslateCTM(context, self.frame.origin.x, self.frame.origin.y);
+        CGContextTranslateCTM(context, 0, self.frame.size.height);
         CGContextScaleCTM(context, 1.0, -1.0);
-        CGContextTranslateCTM(context, - self.boundsRect.origin.x, -self.boundsRect.origin.y);
-        CTFrameDraw(self.frame, context);
+        CGContextTranslateCTM(context, - self.frame.origin.x, -self.frame.origin.y);
+        CTFrameDraw(self.CTFrame, context);
         CGContextRestoreGState(context);
         if (self.attachs.count == 0) {
             return;
@@ -141,10 +134,10 @@ static CGFloat widthCallback(void* ref){
         for (NSInteger i = 0; i < self.attachs.count; i ++) {
             LWTextAttach* attach = self.attachs[i];
             CGContextSaveGState(context);
-            CGContextTranslateCTM(context, self.boundsRect.origin.x, self.boundsRect.origin.y);
-            CGContextTranslateCTM(context, 0, self.boundsRect.size.height);
+            CGContextTranslateCTM(context, self.frame.origin.x, self.frame.origin.y);
+            CGContextTranslateCTM(context, 0, self.frame.size.height);
             CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextTranslateCTM(context, - self.boundsRect.origin.x, -self.boundsRect.origin.y);
+            CGContextTranslateCTM(context, - self.frame.origin.x, -self.frame.origin.y);
             CGContextDrawImage(context,attach.imagePosition,attach.image.CGImage);
             CGContextRestoreGState(context);
         }
@@ -201,10 +194,10 @@ static CGFloat widthCallback(void* ref){
 }
 
 - (void)_setupImageAttachPositionWithAttach:(LWTextAttach *)attach {
-    NSArray* lines = (NSArray *)CTFrameGetLines(_frame);
+    NSArray* lines = (NSArray *)CTFrameGetLines(self.CTFrame);
     NSUInteger lineCount = [lines count];
     CGPoint lineOrigins[lineCount];
-    CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), lineOrigins);
+    CTFrameGetLineOrigins(self.CTFrame, CFRangeMake(0, 0), lineOrigins);
     for (int i = 0; i < lineCount; i++) {
         if (attach == nil) {
             break;
@@ -229,7 +222,7 @@ static CGFloat widthCallback(void* ref){
             runBounds.origin.x = lineOrigins[i].x + xOffset;
             runBounds.origin.y = lineOrigins[i].y - descent;
 
-            CGPathRef pathRef = CTFrameGetPath(_frame);
+            CGPathRef pathRef = CTFrameGetPath(self.CTFrame);
             CGRect colRect = CGPathGetBoundingBox(pathRef);
             CGRect delegateRect = CGRectMake(runBounds.origin.x + colRect.origin.x,
                                              runBounds.origin.y + colRect.origin.y,
@@ -270,11 +263,11 @@ static CGFloat widthCallback(void* ref){
 }
 
 - (void)_resetFrameRef {
-    if (_frame) {
-        CFRelease(_frame);
-        _frame = nil;
+    if (self.CTFrame) {
+        CFRelease(self.CTFrame);
+        self.CTFrame = nil;
     }
-    _textHeight = 0;
+    self.height = 0;
 }
 
 #pragma mark - Getter
@@ -291,19 +284,19 @@ static CGFloat widthCallback(void* ref){
 }
 
 - (CGFloat)left {
-    return self.boundsRect.origin.x;
+    return self.frame.origin.x;
 }
 
 - (CGFloat)right {
-    return  self.boundsRect.origin.x + self.textWidth;
+    return  self.frame.origin.x + self.width;
 }
 
 - (CGFloat)top {
-    return self.boundsRect.origin.y;
+    return self.frame.origin.y;
 }
 
 - (CGFloat)bottom {
-    return self.boundsRect.origin.y + self.textHeight;
+    return self.frame.origin.y + self.height;
 }
 
 #pragma mark - Setter
@@ -396,8 +389,8 @@ static CGFloat widthCallback(void* ref){
 }
 
 - (void)dealloc {
-    if (self.frame) {
-        CFRelease(self.frame);
+    if (self.CTFrame) {
+        CFRelease(self.CTFrame);
     }
 }
 

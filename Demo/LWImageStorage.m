@@ -34,7 +34,7 @@
         self.imageContainerType = LWImageContainerTypeCALayer;
         self.image = nil;
         self.URL = nil;
-        self.boundsRect = CGRectZero;
+        self.frame = CGRectZero;
         self.contentMode = kCAGravityResizeAspect;
         self.masksToBounds = YES;
         self.placeholder = nil;

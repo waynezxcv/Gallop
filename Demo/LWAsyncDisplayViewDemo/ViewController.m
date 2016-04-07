@@ -15,6 +15,7 @@
 #import "StatusModel.h"
 #import "LWTextParser.h"
 #import "CellLayout.h"
+#import "LWStorage+Constraint.h"
 
 
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
@@ -112,8 +113,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     return cell;
 }
 
-
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CellLayout* layout = self.dataSource[indexPath.row];
     return layout.cellHeight;
@@ -169,7 +168,13 @@ const CGFloat kRefreshBoundary = 170.0f;
     LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
     avatarStorage.type = LWImageStorageWebImage;
     avatarStorage.URL = statusModel.avatar;
-    avatarStorage.boundsRect = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
+    avatarStorage.frame = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
+
+
+
+
+
+
     //nameTextStorage
     LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
     nameTextStorage.text = statusModel.name;
@@ -177,7 +182,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     nameTextStorage.textAlignment = NSTextAlignmentLeft;
     nameTextStorage.linespace = 2.0f;
     nameTextStorage.textColor = RGB(113, 129, 161, 1);
-    nameTextStorage.boundsRect = CGRectMake(60, 20, SCREEN_WIDTH, 20);
+    nameTextStorage.frame = CGRectMake(60, 20, SCREEN_WIDTH, 20);
     [nameTextStorage creatCTFrameRef];
     [nameTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",statusModel.name]
                              inRange:NSMakeRange(0,statusModel.name.length)
@@ -189,7 +194,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     contentTextStorage.text = statusModel.content;
     contentTextStorage.font = [UIFont systemFontOfSize:15.0f];
     contentTextStorage.textColor = RGB(40, 40, 40, 1);
-    contentTextStorage.boundsRect = CGRectMake(60.0f,nameTextStorage.bottom,SCREEN_WIDTH - 80.0f,MAXFLOAT);
+    contentTextStorage.frame = CGRectMake(60.0f,nameTextStorage.bottom,SCREEN_WIDTH - 80.0f,MAXFLOAT);
     contentTextStorage.linespace = 2.0f;
     [contentTextStorage creatCTFrameRef];
     [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
@@ -205,7 +210,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     NSInteger column = 0;
     for (NSInteger i = 0; i < statusModel.imgs.count; i ++) {
         CGRect imageRect = CGRectMake(60.0f + (column * 85.0f),
-                                      60.0f + contentTextStorage.textHeight + (row * 85.0f),
+                                      60.0f + contentTextStorage.height + (row * 85.0f),
                                       80.0f,
                                       80.0f);
 
@@ -213,7 +218,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         [imagePositionArray addObject:imagePositionString];
 
         LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
-        imageStorage.boundsRect = imageRect;
+        imageStorage.frame = imageRect;
         NSString* URLString = [statusModel.imgs objectAtIndex:i];
         imageStorage.URL = [NSURL URLWithString:URLString];
         imageStorage.type = LWImageStorageWebImage;
@@ -232,7 +237,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     dateTextStorage.text = [[self dateFormatter] stringFromDate:statusModel.date];
     dateTextStorage.font = [UIFont systemFontOfSize:13.0f];
     dateTextStorage.textColor = [UIColor grayColor];
-    dateTextStorage.boundsRect = CGRectMake(60, 20.0f + imagesHeight + contentTextStorage.bottom,SCREEN_WIDTH - 80,20.0f);
+    dateTextStorage.frame = CGRectMake(60, 20.0f + imagesHeight + contentTextStorage.bottom,SCREEN_WIDTH - 80,20.0f);
     [dateTextStorage creatCTFrameRef];
     //menu
     CGRect menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,20.0f + imagesHeight + contentTextStorage.bottom,20.0f,15.0f);
@@ -253,7 +258,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                 commentTextStorage.textAlignment = NSTextAlignmentLeft;
                 commentTextStorage.linespace = 2.0f;
                 commentTextStorage.textColor = RGB(40, 40, 40, 1);
-                commentTextStorage.boundsRect = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
+                commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
                 [commentTextStorage creatCTFrameRef];
                 [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"from"]]
                                             inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
@@ -273,7 +278,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                            highlightColor:nil
                                            underlineStyle:NSUnderlineStyleNone];
                 [tmp addObject:commentTextStorage];
-                offsetY += commentTextStorage.textHeight;
+                offsetY += commentTextStorage.height;
             } else {
                 NSString* commentString = [NSString stringWithFormat:@"%@:%@",commentDict[@"from"],commentDict[@"content"]];
                 LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
@@ -282,7 +287,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                 commentTextStorage.textAlignment = NSTextAlignmentLeft;
                 commentTextStorage.linespace = 2.0f;
                 commentTextStorage.textColor = RGB(40, 40, 40, 1);
-                commentTextStorage.boundsRect = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
+                commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
                 [commentTextStorage creatCTFrameRef];
                 [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"from"]]
                                             inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
@@ -295,7 +300,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                            highlightColor:nil
                                            underlineStyle:NSUnderlineStyleNone];
                 [tmp addObject:commentTextStorage];
-                offsetY += commentTextStorage.textHeight;
+                offsetY += commentTextStorage.height;
             }
         }
         commentTextStorages = tmp;

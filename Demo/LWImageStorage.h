@@ -17,6 +17,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "LWStorage.h"
 
 
 
@@ -31,12 +32,11 @@ typedef NS_ENUM(NSUInteger, LWImageContainerType) {
 };
 
 
-@interface LWImageStorage : NSObject
+@interface LWImageStorage : LWStorage
 
-@property (nonatomic,assign) LWImageStorageType type;
 @property (nonatomic,strong) NSURL* URL;
+@property (nonatomic,assign) LWImageStorageType type;
 @property (nonatomic,strong) UIImage* image;
-@property (nonatomic,assign) CGRect boundsRect;
 @property (nonatomic,copy) NSString* contentMode;
 @property (nonatomic,assign) BOOL masksToBounds;
 @property (nonatomic,strong) UIImage* placeholder;

@@ -9,7 +9,6 @@
 #import "LWLayout.h"
 #import "StatusModel.h"
 
-
 /**
  *  要添加一些其他属性，可以继承自LWLayout
  */
