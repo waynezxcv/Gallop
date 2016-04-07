@@ -78,7 +78,6 @@ static CGFloat widthCallback(void* ref){
     return YES;
 }
 
-
 - (id)init {
     self = [super init];
     if (self) {
@@ -220,7 +219,6 @@ static CGFloat widthCallback(void* ref){
             if (delegate == nil) {
                 continue;
             }
-
             CGRect runBounds;
             CGFloat ascent;
             CGFloat descent;

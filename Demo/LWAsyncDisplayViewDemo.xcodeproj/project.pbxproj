@@ -35,7 +35,6 @@
 		0154CB851C988AE4002CAF12 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0154CB841C988AE4002CAF12 /* ViewController.m */; };
 		017F67321C988BB700309E92 /* TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67311C988BB700309E92 /* TableViewCell.m */; };
 		017F67381C988C5800309E92 /* TableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67371C988C5800309E92 /* TableViewHeader.m */; };
-		017F673B1C988E1200309E92 /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F673A1C988E1200309E92 /* CellLayout.m */; };
 		017F67501C98A04F00309E92 /* LWAsyncDisplayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67401C98A04F00309E92 /* LWAsyncDisplayLayer.m */; };
 		017F67511C98A04F00309E92 /* LWAsyncDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67421C98A04F00309E92 /* LWAsyncDisplayView.m */; };
 		017F67521C98A04F00309E92 /* LWFlag.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67441C98A04F00309E92 /* LWFlag.m */; };
@@ -49,6 +48,7 @@
 		01DA27391CB58E74004179AB /* LWLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DA27381CB58E74004179AB /* LWLayout.m */; };
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
+		B00257961CB65817008700D5 /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B00257951CB65817008700D5 /* CellLayout.m */; };
 		B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */; };
 		B0D980371CB392D7006D0071 /* StatusModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D980361CB392D7006D0071 /* StatusModel.m */; };
 		B0D9EB3A1CB0F435009FDCCF /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB141CB0F435009FDCCF /* CALayer+WebCache.m */; };
@@ -110,15 +110,13 @@
 		011DFAC61C988479000410D7 /* menu@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "menu@3x.png"; path = "Resource/menu@3x.png"; sourceTree = SOURCE_ROOT; };
 		0152F8C61CB239010062CB32 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
 		0152F8C71CB239010062CB32 /* comment@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@3x.png"; sourceTree = "<group>"; };
-		0154CB821C9887EA002CAF12 /* LWDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWDefine.h; path = ../LWAsyncDisplayView/LWDefine.h; sourceTree = "<group>"; };
+		0154CB821C9887EA002CAF12 /* LWDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWDefine.h; path = ../../LWAsyncDisplayView/LWDefine.h; sourceTree = "<group>"; };
 		0154CB831C988AE4002CAF12 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		0154CB841C988AE4002CAF12 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		017F67301C988BB700309E92 /* TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCell.h; sourceTree = "<group>"; };
 		017F67311C988BB700309E92 /* TableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewCell.m; sourceTree = "<group>"; };
 		017F67361C988C5800309E92 /* TableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewHeader.h; sourceTree = "<group>"; };
 		017F67371C988C5800309E92 /* TableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewHeader.m; sourceTree = "<group>"; };
-		017F67391C988E1200309E92 /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
-		017F673A1C988E1200309E92 /* CellLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellLayout.m; sourceTree = "<group>"; };
 		017F673F1C98A04F00309E92 /* LWAsyncDisplayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAsyncDisplayLayer.h; path = ../LWAsyncDisplayView/LWAsyncDisplayLayer.h; sourceTree = "<group>"; };
 		017F67401C98A04F00309E92 /* LWAsyncDisplayLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAsyncDisplayLayer.m; path = ../LWAsyncDisplayView/LWAsyncDisplayLayer.m; sourceTree = "<group>"; };
 		017F67411C98A04F00309E92 /* LWAsyncDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAsyncDisplayView.h; path = ../LWAsyncDisplayView/LWAsyncDisplayView.h; sourceTree = "<group>"; };
@@ -144,6 +142,8 @@
 		01DA27381CB58E74004179AB /* LWLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWLayout.m; sourceTree = "<group>"; };
 		01F51A0D1CA1B1CE00463571 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		B00257941CB65817008700D5 /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
+		B00257951CB65817008700D5 /* CellLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellLayout.m; sourceTree = "<group>"; };
 		B0C503EA1CAE4FC300B6D3FB /* LWAlchemyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyManager.h; path = ../LWAlchemy/LWAlchemyManager.h; sourceTree = "<group>"; };
 		B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyManager.m; path = ../LWAlchemy/LWAlchemyManager.m; sourceTree = "<group>"; };
 		B0D980351CB392D7006D0071 /* StatusModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusModel.h; sourceTree = "<group>"; };
@@ -225,10 +225,10 @@
 				011DFABA1C9883F3000410D7 /* Resource */,
 				0154CB831C988AE4002CAF12 /* ViewController.h */,
 				0154CB841C988AE4002CAF12 /* ViewController.m */,
+				B00257941CB65817008700D5 /* CellLayout.h */,
+				B00257951CB65817008700D5 /* CellLayout.m */,
 				017F67301C988BB700309E92 /* TableViewCell.h */,
 				017F67311C988BB700309E92 /* TableViewCell.m */,
-				017F67391C988E1200309E92 /* CellLayout.h */,
-				017F673A1C988E1200309E92 /* CellLayout.m */,
 				011DFA1D1C987CD6000410D7 /* Supporting Files */,
 			);
 			name = Demo;
@@ -270,7 +270,6 @@
 				B0D9EB1C1CB0F435009FDCCF /* LWRunLoopTransactions.m */,
 				017F67431C98A04F00309E92 /* LWFlag.h */,
 				017F67441C98A04F00309E92 /* LWFlag.m */,
-				0154CB821C9887EA002CAF12 /* LWDefine.h */,
 			);
 			name = LWAsyncDisplayView;
 			sourceTree = "<group>";
@@ -359,6 +358,7 @@
 		011DFABA1C9883F3000410D7 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				0154CB821C9887EA002CAF12 /* LWDefine.h */,
 				0152F8C61CB239010062CB32 /* comment@2x.png */,
 				0152F8C71CB239010062CB32 /* comment@3x.png */,
 				011DFABB1C988479000410D7 /* [心]@2x.png */,
@@ -500,12 +500,12 @@
 				017F67541C98A04F00309E92 /* LWTextAttach.m in Sources */,
 				B0D9EB4C1CB0F436009FDCCF /* UIView+WebCacheOperation.m in Sources */,
 				017F67501C98A04F00309E92 /* LWAsyncDisplayLayer.m in Sources */,
-				017F673B1C988E1200309E92 /* CellLayout.m in Sources */,
 				B0D9EB3C1CB0F435009FDCCF /* MKAnnotationView+WebCache.m in Sources */,
 				B0D9EB3D1CB0F435009FDCCF /* NSData+ImageContentType.m in Sources */,
 				011DFA571C9880D2000410D7 /* LWImageBrowser.m in Sources */,
 				B0D9EB401CB0F435009FDCCF /* SDWebImageCompat.m in Sources */,
 				B0D9EB481CB0F436009FDCCF /* UIImage+MultiFormat.m in Sources */,
+				B00257961CB65817008700D5 /* CellLayout.m in Sources */,
 				017F67561C98A04F00309E92 /* LWTextParser.m in Sources */,
 				B0D9EB491CB0F436009FDCCF /* UIImage+WebP.m in Sources */,
 				B0D9EB441CB0F435009FDCCF /* SDWebImageManager.m in Sources */,

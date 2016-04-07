@@ -50,9 +50,7 @@ static void RunLoopTransactionsSetup() {
     });
 }
 
-
 @implementation LWRunLoopTransactions
-
 
 + (LWRunLoopTransactions *)transactionsWithTarget:(id)target
                                        selector:(SEL)selector

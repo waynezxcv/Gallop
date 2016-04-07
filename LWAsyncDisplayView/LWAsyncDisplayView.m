@@ -21,8 +21,6 @@
 #import "LWRunLoopTransactions.h"
 #import "CALayer+WebCache.h"
 
-
-
 typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     LWAsyncDisplayViewStateNeedLayout,
     LWAsyncDisplayViewStateNeedDisplay,
@@ -42,8 +40,6 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 @implementation LWAsyncDisplayView
 
 #pragma mark - Initialization
-
-
 /**
  *  “default is [CALayer class].
  *  Used when creating the underlying layer for the view.”
@@ -129,22 +125,20 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
             }
         }
     }
-    LWRunLoopTransactions* transactions = [LWRunLoopTransactions transactionsWithTarget:self
-                                                                               selector:@selector(_setupImages)
-                                                                                 object:nil];
-    [transactions commit];
+    [self _setupImages];
 }
 
 - (void)_setupImages {
     for (NSInteger i = 0; i < self.layout.imageStorages.count; i++) {
         LWImageStorage* imageStorage = self.layout.imageStorages[i];
+        CALayer* subLayer = self.subLayers[i];
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        subLayer.frame = imageStorage.boundsRect;
+        [CATransaction commit];
         if (imageStorage.type == LWImageStorageWebImage) {
-            CALayer* subLayer = self.subLayers[i];
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
-            subLayer.frame = imageStorage.boundsRect;
-            [CATransaction commit];
-            [subLayer sd_setImageWithURL:imageStorage.URL placeholderImage:imageStorage.placeholder
+            [subLayer sd_setImageWithURL:imageStorage.URL
+                        placeholderImage:imageStorage.placeholder
                                  options:0
                                completed:^(UIImage *image,
                                            NSError *error,
@@ -154,11 +148,14 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
                                    if (imageStorage.fadeShow) {
                                        CATransition *transition = [CATransition animation];
                                        transition.duration = 0.2;
-                                       transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                                       transition.timingFunction = [CAMediaTimingFunction
+                                                                    functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
                                        transition.type = kCATransitionFade;
                                        [subLayer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
                                    }
                                }];
+        } else {
+            [subLayer setContents:(__bridge id)imageStorage.image.CGImage];
         }
     }
 }

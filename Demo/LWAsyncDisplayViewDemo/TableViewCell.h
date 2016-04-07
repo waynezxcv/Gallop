@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LWAsyncDisplayView.h"
 #import "CellLayout.h"
+
 
 @class TableViewCell;
 
@@ -21,7 +23,7 @@
 @interface TableViewCell : UITableViewCell
 
 @property (nonatomic,weak) id <TableViewCellDelegate> delegate;
-@property (nonatomic,strong) CellLayout* layout;
+@property (nonatomic,strong) CellLayout* cellLayout;
 
 @end
 

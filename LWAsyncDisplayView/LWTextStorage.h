@@ -24,7 +24,6 @@
 #import "LWTextAttach.h"
 
 
-
 /**
  *  垂直方向对齐方式
  */
@@ -121,7 +120,6 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  *
  */
 @property (nonatomic,assign,readonly) CGFloat textWidth;
-
 @property (nonatomic,assign,readonly) CGFloat left;
 @property (nonatomic,assign,readonly) CGFloat right;
 @property (nonatomic,assign,readonly) CGFloat top;
@@ -166,11 +164,13 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  */
 - (void)replaceTextWithImage:(UIImage *)image inRange:(NSRange)range;
 
+//TODO：
+
 /**
  *  用网络图片替换掉指定位置的文字
  *
  */
-- (void)replaceTextWithImageURL:(NSURL *)URL inRange:(NSRange)range;
+//- (void)replaceTextWithImageURL:(NSURL *)URL inRange:(NSRange)range;
 
 
 #define kLWTextLinkAttributedName @"LWTextLinkAttributedName"

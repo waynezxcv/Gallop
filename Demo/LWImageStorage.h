@@ -16,7 +16,6 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
     LWImageStorageWebImage,
 };
 
-
 @interface LWImageStorage : NSObject
 
 @property (nonatomic,assign) LWImageStorageType type;

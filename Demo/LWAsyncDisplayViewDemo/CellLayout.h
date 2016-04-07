@@ -2,42 +2,24 @@
 //  CellLayout.h
 //  LWAsyncDisplayViewDemo
 //
-//  Created by 刘微 on 16/3/16.
+//  Created by 刘微 on 16/4/7.
 //  Copyright © 2016年 WayneInc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "LWTextStorage.h"
-#import "LWImageStorage.h"
-#import "LWTextParser.h"
-#import "StatusModel.h"
 #import "LWLayout.h"
+#import "StatusModel.h"
 
 
-@interface CellLayout : NSObject
+/**
+ *  要添加一些其他属性，可以继承自LWLayout
+ */
 
-@property (nonatomic,strong) StatusModel* statusModel;
-@property (nonatomic,strong) LWTextStorage* nameTextLayout;
-@property (nonatomic,strong) LWTextStorage* contentTextLayout;
-@property (nonatomic,strong) LWTextStorage* dateTextLayout;
+@interface CellLayout : LWLayout
 
-@property (nonatomic,assign) CGRect avatarPosition;
-@property (nonatomic,assign) CGRect menuPosition;
-@property (nonatomic,assign) CGRect likesAndCommentsPosition;
-@property (nonatomic,copy) NSArray* imagePostionArray;
-
-@property (nonatomic,assign) CGFloat textHeight;
-@property (nonatomic,assign) CGFloat imagesHeight;
-@property (nonatomic,assign) CGFloat likesAndCommentsHeight;
-@property (nonatomic,assign) CGRect commentBgPosition;
-@property (nonatomic,copy) NSArray* commentTextLayouts;
 @property (nonatomic,assign) CGFloat cellHeight;
-
-@property (nonatomic,copy) NSArray* imageStorages;
-
-
-@property (nonatomic,strong) LWLayout* layout;
-
-- (id)initWithCDStatusModel:(StatusModel *)statusModel;
+@property (nonatomic,assign) CGRect menuPosition;
+@property (nonatomic,assign) CGRect commentBgPosition;
+@property (nonatomic,copy) NSArray* imagePostionArray;
+@property (nonatomic,strong) StatusModel* statusModel;
 
 @end

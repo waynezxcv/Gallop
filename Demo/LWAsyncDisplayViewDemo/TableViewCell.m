@@ -7,7 +7,6 @@
 //
 
 #import "TableViewCell.h"
-#import "LWAsyncDisplayView.h"
 #import "LWDefine.h"
 
 
@@ -26,6 +25,8 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
+        [self.asyncDisplayView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                            action:@selector(didClickedImageView:)]];
     }
     return self;
 }
@@ -38,12 +39,12 @@
  */
 - (void)didClickedImageView:(UITapGestureRecognizer *)tap {
     CGPoint point = [tap locationInView:self];
-    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        CGRect imagePosition = CGRectFromString(self.layout.imagePostionArray[i]);
+    for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
+        CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
         if (CGRectContainsPoint(imagePosition, point)) {
             if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedImageWithCellLayout:atIndex:)] &&
                 [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-                [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.layout atIndex:i];
+                [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.cellLayout atIndex:i];
             }
         }
     }
@@ -62,12 +63,12 @@
 
 #pragma mark - Draw and setup
 
-- (void)setLayout:(CellLayout *)layout {
-    if (_layout == layout) {
+- (void)setCellLayout:(CellLayout *)cellLayout {
+    if (_cellLayout == cellLayout) {
         return;
     }
-    _layout = layout;
-    [self setupCell];
+    _cellLayout = cellLayout;
+    self.asyncDisplayView.layout = cellLayout;
 }
 
 - (void)layoutSubviews {
@@ -76,34 +77,23 @@
 }
 
 - (void)_layoutSubViews {
-    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
-}
-
-- (void)setupCell {
-    self.asyncDisplayView.layout = self.layout.layout;
+    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.cellLayout.cellHeight);
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size {
-    //绘制头像外框
-    CGContextAddRect(context,self.layout.avatarPosition);
+    //绘制分割线
     CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
     CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
     CGContextSetLineWidth(context, 0.3f);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextStrokePath(context);
-    //绘制图片背景
-    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        CGContextAddRect(context, CGRectFromString(self.layout.imagePostionArray[i]));
-        CGContextSetFillColorWithColor(context, [UIColor grayColor].CGColor);
-        CGContextFillPath(context);
-    }
     //绘制菜单按钮
-    [self _drawImage:[UIImage imageNamed:@"menu"] rect:_layout.menuPosition context:context];
+    [self _drawImage:[UIImage imageNamed:@"menu"] rect:self.cellLayout.menuPosition context:context];
     //绘制评论背景
     UIImage*commentBgImage = [[UIImage imageNamed:@"comment"]
                               stretchableImageWithLeftCapWidth:40.0f
                               topCapHeight:15.0f];
-    [commentBgImage drawInRect:self.layout.commentBgPosition];
+    [commentBgImage drawInRect:self.cellLayout.commentBgPosition];
 }
 
 - (void)_drawImage:(UIImage *)image rect:(CGRect)rect context:(CGContextRef)context {
