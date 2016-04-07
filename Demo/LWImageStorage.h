@@ -23,5 +23,7 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
 @property (nonatomic,strong) NSURL* URL;
 @property (nonatomic,strong) UIImage* image;
 @property (nonatomic,assign) CGRect boundsRect;
+@property (nonatomic,copy) NSString* contentMode;
+@property (nonatomic,assign) BOOL masksToBounds;
 
 @end

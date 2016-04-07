@@ -81,18 +81,22 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    for (NSInteger i = 0; i < self.storages.count; i ++) {
-        id storage = [self.storages objectAtIndex:i];
+    NSMutableArray* tmp = [[NSMutableArray alloc] init];
+    for (id storage in _storages) {
         if ([storage isKindOfClass:[LWImageStorage class]] ) {
-            LWImageStorage* imageStorage = (LWImageStorage *)storage;
-            if (imageStorage.type == LWImageStorageWebImage) {
-                if (self.subLayers.count > i) {
-                    CALayer* subLayer = [self.subLayers objectAtIndex:i];
-                    subLayer.frame = imageStorage.boundsRect;
-                }
-            }
+            [tmp addObject:storage];
         }
     }
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    for (NSInteger i = 0; i <tmp.count; i++) {
+        LWImageStorage* imageStorage = tmp[i];
+        if (imageStorage.type == LWImageStorageWebImage) {
+            CALayer* subLayer = self.subLayers[i];
+            subLayer.frame = imageStorage.boundsRect;
+        }
+    }
+    [CATransaction commit];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -115,43 +119,54 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     [self _displayIfNeed];
 }
 
-
 - (void)setStorages:(NSArray *)storages {
     if (_storages && [_storages isEqualToArray:storages]) {
         return;
     }
     _storages = [storages copy];
+    [self _resetSubLayers];
+    NSMutableArray* tmp = [[NSMutableArray alloc] init];
     for (id storage in _storages) {
         if ([storage isKindOfClass:[LWImageStorage class]] ) {
-            LWImageStorage* imageStorage = (LWImageStorage *)storage;
-            if (imageStorage.type == LWImageStorageWebImage) {
-                //TODO:
-                CALayer* subLayer = [CALayer layer];
-                [self.layer addSublayer:subLayer];
-                [self.subLayers addObject:subLayer];
-            }
+            [tmp addObject:storage];
+        }
+    }
+    for (id storage in tmp) {
+        LWImageStorage* imageStorage = (LWImageStorage *)storage;
+        if (imageStorage.type == LWImageStorageWebImage) {
+            CALayer* subLayer = [CALayer layer];
+            subLayer.contentsGravity = kCAGravityResizeAspectFill;
+            subLayer.contentsScale = [UIScreen mainScreen].scale;
+            subLayer.masksToBounds = YES;
+            [self.layer addSublayer:subLayer];
+            [self.subLayers addObject:subLayer];
         }
     }
     [self _displayIfNeed];
 }
 
-
+- (void)_resetSubLayers {
+    for (CALayer* subLayer in self.subLayers) {
+        [subLayer removeFromSuperlayer];
+    }
+    [self.subLayers removeAllObjects];
+}
 
 - (void)_displayIfNeed {
     if (self.state == LWAsyncDisplayViewStateNeedDisplay) {
         [(LWAsyncDisplayLayer *)self.layer cleanUp];
         [(LWAsyncDisplayLayer *)self.layer drawContentInRect:self.bounds];
-
-        for (NSInteger i = 0; i < self.storages.count; i ++) {
-            id storage = [self.storages objectAtIndex:i];
+        NSMutableArray* tmp = [[NSMutableArray alloc] init];
+        for (id storage in _storages) {
             if ([storage isKindOfClass:[LWImageStorage class]] ) {
-                LWImageStorage* imageStorage = (LWImageStorage *)storage;
-                if (imageStorage.type == LWImageStorageWebImage) {
-                    if (self.subLayers.count > i) {
-                        CALayer* subLayer = [self.subLayers objectAtIndex:i];
-                        [subLayer sd_setImageWithURL:imageStorage.URL placeholderImage:nil options:0];
-                    }
-                }
+                [tmp addObject:storage];
+            }
+        }
+        for (NSInteger i = 0; i <tmp.count; i++) {
+            LWImageStorage* imageStorage = tmp[i];
+            if (imageStorage.type == LWImageStorageWebImage) {
+                CALayer* subLayer = self.subLayers[i];
+                [subLayer sd_setImageWithURL:imageStorage.URL placeholderImage:nil options:0];
             }
         }
     }
@@ -211,50 +226,53 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
-    for (LWTextStorage* layout in self.storages) {
-        if (layout == nil) {
+    for (id storage in self.storages) {
+        if (storage == nil) {
             continue;
         }
-        CTFrameRef textFrame = layout.frame;
-        if (textFrame == NULL) {
-            continue;
-        }
-        CFArrayRef lines = CTFrameGetLines(textFrame);
-        CGPoint origins[CFArrayGetCount(lines)];
-        CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
-        CGPathRef path = CTFrameGetPath(textFrame);
-        CGRect boundsRect = CGPathGetBoundingBox(path);
-        CGAffineTransform transform = CGAffineTransformIdentity;
-        transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
-        transform = CGAffineTransformScale(transform, 1.f, -1.f);
-        for (int i= 0; i < CFArrayGetCount(lines); i++) {
-            CGPoint linePoint = origins[i];
-            CTLineRef line = CFArrayGetValueAtIndex(lines, i);
-            CGRect flippedRect = [self _getLineBounds:line point:linePoint];
-            CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
+        if ([storage isKindOfClass:[LWTextStorage class]]) {
+            LWTextStorage* textStorage = (LWTextStorage *)storage;
+            CTFrameRef textFrame = textStorage.frame;
+            if (textFrame == NULL) {
+                continue;
+            }
+            CFArrayRef lines = CTFrameGetLines(textFrame);
+            CGPoint origins[CFArrayGetCount(lines)];
+            CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
+            CGPathRef path = CTFrameGetPath(textFrame);
+            CGRect boundsRect = CGPathGetBoundingBox(path);
+            CGAffineTransform transform = CGAffineTransformIdentity;
+            transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
+            transform = CGAffineTransformScale(transform, 1.f, -1.f);
+            for (int i= 0; i < CFArrayGetCount(lines); i++) {
+                CGPoint linePoint = origins[i];
+                CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+                CGRect flippedRect = [self _getLineBounds:line point:linePoint];
+                CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
 
-            CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
-                                           rect.origin.y + boundsRect.origin.y,
-                                           rect.size.width,
-                                           rect.size.height);
+                CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                               rect.origin.y + boundsRect.origin.y,
+                                               rect.size.width,
+                                               rect.size.height);
 
-            if (CGRectContainsPoint(adjustRect, touchPoint)) {
-                CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
-                                                    touchPoint.y - CGRectGetMinY(adjustRect));
-                CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
-                CTRunRef touchedRun;
-                NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
-                for (NSInteger i = 0; i < runObjArray.count; i ++) {
-                    CTRunRef runObj = (__bridge CTRunRef)[runObjArray objectAtIndex:i];
-                    CFRange range = CTRunGetStringRange((CTRunRef)runObj);
-                    if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
-                        touchedRun = runObj;
-                        NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
-                        if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
-                            if ([self.delegate respondsToSelector:@selector(lwAsyncDicsPlayView:didCilickedLinkWithfData:)] &&
-                                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
-                                [self.delegate lwAsyncDicsPlayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
-                                break;
+                if (CGRectContainsPoint(adjustRect, touchPoint)) {
+                    CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
+                                                        touchPoint.y - CGRectGetMinY(adjustRect));
+                    CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
+                    CTRunRef touchedRun;
+                    NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
+                    for (NSInteger i = 0; i < runObjArray.count; i ++) {
+                        CTRunRef runObj = (__bridge CTRunRef)[runObjArray objectAtIndex:i];
+                        CFRange range = CTRunGetStringRange((CTRunRef)runObj);
+                        if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
+                            touchedRun = runObj;
+                            NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
+                            if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
+                                if ([self.delegate respondsToSelector:@selector(lwAsyncDicsPlayView:didCilickedLinkWithfData:)] &&
+                                    [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
+                                    [self.delegate lwAsyncDicsPlayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
+                                    break;
+                                }
                             }
                         }
                     }

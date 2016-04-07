@@ -17,6 +17,8 @@
         self.image = nil;
         self.URL = nil;
         self.boundsRect = CGRectZero;
+        self.contentMode = kCAGravityResizeAspect;
+        self.masksToBounds = YES;
     }
     return self;
 }
