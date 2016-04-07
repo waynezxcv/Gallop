@@ -40,8 +40,8 @@
 
 @end
 
-
 @interface LWAsyncDisplayView : UIView
+
 
 @property (nonatomic,weak) id <LWAsyncDisplayViewDelegate> delegate;
 

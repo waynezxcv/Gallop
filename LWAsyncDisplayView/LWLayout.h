@@ -8,48 +8,24 @@
 //
 ////
 //
-//  LWWebImage.m
+//  LWAutoLayout.h
 //  LWAsyncDisplayViewDemo
 //
 //  Created by 刘微 on 16/4/7.
 //  Copyright © 2016年 WayneInc. All rights reserved.
-//
 
+#import <Foundation/Foundation.h>
+#import "LWTextStorage.h"
 #import "LWImageStorage.h"
 
-@interface LWImageStorage ()
+@interface LWLayout : NSObject
 
-@property (nonatomic, strong) id target;
-@property (nonatomic, assign) SEL selector;
-@property (nonatomic,assign,readwrite) LWImageContainerType imageContainerType;
+@property (nonatomic,copy) NSArray<LWTextStorage *>* textStorages;
+@property (nonatomic,copy) NSArray<LWImageStorage *>* imageStorages;
 
-@end
+- (id)initWithTextStorages:(NSArray<LWTextStorage *>*)textStorages
+             imageStorages:(NSArray<LWImageStorage *>*)imageStorages;
 
-@implementation LWImageStorage
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        self.type = LWImageStorageLocalImage;
-        self.imageContainerType = LWImageContainerTypeCALayer;
-        self.image = nil;
-        self.URL = nil;
-        self.frame = CGRectZero;
-        self.contentMode = kCAGravityResizeAspect;
-        self.masksToBounds = YES;
-        self.placeholder = nil;
-        self.fadeShow = NO;
-    }
-    return self;
-}
-
-- (void)addtarget:(id)target action:(SEL)selector {
-    if (!target || !selector) {
-        return;
-    }
-    self.target = target;
-    self.selector = selector;
-    self.imageContainerType = LWImageContainerTypeUIImageView;
-}
 
 @end
