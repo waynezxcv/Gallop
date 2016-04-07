@@ -8,16 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "LWConstraint.h"
-#import "LWStorage.h"
 
-
-typedef LWConstraint* (^MarginToStorage)(LWStorage* storage, CGFloat value);
 
 @interface LWStorage(Constraint)
 
-@property (nonatomic, copy, readonly) MarginToStorage leftMargin;
-@property (nonatomic, copy, readonly) MarginToStorage rightMargin;
-@property (nonatomic, copy, readonly) MarginToStorage topMargin;
-@property (nonatomic, copy, readonly) MarginToStorage bottomMargin;
+- (LWConstraint *)constraint;
+
+- (void)autoLayout;
+
+@property (nonatomic,strong) LWConstraint* cacheConstraint;
 
 @end

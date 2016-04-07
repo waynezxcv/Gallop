@@ -169,12 +169,17 @@ const CGFloat kRefreshBoundary = 170.0f;
     avatarStorage.type = LWImageStorageWebImage;
     avatarStorage.URL = statusModel.avatar;
     avatarStorage.frame = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
-
-
-
-
-
-
+    
+    
+    //TODO:auotoLayout
+    avatarStorage.constraint
+    .leftMargin(avatarStorage,20)
+    .rightMargin(avatarStorage,20)
+    .topMargin(avatarStorage,20)
+    .bottomMargin(avatarStorage,20);
+    
+    [avatarStorage autoLayout];
+    
     //nameTextStorage
     LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
     nameTextStorage.text = statusModel.name;
@@ -213,10 +218,10 @@ const CGFloat kRefreshBoundary = 170.0f;
                                       60.0f + contentTextStorage.height + (row * 85.0f),
                                       80.0f,
                                       80.0f);
-
+        
         NSString* imagePositionString = NSStringFromCGRect(imageRect);
         [imagePositionArray addObject:imagePositionString];
-
+        
         LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
         imageStorage.frame = imageRect;
         NSString* URLString = [statusModel.imgs objectAtIndex:i];
@@ -265,13 +270,13 @@ const CGFloat kRefreshBoundary = 170.0f;
                                           linkColor:RGB(113, 129, 161, 1)
                                      highLightColor:[UIColor grayColor]
                                      UnderLineStyle:NSUnderlineStyleNone];
-
+                
                 [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"to"]]
                                             inRange:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
                                           linkColor:RGB(113, 129, 161, 1)
                                      highLightColor:[UIColor grayColor]
                                      UnderLineStyle:NSUnderlineStyleNone];
-
+                
                 [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
                 [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                 linkColor:RGB(113, 129, 161, 1)

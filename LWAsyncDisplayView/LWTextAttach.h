@@ -17,7 +17,6 @@
 //  See LICENSE for this sample’s licensing information
 //
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 @interface LWTextAttach : NSObject
