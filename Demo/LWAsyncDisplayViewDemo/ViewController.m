@@ -59,10 +59,10 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 #pragma mark - Actions
 
-///**
-// *  点击图片
-// *
-// */
+/**
+ *  点击图片
+ *
+ */
 - (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index {
     NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:layout.imagePostionArray.count];
     for (NSInteger i = 0; i < layout.imagePostionArray.count; i ++) {

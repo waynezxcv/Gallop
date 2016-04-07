@@ -32,7 +32,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 @property (nonatomic,assign) LWAsyncDisplayViewState state;
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
-@property (nonatomic,strong) NSMutableArray* subLayers;
+@property (nonatomic,strong) NSMutableArray* imageContainers;
 
 @end
 
@@ -106,22 +106,22 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (void)_resetImagesIfNeed {
     if (self.isNeedResetImages) {
-        if (self.subLayers.count > self.layout.imageStorages.count) {
-            NSInteger delta = self.subLayers.count - self.layout.imageStorages.count;
+        if (self.imageContainers.count > self.layout.imageStorages.count) {
+            NSInteger delta = self.imageContainers.count - self.layout.imageStorages.count;
             for (NSInteger i = 0 ; i < delta; i ++) {
-                CALayer* subLayer = [self.subLayers lastObject];
+                CALayer* subLayer = [self.imageContainers lastObject];
                 [subLayer removeFromSuperlayer];
-                [self.subLayers removeLastObject];
+                [self.imageContainers removeLastObject];
             }
         } else {
-            NSInteger delta = self.layout.imageStorages.count - self.subLayers.count;
+            NSInteger delta = self.layout.imageStorages.count - self.imageContainers.count;
             for (NSInteger i = 0; i < delta; i ++) {
                 CALayer* subLayer = [CALayer layer];
                 subLayer.contentsGravity = kCAGravityResizeAspectFill;
                 subLayer.contentsScale = [UIScreen mainScreen].scale;
                 subLayer.masksToBounds = YES;
                 [self.layer addSublayer:subLayer];
-                [self.subLayers addObject:subLayer];
+                [self.imageContainers addObject:subLayer];
             }
         }
     }
@@ -131,7 +131,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 - (void)_setupImages {
     for (NSInteger i = 0; i < self.layout.imageStorages.count; i++) {
         LWImageStorage* imageStorage = self.layout.imageStorages[i];
-        CALayer* subLayer = self.subLayers[i];
+        CALayer* subLayer = self.imageContainers[i];
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         subLayer.frame = imageStorage.boundsRect;
@@ -170,7 +170,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 #pragma mark - Setter & Getter
 
 - (BOOL)isNeedResetImages {
-    if (self.subLayers.count == self.layout.imageStorages.count) {
+    if (self.imageContainers.count == self.layout.imageStorages.count) {
         return NO;
     }
     return YES;
@@ -178,21 +178,21 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {
-        _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                        action:@selector(_didSingleTapThisView:)];
+        _tapGestureRecognizer = [[UITapGestureRecognizer alloc]
+                                 initWithTarget:self
+                                 action:@selector(_didSingleTapThisView:)];
         _tapGestureRecognizer.delegate = self;
     }
     return _tapGestureRecognizer;
 }
 
-- (NSMutableArray *)subLayers {
-    if (_subLayers) {
-        return _subLayers;
+- (NSMutableArray *)imageContainers {
+    if (_imageContainers) {
+        return _imageContainers;
     }
-    _subLayers = [[NSMutableArray alloc] init];
-    return _subLayers;
+    _imageContainers = [[NSMutableArray alloc] init];
+    return _imageContainers;
 }
-
 
 #pragma mark - LWAsyncDisplayLayerDelegate
 

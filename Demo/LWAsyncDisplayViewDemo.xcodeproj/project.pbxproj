@@ -49,6 +49,8 @@
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
 		B00257961CB65817008700D5 /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B00257951CB65817008700D5 /* CellLayout.m */; };
+		B00257991CB6683D008700D5 /* LWConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = B00257981CB6683D008700D5 /* LWConstraint.m */; };
+		B002579C1CB668BF008700D5 /* LWConstraintManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B002579B1CB668BF008700D5 /* LWConstraintManager.m */; };
 		B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */; };
 		B0D980371CB392D7006D0071 /* StatusModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D980361CB392D7006D0071 /* StatusModel.m */; };
 		B0D9EB3A1CB0F435009FDCCF /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB141CB0F435009FDCCF /* CALayer+WebCache.m */; };
@@ -144,6 +146,10 @@
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B00257941CB65817008700D5 /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
 		B00257951CB65817008700D5 /* CellLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellLayout.m; sourceTree = "<group>"; };
+		B00257971CB6683D008700D5 /* LWConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWConstraint.h; sourceTree = "<group>"; };
+		B00257981CB6683D008700D5 /* LWConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWConstraint.m; sourceTree = "<group>"; };
+		B002579A1CB668BF008700D5 /* LWConstraintManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWConstraintManager.h; sourceTree = "<group>"; };
+		B002579B1CB668BF008700D5 /* LWConstraintManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWConstraintManager.m; sourceTree = "<group>"; };
 		B0C503EA1CAE4FC300B6D3FB /* LWAlchemyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyManager.h; path = ../LWAlchemy/LWAlchemyManager.h; sourceTree = "<group>"; };
 		B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyManager.m; path = ../LWAlchemy/LWAlchemyManager.m; sourceTree = "<group>"; };
 		B0D980351CB392D7006D0071 /* StatusModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusModel.h; sourceTree = "<group>"; };
@@ -250,6 +256,10 @@
 			children = (
 				01DA27371CB58E74004179AB /* LWLayout.h */,
 				01DA27381CB58E74004179AB /* LWLayout.m */,
+				B002579A1CB668BF008700D5 /* LWConstraintManager.h */,
+				B002579B1CB668BF008700D5 /* LWConstraintManager.m */,
+				B00257971CB6683D008700D5 /* LWConstraint.h */,
+				B00257981CB6683D008700D5 /* LWConstraint.m */,
 				01DA27341CB58AC3004179AB /* LWImageStorage.h */,
 				01DA27351CB58AC3004179AB /* LWImageStorage.m */,
 				017F67491C98A04F00309E92 /* LWTextStorage.h */,
@@ -494,8 +504,10 @@
 				B0D9EB431CB0F435009FDCCF /* SDWebImageDownloaderOperation.m in Sources */,
 				011DFA5C1C9880D2000410D7 /* LWImageItem.m in Sources */,
 				017F67321C988BB700309E92 /* TableViewCell.m in Sources */,
+				B00257991CB6683D008700D5 /* LWConstraint.m in Sources */,
 				01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */,
 				01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */,
+				B002579C1CB668BF008700D5 /* LWConstraintManager.m in Sources */,
 				017F67381C988C5800309E92 /* TableViewHeader.m in Sources */,
 				017F67541C98A04F00309E92 /* LWTextAttach.m in Sources */,
 				B0D9EB4C1CB0F436009FDCCF /* UIView+WebCacheOperation.m in Sources */,
