@@ -1,5 +1,5 @@
 //
-//  LWAutoLayout.h
+//  LWConstraint.h
 //  LWAsyncDisplayViewDemo
 //
 //  Created by 刘微 on 16/4/7.
@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LWAutoLayout : NSObject
 
-//TODO:
+@interface LWConstraint : NSObject
 
 
 @end

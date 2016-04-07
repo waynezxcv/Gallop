@@ -17,15 +17,15 @@
 //  See LICENSE for this sample’s licensing information
 //
 #import <Foundation/Foundation.h>
-#import "LWTextStorage.h"
-#import "LWImageStorage.h"
-
+#import "LWLayout.h"
 
 @class LWAsyncDisplayView;
 
 @protocol LWAsyncDisplayViewDelegate <NSObject>
 
 @optional
+
+
 /**
  *  点击链接回调
  *
@@ -40,16 +40,14 @@
 
 @end
 
-/**
- *  LWLabel 支持属性文本、图文混排、点击链接、异步绘制。
- */
 @interface LWAsyncDisplayView : UIView
+
 
 @property (nonatomic,weak) id <LWAsyncDisplayViewDelegate> delegate;
 
 /**
- *  存放文字排版的数组
+ *  数据源
  */
-@property (nonatomic,copy) NSArray* storages;
+@property (nonatomic,copy) LWLayout* layout;
 
 @end

@@ -138,20 +138,13 @@
                                          progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                         completed:(SDWebImageCompletionBlock)completedBlock;
 
-
-
-- (void)sd_setImageWithPreviousCachedImageWithURL:(NSURL *)url
-                                 placeholderImage:(UIImage *)placeholder
-                                          options:(SDWebImageOptions)options
-                                         progress:(SDWebImageDownloaderProgressBlock)progressBlock
-                                        completed:(SDWebImageCompletionBlock)completedBlock;
-
-
-
 /**
  * Cancel the current download
  */
 - (void)sd_cancelCurrentImageLoad;
+
+
+- (void)delaySetContents:(id)contents;
 
 
 @end

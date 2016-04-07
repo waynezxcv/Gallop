@@ -18,11 +18,10 @@
 //
 
 
-#import <Foundation/Foundation.h>
-#import <CoreText/CoreText.h>
 #import <UIKit/UIKit.h>
+#import <CoreText/CoreText.h>
 #import "LWTextAttach.h"
-
+#import "LWStorage.h"
 
 
 /**
@@ -44,7 +43,7 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 };
 
 
-@interface LWTextStorage : NSObject
+@interface LWTextStorage : LWStorage
 
 /**
  *  文本内容，默认为nil
@@ -104,29 +103,7 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 /**
  *  ctFrameRef
  */
-@property (nonatomic,assign) CTFrameRef frame;
-
-/**
- * 文字绘制范围
- */
-@property (nonatomic,assign) CGRect boundsRect;
-
-/**
- *  文字高度
- */
-@property (nonatomic,assign,readonly) CGFloat textHeight;
-
-/**
- *  文字宽度
- *
- */
-@property (nonatomic,assign,readonly) CGFloat textWidth;
-
-
-@property (nonatomic,assign,readonly) CGFloat left;
-@property (nonatomic,assign,readonly) CGFloat right;
-@property (nonatomic,assign,readonly) CGFloat top;
-@property (nonatomic,assign,readonly) CGFloat bottom;
+@property (nonatomic,assign) CTFrameRef CTFrame;
 
 
 /**
@@ -167,11 +144,12 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  */
 - (void)replaceTextWithImage:(UIImage *)image inRange:(NSRange)range;
 
+//TODO：
 /**
  *  用网络图片替换掉指定位置的文字
  *
  */
-- (void)replaceTextWithImageURL:(NSURL *)URL inRange:(NSRange)range;
+//- (void)replaceTextWithImageURL:(NSURL *)URL inRange:(NSRange)range;
 
 
 #define kLWTextLinkAttributedName @"LWTextLinkAttributedName"

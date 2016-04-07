@@ -9,7 +9,7 @@
 #import "UIImageView+WebCache.h"
 #import "objc/runtime.h"
 #import "UIView+WebCacheOperation.h"
-#import "RunLoopTransactions.h"
+#import "LWRunLoopTransactions.h"
 
 static char imageURLKey;
 static char TAG_ACTIVITY_INDICATOR;
@@ -215,7 +215,7 @@ static char TAG_ACTIVITY_SHOW;
 
 
 - (void)delaySetImage:(UIImage *)image {
-    RunLoopTransactions* transactions = [RunLoopTransactions
+    LWRunLoopTransactions* transactions = [LWRunLoopTransactions
                                          transactionsWithTarget:self
                                          selector:@selector(setImage:)
                                          object:image];

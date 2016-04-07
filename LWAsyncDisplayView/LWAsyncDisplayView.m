@@ -18,8 +18,8 @@
 
 #import "LWAsyncDisplayView.h"
 #import "LWAsyncDisplayLayer.h"
-#import "LWRunLoopObserver.h"
-
+#import "LWRunLoopTransactions.h"
+#import "CALayer+WebCache.h"
 
 typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     LWAsyncDisplayViewStateNeedLayout,
@@ -32,7 +32,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 @property (nonatomic,assign) LWAsyncDisplayViewState state;
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
-@property (nonatomic,strong) NSMutableArray* imageLayers;
+@property (nonatomic,strong) NSMutableArray* imageContainers;
 
 @end
 
@@ -40,8 +40,6 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 @implementation LWAsyncDisplayView
 
 #pragma mark - Initialization
-
-
 /**
  *  “default is [CALayer class].
  *  Used when creating the underlying layer for the view.”
@@ -77,6 +75,15 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 #pragma mark - Layout & Display
 
+- (void)setLayout:(LWLayout *)layout {
+    if (_layout == layout) {
+        return;
+    }
+    _layout = layout;
+    [self _resetImagesIfNeed];
+    [self _displayIfNeed];
+}
+
 - (void)setFrame:(CGRect)frame {
     CGSize oldSize = self.bounds.size;
     CGSize newSize = frame.size;
@@ -97,23 +104,61 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     [self _displayIfNeed];
 }
 
-
-- (void)setStorages:(NSArray *)storages {
-    if (_storages && [_storages isEqualToArray:storages]) {
-        return;
-    }
-    _storages = [storages copy];
-    for (id storage in storages) {
-        if ([storage isKindOfClass:[LWImageStorage class]] ) {
-            LWImageStorage* imageStorage = (LWImageStorage *)storage;
-            if (imageStorage.type == LWImageStorageWebImage) {
-                //TODO:
+- (void)_resetImagesIfNeed {
+    if (self.isNeedResetImages) {
+        if (self.imageContainers.count > self.layout.imageStorages.count) {
+            NSInteger delta = self.imageContainers.count - self.layout.imageStorages.count;
+            for (NSInteger i = 0 ; i < delta; i ++) {
+                CALayer* subLayer = [self.imageContainers lastObject];
+                [subLayer removeFromSuperlayer];
+                [self.imageContainers removeLastObject];
+            }
+        } else {
+            NSInteger delta = self.layout.imageStorages.count - self.imageContainers.count;
+            for (NSInteger i = 0; i < delta; i ++) {
+                CALayer* subLayer = [CALayer layer];
+                subLayer.contentsGravity = kCAGravityResizeAspectFill;
+                subLayer.contentsScale = [UIScreen mainScreen].scale;
+                subLayer.masksToBounds = YES;
+                [self.layer addSublayer:subLayer];
+                [self.imageContainers addObject:subLayer];
             }
         }
     }
-    [self _displayIfNeed];
+    [self _setupImages];
 }
 
+- (void)_setupImages {
+    for (NSInteger i = 0; i < self.layout.imageStorages.count; i++) {
+        LWImageStorage* imageStorage = self.layout.imageStorages[i];
+        CALayer* subLayer = self.imageContainers[i];
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        subLayer.frame = imageStorage.frame;
+        [CATransaction commit];
+        if (imageStorage.type == LWImageStorageWebImage) {
+            [subLayer sd_setImageWithURL:imageStorage.URL
+                        placeholderImage:imageStorage.placeholder
+                                 options:0
+                               completed:^(UIImage *image,
+                                           NSError *error,
+                                           SDImageCacheType
+                                           cacheType,
+                                           NSURL *imageURL) {
+                                   if (imageStorage.fadeShow) {
+                                       CATransition *transition = [CATransition animation];
+                                       transition.duration = 0.2;
+                                       transition.timingFunction = [CAMediaTimingFunction
+                                                                    functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                                       transition.type = kCATransitionFade;
+                                       [subLayer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
+                                   }
+                               }];
+        } else {
+            [subLayer setContents:(__bridge id)imageStorage.image.CGImage];
+        }
+    }
+}
 
 - (void)_displayIfNeed {
     if (self.state == LWAsyncDisplayViewStateNeedDisplay) {
@@ -124,21 +169,29 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 #pragma mark - Setter & Getter
 
+- (BOOL)isNeedResetImages {
+    if (self.imageContainers.count == self.layout.imageStorages.count) {
+        return NO;
+    }
+    return YES;
+}
+
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {
-        _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                        action:@selector(_didSingleTapThisView:)];
+        _tapGestureRecognizer = [[UITapGestureRecognizer alloc]
+                                 initWithTarget:self
+                                 action:@selector(_didSingleTapThisView:)];
         _tapGestureRecognizer.delegate = self;
     }
     return _tapGestureRecognizer;
 }
 
-- (NSMutableArray *)imageLayers {
-    if (_imageLayers) {
-        return _imageLayers;
+- (NSMutableArray *)imageContainers {
+    if (_imageContainers) {
+        return _imageContainers;
     }
-    _imageLayers = [[NSMutableArray alloc] init];
-    return _imageLayers;
+    _imageContainers = [[NSMutableArray alloc] init];
+    return _imageContainers;
 }
 
 #pragma mark - LWAsyncDisplayLayerDelegate
@@ -159,7 +212,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
         [self.delegate extraAsyncDisplayIncontext:context size:size];
     }
-    for (LWTextStorage* textStorage in self.storages) {
+    for (LWTextStorage* textStorage in self.layout.textStorages) {
         [textStorage drawInContext:context];
     }
 }
@@ -174,50 +227,52 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
-    for (LWTextStorage* layout in self.storages) {
-        if (layout == nil) {
+    for (LWTextStorage* textStorage in self.layout.textStorages) {
+        if (textStorage == nil) {
             continue;
         }
-        CTFrameRef textFrame = layout.frame;
-        if (textFrame == NULL) {
-            continue;
-        }
-        CFArrayRef lines = CTFrameGetLines(textFrame);
-        CGPoint origins[CFArrayGetCount(lines)];
-        CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
-        CGPathRef path = CTFrameGetPath(textFrame);
-        CGRect boundsRect = CGPathGetBoundingBox(path);
-        CGAffineTransform transform = CGAffineTransformIdentity;
-        transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
-        transform = CGAffineTransformScale(transform, 1.f, -1.f);
-        for (int i= 0; i < CFArrayGetCount(lines); i++) {
-            CGPoint linePoint = origins[i];
-            CTLineRef line = CFArrayGetValueAtIndex(lines, i);
-            CGRect flippedRect = [self _getLineBounds:line point:linePoint];
-            CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-            
-            CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
-                                           rect.origin.y + boundsRect.origin.y,
-                                           rect.size.width,
-                                           rect.size.height);
-            
-            if (CGRectContainsPoint(adjustRect, touchPoint)) {
-                CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
-                                                    touchPoint.y - CGRectGetMinY(adjustRect));
-                CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
-                CTRunRef touchedRun;
-                NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
-                for (NSInteger i = 0; i < runObjArray.count; i ++) {
-                    CTRunRef runObj = (__bridge CTRunRef)[runObjArray objectAtIndex:i];
-                    CFRange range = CTRunGetStringRange((CTRunRef)runObj);
-                    if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
-                        touchedRun = runObj;
-                        NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
-                        if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
-                            if ([self.delegate respondsToSelector:@selector(lwAsyncDicsPlayView:didCilickedLinkWithfData:)] &&
-                                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
-                                [self.delegate lwAsyncDicsPlayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
-                                break;
+        if ([textStorage isKindOfClass:[LWTextStorage class]]) {
+            CTFrameRef textFrame = textStorage.CTFrame;
+            if (textFrame == NULL) {
+                continue;
+            }
+            CFArrayRef lines = CTFrameGetLines(textFrame);
+            CGPoint origins[CFArrayGetCount(lines)];
+            CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
+            CGPathRef path = CTFrameGetPath(textFrame);
+            CGRect boundsRect = CGPathGetBoundingBox(path);
+            CGAffineTransform transform = CGAffineTransformIdentity;
+            transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
+            transform = CGAffineTransformScale(transform, 1.f, -1.f);
+            for (int i= 0; i < CFArrayGetCount(lines); i++) {
+                CGPoint linePoint = origins[i];
+                CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+                CGRect flippedRect = [self _getLineBounds:line point:linePoint];
+                CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
+
+                CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                               rect.origin.y + boundsRect.origin.y,
+                                               rect.size.width,
+                                               rect.size.height);
+
+                if (CGRectContainsPoint(adjustRect, touchPoint)) {
+                    CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
+                                                        touchPoint.y - CGRectGetMinY(adjustRect));
+                    CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
+                    CTRunRef touchedRun;
+                    NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
+                    for (NSInteger i = 0; i < runObjArray.count; i ++) {
+                        CTRunRef runObj = (__bridge CTRunRef)[runObjArray objectAtIndex:i];
+                        CFRange range = CTRunGetStringRange((CTRunRef)runObj);
+                        if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
+                            touchedRun = runObj;
+                            NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
+                            if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
+                                if ([self.delegate respondsToSelector:@selector(lwAsyncDicsPlayView:didCilickedLinkWithfData:)] &&
+                                    [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
+                                    [self.delegate lwAsyncDicsPlayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
+                                    break;
+                                }
                             }
                         }
                     }
@@ -237,7 +292,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 }
 
 - (void)_layout:(LWTextStorage *)layout drawHighLightWithAttach:(LWTextAttach *)attach {
-    
+
 }
 
 #pragma mark - UIGestrueRecognizer

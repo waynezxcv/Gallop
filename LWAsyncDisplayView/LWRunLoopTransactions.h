@@ -8,15 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RunLoopTransactions : NSObject
+@interface LWRunLoopTransactions : NSObject
 
 /**
  *  To add a transaction to NSSet,only when the mainrunloop into idle state to perform
  */
-+ (RunLoopTransactions *)transactionsWithTarget:(id)target
++ (LWRunLoopTransactions *)transactionsWithTarget:(id)target
                                        selector:(SEL)selector
                                          object:(id)object;
-
 
 - (void)commit;
 

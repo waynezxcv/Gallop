@@ -7,18 +7,12 @@
 //
 
 #import "TableViewCell.h"
-#import "LWAsyncDisplayView.h"
 #import "LWDefine.h"
-#import "LWRunLoopObserver.h"
-#import "CALayer+WebCache.h"
 
 
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate>
 
-@property (nonatomic,strong) CALayer* avatarLayer;
-@property (nonatomic,strong) NSMutableArray* imageLayers;
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
-@property (nonatomic,assign,getter=isNeedLayoutImageViews) BOOL needLayoutImageViews;
 
 @end
 
@@ -29,12 +23,10 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.needLayoutImageViews = NO;
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
-        [self.asyncDisplayView.layer addSublayer:self.avatarLayer];
-        [self.asyncDisplayView addGestureRecognizer:[[UITapGestureRecognizer alloc]
-                                                     initWithTarget:self action:@selector(didClickedImageView:)]];
+        [self.asyncDisplayView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                            action:@selector(didClickedImageView:)]];
     }
     return self;
 }
@@ -47,12 +39,12 @@
  */
 - (void)didClickedImageView:(UITapGestureRecognizer *)tap {
     CGPoint point = [tap locationInView:self];
-    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        CGRect imagePosition = CGRectFromString(self.layout.imagePostionArray[i]);
+    for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
+        CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
         if (CGRectContainsPoint(imagePosition, point)) {
             if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedImageWithCellLayout:atIndex:)] &&
                 [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-                [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.layout atIndex:i];
+                [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.cellLayout atIndex:i];
             }
         }
     }
@@ -71,15 +63,12 @@
 
 #pragma mark - Draw and setup
 
-- (void)setLayout:(CellLayout *)layout {
-    if (_layout == layout) {
+- (void)setCellLayout:(CellLayout *)cellLayout {
+    if (_cellLayout == cellLayout) {
         return;
     }
-    if (_layout.imagePostionArray.count != layout.imagePostionArray.count) {
-        self.needLayoutImageViews = YES;
-    }
-    _layout = layout;
-    [self setupCell];
+    _cellLayout = cellLayout;
+    self.asyncDisplayView.layout = cellLayout;
 }
 
 - (void)layoutSubviews {
@@ -88,55 +77,23 @@
 }
 
 - (void)_layoutSubViews {
-    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.layout.cellHeight);
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];//设置是否启动隐式动画
-    self.avatarLayer.frame = self.layout.avatarPosition;
-    if (self.isNeedLayoutImageViews) {
-        [self resetImageLayers];
-    }
-    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
-        imageLayer.frame = CGRectFromString([self.layout.imagePostionArray objectAtIndex:i]);
-        imageLayer.hidden = NO;
-    }
-    [CATransaction commit];
-}
-
-- (void)setupCell {
-    [self.avatarLayer sd_setImageWithURL:self.layout.statusModel.avatar
-                        placeholderImage:nil
-                                 options:0];
-    NSMutableArray* layouts = [[NSMutableArray alloc] init];
-    [layouts addObject:self.layout.nameTextLayout];
-    [layouts addObject:self.layout.contentTextLayout];
-    [layouts addObject:self.layout.dateTextLayout];
-    [layouts addObjectsFromArray:self.layout.commentTextLayouts];
-    self.asyncDisplayView.storages = layouts;
-    [self setupImages];
+    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.cellLayout.cellHeight);
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size {
-    //绘制头像外框
-    CGContextAddRect(context,self.layout.avatarPosition);
+    //绘制分割线
     CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
     CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
     CGContextSetLineWidth(context, 0.3f);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextStrokePath(context);
-    //绘制图片背景
-    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        CGContextAddRect(context, CGRectFromString(self.layout.imagePostionArray[i]));
-        CGContextSetFillColorWithColor(context, [UIColor grayColor].CGColor);
-        CGContextFillPath(context);
-    }
     //绘制菜单按钮
-    [self _drawImage:[UIImage imageNamed:@"menu"] rect:_layout.menuPosition context:context];
+    [self _drawImage:[UIImage imageNamed:@"menu"] rect:self.cellLayout.menuPosition context:context];
     //绘制评论背景
     UIImage*commentBgImage = [[UIImage imageNamed:@"comment"]
                               stretchableImageWithLeftCapWidth:40.0f
                               topCapHeight:15.0f];
-    [commentBgImage drawInRect:self.layout.commentBgPosition];
+    [commentBgImage drawInRect:self.cellLayout.commentBgPosition];
 }
 
 - (void)_drawImage:(UIImage *)image rect:(CGRect)rect context:(CGContextRef)context {
@@ -149,23 +106,6 @@
     CGContextRestoreGState(context);
 }
 
-- (void)resetImageLayers {
-    for (NSInteger i = 0; i < 9; i ++) {
-        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
-        imageLayer.hidden = YES;
-    }
-}
-
-- (void)setupImages {
-    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
-        NSString* img = [self.layout.statusModel.imgs objectAtIndex:i];
-        [imageLayer sd_setImageWithURL:[NSURL URLWithString:img]
-                      placeholderImage:nil
-                               options:SDWebImageDelaySetContents];
-    }
-}
-
 #pragma mark - Getter
 
 - (LWAsyncDisplayView *)asyncDisplayView {
@@ -176,30 +116,5 @@
     return _asyncDisplayView;
 }
 
-- (NSMutableArray *)imageLayers {
-    if (_imageLayers) {
-        return _imageLayers;
-    }
-    _imageLayers = [[NSMutableArray alloc] initWithCapacity:9];
-    for (NSInteger i = 0; i < 9; i ++) {
-        CALayer* imageLayer = [CALayer layer];
-        imageLayer.contentsScale = [UIScreen mainScreen].scale;
-        imageLayer.contentsGravity = kCAGravityResizeAspectFill;
-        imageLayer.masksToBounds = YES;
-        [self.asyncDisplayView.layer addSublayer:imageLayer];
-        [_imageLayers addObject:imageLayer];
-    }
-    return _imageLayers ;
-}
-
-- (CALayer *)avatarLayer {
-    if (_avatarLayer) {
-        return _avatarLayer;
-    }
-    _avatarLayer = [CALayer layer];
-    _avatarLayer.contentsScale = [UIScreen mainScreen].scale;
-    _avatarLayer.contentsGravity = kCAGravityResizeAspect;
-    return _avatarLayer;
-}
 
 @end

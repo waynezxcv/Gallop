@@ -11,9 +11,11 @@
 #import "TableViewCell.h"
 #import "TableViewHeader.h"
 #import "LWDefine.h"
-#import "CellLayout.h"
 #import "LWAlchemy.h"
 #import "StatusModel.h"
+#import "LWTextParser.h"
+#import "CellLayout.h"
+#import "LWStorage+Constraint.h"
 
 
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
@@ -22,7 +24,7 @@
 @property (nonatomic,strong) TableViewHeader* tableViewHeader;
 @property (nonatomic,strong) UITableView* tableView;
 @property (nonatomic,strong) NSMutableArray* dataSource;
-@property (nonatomic,assign,getter=isNeedRefresh) BOOL needRefresh;
+@property (nonatomic,assign,getter = isNeedRefresh) BOOL needRefresh;
 
 @end
 
@@ -64,7 +66,7 @@ const CGFloat kRefreshBoundary = 170.0f;
  */
 - (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index {
     NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:layout.imagePostionArray.count];
-    for (NSInteger i = 0; i < layout.statusModel.imgs.count; i ++) {
+    for (NSInteger i = 0; i < layout.imagePostionArray.count; i ++) {
         LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
                                                                               thumbnailURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
                                                                                      HDURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
@@ -107,13 +109,13 @@ const CGFloat kRefreshBoundary = 170.0f;
     cell.delegate = self;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     CellLayout* cellLayout = self.dataSource[indexPath.row];
-    cell.layout = cellLayout;
+    cell.cellLayout = cellLayout;
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CellLayout* cellLayout = self.dataSource[indexPath.row];
-    return cellLayout.cellHeight;
+    CellLayout* layout = self.dataSource[indexPath.row];
+    return layout.cellHeight;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -145,10 +147,8 @@ const CGFloat kRefreshBoundary = 170.0f;
         [self.dataSource removeAllObjects];
         for (NSInteger i = 0; i < self.fakeDatasource.count; i ++) {
             StatusModel* statusModel = [StatusModel modelWithJSON:self.fakeDatasource[i]];
-            CellLayout* cellLayout = [[CellLayout alloc]
-                                      initWithCDStatusModel:statusModel];
-            [self.dataSource addObject:cellLayout];
-
+            LWLayout* layout = [self layoutWithStatusModel:statusModel];
+            [self.dataSource addObject:layout];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.dataSource addObjectsFromArray:self.dataSource];
@@ -156,6 +156,177 @@ const CGFloat kRefreshBoundary = 170.0f;
         });
     });
 }
+
+/****************************************************************************/
+/**
+ *  在这里生成LWAsyncDisplayView的模型。
+ */
+/****************************************************************************/
+
+- (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel {
+    //avatarImageStorage
+    LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
+    avatarStorage.type = LWImageStorageWebImage;
+    avatarStorage.URL = statusModel.avatar;
+    avatarStorage.frame = CGRectMake(10.0f, 20.0f,40.0f, 40.0f);
+
+
+
+
+
+
+    //nameTextStorage
+    LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
+    nameTextStorage.text = statusModel.name;
+    nameTextStorage.font = [UIFont systemFontOfSize:15.0f];
+    nameTextStorage.textAlignment = NSTextAlignmentLeft;
+    nameTextStorage.linespace = 2.0f;
+    nameTextStorage.textColor = RGB(113, 129, 161, 1);
+    nameTextStorage.frame = CGRectMake(60, 20, SCREEN_WIDTH, 20);
+    [nameTextStorage creatCTFrameRef];
+    [nameTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",statusModel.name]
+                             inRange:NSMakeRange(0,statusModel.name.length)
+                           linkColor:nil
+                      highLightColor:[UIColor grayColor]
+                      UnderLineStyle:NSUnderlineStyleNone];
+    //contentTextStorage
+    LWTextStorage* contentTextStorage = [[LWTextStorage alloc] init];
+    contentTextStorage.text = statusModel.content;
+    contentTextStorage.font = [UIFont systemFontOfSize:15.0f];
+    contentTextStorage.textColor = RGB(40, 40, 40, 1);
+    contentTextStorage.frame = CGRectMake(60.0f,nameTextStorage.bottom,SCREEN_WIDTH - 80.0f,MAXFLOAT);
+    contentTextStorage.linespace = 2.0f;
+    [contentTextStorage creatCTFrameRef];
+    [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
+    [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
+                                    linkColor:RGB(113, 129, 161, 1)
+                               highlightColor:nil
+                               underlineStyle:NSUnderlineStyleNone];
+    //imgsStorage
+    NSInteger imageCount = [statusModel.imgs count];
+    NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
+    NSMutableArray* imagePositionArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
+    NSInteger row = 0;
+    NSInteger column = 0;
+    for (NSInteger i = 0; i < statusModel.imgs.count; i ++) {
+        CGRect imageRect = CGRectMake(60.0f + (column * 85.0f),
+                                      60.0f + contentTextStorage.height + (row * 85.0f),
+                                      80.0f,
+                                      80.0f);
+
+        NSString* imagePositionString = NSStringFromCGRect(imageRect);
+        [imagePositionArray addObject:imagePositionString];
+
+        LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+        imageStorage.frame = imageRect;
+        NSString* URLString = [statusModel.imgs objectAtIndex:i];
+        imageStorage.URL = [NSURL URLWithString:URLString];
+        imageStorage.type = LWImageStorageWebImage;
+        imageStorage.fadeShow = YES;
+        [imageStorageArray addObject:imageStorage];
+        column = column + 1;
+        if (column > 2) {
+            column = 0;
+            row = row + 1;
+        }
+    }
+    CGFloat imagesHeight = 0.0f;
+    row < 3 ? (imagesHeight = (row + 1) * 85.0f):(imagesHeight = row  * 85.0f);
+    //timeStamp
+    LWTextStorage* dateTextStorage = [[LWTextStorage alloc] init];
+    dateTextStorage.text = [[self dateFormatter] stringFromDate:statusModel.date];
+    dateTextStorage.font = [UIFont systemFontOfSize:13.0f];
+    dateTextStorage.textColor = [UIColor grayColor];
+    dateTextStorage.frame = CGRectMake(60, 20.0f + imagesHeight + contentTextStorage.bottom,SCREEN_WIDTH - 80,20.0f);
+    [dateTextStorage creatCTFrameRef];
+    //menu
+    CGRect menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,20.0f + imagesHeight + contentTextStorage.bottom,20.0f,15.0f);
+    //comment
+    NSArray* commentTextStorages = @[];
+    CGRect commentBgPosition = CGRectZero;
+    CGRect rect = CGRectMake(60.0f,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, 20);
+    CGFloat offsetY = 0.0f;
+    if (statusModel.commentList.count != 0 && statusModel.commentList != nil) {
+        NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:statusModel.commentList.count];
+        for (NSDictionary* commentDict in statusModel.commentList) {
+            NSString* to = commentDict[@"to"];
+            if (to.length != 0) {
+                NSString* commentString = [NSString stringWithFormat:@"%@回复%@:%@",commentDict[@"from"],commentDict[@"to"],commentDict[@"content"]];
+                LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
+                commentTextStorage.text = commentString;
+                commentTextStorage.font = [UIFont systemFontOfSize:14.0f];
+                commentTextStorage.textAlignment = NSTextAlignmentLeft;
+                commentTextStorage.linespace = 2.0f;
+                commentTextStorage.textColor = RGB(40, 40, 40, 1);
+                commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
+                [commentTextStorage creatCTFrameRef];
+                [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"from"]]
+                                            inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
+                                          linkColor:RGB(113, 129, 161, 1)
+                                     highLightColor:[UIColor grayColor]
+                                     UnderLineStyle:NSUnderlineStyleNone];
+
+                [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"to"]]
+                                            inRange:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
+                                          linkColor:RGB(113, 129, 161, 1)
+                                     highLightColor:[UIColor grayColor]
+                                     UnderLineStyle:NSUnderlineStyleNone];
+
+                [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
+                [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
+                                                linkColor:RGB(113, 129, 161, 1)
+                                           highlightColor:nil
+                                           underlineStyle:NSUnderlineStyleNone];
+                [tmp addObject:commentTextStorage];
+                offsetY += commentTextStorage.height;
+            } else {
+                NSString* commentString = [NSString stringWithFormat:@"%@:%@",commentDict[@"from"],commentDict[@"content"]];
+                LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
+                commentTextStorage.text = commentString;
+                commentTextStorage.font = [UIFont systemFontOfSize:14.0f];
+                commentTextStorage.textAlignment = NSTextAlignmentLeft;
+                commentTextStorage.linespace = 2.0f;
+                commentTextStorage.textColor = RGB(40, 40, 40, 1);
+                commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
+                [commentTextStorage creatCTFrameRef];
+                [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"from"]]
+                                            inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
+                                          linkColor:RGB(113, 129, 161, 1)
+                                     highLightColor:[UIColor grayColor]
+                                     UnderLineStyle:NSUnderlineStyleNone];
+                [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
+                [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
+                                                linkColor:RGB(113, 129, 161, 1)
+                                           highlightColor:nil
+                                           underlineStyle:NSUnderlineStyleNone];
+                [tmp addObject:commentTextStorage];
+                offsetY += commentTextStorage.height;
+            }
+        }
+        commentTextStorages = tmp;
+        commentBgPosition = CGRectMake(60.0f,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, offsetY + 15.0f);
+    }
+    /****************************************************************************/
+    NSMutableArray* textStorages = [[NSMutableArray alloc] init];
+    [textStorages addObject:nameTextStorage];
+    [textStorages addObject:contentTextStorage];
+    [textStorages addObject:dateTextStorage];
+    [textStorages addObjectsFromArray:commentTextStorages];
+    NSMutableArray* imageStorages = [[NSMutableArray alloc] init];
+    [imageStorages addObjectsFromArray:imageStorageArray];
+    [imageStorages addObject:avatarStorage];
+    //生成Layout
+    CellLayout* layout = [[CellLayout alloc] initWithTextStorages:textStorages imageStorages:imageStorages];
+    //一些其他属性
+    layout.menuPosition = menuPosition;
+    layout.commentBgPosition = commentBgPosition;
+    layout.cellHeight = dateTextStorage.bottom + commentBgPosition.size.height + 15.0f;
+    layout.imagePostionArray = imagePositionArray;
+    layout.statusModel = statusModel;
+    return layout;
+}
+
+/****************************************************************************/
 
 - (void)refreshComplete {
     [self.tableViewHeader refreshingAnimateStop];
@@ -194,6 +365,55 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
     return _dataSource;
 }
+
+
+- (NSDateFormatter *)dateFormatter {
+    static NSDateFormatter* dateFormatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"MM月dd日 hh:mm"];
+    });
+    return dateFormatter;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  *  模拟数据

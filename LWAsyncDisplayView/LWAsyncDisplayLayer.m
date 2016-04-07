@@ -20,7 +20,8 @@
 #import "LWAsyncDisplayLayer.h"
 #import <UIKit/UIKit.h>
 #import <libkern/OSAtomic.h>
-#import "CALayer+LazySetContents.h"
+#import "CALayer+WebCache.h"
+
 
 
 static dispatch_queue_t GetAsyncDisplayQueue() {
@@ -158,7 +159,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         }
         UIGraphicsEndImageContext();
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [self lazySetContent:(__bridge id)content];
+            [self delaySetContents:(__bridge id)content];
             if ([self.asyncDisplayDelegate respondsToSelector:@selector(didFinishAsyncDisplay:isFiniedsh:)]) {
                 [self.asyncDisplayDelegate didFinishAsyncDisplay:self isFiniedsh:YES];
             }
