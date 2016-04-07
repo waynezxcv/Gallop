@@ -36,11 +36,9 @@
 		017F67321C988BB700309E92 /* TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67311C988BB700309E92 /* TableViewCell.m */; };
 		017F67381C988C5800309E92 /* TableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67371C988C5800309E92 /* TableViewHeader.m */; };
 		017F673B1C988E1200309E92 /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F673A1C988E1200309E92 /* CellLayout.m */; };
-		017F674F1C98A04F00309E92 /* CALayer+LazySetContents.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F673E1C98A04F00309E92 /* CALayer+LazySetContents.m */; };
 		017F67501C98A04F00309E92 /* LWAsyncDisplayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67401C98A04F00309E92 /* LWAsyncDisplayLayer.m */; };
 		017F67511C98A04F00309E92 /* LWAsyncDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67421C98A04F00309E92 /* LWAsyncDisplayView.m */; };
 		017F67521C98A04F00309E92 /* LWFlag.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67441C98A04F00309E92 /* LWFlag.m */; };
-		017F67531C98A04F00309E92 /* LWRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67461C98A04F00309E92 /* LWRunLoopObserver.m */; };
 		017F67541C98A04F00309E92 /* LWTextAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F67481C98A04F00309E92 /* LWTextAttach.m */; };
 		017F67551C98A04F00309E92 /* LWTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F674A1C98A04F00309E92 /* LWTextStorage.m */; };
 		017F67561C98A04F00309E92 /* LWTextParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F674C1C98A04F00309E92 /* LWTextParser.m */; };
@@ -121,16 +119,12 @@
 		017F67371C988C5800309E92 /* TableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewHeader.m; sourceTree = "<group>"; };
 		017F67391C988E1200309E92 /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
 		017F673A1C988E1200309E92 /* CellLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellLayout.m; sourceTree = "<group>"; };
-		017F673D1C98A04F00309E92 /* CALayer+LazySetContents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+LazySetContents.h"; path = "../LWAsyncDisplayView/CALayer+LazySetContents.h"; sourceTree = "<group>"; };
-		017F673E1C98A04F00309E92 /* CALayer+LazySetContents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+LazySetContents.m"; path = "../LWAsyncDisplayView/CALayer+LazySetContents.m"; sourceTree = "<group>"; };
 		017F673F1C98A04F00309E92 /* LWAsyncDisplayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAsyncDisplayLayer.h; path = ../LWAsyncDisplayView/LWAsyncDisplayLayer.h; sourceTree = "<group>"; };
 		017F67401C98A04F00309E92 /* LWAsyncDisplayLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAsyncDisplayLayer.m; path = ../LWAsyncDisplayView/LWAsyncDisplayLayer.m; sourceTree = "<group>"; };
 		017F67411C98A04F00309E92 /* LWAsyncDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAsyncDisplayView.h; path = ../LWAsyncDisplayView/LWAsyncDisplayView.h; sourceTree = "<group>"; };
 		017F67421C98A04F00309E92 /* LWAsyncDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAsyncDisplayView.m; path = ../LWAsyncDisplayView/LWAsyncDisplayView.m; sourceTree = "<group>"; };
 		017F67431C98A04F00309E92 /* LWFlag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWFlag.h; path = ../LWAsyncDisplayView/LWFlag.h; sourceTree = "<group>"; };
 		017F67441C98A04F00309E92 /* LWFlag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWFlag.m; path = ../LWAsyncDisplayView/LWFlag.m; sourceTree = "<group>"; };
-		017F67451C98A04F00309E92 /* LWRunLoopObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWRunLoopObserver.h; path = ../LWAsyncDisplayView/LWRunLoopObserver.h; sourceTree = "<group>"; };
-		017F67461C98A04F00309E92 /* LWRunLoopObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWRunLoopObserver.m; path = ../LWAsyncDisplayView/LWRunLoopObserver.m; sourceTree = "<group>"; };
 		017F67471C98A04F00309E92 /* LWTextAttach.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextAttach.h; path = ../LWAsyncDisplayView/LWTextAttach.h; sourceTree = "<group>"; };
 		017F67481C98A04F00309E92 /* LWTextAttach.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextAttach.m; path = ../LWAsyncDisplayView/LWTextAttach.m; sourceTree = "<group>"; };
 		017F67491C98A04F00309E92 /* LWTextStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextStorage.h; path = ../LWAsyncDisplayView/LWTextStorage.h; sourceTree = "<group>"; };
@@ -268,10 +262,12 @@
 				017F67481C98A04F00309E92 /* LWTextAttach.m */,
 				017F674B1C98A04F00309E92 /* LWTextParser.h */,
 				017F674C1C98A04F00309E92 /* LWTextParser.m */,
-				017F673D1C98A04F00309E92 /* CALayer+LazySetContents.h */,
-				017F673E1C98A04F00309E92 /* CALayer+LazySetContents.m */,
-				017F67451C98A04F00309E92 /* LWRunLoopObserver.h */,
-				017F67461C98A04F00309E92 /* LWRunLoopObserver.m */,
+				B0D9EB131CB0F435009FDCCF /* CALayer+WebCache.h */,
+				B0D9EB141CB0F435009FDCCF /* CALayer+WebCache.m */,
+				B0D9EB151CB0F435009FDCCF /* CALayer+WebCacheOperation.h */,
+				B0D9EB161CB0F435009FDCCF /* CALayer+WebCacheOperation.m */,
+				B0D9EB1B1CB0F435009FDCCF /* RunLoopTransactions.h */,
+				B0D9EB1C1CB0F435009FDCCF /* RunLoopTransactions.m */,
 				017F67431C98A04F00309E92 /* LWFlag.h */,
 				017F67441C98A04F00309E92 /* LWFlag.m */,
 				0154CB821C9887EA002CAF12 /* LWDefine.h */,
@@ -323,16 +319,10 @@
 		011DFA681C9881AE000410D7 /* SDWebImage */ = {
 			isa = PBXGroup;
 			children = (
-				B0D9EB131CB0F435009FDCCF /* CALayer+WebCache.h */,
-				B0D9EB141CB0F435009FDCCF /* CALayer+WebCache.m */,
-				B0D9EB151CB0F435009FDCCF /* CALayer+WebCacheOperation.h */,
-				B0D9EB161CB0F435009FDCCF /* CALayer+WebCacheOperation.m */,
 				B0D9EB171CB0F435009FDCCF /* MKAnnotationView+WebCache.h */,
 				B0D9EB181CB0F435009FDCCF /* MKAnnotationView+WebCache.m */,
 				B0D9EB191CB0F435009FDCCF /* NSData+ImageContentType.h */,
 				B0D9EB1A1CB0F435009FDCCF /* NSData+ImageContentType.m */,
-				B0D9EB1B1CB0F435009FDCCF /* RunLoopTransactions.h */,
-				B0D9EB1C1CB0F435009FDCCF /* RunLoopTransactions.m */,
 				B0D9EB1D1CB0F435009FDCCF /* SDImageCache.h */,
 				B0D9EB1E1CB0F435009FDCCF /* SDImageCache.m */,
 				B0D9EB1F1CB0F435009FDCCF /* SDWebImageCompat.h */,
@@ -496,7 +486,6 @@
 			files = (
 				B0D9EB3E1CB0F435009FDCCF /* RunLoopTransactions.m in Sources */,
 				B0D980371CB392D7006D0071 /* StatusModel.m in Sources */,
-				017F67531C98A04F00309E92 /* LWRunLoopObserver.m in Sources */,
 				011DFA221C987CD6000410D7 /* AppDelegate.m in Sources */,
 				011DFA5D1C9880D2000410D7 /* UIImage+ImageEffects.m in Sources */,
 				B0D9EB3A1CB0F435009FDCCF /* CALayer+WebCache.m in Sources */,
@@ -504,7 +493,6 @@
 				01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */,
 				B0D9EB431CB0F435009FDCCF /* SDWebImageDownloaderOperation.m in Sources */,
 				011DFA5C1C9880D2000410D7 /* LWImageItem.m in Sources */,
-				017F674F1C98A04F00309E92 /* CALayer+LazySetContents.m in Sources */,
 				017F67321C988BB700309E92 /* TableViewCell.m in Sources */,
 				01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */,
 				01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */,

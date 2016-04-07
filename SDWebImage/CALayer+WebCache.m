@@ -115,8 +115,6 @@ static char imageURLKey;
     [self sd_cancelImageLoadOperationWithKey:@"CALayerImageLoad"];
 }
 
-
-
 - (void)delaySetContents:(id)contents {
     RunLoopTransactions* transactions = [RunLoopTransactions
                                          transactionsWithTarget:self

@@ -122,7 +122,6 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  */
 @property (nonatomic,assign,readonly) CGFloat textWidth;
 
-
 @property (nonatomic,assign,readonly) CGFloat left;
 @property (nonatomic,assign,readonly) CGFloat right;
 @property (nonatomic,assign,readonly) CGFloat top;

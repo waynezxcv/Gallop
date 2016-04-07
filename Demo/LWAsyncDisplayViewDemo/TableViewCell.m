@@ -9,7 +9,7 @@
 #import "TableViewCell.h"
 #import "LWAsyncDisplayView.h"
 #import "LWDefine.h"
-#import "LWRunLoopObserver.h"
+#import "RunLoopTransactions.h"
 #import "CALayer+WebCache.h"
 
 
@@ -112,8 +112,9 @@
     [layouts addObject:self.layout.contentTextLayout];
     [layouts addObject:self.layout.dateTextLayout];
     [layouts addObjectsFromArray:self.layout.commentTextLayouts];
+    [layouts addObjectsFromArray:self.layout.imageStorages];
     self.asyncDisplayView.storages = layouts;
-    [self setupImages];
+//    [self setupImages];
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size {
@@ -156,15 +157,15 @@
     }
 }
 
-- (void)setupImages {
-    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
-        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
-        NSString* img = [self.layout.statusModel.imgs objectAtIndex:i];
-        [imageLayer sd_setImageWithURL:[NSURL URLWithString:img]
-                      placeholderImage:nil
-                               options:SDWebImageDelaySetContents];
-    }
-}
+//- (void)setupImages {
+//    for (NSInteger i = 0; i < self.layout.imagePostionArray.count; i ++) {
+//        CALayer* imageLayer = [self.imageLayers objectAtIndex:i];
+//        NSString* img = [self.layout.statusModel.imgs objectAtIndex:i];
+//        [imageLayer sd_setImageWithURL:[NSURL URLWithString:img]
+//                      placeholderImage:nil
+//                               options:SDWebImageDelaySetContents];
+//    }
+//}
 
 #pragma mark - Getter
 
@@ -176,21 +177,21 @@
     return _asyncDisplayView;
 }
 
-- (NSMutableArray *)imageLayers {
-    if (_imageLayers) {
-        return _imageLayers;
-    }
-    _imageLayers = [[NSMutableArray alloc] initWithCapacity:9];
-    for (NSInteger i = 0; i < 9; i ++) {
-        CALayer* imageLayer = [CALayer layer];
-        imageLayer.contentsScale = [UIScreen mainScreen].scale;
-        imageLayer.contentsGravity = kCAGravityResizeAspectFill;
-        imageLayer.masksToBounds = YES;
-        [self.asyncDisplayView.layer addSublayer:imageLayer];
-        [_imageLayers addObject:imageLayer];
-    }
-    return _imageLayers ;
-}
+//- (NSMutableArray *)imageLayers {
+//    if (_imageLayers) {
+//        return _imageLayers;
+//    }
+//    _imageLayers = [[NSMutableArray alloc] initWithCapacity:9];
+//    for (NSInteger i = 0; i < 9; i ++) {
+//        CALayer* imageLayer = [CALayer layer];
+//        imageLayer.contentsScale = [UIScreen mainScreen].scale;
+//        imageLayer.contentsGravity = kCAGravityResizeAspectFill;
+//        imageLayer.masksToBounds = YES;
+//        [self.asyncDisplayView.layer addSublayer:imageLayer];
+//        [_imageLayers addObject:imageLayer];
+//    }
+//    return _imageLayers ;
+//}
 
 - (CALayer *)avatarLayer {
     if (_avatarLayer) {

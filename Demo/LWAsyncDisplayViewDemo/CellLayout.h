@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LWTextStorage.h"
+#import "LWImageStorage.h"
 #import "LWTextParser.h"
 #import "StatusModel.h"
 
@@ -30,6 +31,8 @@
 @property (nonatomic,assign) CGRect commentBgPosition;
 @property (nonatomic,copy) NSArray* commentTextLayouts;
 @property (nonatomic,assign) CGFloat cellHeight;
+
+@property (nonatomic,copy) NSArray* imageStorages;
 
 - (id)initWithCDStatusModel:(StatusModel *)statusModel;
 

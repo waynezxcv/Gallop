@@ -68,17 +68,29 @@
                                           60.0f + self.contentTextLayout.textHeight + (row * 85.0f),
                                           80.0f,
                                           80.0f);
-            NSString* rectString = NSStringFromCGRect(imageRect);
-            [tmpArray addObject:rectString];
+
+
+            LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+            imageStorage.boundsRect = imageRect;
+            NSString* U = [self.statusModel.imgs objectAtIndex:i];
+            imageStorage.URL = [NSURL URLWithString:U];
+            imageStorage.type = LWImageStorageWebImage;
+
+
+//            NSString* rectString = NSStringFromCGRect(imageRect);
+            [tmpArray addObject:imageStorage];
             column = column + 1;
             if (column > 2) {
                 column = 0;
                 row = row + 1;
             }
         }
+
+        
         CGFloat imagesHeight = 0.0f;
         row < 3 ? (imagesHeight = (row + 1) * 85.0f):(imagesHeight = row  * 85.0f);
-        self.imagePostionArray = tmpArray;
+//        self.imagePostionArray = tmpArray;
+        self.imageStorages = tmpArray;
         //timeStamp
         self.dateTextLayout = [[LWTextStorage alloc] init];
         self.dateTextLayout.text = [dateFormatter stringFromDate:self.statusModel.date];

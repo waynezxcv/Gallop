@@ -18,7 +18,9 @@
 
 #import "LWAsyncDisplayView.h"
 #import "LWAsyncDisplayLayer.h"
-#import "LWRunLoopObserver.h"
+#import "RunLoopTransactions.h"
+#import "CALayer+WebCache.h"
+
 
 
 typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
@@ -32,7 +34,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 @property (nonatomic,assign) LWAsyncDisplayViewState state;
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
-@property (nonatomic,strong) NSMutableArray* imageLayers;
+@property (nonatomic,strong) NSMutableArray* subLayers;
 
 @end
 
@@ -77,6 +79,22 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 #pragma mark - Layout & Display
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    for (NSInteger i = 0; i < self.storages.count; i ++) {
+        id storage = [self.storages objectAtIndex:i];
+        if ([storage isKindOfClass:[LWImageStorage class]] ) {
+            LWImageStorage* imageStorage = (LWImageStorage *)storage;
+            if (imageStorage.type == LWImageStorageWebImage) {
+                if (self.subLayers.count > i) {
+                    CALayer* subLayer = [self.subLayers objectAtIndex:i];
+                    subLayer.frame = imageStorage.boundsRect;
+                }
+            }
+        }
+    }
+}
+
 - (void)setFrame:(CGRect)frame {
     CGSize oldSize = self.bounds.size;
     CGSize newSize = frame.size;
@@ -103,11 +121,14 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         return;
     }
     _storages = [storages copy];
-    for (id storage in storages) {
+    for (id storage in _storages) {
         if ([storage isKindOfClass:[LWImageStorage class]] ) {
             LWImageStorage* imageStorage = (LWImageStorage *)storage;
             if (imageStorage.type == LWImageStorageWebImage) {
                 //TODO:
+                CALayer* subLayer = [CALayer layer];
+                [self.layer addSublayer:subLayer];
+                [self.subLayers addObject:subLayer];
             }
         }
     }
@@ -115,10 +136,24 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 }
 
 
+
 - (void)_displayIfNeed {
     if (self.state == LWAsyncDisplayViewStateNeedDisplay) {
         [(LWAsyncDisplayLayer *)self.layer cleanUp];
         [(LWAsyncDisplayLayer *)self.layer drawContentInRect:self.bounds];
+
+        for (NSInteger i = 0; i < self.storages.count; i ++) {
+            id storage = [self.storages objectAtIndex:i];
+            if ([storage isKindOfClass:[LWImageStorage class]] ) {
+                LWImageStorage* imageStorage = (LWImageStorage *)storage;
+                if (imageStorage.type == LWImageStorageWebImage) {
+                    if (self.subLayers.count > i) {
+                        CALayer* subLayer = [self.subLayers objectAtIndex:i];
+                        [subLayer sd_setImageWithURL:imageStorage.URL placeholderImage:nil options:0];
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -133,12 +168,12 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     return _tapGestureRecognizer;
 }
 
-- (NSMutableArray *)imageLayers {
-    if (_imageLayers) {
-        return _imageLayers;
+- (NSMutableArray *)subLayers {
+    if (_subLayers) {
+        return _subLayers;
     }
-    _imageLayers = [[NSMutableArray alloc] init];
-    return _imageLayers;
+    _subLayers = [[NSMutableArray alloc] init];
+    return _subLayers;
 }
 
 #pragma mark - LWAsyncDisplayLayerDelegate
@@ -159,8 +194,10 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
         [self.delegate extraAsyncDisplayIncontext:context size:size];
     }
-    for (LWTextStorage* textStorage in self.storages) {
-        [textStorage drawInContext:context];
+    for (id storage in self.storages) {
+        if ([storage isKindOfClass:[LWTextStorage class]]) {
+            [storage drawInContext:context];
+        }
     }
 }
 
@@ -195,12 +232,12 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
             CTLineRef line = CFArrayGetValueAtIndex(lines, i);
             CGRect flippedRect = [self _getLineBounds:line point:linePoint];
             CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-            
+
             CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
                                            rect.origin.y + boundsRect.origin.y,
                                            rect.size.width,
                                            rect.size.height);
-            
+
             if (CGRectContainsPoint(adjustRect, touchPoint)) {
                 CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
                                                     touchPoint.y - CGRectGetMinY(adjustRect));
@@ -237,7 +274,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 }
 
 - (void)_layout:(LWTextStorage *)layout drawHighLightWithAttach:(LWTextAttach *)attach {
-    
+
 }
 
 #pragma mark - UIGestrueRecognizer
