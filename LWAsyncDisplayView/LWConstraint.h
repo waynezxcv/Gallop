@@ -13,26 +13,92 @@
 @class LWConstraintObject;
 
 typedef LWConstraint* (^MarginToStorage)(LWStorage* storage, CGFloat value);
+typedef LWConstraint* (^Margin)(CGFloat value);
+typedef LWConstraint* (^Length)(CGFloat value);
+typedef LWConstraint* (^EqualToStorage)(LWStorage* storage);
+
+
 
 @interface LWConstraint : NSObject
 
-@property (nonatomic, copy, readonly) MarginToStorage leftMargin;
-@property (nonatomic, copy, readonly) MarginToStorage rightMargin;
-@property (nonatomic, copy, readonly) MarginToStorage topMargin;
-@property (nonatomic, copy, readonly) MarginToStorage bottomMargin;
+@property (nonatomic,copy,readonly) Margin leftMargin;
+@property (nonatomic,copy,readonly) Margin rightMargin;
+@property (nonatomic,copy,readonly) Margin topMargin;
+@property (nonatomic,copy,readonly) Margin bottomMargin;
+
+@property (nonatomic,copy,readonly) Length widthLength;
+@property (nonatomic,copy,readonly) Length heightLength;
 
 
-@property (nonatomic,strong) LWConstraintObject* leftObject;
-@property (nonatomic,strong) LWConstraintObject* rightObject;
-@property (nonatomic,strong) LWConstraintObject* topObject;
-@property (nonatomic,strong) LWConstraintObject* bottomObject;
+@property (nonatomic,copy,readonly) MarginToStorage leftMarginToStorage;
+@property (nonatomic,copy,readonly) MarginToStorage rightMarginToStorage;
+@property (nonatomic,copy,readonly) MarginToStorage topMarginToStorage;
+@property (nonatomic,copy,readonly) MarginToStorage bottomMarginToStorage;
+
+
+@property (nonatomic,copy,readonly) EqualToStorage leftMarginEquelToStorage;
+@property (nonatomic,copy,readonly) EqualToStorage rightMarginEquelToStorage;
+@property (nonatomic,copy,readonly) EqualToStorage topMarginEquelToStorage;
+@property (nonatomic,copy,readonly) EqualToStorage bottomMarginEquelToStorage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ *  绝对位置值
+ *
+ */
+@property (nullable,nonatomic,strong,readonly) NSNumber* left;
+@property (nullable,nonatomic,strong,readonly) NSNumber* right;
+@property (nullable,nonatomic,strong,readonly) NSNumber* top;
+@property (nullable,nonatomic,strong,readonly) NSNumber* bottom;
+@property (nullable,nonatomic,strong,readonly) NSNumber* width;
+@property (nullable,nonatomic,strong,readonly) NSNumber* height;
+
+/**
+ *  相对位置值
+ */
+@property (nullable,nonatomic,strong,readonly) LWConstraintObject* leftObject;
+@property (nullable,nonatomic,strong,readonly) LWConstraintObject* rightObject;
+@property (nullable,nonatomic,strong,readonly) LWConstraintObject* topObject;
+@property (nullable,nonatomic,strong,readonly) LWConstraintObject* bottomObject;
+
 
 @end
 
 
 @interface LWConstraintObject : NSObject
 
-@property (nonatomic,strong) LWStorage* referenceStorage;
+@property (nullable,nonatomic,strong) LWStorage* referenceStorage;
 @property (nonatomic,assign) CGFloat value;
 
 @end

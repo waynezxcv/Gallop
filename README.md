@@ -24,42 +24,6 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
 |LWTextAttach|图文混排时的图片附件|
 
 
-* **简单的使用示例**
-
-```objc
-    //创建一个LWTextLayout实例（要实现更多的布局，可以继承LWTextLayout，并添加相关属性）
-    LWTextLayout* textLayout = [[LWTextLayout alloc] init];
-    textLayout.text = @"使用LWAsyncDisplayView来实现图文混排[微笑]，和点击链接，很简单。并且异步绘制与预加载缓存布局，能保证界面滚动的流畅性~";
-    textLayout.font = [UIFont systemFontOfSize:15.0f];
-    textLayout.textColor = RGB(40, 40, 40, 1);
-    textLayout.boundsRect = CGRectMake(60.0f,50.0f,SCREEN_WIDTH - 80.0f,MAXFLOAT);
-    //生成CTFrameRef
-    [textLayout creatCTFrameRef];
-    //图文混排
-    [textLayout replaceTextWithImage:[UIImage imageNamed:@"微笑"] inRange:NSMakeRange(27, 4)];
-    //点击链接
-    [textLayout addLinkWithData:@"点击链接"
-                                 inRange:NSMakeRange(30,4)
-                               linkColor:[UIColor redColor]
-                          highLightColor:[UIColor grayColor]
-                          UnderLineStyle:NSUnderlineStyleSingle];
-    //创建一个LWAsyncDisplayView实例
-    LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,textLayout.textHeight)];
-    //赋值，开始异步绘制
-    view.layouts = @[textLayout];
-    [self.view addSubview:view];
-    
-    //Delegate
-    //点击链接文本回调
-    - (void)lwAsyncDicsPlayView:(LWAsyncDisplayView *)lwLabel didCilickedLinkWithfData:(id)data {
-      //something you want to do with data...
-     }
-     //额外的绘制可以使用UIGraphics写在这里...
-  - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size {
-      //一些额外的绘制工作
-     }
-
-```
 
 * **如果需要更加详细的内容，请看各个头文件和Demo，有详细的注释**
 

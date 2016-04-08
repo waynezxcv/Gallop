@@ -10,4 +10,21 @@
 
 @implementation LWStorage
 
+
+- (CGFloat)left {
+    return self.frame.origin.x;
+}
+
+- (CGFloat)right {
+    return  self.frame.origin.x + self.width;
+}
+
+- (CGFloat)top {
+    return self.frame.origin.y;
+}
+
+- (CGFloat)bottom {
+    return self.frame.origin.y + self.height;
+}
+
 @end

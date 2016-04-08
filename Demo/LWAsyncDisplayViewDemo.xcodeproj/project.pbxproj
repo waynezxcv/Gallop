@@ -392,6 +392,8 @@
 		B085B3401CB68CCB00087739 /* Constraint */ = {
 			isa = PBXGroup;
 			children = (
+				B085B3531CB69D5200087739 /* LWLayout.h */,
+				B085B3541CB69D5200087739 /* LWLayout.m */,
 				B085B34F1CB69D5200087739 /* LWConstraint.h */,
 				B085B3501CB69D5200087739 /* LWConstraint.m */,
 				B085B3571CB69D5200087739 /* LWStorage+Constraint.h */,
@@ -403,8 +405,6 @@
 		B085B3411CB68CD700087739 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
-				B085B3531CB69D5200087739 /* LWLayout.h */,
-				B085B3541CB69D5200087739 /* LWLayout.m */,
 				B085B3551CB69D5200087739 /* LWStorage.h */,
 				B085B3561CB69D5200087739 /* LWStorage.m */,
 				017F67491C98A04F00309E92 /* LWTextStorage.h */,

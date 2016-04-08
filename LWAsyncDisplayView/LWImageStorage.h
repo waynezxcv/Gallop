@@ -16,7 +16,6 @@
 #import "LWStorage.h"
 
 
-
 typedef NS_ENUM(NSUInteger, LWImageStorageType) {
     LWImageStorageWebImage = 0,
     LWImageStorageLocalImage = 1,
@@ -26,7 +25,6 @@ typedef NS_ENUM(NSUInteger, LWImageContainerType) {
     LWImageContainerTypeCALayer = 0,
     LWImageContainerTypeUIImageView = 1,
 };
-
 
 @interface LWImageStorage : LWStorage
 

@@ -26,6 +26,4 @@
 - (id)initWithTextStorages:(NSArray<LWTextStorage *>*)textStorages
              imageStorages:(NSArray<LWImageStorage *>*)imageStorages;
 
-
-
 @end

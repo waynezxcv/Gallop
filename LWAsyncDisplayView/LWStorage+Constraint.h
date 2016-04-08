@@ -14,8 +14,6 @@
 
 - (LWConstraint *)constraint;
 
-- (void)autoLayout;
-
-@property (nonatomic,strong) LWConstraint* cacheConstraint;
+- (void)auotoLayout;
 
 @end
