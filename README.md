@@ -15,7 +15,7 @@ Gallop --- 异步绘制排版框架，支持布局预加载缓存、支持图文
 * API简单，只需设置简单的属性，复杂的多线程绘制、自动布局交给Gallop就好啦。
 
 
-##  使用Gallop实现网络图片加载部分依赖于SDWebImage（https://github.com/rs/SDWebImage）
+使用Gallop实现网络图片加载部分依赖于SDWebImage（https://github.com/rs/SDWebImage）
 
 
 ## Usage
@@ -33,7 +33,7 @@ Gallop --- 异步绘制排版框架，支持布局预加载缓存、支持图文
 请看各个头文件和Demo，有详细的注释
 
 ### 使用示例
-以微信朋友圈布局为例，使用LWAsyncDisplayView来构建UITableViewCell
+以微信朋友圈布局为例，使用LWAsyncDisplayView来构建UITableViewCell,示例多种API使用方式
 
 ```objc
     /********生成Storage 相当于模型***********/
