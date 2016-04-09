@@ -8,8 +8,6 @@
 
 #import "LWConstraint.h"
 
-
-
 @interface LWConstraint ()
 
 @property (nonatomic,copy) Margin leftMargin;
@@ -30,10 +28,6 @@
 @property (nonatomic,copy) EqualToStorage topMarginEquelToStorage;
 @property (nonatomic,copy) EqualToStorage bottomMarginEquelToStorage;
 
-/**
- *  绝对位置值
- *
- */
 @property (nullable,nonatomic,strong) NSNumber* left;
 @property (nullable,nonatomic,strong) NSNumber* right;
 @property (nullable,nonatomic,strong) NSNumber* top;
@@ -41,9 +35,6 @@
 @property (nullable,nonatomic,strong) NSNumber* width;
 @property (nullable,nonatomic,strong) NSNumber* height;
 
-/**
- *  相对位置值
- */
 @property (nullable,nonatomic,strong) LWConstraintObject* leftObject;
 @property (nullable,nonatomic,strong) LWConstraintObject* rightObject;
 @property (nullable,nonatomic,strong) LWConstraintObject* topObject;
@@ -51,8 +42,9 @@
 
 @end
 
-@implementation LWConstraint
 
+
+@implementation LWConstraint
 
 - (Margin)leftMargin {
     if (_leftMargin) {
@@ -101,7 +93,6 @@
     _heightLength = [self lengthWithKey:@"height"];
     return _heightLength;
 }
-
 
 - (MarginToStorage)leftMarginToStorage {
     if (_leftMarginToStorage) {

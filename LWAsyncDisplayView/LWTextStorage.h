@@ -106,6 +106,9 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 @property (nonatomic,assign) CTFrameRef CTFrame;
 
 
+
+
+
 /**
  *  存放附件的数组
  */

@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "LWStorage.h"
 
+
+
 @class LWConstraint;
 @class LWConstraintObject;
 
@@ -16,10 +18,10 @@ typedef LWConstraint* (^MarginToStorage)(LWStorage* storage, CGFloat value);
 typedef LWConstraint* (^Margin)(CGFloat value);
 typedef LWConstraint* (^Length)(CGFloat value);
 typedef LWConstraint* (^EqualToStorage)(LWStorage* storage);
-
-
+//typedef LWConstraint* (^EdgeInsetsToStorage)(LWStorage* storage,UIEdgeInsets insets);
 
 @interface LWConstraint : NSObject
+
 
 @property (nonatomic,copy,readonly) Margin leftMargin;
 @property (nonatomic,copy,readonly) Margin rightMargin;
@@ -29,12 +31,10 @@ typedef LWConstraint* (^EqualToStorage)(LWStorage* storage);
 @property (nonatomic,copy,readonly) Length widthLength;
 @property (nonatomic,copy,readonly) Length heightLength;
 
-
 @property (nonatomic,copy,readonly) MarginToStorage leftMarginToStorage;
 @property (nonatomic,copy,readonly) MarginToStorage rightMarginToStorage;
 @property (nonatomic,copy,readonly) MarginToStorage topMarginToStorage;
 @property (nonatomic,copy,readonly) MarginToStorage bottomMarginToStorage;
-
 
 @property (nonatomic,copy,readonly) EqualToStorage leftMarginEquelToStorage;
 @property (nonatomic,copy,readonly) EqualToStorage rightMarginEquelToStorage;
@@ -59,24 +59,11 @@ typedef LWConstraint* (^EqualToStorage)(LWStorage* storage);
 
 
 
+/******************************** Private ************************************/
 
 
+@property (nonatomic,weak) LWStorage* superStorage;
 
-
-
-
-
-
-
-
-
-
-
-
-/**
- *  绝对位置值
- *
- */
 @property (nullable,nonatomic,strong,readonly) NSNumber* left;
 @property (nullable,nonatomic,strong,readonly) NSNumber* right;
 @property (nullable,nonatomic,strong,readonly) NSNumber* top;
@@ -84,9 +71,7 @@ typedef LWConstraint* (^EqualToStorage)(LWStorage* storage);
 @property (nullable,nonatomic,strong,readonly) NSNumber* width;
 @property (nullable,nonatomic,strong,readonly) NSNumber* height;
 
-/**
- *  相对位置值
- */
+
 @property (nullable,nonatomic,strong,readonly) LWConstraintObject* leftObject;
 @property (nullable,nonatomic,strong,readonly) LWConstraintObject* rightObject;
 @property (nullable,nonatomic,strong,readonly) LWConstraintObject* topObject;

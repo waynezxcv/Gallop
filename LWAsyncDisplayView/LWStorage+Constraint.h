@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LWStorage.h"
 #import "LWConstraint.h"
 
 
 @interface LWStorage(Constraint)
 
 - (LWConstraint *)constraint;
-
-- (void)auotoLayout;
 
 @end

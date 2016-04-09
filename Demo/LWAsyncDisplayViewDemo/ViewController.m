@@ -16,6 +16,7 @@
 #import "LWTextParser.h"
 #import "CellLayout.h"
 #import "LWStorage+Constraint.h"
+#import "LWConstraintManager.h"
 
 
 
@@ -166,42 +167,59 @@ const CGFloat kRefreshBoundary = 170.0f;
 /****************************************************************************/
 
 - (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel {
-    //avatarImageStorage
+    /****************************生成Storage 相当于模型*************************************/
+    /*********LWAsyncDisplayView用将所有文本跟图片的模型都抽象成LWStorage，方便你能预先将所有的需要计算的布局内容直接缓存起来***/
+    /*******而不是在渲染的时候才进行计算,提高性能*******************************************/
+
+    //头像模型 avatarImageStorage
     LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
     avatarStorage.type = LWImageStorageWebImage;
     avatarStorage.URL = statusModel.avatar;
-    avatarStorage.frame = CGRectMake(10, 20, 40, 40);
 
-
-    //nameTextStorage
+    //名字模型 nameTextStorage
     LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
     nameTextStorage.text = statusModel.name;
     nameTextStorage.font = [UIFont systemFontOfSize:15.0f];
     nameTextStorage.textAlignment = NSTextAlignmentLeft;
     nameTextStorage.linespace = 2.0f;
     nameTextStorage.textColor = RGB(113, 129, 161, 1);
-    nameTextStorage.frame = CGRectMake(60, 20, SCREEN_WIDTH, 20);
-    [nameTextStorage creatCTFrameRef];
+
+
+    //正文内容模型 contentTextStorage
+    LWTextStorage* contentTextStorage = [[LWTextStorage alloc] init];
+    contentTextStorage.text = statusModel.content;
+    contentTextStorage.font = [UIFont systemFontOfSize:15.0f];
+    contentTextStorage.textColor = RGB(40, 40, 40, 1);
+    contentTextStorage.linespace = 2.0f;
+
+    /**
+     *  TODO:设置约束自动布局还在完善中。。。。
+     *
+     */
+    /***********************************  设置约束 自动布局 *********************************************/
+    [LWConstraintManager lw_makeConstraint:avatarStorage.constraint.leftMargin(10).topMargin(20).widthLength(40.0f).heightLength(40.0f)];
+    [LWConstraintManager lw_makeConstraint:nameTextStorage.constraint.leftMarginToStorage(avatarStorage,10).topMargin(20).widthLength(SCREEN_WIDTH)];
+    [LWConstraintManager lw_makeConstraint:contentTextStorage.constraint.leftMarginToStorage(avatarStorage,10).topMarginToStorage(nameTextStorage,10).rightMargin(20)];
+
+
+
+
+    /***********************************  添加点击Link 解析表情*********************************************/
     [nameTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",statusModel.name]
                              inRange:NSMakeRange(0,statusModel.name.length)
                            linkColor:nil
                       highLightColor:[UIColor grayColor]
                       UnderLineStyle:NSUnderlineStyleNone];
 
-    //contentTextStorage
-    LWTextStorage* contentTextStorage = [[LWTextStorage alloc] init];
-    contentTextStorage.text = statusModel.content;
-    contentTextStorage.font = [UIFont systemFontOfSize:15.0f];
-    contentTextStorage.textColor = RGB(40, 40, 40, 1);
-    contentTextStorage.frame = CGRectMake(60.0f,nameTextStorage.bottom,SCREEN_WIDTH - 80.0f,MAXFLOAT);
-    contentTextStorage.linespace = 2.0f;
-    [contentTextStorage creatCTFrameRef];
     [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
     [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                     linkColor:RGB(113, 129, 161, 1)
                                highlightColor:nil
                                underlineStyle:NSUnderlineStyleNone];
-    //imgsStorage
+
+
+
+    //发布的图片模型 imgsStorage
     NSInteger imageCount = [statusModel.imgs count];
     NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
     NSMutableArray* imagePositionArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
@@ -212,12 +230,14 @@ const CGFloat kRefreshBoundary = 170.0f;
                                       60.0f + contentTextStorage.height + (row * 85.0f),
                                       80.0f,
                                       80.0f);
-
         NSString* imagePositionString = NSStringFromCGRect(imageRect);
         [imagePositionArray addObject:imagePositionString];
-
         LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+
+        /***************** 也可以不使用设置约束的方式来布局，而是直接设置frame属性的方式来布局*************************************/
         imageStorage.frame = imageRect;
+        /***********************************/
+
         NSString* URLString = [statusModel.imgs objectAtIndex:i];
         imageStorage.URL = [NSURL URLWithString:URLString];
         imageStorage.type = LWImageStorageWebImage;
@@ -231,15 +251,22 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
     CGFloat imagesHeight = 0.0f;
     row < 3 ? (imagesHeight = (row + 1) * 85.0f):(imagesHeight = row  * 85.0f);
-    //timeStamp
+
+    //获取最后一张图片的模型
+    LWImageStorage* lastImageStorage = (LWImageStorage *)[imageStorageArray lastObject];
+
+    //生成时间的模型 dateTextStorage
     LWTextStorage* dateTextStorage = [[LWTextStorage alloc] init];
     dateTextStorage.text = [[self dateFormatter] stringFromDate:statusModel.date];
     dateTextStorage.font = [UIFont systemFontOfSize:13.0f];
     dateTextStorage.textColor = [UIColor grayColor];
-    dateTextStorage.frame = CGRectMake(60, 20.0f + imagesHeight + contentTextStorage.bottom,SCREEN_WIDTH - 80,20.0f);
-    [dateTextStorage creatCTFrameRef];
-    //menu
+
+    /***********************************  设置约束 自动布局 *********************************************/
+    [LWConstraintManager lw_makeConstraint:dateTextStorage.constraint.leftMarginToStorage(avatarStorage,10).topMarginToStorage(lastImageStorage,10)];
+
+    //生成菜单图片的模型 dateTextStorage
     CGRect menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,20.0f + imagesHeight + contentTextStorage.bottom,20.0f,15.0f);
+
     //comment
     NSArray* commentTextStorages = @[];
     CGRect commentBgPosition = CGRectZero;
@@ -305,27 +332,48 @@ const CGFloat kRefreshBoundary = 170.0f;
         commentTextStorages = tmp;
         commentBgPosition = CGRectMake(60.0f,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, offsetY + 15.0f);
     }
-    /****************************************************************************/
+
+
+
+    /**************************将要在同一个LWAsyncDisplayView上显示的Storage要全部放入同一个LWLayout中***************************************/
+    /**************************我们将尽量通过合并绘制的技术将所有在同一个View显示的内容全都异步绘制在同一个AsyncDisplayView上**************************/
+    /**************************这样的做法能最大限度的节省系统的开销**************************/
+
     NSMutableArray* textStorages = [[NSMutableArray alloc] init];
     [textStorages addObject:nameTextStorage];
     [textStorages addObject:contentTextStorage];
     [textStorages addObject:dateTextStorage];
     [textStorages addObjectsFromArray:commentTextStorages];
+
     NSMutableArray* imageStorages = [[NSMutableArray alloc] init];
     [imageStorages addObjectsFromArray:imageStorageArray];
     [imageStorages addObject:avatarStorage];
+
     //生成Layout
     CellLayout* layout = [[CellLayout alloc] initWithTextStorages:textStorages imageStorages:imageStorages];
     //一些其他属性
     layout.menuPosition = menuPosition;
     layout.commentBgPosition = commentBgPosition;
-    layout.cellHeight = dateTextStorage.bottom + commentBgPosition.size.height + 15.0f;
     layout.imagePostionArray = imagePositionArray;
     layout.statusModel = statusModel;
+
+    //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
+    layout.cellHeight = dateTextStorage.bottom + commentBgPosition.size.height + 15.0f;
+
+    /******************** 希望你能使用LWAsyncDisplayView来提高性能，熟练使用后布局过程比使用苹果源生的方式更快速 *****************/
+    /******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
+    /********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
     return layout;
 }
 
 /****************************************************************************/
+
+
+
+
+
+
+
 
 - (void)refreshComplete {
     [self.tableViewHeader refreshingAnimateStop];

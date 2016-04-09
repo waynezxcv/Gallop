@@ -52,6 +52,8 @@ static CGFloat widthCallback(void* ref){
 
 @implementation LWTextStorage
 
+@synthesize frame = _frame;
+
 #pragma mark - Initialization
 
 - (NSUInteger)hash {

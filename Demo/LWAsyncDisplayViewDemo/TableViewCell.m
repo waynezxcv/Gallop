@@ -72,8 +72,8 @@
 }
 
 - (void)layoutSubviews {
-    [self _layoutSubViews];
     [super layoutSubviews];
+    [self _layoutSubViews];
 }
 
 - (void)_layoutSubViews {
