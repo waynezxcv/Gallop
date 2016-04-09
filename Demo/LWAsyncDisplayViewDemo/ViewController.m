@@ -336,8 +336,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     /**************************将要在同一个LWAsyncDisplayView上显示的Storage要全部放入同一个LWLayout中***************************************/
     /**************************我们将尽量通过合并绘制的技术将所有在同一个View显示的内容全都异步绘制在同一个AsyncDisplayView上**************************/
     /**************************这样的做法能最大限度的节省系统的开销**************************/
-
-
     NSMutableArray* textStorages = [[NSMutableArray alloc] init];
     [textStorages addObject:nameTextStorage];
     [textStorages addObject:contentTextStorage];
@@ -357,12 +355,13 @@ const CGFloat kRefreshBoundary = 170.0f;
     layout.statusModel = statusModel;
 
     //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
-    layout.cellHeight = dateTextStorage.bottom + commentBgPosition.size.height + 15.0f;
-
+    layout.cellHeight = [layout suggestHeightWithBottomMargin:15.0f];
     /******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
     /********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
     return layout;
 }
+
+
 
 /****************************************************************************/
 
