@@ -17,9 +17,7 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
 ## Usage
 
 * **Class**
-
 |Class | Function|
-
 |--------|---------|
 |LWAsyncDisplayView|在子线程中实现界面的渲染，保证主线程的流畅性|
 |LWStorage、LWTextStorage、LWImageStorage|LWAsyncDisplayView的模型|
@@ -140,9 +138,11 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
       //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
     layout.cellHeight = [layout suggestHeightWithBottomMargin:15.0f];
     
-    
-    //然后将这个Layout赋值给LWAsyncDisplayView的实例对象即可
-    - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+
+
+//然后将这个Layout赋值给LWAsyncDisplayView的实例对象即可
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString* cellIdentifier = @"cellIdentifier";
     TableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
