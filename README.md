@@ -11,7 +11,7 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
 * 支持富文本，图文混排显示，支持行间距 字间距，设置行数，自适应高度
 * 支持添加属性文本，自定义链接
 * 支持通过设置约束的方式自动布局
-
+* (用LWAsyncDisplayView实现网络图片加载依赖于SDWebImage)
 
 
 ## Usage
@@ -23,7 +23,6 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
 |LWAsyncDisplayView|在子线程中实现界面的渲染，保证主线程的流畅性|
 |LWStorage、LWTextStorage、LWImageStorage|LWAsyncDisplayView的模型|
 |LWConstraintManager|实现设置约束自动布局|
-|LWAlchemyValueTransformer|继承NSValueTransformer提供更方便使用的API|
 
 
 * **API Quickstart**
