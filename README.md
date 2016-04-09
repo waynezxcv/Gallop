@@ -2,16 +2,20 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# LWAsyncDisplayView V1.0
-LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布局预加载缓存、支持图文混排显示，支持添加链接、支持自定义排版。
-使用在UITableViewCell上时，构建复杂的界面,滚动时可以保持帧数在60。<br>
+# Gallop V1.0
+Gallop --- 异步绘制排版框架，支持布局预加载缓存、支持图文混排显示，支持添加链接、支持自定义排版，自动布局。
+使用在UITableViewCell上时，构建复杂的界面,滚动时可以保持帧数在60。
+<br>
 
 ## Features
 * 支持文本布局绘制预加载，并使用异步绘制的方式，保持界面的流畅性
 * 支持富文本，图文混排显示，支持行间距 字间距，设置行数，自适应高度
 * 支持添加属性文本，自定义链接
 * 支持通过设置约束的方式自动布局
-* (用LWAsyncDisplayView实现网络图片加载依赖于SDWebImage)
+* API简单，只需设置简单的属性，复杂的多线程绘制、自动布局交给Gallop就好啦。
+
+
+##  使用Gallop实现网络图片加载部分依赖于SDWebImage（https://github.com/rs/SDWebImage）
 
 
 ## Usage
@@ -34,7 +38,7 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
 ```objc
     /********生成Storage 相当于模型***********/
     /********LWAsyncDisplayView用将所有文本跟图片的模型都抽象成LWStorage，方便你能预先将所有的需要计算的布局内容直接缓存起来***/
-    /*******而不是在渲染的时候才进行计算,提高性能*********/
+    /*******而不是在渲染的时候才进行计算,提高性能，以空间换时间*********/
     //头像模型 avatarImageStorage
     LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
     avatarStorage.type = LWImageStorageWebImage;
@@ -138,7 +142,6 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
       //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
     layout.cellHeight = [layout suggestHeightWithBottomMargin:15.0f];
     
-
 
 
 //然后将这个Layout赋值给LWAsyncDisplayView的实例对象即可
