@@ -15,7 +15,9 @@
 
 @interface CellLayout : LWLayout
 
+
 @property (nonatomic,assign) CGFloat cellHeight;
+
 @property (nonatomic,assign) CGRect menuPosition;
 @property (nonatomic,assign) CGRect commentBgPosition;
 @property (nonatomic,copy) NSArray* imagePostionArray;

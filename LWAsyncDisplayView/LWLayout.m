@@ -18,6 +18,14 @@
 #import "LWLayout.h"
 #import "LWStorage+Constraint.h"
 
+
+@interface LWLayout ()
+
+
+@property (nonatomic,strong) NSMutableArray* totalStorages;
+
+@end
+
 @implementation LWLayout
 
 - (id)initWithTextStorages:(NSArray<LWTextStorage *>*)textStorages
@@ -26,8 +34,26 @@
     if (self) {
         self.textStorages = [textStorages copy];
         self.imageStorages = [imageStorages copy];
+
+        [self.totalStorages addObjectsFromArray:self.textStorages];
+        [self.totalStorages addObjectsFromArray:self.imageStorages];
     }
     return self;
 }
 
+- (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin {
+    CGFloat suggestHeight = 0.0f;
+    for (LWTextStorage* storage in self.totalStorages) {
+        suggestHeight = suggestHeight > storage.bottom ? suggestHeight :storage.bottom;
+    }
+    return suggestHeight + bottomMargin;
+}
+
+- (NSMutableArray *)totalStorages {
+    if (_totalStorages) {
+        return _totalStorages;
+    }
+    _totalStorages = [[NSMutableArray alloc] init];
+    return _totalStorages;
+}
 @end
