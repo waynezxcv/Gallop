@@ -17,12 +17,13 @@ LWAsyncDisplayView 轻量级的属性文本 异步绘制 的控件，支持布�
 ## Usage
 
 * **Class**
+
 |Class | Function|
 |--------|---------|
 |LWAsyncDisplayView|在子线程中实现界面的渲染，保证主线程的流畅性|
 |LWStorage、LWTextStorage、LWImageStorage|LWAsyncDisplayView的模型|
-|LWTextLayout|文本布局的预加载类，缓存起来，把计算布局的时间提前，减少绘制图片时的计算时间|
 |LWConstraintManager|实现设置约束自动布局|
+|LWAlchemyValueTransformer|继承NSValueTransformer提供更方便使用的API|
 
 
 * **API Quickstart**
