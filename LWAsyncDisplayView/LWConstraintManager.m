@@ -1,6 +1,12 @@
 //
-//  LWConstraintManager.m
-//  LWAsyncDisplayViewDemo
+//  The MIT License (MIT)
+//  Copyright (c) 2016 Wayne Liu <liuweiself@126.com>
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//　　The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+////
 //
 //  Created by 刘微 on 16/4/9.
 //  Copyright © 2016年 WayneInc. All rights reserved.
@@ -53,7 +59,7 @@ static void* LWContainerSizeKey = &LWContainerSizeKey;
         [self changeTop:self.constraint.top];
     }
     if (self.constraint.bottom) {
-        [self changeTop:self.constraint.bottom];
+        [self changeBottom:self.constraint.bottom];
     }
     if (self.constraint.width) {
         [self changeWidth:self.constraint.width];
@@ -61,21 +67,34 @@ static void* LWContainerSizeKey = &LWContainerSizeKey;
     if (self.constraint.height) {
         [self changeHeight:self.constraint.height];
     }
-    if (self.constraint.leftObject) {
-        [self changeLeft:@(self.constraint.leftObject.referenceStorage.right + self.constraint.leftObject.value)];
+    if (self.constraint.leftEqualObject) {
+        [self changeLeft:@(self.constraint.leftEqualObject.referenceStorage.left)];
+    }
+    if (self.constraint.topEqualObject) {
+        [self changeTop:@(self.constraint.rightEqualObject.referenceStorage.right)];
+    }
+    if (self.constraint.bottomEqualObject) {
+        [self changeBottom:@(self.constraint.bottomEqualObject.referenceStorage.bottom)];
+    }
+    if (self.constraint.leftMarginObject) {
+        [self changeLeft:@(self.constraint.leftMarginObject.referenceStorage.right + self.constraint.leftMarginObject.value)];
     }
     if (self.constraint.right) {
         [self changeRight:self.constraint.right];
     }
-    if (self.constraint.rightObject) {
-        [self changeRight:@(self.constraint.rightObject.referenceStorage.left - self.constraint.rightObject.value)];
+    if (self.constraint.rightEqualObject) {
+        [self changeRight:@(self.constraint.rightEqualObject.referenceStorage.right)];
     }
-    if (self.constraint.topObject) {
-        [self changeTop:@(self.constraint.topObject.referenceStorage.bottom + self.constraint.topObject.value)];
+    if (self.constraint.rightMarginObject) {
+        [self changeRight:@(self.constraint.rightMarginObject.referenceStorage.left - self.constraint.rightMarginObject.value)];
     }
-    if (self.constraint.bottomObject) {
-        [self changeTop:@(self.constraint.bottomObject.referenceStorage.top - self.constraint.bottomObject.value)];
+    if (self.constraint.topMarginObject) {
+        [self changeTop:@(self.constraint.topMarginObject.referenceStorage.bottom + self.constraint.topMarginObject.value)];
     }
+    if (self.constraint.bottomMarginObject) {
+        [self changeTop:@(self.constraint.bottomMarginObject.referenceStorage.top - self.constraint.bottomMarginObject.value)];
+    }
+
     if ([self.constraint.superStorage isMemberOfClass:[LWTextStorage class]]) {
         LWTextStorage* TextStorage = (LWTextStorage *)self.constraint.superStorage;
         [TextStorage creatCTFrameRef];

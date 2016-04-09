@@ -262,7 +262,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     dateTextStorage.textColor = [UIColor grayColor];
 
     /***********************************  设置约束 自动布局 *********************************************/
-    [LWConstraintManager lw_makeConstraint:dateTextStorage.constraint.leftMarginToStorage(avatarStorage,10).topMarginToStorage(lastImageStorage,10)];
+    [LWConstraintManager lw_makeConstraint:dateTextStorage.constraint.leftEquelToStorage(contentTextStorage).topMarginToStorage(lastImageStorage,10)];
 
     //生成菜单图片的模型 dateTextStorage
     CGRect menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,20.0f + imagesHeight + contentTextStorage.bottom,20.0f,15.0f);
@@ -333,11 +333,10 @@ const CGFloat kRefreshBoundary = 170.0f;
         commentBgPosition = CGRectMake(60.0f,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, offsetY + 15.0f);
     }
 
-
-
     /**************************将要在同一个LWAsyncDisplayView上显示的Storage要全部放入同一个LWLayout中***************************************/
     /**************************我们将尽量通过合并绘制的技术将所有在同一个View显示的内容全都异步绘制在同一个AsyncDisplayView上**************************/
     /**************************这样的做法能最大限度的节省系统的开销**************************/
+
 
     NSMutableArray* textStorages = [[NSMutableArray alloc] init];
     [textStorages addObject:nameTextStorage];
@@ -360,18 +359,12 @@ const CGFloat kRefreshBoundary = 170.0f;
     //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
     layout.cellHeight = dateTextStorage.bottom + commentBgPosition.size.height + 15.0f;
 
-    /******************** 希望你能使用LWAsyncDisplayView来提高性能，熟练使用后布局过程比使用苹果源生的方式更快速 *****************/
     /******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
     /********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
     return layout;
 }
 
 /****************************************************************************/
-
-
-
-
-
 
 
 

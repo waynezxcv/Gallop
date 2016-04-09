@@ -1,6 +1,12 @@
 //
-//  LWConstraint.m
-//  LWAsyncDisplayViewDemo
+//  The MIT License (MIT)
+//  Copyright (c) 2016 Wayne Liu <liuweiself@126.com>
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//　　The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+////
 //
 //  Created by 刘微 on 16/4/7.
 //  Copyright © 2016年 WayneInc. All rights reserved.
@@ -23,10 +29,10 @@
 @property (nonatomic,copy) MarginToStorage topMarginToStorage;
 @property (nonatomic,copy) MarginToStorage bottomMarginToStorage;
 
-@property (nonatomic,copy) EqualToStorage leftMarginEquelToStorage;
-@property (nonatomic,copy) EqualToStorage rightMarginEquelToStorage;
-@property (nonatomic,copy) EqualToStorage topMarginEquelToStorage;
-@property (nonatomic,copy) EqualToStorage bottomMarginEquelToStorage;
+@property (nonatomic,copy) EqualToStorage leftEquelToStorage;
+@property (nonatomic,copy) EqualToStorage rightEquelToStorage;
+@property (nonatomic,copy) EqualToStorage topEquelToStorage;
+@property (nonatomic,copy) EqualToStorage bottomEquelToStorage;
 
 @property (nullable,nonatomic,strong) NSNumber* left;
 @property (nullable,nonatomic,strong) NSNumber* right;
@@ -35,10 +41,16 @@
 @property (nullable,nonatomic,strong) NSNumber* width;
 @property (nullable,nonatomic,strong) NSNumber* height;
 
-@property (nullable,nonatomic,strong) LWConstraintObject* leftObject;
-@property (nullable,nonatomic,strong) LWConstraintObject* rightObject;
-@property (nullable,nonatomic,strong) LWConstraintObject* topObject;
-@property (nullable,nonatomic,strong) LWConstraintObject* bottomObject;
+@property (nullable,nonatomic,strong) LWConstraintMarginObject* leftMarginObject;
+@property (nullable,nonatomic,strong) LWConstraintMarginObject* rightMarginObject;
+@property (nullable,nonatomic,strong) LWConstraintMarginObject* topMarginObject;
+@property (nullable,nonatomic,strong) LWConstraintMarginObject* bottomMarginObject;
+
+
+@property (nullable,nonatomic,strong) LWConstraintEqualObject* leftEqualObject;
+@property (nullable,nonatomic,strong) LWConstraintEqualObject* rightEqualObject;
+@property (nullable,nonatomic,strong) LWConstraintEqualObject* topEqualObject;
+@property (nullable,nonatomic,strong) LWConstraintEqualObject* bottomEqualObject;
 
 @end
 
@@ -98,7 +110,7 @@
     if (_leftMarginToStorage) {
         return _leftMarginToStorage;
     }
-    _leftMarginToStorage = [self marginToStorageWithKey:@"leftObject"];
+    _leftMarginToStorage = [self marginToStorageWithKey:@"leftMarginObject"];
     return _leftMarginToStorage;
 }
 
@@ -106,7 +118,7 @@
     if (_rightMarginToStorage) {
         return _rightMarginToStorage;
     }
-    _rightMarginToStorage = [self marginToStorageWithKey:@"rightObject"];
+    _rightMarginToStorage = [self marginToStorageWithKey:@"rightMarginObject"];
     return _rightMarginToStorage;
 }
 
@@ -114,7 +126,7 @@
     if (_topMarginToStorage) {
         return _topMarginToStorage;
     }
-    _topMarginToStorage = [self marginToStorageWithKey:@"topObject"];
+    _topMarginToStorage = [self marginToStorageWithKey:@"topMarginObject"];
     return _topMarginToStorage;
 }
 
@@ -122,10 +134,53 @@
     if (_bottomMarginToStorage) {
         return _bottomMarginToStorage;
     }
-    _bottomMarginToStorage = [self marginToStorageWithKey:@"bottomObject"];
+    _bottomMarginToStorage = [self marginToStorageWithKey:@"bottomMarginObject"];
     return _bottomMarginToStorage;
 }
 
+- (EqualToStorage)leftEquelToStorage {
+    if (_leftEquelToStorage) {
+        return _leftEquelToStorage;
+    }
+    _leftEquelToStorage = [self equelToStorageWithKey:@"leftEqualObject"];
+    return _leftEquelToStorage;
+}
+
+- (EqualToStorage)rightEquelToStorage {
+    if (_rightEquelToStorage) {
+        return _rightEquelToStorage;
+    }
+    _rightEquelToStorage = [self equelToStorageWithKey:@"rightEqualObject"];
+    return _rightEquelToStorage;
+}
+
+
+- (EqualToStorage)topEquelToStorage {
+    if (_topEquelToStorage) {
+        return _topEquelToStorage;
+    }
+    _topEquelToStorage = [self equelToStorageWithKey:@"topEqualObject"];
+    return _topEquelToStorage;
+}
+
+- (EqualToStorage)bottomEquelToStorage {
+    if (_bottomEquelToStorage) {
+        return _bottomEquelToStorage;
+    }
+    _bottomEquelToStorage  = [self equelToStorageWithKey:@"bottomEqualObject"];
+    return _bottomEquelToStorage;
+}
+
+- (EqualToStorage)equelToStorageWithKey:(NSString *)key {
+    __weak typeof(self) weakSelf = self;
+    return ^(LWStorage* storage) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        LWConstraintEqualObject* object = [[LWConstraintEqualObject alloc] init];
+        object.referenceStorage = storage;
+        [strongSelf setValue:object forKey:key];
+        return strongSelf;
+    };
+}
 
 - (Length)lengthWithKey:(NSString *)key {
     __weak typeof(self) weakSelf = self;
@@ -163,7 +218,7 @@
     __weak typeof(self) weakSelf = self;
     return ^(LWStorage* storage, CGFloat value) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        LWConstraintObject* object = [[LWConstraintObject alloc] init];
+        LWConstraintMarginObject* object = [[LWConstraintMarginObject alloc] init];
         object.referenceStorage = storage;
         object.value = value;
         [strongSelf setValue:object forKey:key];
@@ -173,7 +228,15 @@
 
 @end
 
-@implementation LWConstraintObject
+
+
+
+
+@implementation LWConstraintMarginObject
+
+@end
+
+@implementation LWConstraintEqualObject
 
 @end
 
