@@ -19,10 +19,19 @@
 
 #import <UIKit/UIKit.h>
 
+
+typedef NS_ENUM(NSUInteger, LWTextAttachType) {
+    LWTextAttachWebImage = 0,
+    LWTextAttachLocalImage = 1,
+};
+
+
 @interface LWTextAttach : NSObject
 
+@property (nonatomic,assign) LWTextAttachType type;
 @property (nonatomic,strong) UIImage* image;
 @property (nonatomic,assign) NSRange range;
 @property (nonatomic,assign) CGRect imagePosition;
+@property (nonatomic,strong) NSURL* URL;
 
 @end

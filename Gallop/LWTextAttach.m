@@ -25,9 +25,11 @@
 - (id)init {
     self = [super init];
     if (self) {
+        self.type = LWTextAttachLocalImage;
         self.range = NSMakeRange(0, 0);
         self.imagePosition = CGRectZero;
         self.image = nil;
+        self.URL = nil;
     }
     return self;
 }

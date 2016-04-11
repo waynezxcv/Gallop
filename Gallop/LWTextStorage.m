@@ -47,6 +47,8 @@ static CGFloat widthCallback(void* ref){
 
 @interface LWTextStorage ()
 
+@property (nonatomic,strong) NSMutableArray* localAttachs;
+@property (nonatomic,assign) NSInteger webImageCount;
 @property (nonatomic,assign) CGSize suggestSize;
 
 @end
@@ -135,11 +137,14 @@ static CGFloat widthCallback(void* ref){
         CGContextTranslateCTM(context, - self.frame.origin.x, -self.frame.origin.y);
         CTFrameDraw(self.CTFrame, context);
         CGContextRestoreGState(context);
-        if (self.attachs.count == 0) {
+        if (self.localAttachs.count == 0) {
             return;
         }
-        for (NSInteger i = 0; i < self.attachs.count; i ++) {
-            LWTextAttach* attach = self.attachs[i];
+        for (NSInteger i = 0; i < self.localAttachs.count; i ++) {
+            LWTextAttach* attach = self.localAttachs[i];
+            if (attach.type == LWTextAttachWebImage) {
+                return;
+            }
             CGContextSaveGState(context);
             CGContextTranslateCTM(context, self.frame.origin.x, self.frame.origin.y);
             CGContextTranslateCTM(context, 0, self.frame.size.height);
@@ -150,6 +155,7 @@ static CGFloat widthCallback(void* ref){
         }
     }
 }
+
 
 #pragma mark - Add Link
 
@@ -192,13 +198,29 @@ static CGFloat widthCallback(void* ref){
     [self creatCTFrameRef];
     LWTextAttach* attach = [[LWTextAttach alloc] init];
     attach.image = image;
+    attach.type = LWTextAttachLocalImage;
     [self _setupImageAttachPositionWithAttach:attach];
-    [self.attachs addObject:attach];
+    [self.localAttachs addObject:attach];
 }
 
-- (void)replaceTextWithImageURL:(NSURL *)URL inRange:(NSRange)range {
-
+- (void)replaceTextWithImageURL:(NSURL *)URL imageSize:(CGSize)size inRange:(NSRange)range {
+    if (_attributedText == nil || _attributedText.length == 0) {
+        return;
+    }
+    [self _resetFrameRef];
+    CGFloat width = size.width;
+    CGFloat height = size.height;
+    NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width
+                                                                                    imageHeight:height]];
+    [_attributedText replaceCharactersInRange:range withAttributedString:placeholder];
+    [self creatCTFrameRef];
+    LWTextAttach* attach = [[LWTextAttach alloc] init];
+    attach.type = LWTextAttachWebImage;
+    attach.URL = URL;
+    [self _setupImageAttachPositionWithAttach:attach];
+    [self.webAttachs addObject:attach];
 }
+
 
 - (void)_setupImageAttachPositionWithAttach:(LWTextAttach *)attach {
     NSArray* lines = (NSArray *)CTFrameGetLines(self.CTFrame);
@@ -266,7 +288,8 @@ static CGFloat widthCallback(void* ref){
 
 #pragma mark - Reset
 - (void)_resetAttachs {
-    [self.attachs removeAllObjects];
+    [self.webAttachs removeAllObjects];
+    [self.localAttachs removeAllObjects];
 }
 
 - (void)_resetFrameRef {
@@ -278,11 +301,18 @@ static CGFloat widthCallback(void* ref){
 
 #pragma mark - Getter
 
-- (NSMutableArray *)attachs {
-    if (!_attachs) {
-        _attachs = [[NSMutableArray alloc] init];
+- (NSMutableArray *)webAttachs {
+    if (!_webAttachs) {
+        _webAttachs = [[NSMutableArray alloc] init];
     }
-    return _attachs;
+    return _webAttachs;
+}
+
+- (NSMutableArray *)localAttachs {
+    if (!_localAttachs) {
+        _localAttachs = [[NSMutableArray alloc] init];
+    }
+    return _localAttachs;
 }
 
 - (NSString *)text {
@@ -290,6 +320,10 @@ static CGFloat widthCallback(void* ref){
 }
 
 #pragma mark - Setter
+
+- (NSInteger)webImageCount {
+    return self.webAttachs.count;
+}
 
 - (void)setText:(NSString *)text {
     [self _resetAttachs];

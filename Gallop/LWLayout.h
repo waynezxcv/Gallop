@@ -20,13 +20,11 @@
 
 @interface LWLayout : NSObject
 
-
 @property (nonatomic,copy) NSArray<LWTextStorage *>* textStorages;
 @property (nonatomic,copy) NSArray<LWImageStorage *>* imageStorages;
 
 - (id)initWithTextStorages:(NSArray<LWTextStorage *>*)textStorages
              imageStorages:(NSArray<LWImageStorage *>*)imageStorages;
-
 
 - (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin;
 

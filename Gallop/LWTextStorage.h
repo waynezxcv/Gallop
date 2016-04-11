@@ -105,14 +105,15 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  */
 @property (nonatomic,assign) CTFrameRef CTFrame;
 
-
-
-
+/**
+ *  附件中网络图片的个数
+ */
+@property (nonatomic,assign,readonly) NSInteger webImageCount;
 
 /**
- *  存放附件的数组
+ *  存放网络图片的附件
  */
-@property (nonatomic,strong) NSMutableArray* attachs;
+@property (nonatomic,strong) NSMutableArray* webAttachs;
 
 /**
  *  是否自动适配宽度
@@ -124,6 +125,7 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  *
  */
 - (void)creatCTFrameRef;
+
 
 /**
  *  绘制
@@ -147,12 +149,11 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  */
 - (void)replaceTextWithImage:(UIImage *)image inRange:(NSRange)range;
 
-//TODO：
 /**
  *  用网络图片替换掉指定位置的文字
  *
  */
-//- (void)replaceTextWithImageURL:(NSURL *)URL inRange:(NSRange)range;
+- (void)replaceTextWithImageURL:(NSURL *)URL imageSize:(CGSize)size inRange:(NSRange)range;
 
 
 #define kLWTextLinkAttributedName @"LWTextLinkAttributedName"
