@@ -217,8 +217,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                                highlightColor:nil
                                underlineStyle:NSUnderlineStyleNone];
 
-
-
     //发布的图片模型 imgsStorage
     NSInteger imageCount = [statusModel.imgs count];
     NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
@@ -233,7 +231,6 @@ const CGFloat kRefreshBoundary = 170.0f;
         NSString* imagePositionString = NSStringFromCGRect(imageRect);
         [imagePositionArray addObject:imagePositionString];
         LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
-
         /***************** 也可以不使用设置约束的方式来布局，而是直接设置frame属性的方式来布局*************************************/
         imageStorage.frame = imageRect;
         /***********************************/
@@ -243,6 +240,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         imageStorage.type = LWImageStorageWebImage;
         imageStorage.fadeShow = YES;
         [imageStorageArray addObject:imageStorage];
+
         column = column + 1;
         if (column > 2) {
             column = 0;
@@ -254,7 +252,6 @@ const CGFloat kRefreshBoundary = 170.0f;
 
     //获取最后一张图片的模型
     LWImageStorage* lastImageStorage = (LWImageStorage *)[imageStorageArray lastObject];
-
     //生成时间的模型 dateTextStorage
     LWTextStorage* dateTextStorage = [[LWTextStorage alloc] init];
     dateTextStorage.text = [[self dateFormatter] stringFromDate:statusModel.date];
@@ -334,7 +331,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
 
     /**************************将要在同一个LWAsyncDisplayView上显示的Storage要全部放入同一个LWLayout中***************************************/
-    /**************************我们将尽量通过合并绘制的技术将所有在同一个View显示的内容全都异步绘制在同一个AsyncDisplayView上**************************/
+    /**************************我们将尽量通过合并绘制的方式将所有在同一个View显示的内容全都异步绘制在同一个AsyncDisplayView上**************************/
     /**************************这样的做法能最大限度的节省系统的开销**************************/
     NSMutableArray* textStorages = [[NSMutableArray alloc] init];
     [textStorages addObject:nameTextStorage];
@@ -364,8 +361,6 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 
 /****************************************************************************/
-
-
 
 - (void)refreshComplete {
     [self.tableViewHeader refreshingAnimateStop];

@@ -12,13 +12,6 @@
 
 #import "LWImageStorage.h"
 
-@interface LWImageStorage ()
-
-@property (nonatomic, strong) id target;
-@property (nonatomic, assign) SEL selector;
-@property (nonatomic,assign,readwrite) LWImageContainerType imageContainerType;
-
-@end
 
 @implementation LWImageStorage
 
@@ -26,7 +19,6 @@
     self = [super init];
     if (self) {
         self.type = LWImageStorageLocalImage;
-        self.imageContainerType = LWImageContainerTypeCALayer;
         self.image = nil;
         self.URL = nil;
         self.frame = CGRectZero;
@@ -36,23 +28,6 @@
         self.fadeShow = NO;
     }
     return self;
-}
-
-- (void)addtarget:(id)target action:(SEL)selector {
-    if (!target || !selector) {
-        return;
-    }
-    self.target = target;
-    self.selector = selector;
-    self.imageContainerType = LWImageContainerTypeUIImageView;
-}
-
-- (CGFloat)width {
-    return self.frame.size.width;
-}
-
-- (CGFloat)height {
-    return self.frame.size.height;
 }
 
 @end

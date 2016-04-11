@@ -47,6 +47,7 @@ static CGFloat widthCallback(void* ref){
 
 @interface LWTextStorage ()
 
+@property (nonatomic,assign) CGSize suggestSize;
 
 @end
 
@@ -96,21 +97,11 @@ static CGFloat widthCallback(void* ref){
     if (_attributedText == nil) {
         return ;
     }
-    if (self.height > 0) {
-        return ;
-    }
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedText);
-    CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,
-                                                                      CFRangeMake(0, _attributedText.length),
-                                                                      NULL,
-                                                                      CGSizeMake(self.frame.size.width, CGFLOAT_MAX),
-                                                                      NULL);
-    self.height = suggestSize.height;
-    self.width = suggestSize.width;
     if (self.isWidthToFit) {
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, suggestSize.width, suggestSize.height);
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.suggestSize.width,self.suggestSize.height);
     } else {
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, suggestSize.height);
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.suggestSize.height);
     }
     CGMutablePathRef textPath = CGPathCreateMutable();
     CGPathAddRect(textPath, NULL, self.frame);
@@ -118,6 +109,20 @@ static CGFloat widthCallback(void* ref){
     CFRelease(ctFrameSetter);
     CFRelease(textPath);
 }
+
+
+- (CGSize)suggestSize {
+    CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedText);
+    CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,
+                                                                      CFRangeMake(0, _attributedText.length),
+                                                                      NULL,
+                                                                      CGSizeMake(self.frame.size.width, CGFLOAT_MAX),
+                                                                      NULL);
+    CFRelease(ctFrameSetter);
+    return suggestSize;
+}
+
+
 
 #pragma mark - Draw
 - (void)drawInContext:(CGContextRef)context {
@@ -269,7 +274,6 @@ static CGFloat widthCallback(void* ref){
         CFRelease(self.CTFrame);
         self.CTFrame = nil;
     }
-    self.height = 0;
 }
 
 #pragma mark - Getter

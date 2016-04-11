@@ -17,6 +17,8 @@
 
 @interface LWStorage : NSObject
 
+@property (nonatomic,copy) NSString* uniqueSign;
+
 @property (nonatomic,assign) CGRect frame;
 @property (nonatomic,assign) CGFloat height;
 @property (nonatomic,assign) CGFloat width;

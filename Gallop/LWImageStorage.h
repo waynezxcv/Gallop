@@ -21,11 +21,6 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
     LWImageStorageLocalImage = 1,
 };
 
-typedef NS_ENUM(NSUInteger, LWImageContainerType) {
-    LWImageContainerTypeCALayer = 0,
-    LWImageContainerTypeUIImageView = 1,
-};
-
 @interface LWImageStorage : LWStorage
 
 @property (nonatomic,strong) NSURL* URL;
@@ -35,8 +30,5 @@ typedef NS_ENUM(NSUInteger, LWImageContainerType) {
 @property (nonatomic,assign) BOOL masksToBounds;
 @property (nonatomic,strong) UIImage* placeholder;
 @property (nonatomic,assign,getter=isFadeShow) BOOL fadeShow;
-@property (nonatomic,assign,readonly) LWImageContainerType imageContainerType;
-
-- (void)addtarget:(id)target action:(nullable SEL)selector;
 
 @end

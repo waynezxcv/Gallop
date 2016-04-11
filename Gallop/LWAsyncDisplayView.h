@@ -18,6 +18,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "LWLayout.h"
+#import "LWImageStorage.h"
 
 @class LWAsyncDisplayView;
 
@@ -30,7 +31,13 @@
  *  点击链接回调
  *
  */
-- (void)lwAsyncDicsPlayView:(LWAsyncDisplayView *)lwLabel didCilickedLinkWithfData:(id)data;
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data;
+
+/**
+ *  点击LWImageStorage回调
+ *
+ */
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedImageStorage:(LWImageStorage *)imageStorage tapGesture:(UITapGestureRecognizer *)tapGesutrueRecognizer;
 
 /**
  *  额外的绘制任务在这里实现
@@ -49,5 +56,6 @@
  *  数据源
  */
 @property (nonatomic,copy) LWLayout* layout;
+
 
 @end

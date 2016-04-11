@@ -226,7 +226,18 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 #pragma mark - SignleTapGesture
 
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
+
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
+    for (LWImageStorage* imageStorage in self.layout.imageStorages) {
+        if (imageStorage == nil) {
+            continue;
+        }
+        if (CGRectContainsPoint(imageStorage.frame, touchPoint)) {
+            if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:tapGesture:)]) {
+                [self.delegate lwAsyncDisplayView:self didCilickedImageStorage:imageStorage tapGesture:tapGestureRecognizer];
+            }
+        }
+    }
     for (LWTextStorage* textStorage in self.layout.textStorages) {
         if (textStorage == nil) {
             continue;
@@ -268,9 +279,9 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
                             touchedRun = runObj;
                             NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
                             if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
-                                if ([self.delegate respondsToSelector:@selector(lwAsyncDicsPlayView:didCilickedLinkWithfData:)] &&
+                                if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedLinkWithfData:)] &&
                                     [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
-                                    [self.delegate lwAsyncDicsPlayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
+                                    [self.delegate lwAsyncDisplayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
                                     break;
                                 }
                             }

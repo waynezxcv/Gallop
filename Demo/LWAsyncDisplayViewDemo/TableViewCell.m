@@ -8,6 +8,7 @@
 
 #import "TableViewCell.h"
 #import "LWDefine.h"
+#import "LWImageStorage.h"
 
 
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate>
@@ -25,8 +26,6 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
-        [self.asyncDisplayView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                            action:@selector(didClickedImageView:)]];
     }
     return self;
 }
@@ -37,8 +36,10 @@
  *  点击图片查看大图
  *
  */
-- (void)didClickedImageView:(UITapGestureRecognizer *)tap {
-    CGPoint point = [tap locationInView:self];
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
+   didCilickedImageStorage:(LWImageStorage *)imageStorage
+                tapGesture:(UITapGestureRecognizer *)tapGesutrueRecognizer{
+    CGPoint point = [tapGesutrueRecognizer locationInView:self];
     for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
         if (CGRectContainsPoint(imagePosition, point)) {
@@ -50,11 +51,12 @@
     }
 }
 
+
 /**
  *  点击链接回调
  *
  */
-- (void)lwAsyncDicsPlayView:(LWAsyncDisplayView *)lwLabel didCilickedLinkWithfData:(id)data {
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data {
     if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLinkWithData:)] &&
         [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
         [self.delegate tableViewCell:self didClickedLinkWithData:data];

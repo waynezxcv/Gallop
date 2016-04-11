@@ -34,7 +34,6 @@
     if (self) {
         self.textStorages = [textStorages copy];
         self.imageStorages = [imageStorages copy];
-
         [self.totalStorages addObjectsFromArray:self.textStorages];
         [self.totalStorages addObjectsFromArray:self.imageStorages];
     }
