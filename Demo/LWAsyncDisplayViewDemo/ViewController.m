@@ -185,8 +185,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     nameTextStorage.textColor = RGB(113, 129, 161, 1);
 
 
-
-
     //正文内容模型 contentTextStorage
     LWTextStorage* contentTextStorage = [[LWTextStorage alloc] init];
     contentTextStorage.text = statusModel.content;
@@ -203,9 +201,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     [LWConstraintManager lw_makeConstraint:nameTextStorage.constraint.leftMarginToStorage(avatarStorage,10).topMargin(20).widthLength(SCREEN_WIDTH)];
     [LWConstraintManager lw_makeConstraint:contentTextStorage.constraint.leftMarginToStorage(avatarStorage,10).topMarginToStorage(nameTextStorage,10).rightMargin(20)];
 
-
-
-
     /***********************************  添加点击Link 解析表情*********************************************/
     [nameTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",statusModel.name]
                              inRange:NSMakeRange(0,statusModel.name.length)
@@ -218,6 +213,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     linkColor:RGB(113, 129, 161, 1)
                                highlightColor:nil
                                underlineStyle:NSUnderlineStyleNone];
+
 
     //发布的图片模型 imgsStorage
     NSInteger imageCount = [statusModel.imgs count];
@@ -232,8 +228,9 @@ const CGFloat kRefreshBoundary = 170.0f;
                                       80.0f);
         NSString* imagePositionString = NSStringFromCGRect(imageRect);
         [imagePositionArray addObject:imagePositionString];
-        LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+
         /***************** 也可以不使用设置约束的方式来布局，而是直接设置frame属性的方式来布局*************************************/
+        LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
         imageStorage.frame = imageRect;
         /***********************************/
 

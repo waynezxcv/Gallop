@@ -226,7 +226,6 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 #pragma mark - SignleTapGesture
 
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
-
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
     for (LWImageStorage* imageStorage in self.layout.imageStorages) {
         if (imageStorage == nil) {
@@ -302,9 +301,6 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     return CGRectMake(point.x, point.y - descent, width, height);
 }
 
-- (void)_layout:(LWTextStorage *)layout drawHighLightWithAttach:(LWTextAttach *)attach {
-
-}
 
 #pragma mark - UIGestrueRecognizer
 
