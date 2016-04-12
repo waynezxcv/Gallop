@@ -378,7 +378,6 @@
 		011DFADC1C9886F5000410D7 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				011DFA681C9881AE000410D7 /* SDWebImage */,
 				011DFA341C987DF6000410D7 /* LWAsyncDisplayView */,
 			);
 			name = Classes;
@@ -465,6 +464,7 @@
 		B085B3441CB69C7B00087739 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				011DFA681C9881AE000410D7 /* SDWebImage */,
 				011DFA361C987DFC000410D7 /* LWAlchemy */,
 				011DFA351C987DF8000410D7 /* LWImageBrowser */,
 			);
