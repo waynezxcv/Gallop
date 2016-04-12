@@ -10,6 +10,6 @@
 
 @interface NSObject(SwizzleMethod)
 
-+ (BOOL)swizzleMethod:(SEL)origSel withMethod:(SEL)aftSel;
++ (void)swizzleMethod:(SEL)origSel withMethod:(SEL)aftSel;
 
 @end

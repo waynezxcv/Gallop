@@ -10,7 +10,7 @@
 
 @interface CALayer(GallopAddtions)
 
-- (void)lw_advanceCornerRadius:(CGFloat)cornerRadous cornerBackgroundColor:(UIColor *)color;
+- (void)lw_advanceCornerRadius:(CGFloat)cornerRadius cornerBackgroundColor:(UIColor *)color image:(UIImage *)image;
 - (void)lw_delaySetContents:(id)contents;
 
 @end

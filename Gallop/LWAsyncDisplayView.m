@@ -118,9 +118,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
             NSInteger delta = self.layout.imageStorages.count - self.imageContainers.count;
             for (NSInteger i = 0; i < delta; i ++) {
                 CALayer* subLayer = [CALayer layer];
-                subLayer.contentsGravity = kCAGravityResizeAspectFill;
                 subLayer.contentsScale = [UIScreen mainScreen].scale;
-                subLayer.masksToBounds = YES;
                 [self.layer addSublayer:subLayer];
                 [self.imageContainers addObject:subLayer];
             }
@@ -136,28 +134,21 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         subLayer.frame = imageStorage.frame;
-        [subLayer lw_advanceCornerRadius:imageStorage.cornerRadius cornerBackgroundColor:imageStorage.cornerBackgroundColor];
+        subLayer.contentsGravity = kCAGravityResizeAspectFill;
         [CATransaction commit];
         if (imageStorage.type == LWImageStorageWebImage) {
-            [subLayer sd_setImageWithURL:imageStorage.URL
-                        placeholderImage:imageStorage.placeholder
-                                 options:0
-                               completed:^(UIImage *image,
-                                           NSError *error,
-                                           SDImageCacheType
-                                           cacheType,
-                                           NSURL *imageURL) {
-                                   if (imageStorage.fadeShow) {
-                                       CATransition *transition = [CATransition animation];
-                                       transition.duration = 0.2;
-                                       transition.timingFunction = [CAMediaTimingFunction
-                                                                    functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-                                       transition.type = kCATransitionFade;
-                                       [subLayer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
-                                   }
-                               }];
+            [subLayer sd_setImageWithURL:imageStorage.URL placeholderImage:imageStorage.placeholder options:0 cornerRadius:imageStorage.cornerRadius cornerBackgroundColor:imageStorage.cornerBackgroundColor completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                if (imageStorage.fadeShow) {
+                    CATransition *transition = [CATransition animation];
+                    transition.duration = 0.2;
+                    transition.timingFunction = [CAMediaTimingFunction
+                                                 functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                    transition.type = kCATransitionFade;
+                    [subLayer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
+                }
+            }];
         } else {
-            [subLayer setContents:(__bridge id)imageStorage.image.CGImage];
+            [subLayer lw_advanceCornerRadius:imageStorage.cornerRadius cornerBackgroundColor:imageStorage.cornerBackgroundColor image:imageStorage.image];
         }
     }
 }
@@ -171,7 +162,6 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
 
 }
 

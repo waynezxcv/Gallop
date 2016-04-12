@@ -8,11 +8,7 @@
 
 #import "CALayer+GallopAddtions.h"
 #import "LWRunLoopTransactions.h"
-#import "NSObject+SwizzleMethod.h"
-#import "objc/runtime.h"
 
-static void* LWCornerRadiusKey = &LWCornerRadiusKey;
-static void* LWCornerBackgroundColorKey = &LWCornerBackgroundColorKey;
 
 @implementation CALayer(GallopAddtions)
 
@@ -26,23 +22,7 @@ static void* LWCornerBackgroundColorKey = &LWCornerBackgroundColorKey;
     [transactions commit];
 }
 
-
-- (void)lw_advanceCornerRadius:(CGFloat)cornerRadius cornerBackgroundColor:(UIColor *)color {
-    objc_setAssociatedObject(self, LWCornerRadiusKey, @(cornerRadius), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, LWCornerBackgroundColorKey,color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self.class swizzleMethod:@selector(layoutSublayers) withMethod:@selector(lw_LayoutSublayers)];
-}
-
-- (UIColor *)cornerBackgroundColor {
-    return objc_getAssociatedObject(self, LWCornerBackgroundColorKey);
-}
-
-- (CGFloat)lw_cornerRadius {
-    return [objc_getAssociatedObject(self, LWCornerRadiusKey) floatValue];
-}
-
-- (void)lw_LayoutSublayers {
-    NSLog(@"lw_layoutsubviews");
+- (void)lw_advanceCornerRadius:(CGFloat)cornerRadius cornerBackgroundColor:(UIColor *)color image:(UIImage *)image {
     CGSize size = self.bounds.size;
     CGFloat scale = [UIScreen mainScreen].scale;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -50,19 +30,20 @@ static void* LWCornerBackgroundColorKey = &LWCornerBackgroundColorKey;
         if (nil == UIGraphicsGetCurrentContext()) {
             return;
         }
-        UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:[self lw_cornerRadius]];
+        UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:cornerRadius];
         UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:self.bounds];
-        [[self cornerBackgroundColor] setFill];
+        [color setFill];
         [backgroundRect fill];
         [cornerPath addClip];
-        [self.contents drawInRect:self.bounds];
+        [image drawInRect:self.bounds];
         id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
         UIGraphicsEndImageContext();
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.contents = processedImageRef;
+            [self lw_delaySetContents:processedImageRef];
         });
     });
 }
+
 
 
 @end

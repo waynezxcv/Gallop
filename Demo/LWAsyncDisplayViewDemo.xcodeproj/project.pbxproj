@@ -263,7 +263,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		011DFA341C987DF6000410D7 /* LWAsyncDisplayView */ = {
+		011DFA341C987DF6000410D7 /* Gallop */ = {
 			isa = PBXGroup;
 			children = (
 				B085B3431CB68D1000087739 /* Utils */,
@@ -271,7 +271,7 @@
 				B085B3411CB68CD700087739 /* Storage */,
 				B085B3401CB68CCB00087739 /* Constraint */,
 			);
-			name = LWAsyncDisplayView;
+			name = Gallop;
 			sourceTree = "<group>";
 		};
 		011DFA351C987DF8000410D7 /* LWImageBrowser */ = {
@@ -378,7 +378,7 @@
 		011DFADC1C9886F5000410D7 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				011DFA341C987DF6000410D7 /* LWAsyncDisplayView */,
+				011DFA341C987DF6000410D7 /* Gallop */,
 			);
 			name = Classes;
 			sourceTree = "<group>";

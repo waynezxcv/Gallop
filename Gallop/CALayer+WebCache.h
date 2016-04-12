@@ -138,6 +138,19 @@
                                          progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                         completed:(SDWebImageCompletionBlock)completedBlock;
 
+
+/**
+ *  CornerRadius addtion
+ *
+ */
+- (void)sd_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholder
+                   options:(SDWebImageOptions)options
+              cornerRadius:(CGFloat)cornerRadius
+     cornerBackgroundColor:(UIColor *)color
+                 completed:(SDWebImageCompletionBlock)completedBlock;
+
+
 /**
  * Cancel the current download
  */
