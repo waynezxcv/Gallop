@@ -24,7 +24,6 @@
 #import "CALayer+GallopAddtions.h"
 
 
-
 static dispatch_queue_t GetAsyncDisplayQueue() {
 #define MAX_QUEUE_COUNT 16
     static int queueCount;

@@ -75,7 +75,9 @@ static char imageURLKey;
         id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadImageWithURL:url
                                                                                            options:options
                                                                                           progress:progressBlock
-                                                                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                                                                                         completed:^(UIImage *image, NSError *error,
+                                                                                                     SDImageCacheType cacheType,
+                                                                                                     BOOL finished, NSURL *imageURL) {
                                                                                              if (!wself) return;
                                                                                              dispatch_main_sync_safe(^{
                                                                                                  if (!wself) return;
@@ -83,9 +85,11 @@ static char imageURLKey;
                                                                                                      completedBlock(image, error, cacheType, url);
                                                                                                      return;
                                                                                                  } else if (image) {
-                                                                                                     [wself lw_advanceCornerRadius:cornerRadius
-                                                                                                             cornerBackgroundColor:color
-                                                                                                                             image:image];
+                                                                                                     if (cornerRadius != 0) {
+                                                                                                         [wself lw_setImage:image cornerRadius:cornerRadius cornerBackgroundColor:color];
+                                                                                                     } else {
+                                                                                                         [wself setContents:(__bridge id)image.CGImage];
+                                                                                                     }
                                                                                                      [wself setNeedsLayout];
                                                                                                  } else {
                                                                                                      if ((options & SDWebImageDelayPlaceholder)) {

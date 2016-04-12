@@ -176,7 +176,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     avatarStorage.type = LWImageStorageWebImage;
     avatarStorage.URL = statusModel.avatar;
     avatarStorage.cornerRadius = 20.0f;
-    avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
+//    avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
 
     //名字模型 nameTextStorage
     LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
@@ -215,8 +215,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     linkColor:RGB(113, 129, 161, 1)
                                highlightColor:nil
                                underlineStyle:NSUnderlineStyleNone];
-
-
     //发布的图片模型 imgsStorage
     NSInteger imageCount = [statusModel.imgs count];
     NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
@@ -230,7 +228,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                                       80.0f);
         NSString* imagePositionString = NSStringFromCGRect(imageRect);
         [imagePositionArray addObject:imagePositionString];
-
         /***************** 也可以不使用设置约束的方式来布局，而是直接设置frame属性的方式来布局*************************************/
         LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
         imageStorage.frame = imageRect;
@@ -240,6 +237,9 @@ const CGFloat kRefreshBoundary = 170.0f;
         imageStorage.URL = [NSURL URLWithString:URLString];
         imageStorage.type = LWImageStorageWebImage;
         imageStorage.fadeShow = YES;
+        imageStorage.masksToBounds = YES;
+        imageStorage.contentMode = kCAGravityResizeAspectFill;
+
         [imageStorageArray addObject:imageStorage];
 
         column = column + 1;

@@ -114,7 +114,6 @@
 		011DFAC61C988479000410D7 /* menu@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "menu@3x.png"; path = "Resource/menu@3x.png"; sourceTree = SOURCE_ROOT; };
 		0152F8C61CB239010062CB32 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
 		0152F8C71CB239010062CB32 /* comment@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@3x.png"; sourceTree = "<group>"; };
-		0154CB821C9887EA002CAF12 /* LWDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWDefine.h; path = ../../LWAsyncDisplayView/LWDefine.h; sourceTree = "<group>"; };
 		0154CB831C988AE4002CAF12 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		0154CB841C988AE4002CAF12 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		017F67301C988BB700309E92 /* TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCell.h; sourceTree = "<group>"; };
@@ -358,7 +357,6 @@
 		011DFABA1C9883F3000410D7 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				0154CB821C9887EA002CAF12 /* LWDefine.h */,
 				0152F8C61CB239010062CB32 /* comment@2x.png */,
 				0152F8C71CB239010062CB32 /* comment@3x.png */,
 				011DFABB1C988479000410D7 /* [心]@2x.png */,
@@ -435,16 +433,16 @@
 			isa = PBXGroup;
 			children = (
 				B074CC731CBB3A7F00ADECC1 /* LWDefine.h */,
-				B074CC671CBB3A7F00ADECC1 /* CALayer+WebCache.h */,
-				B074CC681CBB3A7F00ADECC1 /* CALayer+WebCache.m */,
-				B074CC691CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.h */,
-				B074CC6A1CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.m */,
 				B0FB547C1CBCEC88009478C3 /* CALayer+GallopAddtions.h */,
 				B0FB547D1CBCEC88009478C3 /* CALayer+GallopAddtions.m */,
 				B0FB547E1CBCEC88009478C3 /* NSObject+SwizzleMethod.h */,
 				B0FB547F1CBCEC88009478C3 /* NSObject+SwizzleMethod.m */,
 				B074CC7A1CBB3A7F00ADECC1 /* LWRunLoopTransactions.h */,
 				B074CC7B1CBB3A7F00ADECC1 /* LWRunLoopTransactions.m */,
+				B074CC671CBB3A7F00ADECC1 /* CALayer+WebCache.h */,
+				B074CC681CBB3A7F00ADECC1 /* CALayer+WebCache.m */,
+				B074CC691CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.h */,
+				B074CC6A1CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.m */,
 				B074CC821CBB3A7F00ADECC1 /* LWTextParser.h */,
 				B074CC831CBB3A7F00ADECC1 /* LWTextParser.m */,
 				B074CC741CBB3A7F00ADECC1 /* LWFlag.h */,

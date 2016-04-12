@@ -134,21 +134,28 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         subLayer.frame = imageStorage.frame;
-        subLayer.contentsGravity = kCAGravityResizeAspectFill;
+        subLayer.contentsGravity = imageStorage.contentMode;
+        subLayer.masksToBounds = imageStorage.masksToBounds;
         [CATransaction commit];
         if (imageStorage.type == LWImageStorageWebImage) {
-            [subLayer sd_setImageWithURL:imageStorage.URL placeholderImage:imageStorage.placeholder options:0 cornerRadius:imageStorage.cornerRadius cornerBackgroundColor:imageStorage.cornerBackgroundColor completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                if (imageStorage.fadeShow) {
-                    CATransition *transition = [CATransition animation];
-                    transition.duration = 0.2;
-                    transition.timingFunction = [CAMediaTimingFunction
-                                                 functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-                    transition.type = kCATransitionFade;
-                    [subLayer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
-                }
-            }];
+            [subLayer sd_setImageWithURL:imageStorage.URL
+                        placeholderImage:imageStorage.placeholder
+                                 options:0 cornerRadius:imageStorage.cornerRadius
+                   cornerBackgroundColor:imageStorage.cornerBackgroundColor
+                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                   if (imageStorage.fadeShow) {
+                                       CATransition *transition = [CATransition animation];
+                                       transition.duration = 0.2;
+                                       transition.timingFunction = [CAMediaTimingFunction
+                                                                    functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                                       transition.type = kCATransitionFade;
+                                       [subLayer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
+                                   }
+                               }];
         } else {
-            [subLayer lw_advanceCornerRadius:imageStorage.cornerRadius cornerBackgroundColor:imageStorage.cornerBackgroundColor image:imageStorage.image];
+            [subLayer lw_setImage:imageStorage.image
+                     cornerRadius:imageStorage.cornerRadius
+            cornerBackgroundColor:imageStorage.cornerBackgroundColor];
         }
     }
 }
