@@ -13,6 +13,10 @@
 //
 
 #import "LWConstraint.h"
+#import "LWStorage.h"
+
+
+
 
 @interface LWConstraint ()
 
@@ -22,6 +26,7 @@
 @property (nonatomic,copy) Margin bottomMargin;
 @property (nonatomic,copy) Length widthLength;
 @property (nonatomic,copy) Length heightLength;
+@property (nonatomic,copy) Center center;
 
 
 @property (nonatomic,copy) MarginToStorage leftMarginToStorage;
@@ -34,23 +39,28 @@
 @property (nonatomic,copy) EqualToStorage topEquelToStorage;
 @property (nonatomic,copy) EqualToStorage bottomEquelToStorage;
 
-@property (nullable,nonatomic,strong) NSNumber* left;
-@property (nullable,nonatomic,strong) NSNumber* right;
-@property (nullable,nonatomic,strong) NSNumber* top;
-@property (nullable,nonatomic,strong) NSNumber* bottom;
-@property (nullable,nonatomic,strong) NSNumber* width;
-@property (nullable,nonatomic,strong) NSNumber* height;
 
-@property (nullable,nonatomic,strong) LWConstraintMarginObject* leftMarginObject;
-@property (nullable,nonatomic,strong) LWConstraintMarginObject* rightMarginObject;
-@property (nullable,nonatomic,strong) LWConstraintMarginObject* topMarginObject;
-@property (nullable,nonatomic,strong) LWConstraintMarginObject* bottomMarginObject;
+@property (nonatomic,copy) EdgeInsetsToContainer edgeInsetsToContainer;
 
 
-@property (nullable,nonatomic,strong) LWConstraintEqualObject* leftEqualObject;
-@property (nullable,nonatomic,strong) LWConstraintEqualObject* rightEqualObject;
-@property (nullable,nonatomic,strong) LWConstraintEqualObject* topEqualObject;
-@property (nullable,nonatomic,strong) LWConstraintEqualObject* bottomEqualObject;
+@property (nonatomic,strong) NSNumber* left;
+@property (nonatomic,strong) NSNumber* right;
+@property (nonatomic,strong) NSNumber* top;
+@property (nonatomic,strong) NSNumber* bottom;
+@property (nonatomic,strong) NSNumber* width;
+@property (nonatomic,strong) NSNumber* height;
+@property (nonatomic,strong) NSValue* centerValue;
+
+@property (nonatomic,strong) LWConstraintMarginObject* leftMarginObject;
+@property (nonatomic,strong) LWConstraintMarginObject* rightMarginObject;
+@property (nonatomic,strong) LWConstraintMarginObject* topMarginObject;
+@property (nonatomic,strong) LWConstraintMarginObject* bottomMarginObject;
+
+
+@property (nonatomic,strong) LWConstraintEqualObject* leftEqualObject;
+@property (nonatomic,strong) LWConstraintEqualObject* rightEqualObject;
+@property (nonatomic,strong) LWConstraintEqualObject* topEqualObject;
+@property (nonatomic,strong) LWConstraintEqualObject* bottomEqualObject;
 
 @end
 
@@ -226,9 +236,37 @@
     };
 }
 
+- (EdgeInsetsToContainer)edgeInsetsToContainer {
+    if (_edgeInsetsToContainer) {
+        return _edgeInsetsToContainer;
+    }
+    __weak typeof(self) weakSelf = self;
+    _edgeInsetsToContainer = ^(UIEdgeInsets insets) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        strongSelf.left = @(insets.left);
+        strongSelf.right = @(insets.right);
+        strongSelf.top = @(insets.top);
+        strongSelf.bottom = @(insets.bottom);
+        return strongSelf;
+    };
+    return _edgeInsetsToContainer;
+}
+
+- (Center)center {
+    if (_center) {
+        return _center;
+    }
+    __weak typeof(self) weakSelf = self;
+    _center  = ^(CGPoint center) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        NSValue* centerValue = [NSValue valueWithCGPoint:CGPointMake(center.x, center.y)];
+        strongSelf.centerValue = centerValue;
+        return strongSelf;
+    };
+    return _center;
+}
+
 @end
-
-
 
 
 

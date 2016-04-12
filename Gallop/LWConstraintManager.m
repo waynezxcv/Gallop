@@ -52,6 +52,9 @@ static void* LWContainerSizeKey = &LWContainerSizeKey;
 }
 
 + (void)auotoLayout {
+    if (self.constraint.centerValue) {
+        [self changeCenter:self.constraint.centerValue];
+    }
     if (self.constraint.left) {
         [self changeLeft:self.constraint.left];
     }
@@ -137,6 +140,11 @@ static void* LWContainerSizeKey = &LWContainerSizeKey;
     CGRect frame = self.constraint.superStorage.frame;
     frame.size.height = [height floatValue];
     self.constraint.superStorage.frame = frame;
+}
+
++ (void)changeCenter:(NSValue *)center {
+    CGPoint centerPoint = [center CGPointValue];
+    self.constraint.superStorage.center = centerPoint;
 }
 
 

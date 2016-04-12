@@ -17,6 +17,10 @@
 #import "LWConstraint.h"
 
 
+/**
+ *  扩展LWStorage，方便调用自动约束的API
+ */
+
 @interface LWStorage(Constraint)
 
 - (LWConstraint *)constraint;

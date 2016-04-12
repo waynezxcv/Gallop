@@ -16,7 +16,6 @@
 
 @implementation LWStorage
 
-
 - (CGFloat)left {
     return self.frame.origin.x;
 }
@@ -41,6 +40,18 @@
     return self.frame.size.width;
 }
 
+
+- (void)setCenter:(CGPoint)center {
+    CGRect frame = self.frame;
+    frame.origin.x = center.x - frame.size.width * 0.5f;
+    frame.origin.y = center.y - frame.size.height * 0.5f;
+    self.frame = frame;
+}
+
+- (CGPoint)center {
+    return CGPointMake(self.frame.origin.x + self.frame.size.width * 0.5f,
+                       self.frame.origin.y + self.frame.size.height * 0.5f);
+}
 
 
 @end

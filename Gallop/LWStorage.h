@@ -26,5 +26,6 @@
 @property (nonatomic,assign) CGFloat right;
 @property (nonatomic,assign) CGFloat top;
 @property (nonatomic,assign) CGFloat bottom;
+@property (nonatomic,assign) CGPoint center;
 
 @end
