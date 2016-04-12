@@ -83,7 +83,10 @@
     CGSize newSize = frame.size;
     if (!CGSizeEqualToSize(oldSize, newSize)) {
         [super setFrame:frame];
+        [self _commitUpdate];
+
     }
+    
 }
 
 - (void)setBounds:(CGRect)bounds {
@@ -91,6 +94,7 @@
     CGSize newSize = bounds.size;
     if (!CGSizeEqualToSize(oldSize, newSize)) {
         [super setBounds:bounds];
+        [self _commitUpdate];
     }
 }
 
@@ -108,12 +112,11 @@
 - (void)_update {
     self.needUpdate = NO;
     [self _display];
-    [self setNeedsLayout];
+    [self _resetImagesIfNeed];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    [self _resetImagesIfNeed];
 }
 
 - (void)_resetImagesIfNeed {
