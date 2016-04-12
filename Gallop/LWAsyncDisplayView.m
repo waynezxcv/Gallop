@@ -128,6 +128,7 @@
             for (NSInteger i = 0; i < delta; i ++) {
                 CALayer* subLayer = [CALayer layer];
                 subLayer.contentsScale = [UIScreen mainScreen].scale;
+                subLayer.opaque = YES;
                 [self.layer addSublayer:subLayer];
                 [self.imageContainers addObject:subLayer];
             }

@@ -30,14 +30,11 @@
     [transactions commit];
 }
 
-
-
-
 - (void)lw_setImage:(UIImage *)image cornerRadius:(CGFloat)cornerRadius cornerBackgroundColor:(UIColor *)color {
     CGSize size = self.bounds.size;
     CGFloat scale = [UIScreen mainScreen].scale;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        UIGraphicsBeginImageContextWithOptions(size, NO, scale);
+        UIGraphicsBeginImageContextWithOptions(size, YES, scale);
         if (nil == UIGraphicsGetCurrentContext()) {
             return;
         }
