@@ -22,18 +22,13 @@
 #import "CALayer+WebCache.h"
 #import "CALayer+GallopAddtions.h"
 
-typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
-    LWAsyncDisplayViewStateNeedLayout,
-    LWAsyncDisplayViewStateNeedDisplay,
-    LWAsyncDisplayViewStateHasDisplayed
-};
 
 @interface LWAsyncDisplayView ()
 <LWAsyncDisplayLayerDelegate,UIGestureRecognizerDelegate>
 
-@property (nonatomic,assign) LWAsyncDisplayViewState state;
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
 @property (nonatomic,strong) NSMutableArray* imageContainers;
+@property (nonatomic,assign,getter=isNeedUpdate) BOOL needUpdate;
 
 @end
 
@@ -67,7 +62,6 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 }
 
 - (void)setup {
-    self.state = LWAsyncDisplayViewStateNeedLayout;
     self.layer.opaque = NO;
     self.layer.contentsScale = [UIScreen mainScreen].scale;
     ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
@@ -81,8 +75,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         return;
     }
     _layout = layout;
-    [self _resetImagesIfNeed];
-    [self _displayIfNeed];
+    [self _commitUpdate];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -90,9 +83,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     CGSize newSize = frame.size;
     if (!CGSizeEqualToSize(oldSize, newSize)) {
         [super setFrame:frame];
-        self.state = LWAsyncDisplayViewStateNeedDisplay;
     }
-    [self _displayIfNeed];
 }
 
 - (void)setBounds:(CGRect)bounds {
@@ -100,9 +91,29 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     CGSize newSize = bounds.size;
     if (!CGSizeEqualToSize(oldSize, newSize)) {
         [super setBounds:bounds];
-        self.state = LWAsyncDisplayViewStateNeedDisplay;
     }
-    [self _displayIfNeed];
+}
+
+- (void)_commitUpdate {
+    self.needUpdate = YES;
+    [[LWRunLoopTransactions transactionsWithTarget:self selector:@selector(_updateIfNeeded) object:nil] commit];
+}
+
+- (void)_updateIfNeeded {
+    if (self.needUpdate) {
+        [self _update];
+    }
+}
+
+- (void)_update {
+    self.needUpdate = NO;
+    [self _display];
+    [self setNeedsLayout];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self _resetImagesIfNeed];
 }
 
 - (void)_resetImagesIfNeed {
@@ -160,16 +171,9 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     }
 }
 
-- (void)_displayIfNeed {
-    if (self.state == LWAsyncDisplayViewStateNeedDisplay) {
-        [(LWAsyncDisplayLayer *)self.layer cleanUp];
-        [(LWAsyncDisplayLayer *)self.layer drawContentInRect:self.bounds];
-    }
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
+- (void)_display {
+    [(LWAsyncDisplayLayer *)self.layer cleanUp];
+    [(LWAsyncDisplayLayer *)self.layer drawContentInRect:self.bounds];
 }
 
 
@@ -203,13 +207,10 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 #pragma mark - LWAsyncDisplayLayerDelegate
 
 - (void)displayDidCancled {
-    self.state = LWAsyncDisplayViewStateNeedLayout;
+    self.needUpdate = YES;
 }
 
 - (BOOL)willBeginAsyncDisplay:(LWAsyncDisplayLayer *)layer {
-    if (self.state == LWAsyncDisplayViewStateHasDisplayed) {
-        return NO;
-    }
     return YES;
 }
 
@@ -225,7 +226,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
 
 - (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL)isFinished {
     if (isFinished) {
-        self.state = LWAsyncDisplayViewStateHasDisplayed;
+        self.needUpdate = NO;
     }
 }
 
@@ -265,12 +266,12 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
                 CTLineRef line = CFArrayGetValueAtIndex(lines, i);
                 CGRect flippedRect = [self _getLineBounds:line point:linePoint];
                 CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-
+                
                 CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
                                                rect.origin.y + boundsRect.origin.y,
                                                rect.size.width,
                                                rect.size.height);
-
+                
                 if (CGRectContainsPoint(adjustRect, touchPoint)) {
                     CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
                                                         touchPoint.y - CGRectGetMinY(adjustRect));
