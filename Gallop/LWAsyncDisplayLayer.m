@@ -81,8 +81,17 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
     });
 }
 
-- (void)drawContentInRect:(CGRect)rect {
-    [self _asyncDisplayInRect:rect];
+
+- (void)setNeedsDisplay {
+    dispatch_async(GetAsyncDisplayQueue(), ^{
+        [self _cancelDisplay];
+    });
+    [super setNeedsDisplay];
+}
+
+- (void)display {
+    super.contents = super.contents;
+    [self _asyncDisplayInRect:self.bounds];
 }
 
 - (void)cleanUp {
@@ -90,6 +99,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         [self _cancelDisplay];
     });
 }
+
 
 #pragma mark - Private
 - (void)_asyncDisplayInRect:(CGRect)rect {

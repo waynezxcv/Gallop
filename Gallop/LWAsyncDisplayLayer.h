@@ -71,7 +71,6 @@
  */
 @property (nonatomic,strong,readonly) LWFlag* flag;
 
-- (void)drawContentInRect:(CGRect)rect;
 - (void)cleanUp;
 
 

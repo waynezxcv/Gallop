@@ -84,10 +84,9 @@
     if (!CGSizeEqualToSize(oldSize, newSize)) {
         [super setFrame:frame];
         [self _commitUpdate];
-
     }
-    
 }
+
 
 - (void)setBounds:(CGRect)bounds {
     CGSize oldSize = self.bounds.size;
@@ -113,10 +112,6 @@
     self.needUpdate = NO;
     [self _display];
     [self _resetImagesIfNeed];
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
 }
 
 - (void)_resetImagesIfNeed {
@@ -176,7 +171,7 @@
 
 - (void)_display {
     [(LWAsyncDisplayLayer *)self.layer cleanUp];
-    [(LWAsyncDisplayLayer *)self.layer drawContentInRect:self.bounds];
+    [self.layer setNeedsDisplay];
 }
 
 
@@ -210,7 +205,7 @@
 #pragma mark - LWAsyncDisplayLayerDelegate
 
 - (void)displayDidCancled {
-    self.needUpdate = YES;
+    self.needUpdate = NO;
 }
 
 - (BOOL)willBeginAsyncDisplay:(LWAsyncDisplayLayer *)layer {
