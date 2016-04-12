@@ -7,10 +7,9 @@
 //
 
 #import "CALayer+WebCache.h"
-#import "objc/runtime.h"
 #import "CALayer+WebCacheOperation.h"
-#import "LWRunLoopTransactions.h"
-
+#import "CALayer+GallopAddtions.h"
+#import "objc/runtime.h"
 
 
 static char imageURLKey;
@@ -70,15 +69,8 @@ static char imageURLKey;
                                                                                                      completedBlock(image, error, cacheType, url);
                                                                                                      return;
                                                                                                  } else if (image) {
-                                                                                                     if ((options & SDWebImageDelaySetContents)) {
-                                                                                                         [wself delaySetContents:(__bridge id)image.CGImage];
-                                                                                                        
-                                                                                                         [wself setNeedsLayout];
-                                                                                                     }
-                                                                                                     else {
-                                                                                                         [wself setContents:(__bridge id)image.CGImage];
-                                                                                                         [wself setNeedsLayout];
-                                                                                                     }
+                                                                                                     [wself setContents:(__bridge id)image.CGImage];
+                                                                                                     [wself setNeedsLayout];
                                                                                                  } else {
                                                                                                      if ((options & SDWebImageDelayPlaceholder)) {
                                                                                                          [wself setContents:(__bridge id)placeholder.CGImage];
@@ -113,14 +105,6 @@ static char imageURLKey;
 
 - (void)sd_cancelCurrentImageLoad {
     [self sd_cancelImageLoadOperationWithKey:@"CALayerImageLoad"];
-}
-
-- (void)delaySetContents:(id)contents {
-    LWRunLoopTransactions* transactions = [LWRunLoopTransactions
-                                         transactionsWithTarget:self
-                                         selector:@selector(setContents:)
-                                         object:contents];
-    [transactions commit];
 }
 
 @end

@@ -26,6 +26,8 @@
         self.masksToBounds = YES;
         self.placeholder = nil;
         self.fadeShow = NO;
+        self.cornerRadius = 0.0f;
+        self.cornerBackgroundColor = [UIColor clearColor];
     }
     return self;
 }

@@ -69,13 +69,8 @@ static char TAG_ACTIVITY_SHOW;
                     return;
                 }
                 else if (image) {
-                    if ((options & SDWebImageDelaySetContents)) {
-                        [wself delaySetImage:image];
-                        [wself setNeedsLayout];
-                    } else {
-                        wself.image = image;
-                        [wself setNeedsLayout];
-                    }
+                    wself.image = image;
+                    [wself setNeedsLayout];
                 } else {
                     if ((options & SDWebImageDelayPlaceholder)) {
                         wself.image = placeholder;
@@ -182,7 +177,6 @@ static char TAG_ACTIVITY_SHOW;
 
         dispatch_main_async_safe(^{
             [self addSubview:self.activityIndicator];
-
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
                                                              attribute:NSLayoutAttributeCenterX
                                                              relatedBy:NSLayoutRelationEqual
@@ -216,9 +210,9 @@ static char TAG_ACTIVITY_SHOW;
 
 - (void)delaySetImage:(UIImage *)image {
     LWRunLoopTransactions* transactions = [LWRunLoopTransactions
-                                         transactionsWithTarget:self
-                                         selector:@selector(setImage:)
-                                         object:image];
+                                           transactionsWithTarget:self
+                                           selector:@selector(setImage:)
+                                           object:image];
     [transactions commit];
 }
 

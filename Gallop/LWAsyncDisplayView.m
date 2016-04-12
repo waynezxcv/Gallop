@@ -20,6 +20,7 @@
 #import "LWAsyncDisplayLayer.h"
 #import "LWRunLoopTransactions.h"
 #import "CALayer+WebCache.h"
+#import "CALayer+GallopAddtions.h"
 
 typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
     LWAsyncDisplayViewStateNeedLayout,
@@ -135,6 +136,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         subLayer.frame = imageStorage.frame;
+        [subLayer lw_advanceCornerRadius:imageStorage.cornerRadius cornerBackgroundColor:imageStorage.cornerBackgroundColor];
         [CATransaction commit];
         if (imageStorage.type == LWImageStorageWebImage) {
             [subLayer sd_setImageWithURL:imageStorage.URL
@@ -166,6 +168,13 @@ typedef NS_ENUM(NSUInteger, LWAsyncDisplayViewState) {
         [(LWAsyncDisplayLayer *)self.layer drawContentInRect:self.bounds];
     }
 }
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+
+}
+
 
 #pragma mark - Setter & Getter
 

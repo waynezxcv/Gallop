@@ -73,6 +73,8 @@
 		B0D9EB4A1CB0F436009FDCCF /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB351CB0F435009FDCCF /* UIImageView+HighlightedWebCache.m */; };
 		B0D9EB4B1CB0F436009FDCCF /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB371CB0F435009FDCCF /* UIImageView+WebCache.m */; };
 		B0D9EB4C1CB0F436009FDCCF /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB391CB0F435009FDCCF /* UIView+WebCacheOperation.m */; };
+		B0FB54801CBCEC88009478C3 /* CALayer+GallopAddtions.m in Sources */ = {isa = PBXBuildFile; fileRef = B0FB547D1CBCEC88009478C3 /* CALayer+GallopAddtions.m */; };
+		B0FB54811CBCEC88009478C3 /* NSObject+SwizzleMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B0FB547F1CBCEC88009478C3 /* NSObject+SwizzleMethod.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -198,6 +200,10 @@
 		B0D9EB371CB0F435009FDCCF /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+WebCache.m"; path = "../SDWebImage/UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		B0D9EB381CB0F435009FDCCF /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCacheOperation.h"; path = "../SDWebImage/UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		B0D9EB391CB0F435009FDCCF /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCacheOperation.m"; path = "../SDWebImage/UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
+		B0FB547C1CBCEC88009478C3 /* CALayer+GallopAddtions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+GallopAddtions.h"; path = "../Gallop/CALayer+GallopAddtions.h"; sourceTree = "<group>"; };
+		B0FB547D1CBCEC88009478C3 /* CALayer+GallopAddtions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+GallopAddtions.m"; path = "../Gallop/CALayer+GallopAddtions.m"; sourceTree = "<group>"; };
+		B0FB547E1CBCEC88009478C3 /* NSObject+SwizzleMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+SwizzleMethod.h"; path = "../Gallop/NSObject+SwizzleMethod.h"; sourceTree = "<group>"; };
+		B0FB547F1CBCEC88009478C3 /* NSObject+SwizzleMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+SwizzleMethod.m"; path = "../Gallop/NSObject+SwizzleMethod.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -442,6 +448,10 @@
 				B074CC681CBB3A7F00ADECC1 /* CALayer+WebCache.m */,
 				B074CC691CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.h */,
 				B074CC6A1CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.m */,
+				B0FB547C1CBCEC88009478C3 /* CALayer+GallopAddtions.h */,
+				B0FB547D1CBCEC88009478C3 /* CALayer+GallopAddtions.m */,
+				B0FB547E1CBCEC88009478C3 /* NSObject+SwizzleMethod.h */,
+				B0FB547F1CBCEC88009478C3 /* NSObject+SwizzleMethod.m */,
 				B074CC7A1CBB3A7F00ADECC1 /* LWRunLoopTransactions.h */,
 				B074CC7B1CBB3A7F00ADECC1 /* LWRunLoopTransactions.m */,
 				B074CC821CBB3A7F00ADECC1 /* LWTextParser.h */,
@@ -563,6 +573,7 @@
 				B0D9EB3C1CB0F435009FDCCF /* MKAnnotationView+WebCache.m in Sources */,
 				B074CC8F1CBB3A7F00ADECC1 /* LWRunLoopTransactions.m in Sources */,
 				B0D9EB3D1CB0F435009FDCCF /* NSData+ImageContentType.m in Sources */,
+				B0FB54811CBCEC88009478C3 /* NSObject+SwizzleMethod.m in Sources */,
 				B074CC921CBB3A7F00ADECC1 /* LWTextAttach.m in Sources */,
 				011DFA571C9880D2000410D7 /* LWImageBrowser.m in Sources */,
 				B074CC861CBB3A7F00ADECC1 /* CALayer+WebCache.m in Sources */,
@@ -592,6 +603,7 @@
 				B074CC931CBB3A7F00ADECC1 /* LWTextParser.m in Sources */,
 				B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */,
 				0154CB851C988AE4002CAF12 /* ViewController.m in Sources */,
+				B0FB54801CBCEC88009478C3 /* CALayer+GallopAddtions.m in Sources */,
 				011DFA581C9880D2000410D7 /* LWImageBrowserButton.m in Sources */,
 				011DFA5B1C9880D2000410D7 /* LWImageBrowserModel.m in Sources */,
 			);

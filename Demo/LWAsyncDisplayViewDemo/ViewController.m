@@ -175,6 +175,8 @@ const CGFloat kRefreshBoundary = 170.0f;
     LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
     avatarStorage.type = LWImageStorageWebImage;
     avatarStorage.URL = statusModel.avatar;
+    avatarStorage.cornerRadius = 20.0f;
+    avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
 
     //名字模型 nameTextStorage
     LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];

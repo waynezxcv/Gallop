@@ -144,7 +144,5 @@
 - (void)sd_cancelCurrentImageLoad;
 
 
-- (void)delaySetContents:(id)contents;
-
 
 @end

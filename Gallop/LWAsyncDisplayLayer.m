@@ -21,6 +21,7 @@
 #import <UIKit/UIKit.h>
 #import <libkern/OSAtomic.h>
 #import "CALayer+WebCache.h"
+#import "CALayer+GallopAddtions.h"
 
 
 
@@ -147,8 +148,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
             return;
         }
         [self.asyncDisplayDelegate didAsyncDisplay:self context:context size:rect.size];
-        UIImage* screenshotImage = UIGraphicsGetImageFromCurrentImageContext();
-        CGImageRef content = screenshotImage.CGImage;
+        id content = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
         if (isCancelled()) {
             UIGraphicsEndImageContext();
             if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
@@ -159,7 +159,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         }
         UIGraphicsEndImageContext();
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [self delaySetContents:(__bridge id)content];
+            [self lw_delaySetContents:content];
             if ([self.asyncDisplayDelegate respondsToSelector:@selector(didFinishAsyncDisplay:isFiniedsh:)]) {
                 [self.asyncDisplayDelegate didFinishAsyncDisplay:self isFiniedsh:YES];
             }
