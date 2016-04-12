@@ -692,7 +692,7 @@
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.WayneInc.LWAsyncDisplayViewDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.WayneInc.Gallop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -708,7 +708,7 @@
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.WayneInc.LWAsyncDisplayViewDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.WayneInc.Gallop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
