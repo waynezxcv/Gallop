@@ -1,6 +1,0 @@
-framework module Gallop {
-  umbrella header "Gallop-umbrella.h"
-
-  export *
-  module * { export * }
-}
