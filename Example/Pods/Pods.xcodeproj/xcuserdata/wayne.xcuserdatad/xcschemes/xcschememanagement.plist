@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Expecta.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Gallop-Gallop.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Gallop.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-Gallop_Tests.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Specta.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>0D888F29E05E498D0CD91A51D28599A5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>56D42AE2379684D3603FE75C84954CC4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>66BD2F4F7DB844DD7BA6AB69E26555CB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CADD800A70DC18C9188A73DEE0988249</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E912AF84BC039E684E5C3E8A45A655D2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>
