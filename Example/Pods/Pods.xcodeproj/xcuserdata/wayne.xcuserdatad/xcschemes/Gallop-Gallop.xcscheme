@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '7C2B4A1433992D2564B330AA'
+               BlueprintIdentifier = 'FFBC84EC9532DDA88DF7BE1C'
                BlueprintName = 'Gallop-Gallop'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Gallop.bundle'>

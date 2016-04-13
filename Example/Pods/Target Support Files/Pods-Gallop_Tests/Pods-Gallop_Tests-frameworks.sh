@@ -86,10 +86,12 @@ strip_invalid_archs() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-Gallop_Tests/Expecta.framework"
   install_framework "Pods-Gallop_Tests/Gallop.framework"
+  install_framework "Pods-Gallop_Tests/SDWebImage.framework"
   install_framework "Pods-Gallop_Tests/Specta.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-Gallop_Tests/Expecta.framework"
   install_framework "Pods-Gallop_Tests/Gallop.framework"
+  install_framework "Pods-Gallop_Tests/SDWebImage.framework"
   install_framework "Pods-Gallop_Tests/Specta.framework"
 fi
