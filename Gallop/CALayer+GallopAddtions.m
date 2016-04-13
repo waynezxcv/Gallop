@@ -23,11 +23,9 @@
 #pragma mark - CornerRadius
 
 - (void)lw_delaySetContents:(id)contents {
-    LWRunLoopTransactions* transactions = [LWRunLoopTransactions
-                                           transactionsWithTarget:self
-                                           selector:@selector(setContents:)
-                                           object:contents];
-    [transactions commit];
+    [[LWRunLoopTransactions transactionsWithTarget:self
+                                          selector:@selector(setContents:)
+                                            object:contents] commit];
 }
 
 - (void)lw_setImage:(UIImage *)image cornerRadius:(CGFloat)cornerRadius cornerBackgroundColor:(UIColor *)color {
@@ -47,7 +45,7 @@
         id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
         UIGraphicsEndImageContext();
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self lw_delaySetContents:processedImageRef];
+            [self setContents:processedImageRef];
         });
     });
 }
