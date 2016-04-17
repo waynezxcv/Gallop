@@ -21,6 +21,7 @@
         [self sd_setImageWithURL:imageStorage.URL
                 placeholderImage:imageStorage.placeholder
                          options:0
+                   containerSize:imageStorage.frame.size
                     cornerRadius:imageStorage.cornerRadius
            cornerBackgroundColor:imageStorage.cornerBackgroundColor
                        completed:^(UIImage *image, NSError *error,
@@ -37,6 +38,7 @@
                        }];
     } else {
         [self lw_setImage:imageStorage.image
+            containerSize:imageStorage.frame.size
              cornerRadius:imageStorage.cornerRadius
     cornerBackgroundColor:imageStorage.cornerBackgroundColor];
     }

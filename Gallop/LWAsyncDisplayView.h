@@ -37,7 +37,9 @@
  *  点击LWImageStorage回调
  *
  */
-- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedImageStorage:(LWImageStorage *)imageStorage tapGesture:(UITapGestureRecognizer *)tapGesutrueRecognizer;
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
+   didCilickedImageStorage:(LWImageStorage *)imageStorage
+                tapGesture:(UITapGestureRecognizer *)tapGesutrueRecognizer;
 
 /**
  *  额外的绘制任务在这里实现
@@ -47,8 +49,8 @@
 
 @end
 
-@interface LWAsyncDisplayView : UIView
 
+@interface LWAsyncDisplayView : UIView
 
 @property (nonatomic,weak) id <LWAsyncDisplayViewDelegate> delegate;
 

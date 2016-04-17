@@ -49,16 +49,18 @@ static char imageURLKey;
 - (void)sd_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholder
                    options:(SDWebImageOptions)options
+             containerSize:(CGSize)containerSize
               cornerRadius:(CGFloat)cornerRadius
      cornerBackgroundColor:(UIColor *)color
                  completed:(SDWebImageCompletionBlock)completedBlock {
-    [self sd_setImageWithURL:url placeholderImage:placeholder options:options cornerRadius:cornerRadius cornerBackgroundColor:color progress:nil completed:completedBlock];
+    [self sd_setImageWithURL:url placeholderImage:placeholder options:options containerSize:containerSize cornerRadius:cornerRadius cornerBackgroundColor:color progress:nil completed:completedBlock];
 }
 
 
 - (void)sd_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholder
                    options:(SDWebImageOptions)options
+             containerSize:(CGSize)containerSize
               cornerRadius:(CGFloat)cornerRadius
      cornerBackgroundColor:(UIColor *)color
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
@@ -86,11 +88,11 @@ static char imageURLKey;
                                                                                                      return;
                                                                                                  } else if (image) {
                                                                                                      if (cornerRadius != 0) {
-                                                                                                         [wself lw_setImage:image cornerRadius:cornerRadius cornerBackgroundColor:color];
+                                                                                                         [wself lw_setImage:image containerSize:containerSize cornerRadius:cornerRadius cornerBackgroundColor:color];
                                                                                                      } else {
                                                                                                          [wself setContents:(__bridge id)image.CGImage];
                                                                                                      }
-//                                                                                                     [wself setNeedsLayout];
+                                                                                                     [wself setNeedsLayout];
                                                                                                  } else {
                                                                                                      if ((options & SDWebImageDelayPlaceholder)) {
                                                                                                          [wself setContents:(__bridge id)placeholder.CGImage];

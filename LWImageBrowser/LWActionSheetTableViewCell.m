@@ -30,7 +30,6 @@
     return self;
 }
 
-
 - (void)show {
     [UIView animateWithDuration:0.1f delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.content.frame = CGRectMake(0, 0, SCREEN_WIDTH, 60.0f);
@@ -60,14 +59,12 @@
 
 @implementation LWActionSheetTableViewCellContent : UIView
 
-
 - (void)setTitle:(NSString *)title {
     if (_title != title) {
         _title = [title copy];
     }
     self.textLabel.text = self.title;
 }
-
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -82,7 +79,6 @@
         [self addSubview:self.textLabel];
     }
     return self;
-
 }
 
 - (void)drawRect:(CGRect)rect {

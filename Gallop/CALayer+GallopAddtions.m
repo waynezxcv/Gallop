@@ -28,23 +28,24 @@
                                             object:contents] commit];
 }
 
-- (void)lw_setImage:(UIImage *)image cornerRadius:(CGFloat)cornerRadius cornerBackgroundColor:(UIColor *)color {
-    CGSize size = self.bounds.size;
+
+- (void)lw_setImage:(UIImage *)image containerSize:(CGSize)size cornerRadius:(CGFloat)cornerRadius cornerBackgroundColor:(UIColor *)color {
     CGFloat scale = [UIScreen mainScreen].scale;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         UIGraphicsBeginImageContextWithOptions(size, YES, scale);
         if (nil == UIGraphicsGetCurrentContext()) {
             return;
         }
-        UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:cornerRadius];
-        UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:self.bounds];
+        UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height)
+                                                              cornerRadius:cornerRadius];
+        UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, size.width, size.height)];
         [color setFill];
         [backgroundRect fill];
         [cornerPath addClip];
-        [image drawInRect:self.bounds];
+        [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
         id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
         UIGraphicsEndImageContext();
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self setContents:processedImageRef];
         });
     });

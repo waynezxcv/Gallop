@@ -146,6 +146,7 @@
 - (void)sd_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholder
                    options:(SDWebImageOptions)options
+             containerSize:(CGSize)containerSize
               cornerRadius:(CGFloat)cornerRadius
      cornerBackgroundColor:(UIColor *)color
                  completed:(SDWebImageCompletionBlock)completedBlock;
