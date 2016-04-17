@@ -31,10 +31,14 @@
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
 @property (nonatomic,strong) NSMutableArray* imageContainers;
 
-@property (nonatomic,assign,getter=isNeedResetImageContainers) BOOL needResetImageContainers;
-@property (nonatomic,assign) BOOL needLayoutSubviews;
-@property (nonatomic,assign) BOOL needDisplay;
+//@property (nonatomic,assign) BOOL resetedImageContainers;
+//@property (nonatomic,assign) BOOL layoutedSubViews;
+//@property (nonatomic,assign) BOOL displayed;
 
+
+@property (nonatomic,assign) BOOL setedFrame;
+@property (nonatomic,assign,getter=isDisplayed) BOOL displayed;
+@property (nonatomic,assign,getter=isSetedImageContents) BOOL setedImageContents;
 @end
 
 
@@ -80,51 +84,52 @@
         return;
     }
     _layout = layout;
-    [self _resetImageContainersIfNeed];
+
+    self.setedFrame = NO;
+    self.displayed = NO;
+    self.setedImageContents = NO;
+
+    [self _resetImageContainers];
     [self _setNeedDisplay];
+    [self _setImageStorages];
 }
 
 - (void)setFrame:(CGRect)frame {
     CGSize oldSize = self.bounds.size;
     CGSize newSize = frame.size;
-    if (!CGSizeEqualToSize(oldSize, newSize) && !CGSizeEqualToSize(newSize,CGSizeZero)) {
+    if (!CGSizeEqualToSize(oldSize, newSize) &&
+        !CGSizeEqualToSize(newSize,CGSizeZero)) {
         [super setFrame:frame];
-        [self _setNeedlayoutSubViews];
+        self.setedFrame = YES;
+        [self _setNeedDisplay];
     }
 }
 
 - (void)setBounds:(CGRect)bounds {
     CGSize oldSize = self.bounds.size;
     CGSize newSize = bounds.size;
-    if (!CGSizeEqualToSize(oldSize, newSize) && !CGSizeEqualToSize(newSize,CGSizeZero)) {
+    if (!CGSizeEqualToSize(oldSize, newSize) &&
+        !CGSizeEqualToSize(newSize,CGSizeZero)) {
         [super setBounds:bounds];
-        [self _setNeedlayoutSubViews];
+        [self _setNeedDisplay];
     }
 }
 
-- (void)_setNeedlayoutSubViews {
-    self.needLayoutSubviews = YES;
-    if (self.needLayoutSubviews && self.needResetImageContainers == NO) {
-        [[LWRunLoopTransactions transactionsWithTarget:self
-                                              selector:@selector(_layoutSubViews)
-                                                object:nil] commit];
+- (void)_setImageStorages {
+    if (!self.setedImageContents) {
+        for (NSInteger i = 0 ; i < self.layout.imageStorages.count; i ++) {
+            LWImageStorage* imageStorage = self.layout.imageStorages[i];
+            LWImageContainer* container = self.imageContainers[i];
+            [container layoutImageStorage:imageStorage];
+            [container setContentWithImageStorage:imageStorage];
+        }
+        self.setedImageContents = YES;
     }
 }
 
-- (void)_layoutSubViews {
-    for (NSInteger i = 0 ; i < self.layout.imageStorages.count; i ++) {
-        LWImageStorage* imageStorage = self.layout.imageStorages[i];
-        LWImageContainer* container = self.imageContainers[i];
-        [container layoutImageStorage:imageStorage];
-    }
-    self.needLayoutSubviews = NO;
-}
-
+#pragma mark - Display
 - (void)_setNeedDisplay {
-    self.needDisplay = YES;
-    if (self.needDisplay && self.needLayoutSubviews == NO) {
-        self.needDisplay = NO;
-        [self _setupImageStorages];
+    if (!self.displayed && self.setedFrame) {
         [self _commitDisplay];
     }
 }
@@ -137,57 +142,40 @@
 
 - (void)_display {
     [(LWAsyncDisplayLayer *)self.layer cleanUp];
-    [self.layer setNeedsDisplay];
+    [(LWAsyncDisplayLayer *)self.layer asyncDisplaySize:self.bounds.size];
 }
 
-- (void)_resetImageContainersIfNeed {
-    if (self.imageContainers.count == self.layout.imageStorages.count) {
-        self.needResetImageContainers = NO;
-    } else {
-        [self _setNeedRestImageContainers];
-    }
-}
-
-- (void)_setNeedRestImageContainers {
-    self.needResetImageContainers = YES;
-    if (self.needResetImageContainers) {
-        self.needResetImageContainers = NO;
-        [self _resetImageContainers];
-    }
-}
-
+#pragma mark - RestImageContainers
 - (void)_resetImageContainers {
-    NSInteger delta = self.imageContainers.count - self.layout.imageStorages.count;
-    if (delta < 0) {
-        for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
-            if (i < ABS(delta)) {
-                LWImageContainer* container = [LWImageContainer layer];
-                [self.layer addSublayer:container];
-                [self.imageContainers addObject:container];
+    if (self.isNeedRestImageContainers) {
+        NSInteger delta = self.imageContainers.count - self.layout.imageStorages.count;
+        if (delta < 0) {
+            for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
+                if (i < ABS(delta)) {
+                    LWImageContainer* container = [LWImageContainer layer];
+                    [self.layer addSublayer:container];
+                    [self.imageContainers addObject:container];
+                }
             }
-        }
-    } else if (delta > 0 ) {
-        for (NSInteger i = 0; i < self.imageContainers.count; i ++ ) {
-            if (i >= self.layout.imageStorages.count) {
-                LWImageContainer* container = self.imageContainers[i];
-                [container cleanup];
+        } else if (delta > 0 ) {
+            for (NSInteger i = 0; i < self.imageContainers.count; i ++ ) {
+                if (i >= self.layout.imageStorages.count) {
+                    LWImageContainer* container = self.imageContainers[i];
+                    [container cleanup];
+                }
             }
         }
     }
 }
 
-- (void)_setupImageStorages {
-    if (self.needResetImageContainers == NO) {
-        for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
-            LWImageStorage* imageStorage = self.layout.imageStorages[i];
-            LWImageContainer* container = self.imageContainers[i];
-            [container setContentWithImageStorage:imageStorage];
-        }
+- (BOOL)isNeedRestImageContainers {
+    if (self.imageContainers.count == self.layout.imageStorages.count) {
+        return NO;
     }
+    return YES;
 }
 
 #pragma mark - Setter & Getter
-
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {
         _tapGestureRecognizer = [[UITapGestureRecognizer alloc]
@@ -207,13 +195,15 @@
 }
 
 #pragma mark - LWAsyncDisplayLayerDelegate
-
 - (void)displayDidCancled {
-    self.needDisplay = YES;
+    self.displayed = NO;
 }
 
 - (BOOL)willBeginAsyncDisplay:(LWAsyncDisplayLayer *)layer {
-    return YES;
+    if (self.displayed == NO) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
@@ -227,11 +217,10 @@
 }
 
 - (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL)isFinished {
-    self.needDisplay = YES;
+    self.displayed = YES;
 }
 
 #pragma mark - SignleTapGesture
-
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
     for (LWImageStorage* imageStorage in self.layout.imageStorages) {
@@ -266,12 +255,10 @@
                 CTLineRef line = CFArrayGetValueAtIndex(lines, i);
                 CGRect flippedRect = [self _getLineBounds:line point:linePoint];
                 CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-
                 CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
                                                rect.origin.y + boundsRect.origin.y,
                                                rect.size.width,
                                                rect.size.height);
-
                 if (CGRectContainsPoint(adjustRect, touchPoint)) {
                     CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
                                                         touchPoint.y - CGRectGetMinY(adjustRect));

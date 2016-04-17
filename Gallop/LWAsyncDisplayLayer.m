@@ -91,7 +91,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 
 - (void)display {
     super.contents = super.contents;
-    [self _asyncDisplayInRect:self.bounds];
+    [self _asyncDisplaySize:self.bounds.size];
 }
 
 - (void)cleanUp {
@@ -100,9 +100,12 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
     });
 }
 
+- (void)asyncDisplaySize:(CGSize)size {
+    [self _asyncDisplaySize:size];
+}
 
 #pragma mark - Private
-- (void)_asyncDisplayInRect:(CGRect)rect {
+- (void)_asyncDisplaySize:(CGSize)size {
     dispatch_async(GetAsyncDisplayQueue(), ^{
         LWFlag* flag = self.flag;
         int32_t value = flag.value;
@@ -116,7 +119,6 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
             }
             return;
         }
-        CGSize size = rect.size;
         BOOL opaque = self.opaque;
         CGFloat scale = self.contentsScale;
         if (size.width < 1 || size.height < 1) {
@@ -156,7 +158,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
             }
             return;
         }
-        [self.asyncDisplayDelegate didAsyncDisplay:self context:context size:rect.size];
+        [self.asyncDisplayDelegate didAsyncDisplay:self context:context size:size];
         id content = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
         if (isCancelled()) {
             UIGraphicsEndImageContext();

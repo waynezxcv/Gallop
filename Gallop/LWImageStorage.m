@@ -11,6 +11,7 @@
 //
 
 #import "LWImageStorage.h"
+#import "SDWebImageManager.h"
 
 
 @implementation LWImageStorage

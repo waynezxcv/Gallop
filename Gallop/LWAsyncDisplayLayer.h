@@ -71,6 +71,7 @@
  */
 @property (nonatomic,strong,readonly) LWFlag* flag;
 
+- (void)asyncDisplaySize:(CGSize)size;
 - (void)cleanUp;
 
 

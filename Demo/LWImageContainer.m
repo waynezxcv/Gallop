@@ -15,8 +15,6 @@
 @implementation LWImageContainer
 
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
-    self.contentsGravity = imageStorage.contentMode;
-    self.masksToBounds = imageStorage.masksToBounds;
     if (imageStorage.type == LWImageStorageWebImage) {
         [self sd_setImageWithURL:imageStorage.URL
                 placeholderImage:imageStorage.placeholder
@@ -60,6 +58,8 @@
     [CATransaction setDisableActions:YES];
     self.frame = imageStorage.frame;
     [CATransaction commit];
+    self.contentsGravity = imageStorage.contentMode;
+    self.masksToBounds = imageStorage.masksToBounds;
 }
 
 - (void)_delayClenup {

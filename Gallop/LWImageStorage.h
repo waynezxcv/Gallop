@@ -24,9 +24,6 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
 @interface LWImageStorage : LWStorage
 
 
-@property (nonatomic,copy) NSString* identifier;
-
-
 /**
  *  图片类型
  */

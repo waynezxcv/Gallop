@@ -76,10 +76,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    [self _layoutSubViews];
-}
-
-- (void)_layoutSubViews {
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.cellLayout.cellHeight);
 }
 
