@@ -84,14 +84,16 @@
         return;
     }
     _layout = layout;
-
     self.setedFrame = NO;
     self.displayed = NO;
     self.setedImageContents = NO;
-
-    [self _resetImageContainers];
-    [self _setNeedDisplay];
-    [self _setImageStorages];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self _resetImageContainers];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self _setImageStorages];
+            [self _setNeedDisplay];
+        });
+    });
 }
 
 - (void)setFrame:(CGRect)frame {
