@@ -90,7 +90,7 @@ static char imageURLKey;
                                                                                                      } else {
                                                                                                          [wself setContents:(__bridge id)image.CGImage];
                                                                                                      }
-                                                                                                     [wself setNeedsLayout];
+//                                                                                                     [wself setNeedsLayout];
                                                                                                  } else {
                                                                                                      if ((options & SDWebImageDelayPlaceholder)) {
                                                                                                          [wself setContents:(__bridge id)placeholder.CGImage];

@@ -21,6 +21,8 @@
 #import "LWRunLoopTransactions.h"
 #import "CALayer+WebCache.h"
 #import "CALayer+GallopAddtions.h"
+#import "LWImageContainer.h"
+#import "NSObject+SwizzleMethod.h"
 
 
 @interface LWAsyncDisplayView ()
@@ -28,7 +30,10 @@
 
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
 @property (nonatomic,strong) NSMutableArray* imageContainers;
-@property (nonatomic,assign,getter=isNeedUpdate) BOOL needUpdate;
+
+@property (nonatomic,assign,getter=isNeedResetImageContainers) BOOL needResetImageContainers;
+@property (nonatomic,assign) BOOL needLayoutSubviews;
+@property (nonatomic,assign) BOOL needDisplay;
 
 @end
 
@@ -75,99 +80,59 @@
         return;
     }
     _layout = layout;
-    [self _commitUpdate];
+    [self _resetImageContainersIfNeed];
+    [self _setNeedDisplay];
 }
 
 - (void)setFrame:(CGRect)frame {
     CGSize oldSize = self.bounds.size;
     CGSize newSize = frame.size;
-    if (!CGSizeEqualToSize(oldSize, newSize)) {
+    if (!CGSizeEqualToSize(oldSize, newSize) && !CGSizeEqualToSize(newSize,CGSizeZero)) {
         [super setFrame:frame];
-        [self _commitUpdate];
+        [self _setNeedlayoutSubViews];
     }
 }
-
 
 - (void)setBounds:(CGRect)bounds {
     CGSize oldSize = self.bounds.size;
     CGSize newSize = bounds.size;
-    if (!CGSizeEqualToSize(oldSize, newSize)) {
+    if (!CGSizeEqualToSize(oldSize, newSize) && !CGSizeEqualToSize(newSize,CGSizeZero)) {
         [super setBounds:bounds];
-        [self _commitUpdate];
+        [self _setNeedlayoutSubViews];
     }
 }
 
-- (void)_commitUpdate {
-    self.needUpdate = YES;
-    [[LWRunLoopTransactions transactionsWithTarget:self selector:@selector(_updateIfNeeded) object:nil] commit];
-}
-
-- (void)_updateIfNeeded {
-    if (self.needUpdate) {
-        [self _update];
+- (void)_setNeedlayoutSubViews {
+    self.needLayoutSubviews = YES;
+    if (self.needLayoutSubviews && self.needResetImageContainers == NO) {
+        [[LWRunLoopTransactions transactionsWithTarget:self
+                                              selector:@selector(_layoutSubViews)
+                                                object:nil] commit];
     }
 }
 
-- (void)_update {
-    self.needUpdate = NO;
-    [self _display];
-    [self _resetImagesIfNeed];
-}
-
-- (void)_resetImagesIfNeed {
-    if (self.isNeedResetImages) {
-        if (self.imageContainers.count > self.layout.imageStorages.count) {
-            NSInteger delta = self.imageContainers.count - self.layout.imageStorages.count;
-            for (NSInteger i = 0 ; i < delta; i ++) {
-                CALayer* subLayer = [self.imageContainers lastObject];
-                [subLayer removeFromSuperlayer];
-                [self.imageContainers removeLastObject];
-            }
-        } else {
-            NSInteger delta = self.layout.imageStorages.count - self.imageContainers.count;
-            for (NSInteger i = 0; i < delta; i ++) {
-                CALayer* subLayer = [CALayer layer];
-                subLayer.contentsScale = [UIScreen mainScreen].scale;
-                subLayer.opaque = YES;
-                [self.layer addSublayer:subLayer];
-                [self.imageContainers addObject:subLayer];
-            }
-        }
-    }
-    [self _setupImages];
-}
-
-- (void)_setupImages {
-    for (NSInteger i = 0; i < self.layout.imageStorages.count; i++) {
+- (void)_layoutSubViews {
+    for (NSInteger i = 0 ; i < self.layout.imageStorages.count; i ++) {
         LWImageStorage* imageStorage = self.layout.imageStorages[i];
-        CALayer* subLayer = self.imageContainers[i];
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        subLayer.frame = imageStorage.frame;
-        subLayer.contentsGravity = imageStorage.contentMode;
-        subLayer.masksToBounds = imageStorage.masksToBounds;
-        [CATransaction commit];
-        if (imageStorage.type == LWImageStorageWebImage) {
-            [subLayer sd_setImageWithURL:imageStorage.URL
-                        placeholderImage:imageStorage.placeholder
-                                 options:0 cornerRadius:imageStorage.cornerRadius
-                   cornerBackgroundColor:imageStorage.cornerBackgroundColor
-                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                                   if (imageStorage.fadeShow) {
-                                       CATransition *transition = [CATransition animation];
-                                       transition.duration = 0.2;
-                                       transition.timingFunction = [CAMediaTimingFunction
-                                                                    functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-                                       transition.type = kCATransitionFade;
-                                       [subLayer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
-                                   }
-                               }];
-        } else {
-            [subLayer lw_setImage:imageStorage.image
-                     cornerRadius:imageStorage.cornerRadius
-            cornerBackgroundColor:imageStorage.cornerBackgroundColor];
-        }
+        LWImageContainer* container = self.imageContainers[i];
+        [container layoutImageStorage:imageStorage];
     }
+    self.needLayoutSubviews = NO;
+}
+
+- (void)_setNeedDisplay {
+    self.needDisplay = YES;
+    if (self.needDisplay && self.needLayoutSubviews == NO) {
+        self.needDisplay = NO;
+        [self _setupImageStorages];
+        [self _commitDisplay];
+    }
+}
+
+- (void)_commitDisplay {
+    [[LWRunLoopTransactions transactionsWithTarget:self
+                                          selector:@selector(_display)
+                                            object:nil] commit];
 }
 
 - (void)_display {
@@ -175,15 +140,53 @@
     [self.layer setNeedsDisplay];
 }
 
+- (void)_resetImageContainersIfNeed {
+    if (self.imageContainers.count == self.layout.imageStorages.count) {
+        self.needResetImageContainers = NO;
+    } else {
+        [self _setNeedRestImageContainers];
+    }
+}
+
+- (void)_setNeedRestImageContainers {
+    self.needResetImageContainers = YES;
+    if (self.needResetImageContainers) {
+        self.needResetImageContainers = NO;
+        [self _resetImageContainers];
+    }
+}
+
+- (void)_resetImageContainers {
+    NSInteger delta = self.imageContainers.count - self.layout.imageStorages.count;
+    if (delta < 0) {
+        for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
+            if (i < ABS(delta)) {
+                LWImageContainer* container = [LWImageContainer layer];
+                [self.layer addSublayer:container];
+                [self.imageContainers addObject:container];
+            }
+        }
+    } else if (delta > 0 ) {
+        for (NSInteger i = 0; i < self.imageContainers.count; i ++ ) {
+            if (i >= self.layout.imageStorages.count) {
+                LWImageContainer* container = self.imageContainers[i];
+                [container cleanup];
+            }
+        }
+    }
+}
+
+- (void)_setupImageStorages {
+    if (self.needResetImageContainers == NO) {
+        for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
+            LWImageStorage* imageStorage = self.layout.imageStorages[i];
+            LWImageContainer* container = self.imageContainers[i];
+            [container setContentWithImageStorage:imageStorage];
+        }
+    }
+}
 
 #pragma mark - Setter & Getter
-
-- (BOOL)isNeedResetImages {
-    if (self.imageContainers.count == self.layout.imageStorages.count) {
-        return NO;
-    }
-    return YES;
-}
 
 - (UITapGestureRecognizer *)tapGestureRecognizer {
     if (!_tapGestureRecognizer) {
@@ -206,11 +209,14 @@
 #pragma mark - LWAsyncDisplayLayerDelegate
 
 - (void)displayDidCancled {
-    self.needUpdate = NO;
+    self.needDisplay = YES;
 }
 
 - (BOOL)willBeginAsyncDisplay:(LWAsyncDisplayLayer *)layer {
-    return YES;
+    if (!self.needDisplay) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
@@ -224,9 +230,7 @@
 }
 
 - (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL)isFinished {
-    if (isFinished) {
-        self.needUpdate = NO;
-    }
+    self.needDisplay = NO;
 }
 
 #pragma mark - SignleTapGesture
@@ -265,12 +269,12 @@
                 CTLineRef line = CFArrayGetValueAtIndex(lines, i);
                 CGRect flippedRect = [self _getLineBounds:line point:linePoint];
                 CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-                
+
                 CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
                                                rect.origin.y + boundsRect.origin.y,
                                                rect.size.width,
                                                rect.size.height);
-                
+
                 if (CGRectContainsPoint(adjustRect, touchPoint)) {
                     CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
                                                         touchPoint.y - CGRectGetMinY(adjustRect));
