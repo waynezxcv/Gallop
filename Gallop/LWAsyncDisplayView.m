@@ -213,10 +213,7 @@
 }
 
 - (BOOL)willBeginAsyncDisplay:(LWAsyncDisplayLayer *)layer {
-    if (!self.needDisplay) {
-        return YES;
-    }
-    return NO;
+    return YES;
 }
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
@@ -230,7 +227,7 @@
 }
 
 - (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL)isFinished {
-    self.needDisplay = NO;
+    self.needDisplay = YES;
 }
 
 #pragma mark - SignleTapGesture

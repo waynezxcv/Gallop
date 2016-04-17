@@ -53,8 +53,6 @@
                                             object:nil] commit];
 }
 
-
-
 - (void)_delayLayoutImageStorage:(LWImageStorage *)imageStorage {
     [CATransaction begin];
     [CATransaction setDisableActions:YES];

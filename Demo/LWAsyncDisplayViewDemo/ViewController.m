@@ -111,8 +111,10 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
     cell.delegate = self;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    CellLayout* cellLayout = self.dataSource[indexPath.row];
-    cell.cellLayout = cellLayout;
+    if (self.dataSource.count >= indexPath.row) {
+        CellLayout* cellLayout = self.dataSource[indexPath.row];
+        cell.cellLayout = cellLayout;
+    }
     return cell;
 }
 
@@ -153,8 +155,9 @@ const CGFloat kRefreshBoundary = 170.0f;
             LWLayout* layout = [self layoutWithStatusModel:statusModel];
             [self.dataSource addObject:layout];
         }
+        [self.dataSource addObjectsFromArray:self.dataSource];
+        [self.dataSource addObjectsFromArray:self.dataSource];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.dataSource addObjectsFromArray:self.dataSource];
             [self refreshComplete];
         });
     });
@@ -175,7 +178,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
     avatarStorage.type = LWImageStorageWebImage;
     avatarStorage.URL = statusModel.avatar;
-//    avatarStorage.cornerRadius = 20.0f;
+    //    avatarStorage.cornerRadius = 20.0f;
     //    avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
 
     //名字模型 nameTextStorage
