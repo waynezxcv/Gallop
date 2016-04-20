@@ -119,8 +119,11 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CellLayout* layout = self.dataSource[indexPath.row];
-    return layout.cellHeight;
+    if (self.dataSource.count >= indexPath.row) {
+        CellLayout* layout = self.dataSource[indexPath.row];
+        return layout.cellHeight;
+    }
+    return 0;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -235,7 +238,6 @@ const CGFloat kRefreshBoundary = 170.0f;
         LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
         imageStorage.frame = imageRect;
         /***********************************/
-
         NSString* URLString = [statusModel.imgs objectAtIndex:i];
         imageStorage.URL = [NSURL URLWithString:URLString];
         imageStorage.type = LWImageStorageWebImage;
@@ -262,13 +264,21 @@ const CGFloat kRefreshBoundary = 170.0f;
     dateTextStorage.font = [UIFont systemFontOfSize:13.0f];
     dateTextStorage.textColor = [UIColor grayColor];
 
+
     /***********************************  设置约束 自动布局 *********************************************/
     [LWConstraintManager lw_makeConstraint:dateTextStorage.constraint.leftEquelToStorage(contentTextStorage).topMarginToStorage(lastImageStorage,10)];
 
     //生成菜单图片的模型 dateTextStorage
     CGRect menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,20.0f + imagesHeight + contentTextStorage.bottom,20.0f,15.0f);
+    LWImageStorage* menuStorage = [[LWImageStorage alloc] init];
+    menuStorage.type = LWImageStorageLocalImage;
+    menuStorage.frame = menuPosition;
+    menuStorage.image = [UIImage imageNamed:@"menu"];
+
 
     //comment
+    //生成评论背景Storage
+    LWImageStorage* commentBgStorage = [[LWImageStorage alloc] init];
     NSArray* commentTextStorages = @[];
     CGRect commentBgPosition = CGRectZero;
     CGRect rect = CGRectMake(60.0f,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, 20);
@@ -330,8 +340,13 @@ const CGFloat kRefreshBoundary = 170.0f;
                 offsetY += commentTextStorage.height;
             }
         }
+        //如果有评论，设置评论背景Storage
         commentTextStorages = tmp;
         commentBgPosition = CGRectMake(60.0f,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, offsetY + 15.0f);
+        commentBgStorage.type = LWImageStorageLocalImage;
+        commentBgStorage.frame = commentBgPosition;
+        commentBgStorage.image = [UIImage imageNamed:@"comment"];
+        [commentBgStorage stretchableImageWithLeftCapWidth:40 topCapHeight:15];
     }
 
     /**************************将要在同一个LWAsyncDisplayView上显示的Storage要全部放入同一个LWLayout中***************************************/
@@ -346,6 +361,9 @@ const CGFloat kRefreshBoundary = 170.0f;
     NSMutableArray* imageStorages = [[NSMutableArray alloc] init];
     [imageStorages addObjectsFromArray:imageStorageArray];
     [imageStorages addObject:avatarStorage];
+    [imageStorages addObject:menuStorage];
+    [imageStorages addObject:commentBgStorage];
+
 
     //生成Layout
     CellLayout* layout = [[CellLayout alloc] initWithTextStorages:textStorages imageStorages:imageStorages];

@@ -179,8 +179,10 @@
         for (NSInteger i = 0 ; i < self.layout.imageStorages.count; i ++) {
             LWImageStorage* imageStorage = self.layout.imageStorages[i];
             LWImageContainer* container = self.imageContainers[i];
-            [container delayLayoutImageStorage:imageStorage];
-            [container setContentWithImageStorage:imageStorage];
+            if (imageStorage.type == LWImageStorageWebImage) {
+                [container delayLayoutImageStorage:imageStorage];
+                [container setContentWithImageStorage:imageStorage];
+            }
         }
         self.setedImageContents = YES;
     }
@@ -197,8 +199,10 @@
     for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
         LWImageStorage* imageStorage = self.layout.imageStorages[i];
         LWImageContainer* container = self.imageContainers[i];
-        [container delayLayoutImageStorage:imageStorage];
-        [container setContentWithImageStorage:imageStorage];
+        if (imageStorage.type == LWImageStorageWebImage) {
+            [container delayLayoutImageStorage:imageStorage];
+            [container setContentWithImageStorage:imageStorage];
+        }
     }
     self.setedImageContents = YES;
 }
@@ -283,6 +287,11 @@
     if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:)] &&
         [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
         [self.delegate extraAsyncDisplayIncontext:context size:size];
+    }
+    for (LWImageStorage* imageStorage in self.layout.imageStorages) {
+        if (imageStorage.type == LWImageStorageLocalImage) {
+            [imageStorage.image drawInRect:imageStorage.frame];
+        }
     }
     for (LWTextStorage* textStorage in self.layout.textStorages) {
         [textStorage drawInContext:context layer:layer];

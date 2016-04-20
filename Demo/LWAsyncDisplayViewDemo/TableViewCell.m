@@ -86,13 +86,6 @@
     CGContextSetLineWidth(context, 0.3f);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextStrokePath(context);
-    //绘制菜单按钮
-    [self _drawImage:[UIImage imageNamed:@"menu"] rect:self.cellLayout.menuPosition context:context];
-    //绘制评论背景
-    UIImage*commentBgImage = [[UIImage imageNamed:@"comment"]
-                              stretchableImageWithLeftCapWidth:40.0f
-                              topCapHeight:15.0f];
-    [commentBgImage drawInRect:self.cellLayout.commentBgPosition];
 }
 
 - (void)_drawImage:(UIImage *)image rect:(CGRect)rect context:(CGContextRef)context {
@@ -109,7 +102,7 @@
 
 - (LWAsyncDisplayView *)asyncDisplayView {
     if (!_asyncDisplayView) {
-        _asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero maxImageStorageCount:10];
+        _asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero maxImageStorageCount:12.0f];
         _asyncDisplayView.delegate = self;
     }
     return _asyncDisplayView;

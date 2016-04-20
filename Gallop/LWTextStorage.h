@@ -166,9 +166,6 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 @end
 
 
-
-
-
 typedef NS_ENUM(NSUInteger, LWTextAttachType) {
     LWTextAttachWebImage = 0,
     LWTextAttachLocalImage = 1,

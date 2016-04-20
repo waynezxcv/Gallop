@@ -23,7 +23,6 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
 
 @interface LWImageStorage : LWStorage
 
-
 /**
  *  图片类型
  */
@@ -66,5 +65,9 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
  *  圆角背景颜色
  */
 @property (nonatomic,strong) UIColor* cornerBackgroundColor;
+
+
+- (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
+
 
 @end
