@@ -295,11 +295,7 @@ static CGFloat widthCallback(void* ref){
                 transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
                 transform = CGAffineTransformScale(transform, 1.f, -1.f);
                 CGRect rect = CGRectApplyAffineTransform(boundsRect, transform);
-                CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
-                                               rect.origin.y + boundsRect.origin.y,
-                                               rect.size.width,
-                                               rect.size.height);
-                attach.imagePosition = adjustRect;
+                attach.imagePosition = CGRectMake(rect.origin.x, rect.origin.y, delegateRect.size.width, delegateRect.size.height);
             }
         }
     }
