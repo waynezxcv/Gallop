@@ -289,12 +289,17 @@ static CGFloat widthCallback(void* ref){
             if (attach.type == LWTextAttachLocalImage) {
                 attach.imagePosition = delegateRect;
             } else if (attach.type == LWTextAttachWebImage) {
+                CGPathRef path = CTFrameGetPath(self.CTFrame);
+                CGRect boundsRect = CGPathGetBoundingBox(path);
                 CGAffineTransform transform = CGAffineTransformIdentity;
+                transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
                 transform = CGAffineTransformScale(transform, 1.f, -1.f);
-                transform = CGAffineTransformMakeTranslation(0,-self.frame.size.height);
-                transform = CGAffineTransformMakeTranslation(0,self.frame.origin.y);
-                CGRect rect = CGRectApplyAffineTransform(delegateRect, transform);
-                attach.imagePosition = rect;
+                CGRect rect = CGRectApplyAffineTransform(boundsRect, transform);
+                CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                               rect.origin.y + boundsRect.origin.y,
+                                               rect.size.width,
+                                               rect.size.height);
+                attach.imagePosition = adjustRect;
             }
         }
     }

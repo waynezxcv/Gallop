@@ -265,10 +265,10 @@
 		011DFA341C987DF6000410D7 /* Gallop */ = {
 			isa = PBXGroup;
 			children = (
-				B085B3431CB68D1000087739 /* Utils */,
 				B085B3421CB68CF500087739 /* DisplayView */,
 				B085B3411CB68CD700087739 /* Storage */,
 				B085B3401CB68CCB00087739 /* Constraint */,
+				B085B3431CB68D1000087739 /* Utils */,
 			);
 			name = Gallop;
 			sourceTree = "<group>";
