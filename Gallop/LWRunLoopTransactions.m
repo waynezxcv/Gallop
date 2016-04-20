@@ -62,8 +62,8 @@ static void RunLoopTransactionsSetup() {
 @implementation LWRunLoopTransactions
 
 + (LWRunLoopTransactions *)transactionsWithTarget:(id)target
-                                       selector:(SEL)selector
-                                         object:(id)object {
+                                         selector:(SEL)selector
+                                           object:(id)object {
     if (!target || !selector) {
         return nil;
     }

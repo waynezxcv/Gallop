@@ -20,7 +20,6 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
-#import "LWTextAttach.h"
 #import "LWStorage.h"
 
 
@@ -128,10 +127,15 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 
 
 /**
+ *  清除附件
+ */
+- (void)removeAttachFromViewAndLayer;
+
+/**
  *  绘制
  *
  */
-- (void)drawInContext:(CGContextRef)context;
+- (void)drawInContext:(CGContextRef)context layer:(CALayer *)layer;
 
 /**
  *  为指定位置的文本添加链接
@@ -147,7 +151,7 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  *  用本地图片替换掉指定位置的文字
  *
  */
-- (void)replaceTextWithImage:(UIImage *)image inRange:(NSRange)range;
+- (void)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range;
 
 /**
  *  用网络图片替换掉指定位置的文字
@@ -156,6 +160,29 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 - (void)replaceTextWithImageURL:(NSURL *)URL imageSize:(CGSize)size inRange:(NSRange)range;
 
 
+
 #define kLWTextLinkAttributedName @"LWTextLinkAttributedName"
 
 @end
+
+
+
+
+
+typedef NS_ENUM(NSUInteger, LWTextAttachType) {
+    LWTextAttachWebImage = 0,
+    LWTextAttachLocalImage = 1,
+};
+
+
+@interface LWTextAttach : NSObject
+
+@property (nonatomic,assign) LWTextAttachType type;
+@property (nonatomic,strong) UIImage* image;
+@property (nonatomic,assign) NSRange range;
+@property (nonatomic,assign) CGRect imagePosition;
+@property (nonatomic,strong) NSURL* URL;
+@property (nonatomic,strong) id content;
+
+@end
+

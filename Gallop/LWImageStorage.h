@@ -38,7 +38,6 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
  *  图片UIImage （LWImageStorageLocalImage）
  */
 @property (nonatomic,strong) UIImage* image;
-
 /**
  *  内容模式
  */

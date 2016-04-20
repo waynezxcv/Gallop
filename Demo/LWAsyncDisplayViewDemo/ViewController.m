@@ -212,6 +212,11 @@ const CGFloat kRefreshBoundary = 170.0f;
                            linkColor:nil
                       highLightColor:[UIColor grayColor]
                       UnderLineStyle:NSUnderlineStyleNone];
+//
+//    //用网络图片替换Text
+//    if (contentTextStorage.text.length > 22) {
+//        [contentTextStorage replaceTextWithImageURL:[NSURL URLWithString:@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0"] imageSize:CGSizeMake(40, 40) inRange:NSMakeRange(20, 1)];
+//    }
 
     [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
     [LWTextParser parseTopicWithLWTextStorage:contentTextStorage

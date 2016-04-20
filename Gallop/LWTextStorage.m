@@ -18,6 +18,7 @@
 //
 
 #import "LWTextStorage.h"
+#import "CALayer+WebCache.h"
 
 
 static CGFloat descentCallback(void *ref){
@@ -127,24 +128,31 @@ static CGFloat widthCallback(void* ref){
 
 
 #pragma mark - Draw
-- (void)drawInContext:(CGContextRef)context {
-    @autoreleasepool {
-        CGContextSaveGState(context);
-        CGContextSetTextMatrix(context,CGAffineTransformIdentity);
-        CGContextTranslateCTM(context, self.frame.origin.x, self.frame.origin.y);
-        CGContextTranslateCTM(context, 0, self.frame.size.height);
-        CGContextScaleCTM(context, 1.0, -1.0);
-        CGContextTranslateCTM(context, - self.frame.origin.x, -self.frame.origin.y);
-        CTFrameDraw(self.CTFrame, context);
-        CGContextRestoreGState(context);
-        if (self.localAttachs.count == 0) {
-            return;
-        }
-        for (NSInteger i = 0; i < self.localAttachs.count; i ++) {
+- (void)drawInContext:(CGContextRef)context layer:(CALayer *)layer {
+    [self _drawTextInContent:context];
+    [self _drawLocalAttachsInContext:context];
+    [self _drawWebAttachsInLayer:layer];
+}
+
+- (void)_drawTextInContent:(CGContextRef)context {
+    CGContextSaveGState(context);
+    CGContextSetTextMatrix(context,CGAffineTransformIdentity);
+    CGContextTranslateCTM(context, self.frame.origin.x, self.frame.origin.y);
+    CGContextTranslateCTM(context, 0, self.frame.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    CGContextTranslateCTM(context, - self.frame.origin.x, -self.frame.origin.y);
+    CTFrameDraw(self.CTFrame, context);
+    CGContextRestoreGState(context);
+}
+
+
+- (void)_drawLocalAttachsInContext:(CGContextRef)context {
+    if (self.localAttachs.count == 0) {
+        return;
+    }
+    for (NSInteger i = 0; i < self.localAttachs.count; i ++) {
+        @autoreleasepool {
             LWTextAttach* attach = self.localAttachs[i];
-            if (attach.type == LWTextAttachWebImage) {
-                return;
-            }
             CGContextSaveGState(context);
             CGContextTranslateCTM(context, self.frame.origin.x, self.frame.origin.y);
             CGContextTranslateCTM(context, 0, self.frame.size.height);
@@ -156,9 +164,30 @@ static CGFloat widthCallback(void* ref){
     }
 }
 
+- (void)_drawWebAttachsInLayer:(CALayer *)layer {
+    if (self.webAttachs.count == 0) {
+        return;
+    }
+    for (NSInteger i = 0; i < self.webAttachs.count; i ++) {
+        @autoreleasepool {
+            LWTextAttach* attach = self.webAttachs[i];
+            id content = attach.content;
+            if (!content) {
+                return;
+            }
+            if ([content isKindOfClass:[CALayer class]]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    CALayer* subLayer = (CALayer *)content;
+                    subLayer.frame = attach.imagePosition;
+                    [layer addSublayer:subLayer];
+                    [subLayer sd_setImageWithURL:attach.URL];
+                });
+            }
+        }
+    }
+}
 
 #pragma mark - Add Link
-
 - (void)addLinkWithData:(id)data
                 inRange:(NSRange)range
               linkColor:(UIColor *)linkColor
@@ -184,14 +213,13 @@ static CGFloat widthCallback(void* ref){
 
 #pragma mark - Add Image
 
-- (void)replaceTextWithImage:(UIImage *)image
-                     inRange:(NSRange)range {
+- (void)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range {
     if (_attributedText == nil || _attributedText.length == 0) {
         return;
     }
     [self _resetFrameRef];
-    CGFloat width = image.size.width;
-    CGFloat height = image.size.height;
+    CGFloat width = size.width;
+    CGFloat height = size.height;
     NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width
                                                                                     imageHeight:height]];
     [_attributedText replaceCharactersInRange:range withAttributedString:placeholder];
@@ -215,6 +243,7 @@ static CGFloat widthCallback(void* ref){
     [_attributedText replaceCharactersInRange:range withAttributedString:placeholder];
     [self creatCTFrameRef];
     LWTextAttach* attach = [[LWTextAttach alloc] init];
+    attach.content = [CALayer layer];
     attach.type = LWTextAttachWebImage;
     attach.URL = URL;
     [self _setupImageAttachPositionWithAttach:attach];
@@ -257,7 +286,16 @@ static CGFloat widthCallback(void* ref){
                                              runBounds.origin.y + colRect.origin.y,
                                              runBounds.size.width,
                                              runBounds.size.height);
-            attach.imagePosition = delegateRect;
+            if (attach.type == LWTextAttachLocalImage) {
+                attach.imagePosition = delegateRect;
+            } else if (attach.type == LWTextAttachWebImage) {
+                CGAffineTransform transform = CGAffineTransformIdentity;
+                transform = CGAffineTransformScale(transform, 1.f, -1.f);
+                transform = CGAffineTransformMakeTranslation(0,-self.frame.size.height);
+                transform = CGAffineTransformMakeTranslation(0,self.frame.origin.y);
+                CGRect rect = CGRectApplyAffineTransform(delegateRect, transform);
+                attach.imagePosition = rect;
+            }
         }
     }
 }
@@ -286,11 +324,54 @@ static CGFloat widthCallback(void* ref){
 }
 
 
+
+- (void)removeAttachFromViewAndLayer {
+    if (self.webAttachs.count == 0) {
+        return;
+    }
+    for (LWTextAttach* attach in self.webAttachs) {
+        if (attach.type == LWTextAttachWebImage) {
+            id content = attach.content;
+            if ([content isKindOfClass:[CALayer class]]) {
+                CALayer* layer = (CALayer *)content;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [layer removeFromSuperlayer];
+                });
+            }
+            else if ([content isKindOfClass:[UIView class]]) {
+                UIView* view = (UIView *)content;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [view removeFromSuperview];
+                });
+            }
+        }
+    }
+}
+
+
 #pragma mark - Reset
 - (void)_resetAttachs {
+    for (LWTextAttach* attach in self.webAttachs) {
+        if (attach.type == LWTextAttachWebImage) {
+            id content = attach.content;
+            if ([content isKindOfClass:[CALayer class]]) {
+                CALayer* layer = (CALayer *)content;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [layer removeFromSuperlayer];
+                });
+            }
+            else if ([content isKindOfClass:[UIView class]]) {
+                UIView* view = (UIView *)content;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [view removeFromSuperview];
+                });
+            }
+        }
+    }
     [self.webAttachs removeAllObjects];
     [self.localAttachs removeAllObjects];
 }
+
 
 - (void)_resetFrameRef {
     if (self.CTFrame) {
@@ -329,7 +410,6 @@ static CGFloat widthCallback(void* ref){
     [self _resetAttachs];
     [self _resetFrameRef];
     _attributedText = [self _createAttributedStringWithText:text];
-
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
@@ -634,3 +714,22 @@ static CTUnderlineStyle _coreTextUnderlineStyleFromNSUnderlineStyle(NSUnderlineS
 }
 
 @end
+
+
+
+@implementation LWTextAttach
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.type = LWTextAttachLocalImage;
+        self.range = NSMakeRange(0, 0);
+        self.imagePosition = CGRectZero;
+        self.image = nil;
+        self.URL = nil;
+    }
+    return self;
+}
+
+@end
+

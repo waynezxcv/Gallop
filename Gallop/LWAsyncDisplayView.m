@@ -31,14 +31,26 @@
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
 @property (nonatomic,strong) NSMutableArray* imageContainers;
 
-//@property (nonatomic,assign) BOOL resetedImageContainers;
-//@property (nonatomic,assign) BOOL layoutedSubViews;
-//@property (nonatomic,assign) BOOL displayed;
-
-
 @property (nonatomic,assign) BOOL setedFrame;
 @property (nonatomic,assign,getter=isDisplayed) BOOL displayed;
 @property (nonatomic,assign,getter=isSetedImageContents) BOOL setedImageContents;
+
+/**
+ *  是否自动管理ImageContainer。默认为YES。若为NO，则需指定一个 maxImageStorageCount
+ *  如需设置maxImageStorageCount,请使用“- (id)initWithmaxImageStorageCount:(NSInteger)count”，
+ *  “- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)count”
+ *  方法来初始化
+ */
+@property (nonatomic,assign) BOOL autoReuseImageContainer;
+
+/**
+ *  最大的ImageContainer数量，默认为0
+ *  如需设置maxImageStorageCount,请使用“- (id)initWithmaxImageStorageCount:(NSInteger)count”，
+ *  “- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)count”
+ *  方法来初始化
+ */
+@property (nonatomic,assign) NSInteger maxImageStorageCount;
+
 @end
 
 
@@ -54,10 +66,42 @@
     return [LWAsyncDisplayLayer class];
 }
 
+- (id)initWithmaxImageStorageCount:(NSInteger)count {
+    self = [super init];
+    if (self) {
+        [self setup];
+        self.autoReuseImageContainer = NO;
+        self.maxImageStorageCount = count;
+        for (NSInteger i = 0; i < self.maxImageStorageCount; i ++) {
+            LWImageContainer* container = [LWImageContainer layer];
+            [self.layer addSublayer:container];
+            [self.imageContainers addObject:container];
+        }
+    }
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)count {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setup];
+        self.autoReuseImageContainer = NO;
+        self.maxImageStorageCount = count;
+        for (NSInteger i = 0; i < self.maxImageStorageCount; i ++) {
+            LWImageContainer* container = [LWImageContainer layer];
+            [self.layer addSublayer:container];
+            [self.imageContainers addObject:container];
+        }
+    }
+    return self;
+}
+
 - (id)init {
     self = [super init];
     if (self) {
         [self setup];
+        self.autoReuseImageContainer = YES;
+        self.maxImageStorageCount = 0;
     }
     return self;
 }
@@ -66,6 +110,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setup];
+        self.autoReuseImageContainer = YES;
+        self.maxImageStorageCount = 0;
     }
     return self;
 }
@@ -83,14 +129,23 @@
     if (_layout == layout) {
         return;
     }
+    for (LWTextStorage* textStorage in self.layout.textStorages) {
+        [textStorage removeAttachFromViewAndLayer];
+    }
     _layout = layout;
     self.setedFrame = NO;
     self.displayed = NO;
     self.setedImageContents = NO;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self _resetImageContainers];
+        if (self.autoReuseImageContainer == YES) {
+            [self _autoReuseImageContainers];
+        }
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [self _setImageStorages];
+            if (self.autoReuseImageContainer == YES) {
+                [self _autoSetImageStorages];
+            } else {
+                [self _setImageStorages];
+            }
             [self _setNeedDisplay];
         });
     });
@@ -117,16 +172,30 @@
     }
 }
 
-- (void)_setImageStorages {
+- (void)_autoSetImageStorages {
     if (!self.setedImageContents) {
         for (NSInteger i = 0 ; i < self.layout.imageStorages.count; i ++) {
             LWImageStorage* imageStorage = self.layout.imageStorages[i];
             LWImageContainer* container = self.imageContainers[i];
-            [container layoutImageStorage:imageStorage];
+            [container delayLayoutImageStorage:imageStorage];
             [container setContentWithImageStorage:imageStorage];
         }
         self.setedImageContents = YES;
     }
+}
+
+- (void)_setImageStorages {
+    for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
+        LWImageContainer* container = self.imageContainers[i];
+        [container cleanup];
+    }
+    for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
+        LWImageStorage* imageStorage = self.layout.imageStorages[i];
+        LWImageContainer* container = self.imageContainers[i];
+        [container delayLayoutImageStorage:imageStorage];
+        [container setContentWithImageStorage:imageStorage];
+    }
+    self.setedImageContents = YES;
 }
 
 #pragma mark - Display
@@ -148,7 +217,7 @@
 }
 
 #pragma mark - RestImageContainers
-- (void)_resetImageContainers {
+- (void)_autoReuseImageContainers {
     if (self.isNeedRestImageContainers) {
         NSInteger delta = self.imageContainers.count - self.layout.imageStorages.count;
         if (delta < 0) {
@@ -214,7 +283,7 @@
         [self.delegate extraAsyncDisplayIncontext:context size:size];
     }
     for (LWTextStorage* textStorage in self.layout.textStorages) {
-        [textStorage drawInContext:context];
+        [textStorage drawInContext:context layer:layer];
     }
 }
 

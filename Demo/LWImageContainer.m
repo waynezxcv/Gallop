@@ -42,18 +42,18 @@
     }
 }
 
-- (void)layoutImageStorage:(LWImageStorage *)imageStorage {
+- (void)delayLayoutImageStorage:(LWImageStorage *)imageStorage {
     [[LWRunLoopTransactions transactionsWithTarget:self
-                                          selector:@selector(_delayLayoutImageStorage:)
+                                          selector:@selector(layoutImageStorage:)
                                             object:imageStorage] commit];}
 
-- (void)cleanup {
+- (void)delayCleanup {
     [[LWRunLoopTransactions transactionsWithTarget:self
-                                          selector:@selector(_delayClenup)
+                                          selector:@selector(cleanup)
                                             object:nil] commit];
 }
 
-- (void)_delayLayoutImageStorage:(LWImageStorage *)imageStorage {
+- (void)layoutImageStorage:(LWImageStorage *)imageStorage {
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
     self.frame = imageStorage.frame;
@@ -62,7 +62,8 @@
     self.masksToBounds = imageStorage.masksToBounds;
 }
 
-- (void)_delayClenup {
+
+- (void)cleanup {
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
     self.frame = CGRectZero;

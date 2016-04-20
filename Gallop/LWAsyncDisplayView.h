@@ -52,12 +52,34 @@
 
 @interface LWAsyncDisplayView : UIView
 
+
+
 @property (nonatomic,weak) id <LWAsyncDisplayViewDelegate> delegate;
 
 /**
- *  数据源
+ *  排版模型
  */
 @property (nonatomic,copy) LWLayout* layout;
+
+
+/**
+ *  初始化并设置最大ImageContainer的数量。如果用"init"方法创建，则自动管理ImageContainers
+ *  指定一个maxImageStorageCount，将避免在滚动中重复创建ImageContainer,滚动会更流畅。
+ *  @param count 最大ImageStorage的数量。
+ *
+ *  @return
+ */
+- (id)initWithmaxImageStorageCount:(NSInteger)count;
+
+
+/**
+ *  初始化并设置最大ImageContainer的数量。如果用"initWithFrame"方法创建，则自动管理ImageContainers
+ *  指定一个maxImageStorageCount，将避免在滚动中重复创建ImageContainer,滚动会更流畅。
+ *  @param count 最大ImageStorage的数量。
+ *
+ *  @return
+ */
+- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)count;
 
 
 @end

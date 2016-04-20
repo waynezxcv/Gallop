@@ -82,9 +82,9 @@ static inline NSRegularExpression* TopicRegularExpression() {
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-
         if (textStorage.text.length >= range.location + range.length) {
-            [textStorage replaceTextWithImage:[UIImage imageNamed:content] inRange:range];
+            UIImage* image = [UIImage imageNamed:content] ;
+            [textStorage replaceTextWithImage:image imageSize:image.size inRange:range];
         }
     }
 }
@@ -101,10 +101,10 @@ static inline NSRegularExpression* TopicRegularExpression() {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         [textStorage addLinkWithData:content
-                            inRange:range
-                          linkColor:linkColor
-                     highLightColor:higlightColor
-                     UnderLineStyle:NSUnderlineStyleSingle];
+                             inRange:range
+                           linkColor:linkColor
+                      highLightColor:higlightColor
+                      UnderLineStyle:NSUnderlineStyleSingle];
     }
 }
 
@@ -122,10 +122,10 @@ static inline NSRegularExpression* TopicRegularExpression() {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         [textStorage addLinkWithData:content
-                            inRange:range
-                          linkColor:linkColor
-                     highLightColor:higlightColor
-                     UnderLineStyle:underline];
+                             inRange:range
+                           linkColor:linkColor
+                      highLightColor:higlightColor
+                      UnderLineStyle:underline];
     }
 }
 
@@ -143,10 +143,10 @@ static inline NSRegularExpression* TopicRegularExpression() {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         [textStorage addLinkWithData:content
-                            inRange:range
-                          linkColor:linkColor
-                     highLightColor:higlightColor
-                     UnderLineStyle:underlineStyle];
+                             inRange:range
+                           linkColor:linkColor
+                      highLightColor:higlightColor
+                      UnderLineStyle:underlineStyle];
     }
 }
 
