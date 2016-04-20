@@ -33,21 +33,28 @@
 
 #pragma mark - Actions
 
-/**
- *  点击图片查看大图
- *
- */
+
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                 tapGesture:(UITapGestureRecognizer *)tapGesutrueRecognizer{
     CGPoint point = [tapGesutrueRecognizer locationInView:self];
     for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
+
+        //点击查看大图
         if (CGRectContainsPoint(imagePosition, point)) {
             if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedImageWithCellLayout:atIndex:)] &&
                 [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
                 [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.cellLayout atIndex:i];
             }
+        }
+
+    }
+
+    //点击菜单按钮
+    if (CGRectContainsPoint(self.cellLayout.menuPosition, point)) {
+        if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedMenuWithCellLayout:atIndexPath:)]) {
+            [self.delegate tableViewCell:self didClickedMenuWithCellLayout:self.cellLayout atIndexPath:self.indexPath];
         }
     }
 }

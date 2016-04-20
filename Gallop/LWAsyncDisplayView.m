@@ -129,7 +129,6 @@
     if (_layout == layout) {
         return;
     }
-
     [self _cleanImageContainers];
     for (LWTextStorage* textStorage in self.layout.textStorages) {
         [textStorage removeAttachFromViewAndLayer];

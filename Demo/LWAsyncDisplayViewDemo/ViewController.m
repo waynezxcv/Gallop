@@ -97,6 +97,15 @@ const CGFloat kRefreshBoundary = 170.0f;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+
+/**
+ *  点击菜单按钮
+ *
+ */
+- (void)tableViewCell:(TableViewCell *)cell didClickedMenuWithCellLayout:(CellLayout *)layout atIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%@",indexPath);
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -111,6 +120,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
     cell.delegate = self;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.indexPath = indexPath;
     if (self.dataSource.count >= indexPath.row) {
         CellLayout* cellLayout = self.dataSource[indexPath.row];
         cell.cellLayout = cellLayout;
