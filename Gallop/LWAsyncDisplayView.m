@@ -129,6 +129,8 @@
     if (_layout == layout) {
         return;
     }
+
+    [self _cleanImageContainers];
     for (LWTextStorage* textStorage in self.layout.textStorages) {
         [textStorage removeAttachFromViewAndLayer];
     }
@@ -184,11 +186,14 @@
     }
 }
 
-- (void)_setImageStorages {
+- (void)_cleanImageContainers {
     for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
         LWImageContainer* container = self.imageContainers[i];
         [container cleanup];
     }
+}
+
+- (void)_setImageStorages {
     for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
         LWImageStorage* imageStorage = self.layout.imageStorages[i];
         LWImageContainer* container = self.imageContainers[i];
@@ -267,14 +272,11 @@
 
 #pragma mark - LWAsyncDisplayLayerDelegate
 - (void)displayDidCancled {
-    self.displayed = NO;
+    return;
 }
 
 - (BOOL)willBeginAsyncDisplay:(LWAsyncDisplayLayer *)layer {
-    if (self.displayed == NO) {
-        return YES;
-    }
-    return NO;
+    return YES;
 }
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
@@ -288,7 +290,7 @@
 }
 
 - (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL)isFinished {
-    self.displayed = YES;
+    return;
 }
 
 #pragma mark - SignleTapGesture
