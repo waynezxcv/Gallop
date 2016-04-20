@@ -34,11 +34,15 @@
     if (self) {
         self.textStorages = [textStorages copy];
         self.imageStorages = [imageStorages copy];
-        [self.totalStorages addObjectsFromArray:self.textStorages];
+        for (LWTextStorage* textStorage in self.textStorages) {
+            [textStorage creatCTFrameRef];
+            [self.totalStorages addObject:textStorage];
+        }
         [self.totalStorages addObjectsFromArray:self.imageStorages];
     }
     return self;
 }
+
 
 - (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin {
     CGFloat suggestHeight = 0.0f;
