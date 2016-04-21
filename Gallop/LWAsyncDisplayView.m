@@ -54,6 +54,10 @@
 
 
 @implementation LWAsyncDisplayView
+{
+    NSArray* _textStorages;
+    NSArray* _imageStorages;
+}
 
 #pragma mark - Initialization
 /**
@@ -128,14 +132,37 @@
     if (_layout == layout) {
         return;
     }
+    [self _clenLayout];
+    _layout = layout;
+    [self _updateLayout];
+    [self invalidateIntrinsicContentSize];
+}
+
+- (void)_clenLayout {
+    LWLayout* layout = _layout;
+    NSArray* imageStorages = _imageStorages;
+    NSArray* textStroages = _textStorages;
+    _layout = nil;
+    _imageStorages = nil;
+    _textStorages = nil;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [layout class];
+        [imageStorages count];
+        [textStroages count];
+    });
+}
+
+- (void)_updateLayout {
     [self _cleanImageContainers];
-    for (LWTextStorage* textStorage in self.layout.container.textStorages) {
+    for (LWTextStorage* textStorage in _textStorages) {
         [textStorage removeAttachFromViewAndLayer];
     }
-    _layout = layout;
     self.setedFrame = NO;
     self.displayed = NO;
     self.setedImageContents = NO;
+
+    _textStorages = self.layout.container.textStorages;
+    _imageStorages = self.layout.container.imageStorages;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if (self.autoReuseImageContainer == YES) {
             [self _autoReuseImageContainers];
@@ -174,8 +201,8 @@
 
 - (void)_autoSetImageStorages {
     if (!self.setedImageContents) {
-        for (NSInteger i = 0 ; i < self.layout.container.imageStorages.count; i ++) {
-            LWImageStorage* imageStorage = self.layout.container.imageStorages[i];
+        for (NSInteger i = 0 ; i < _imageStorages.count; i ++) {
+            LWImageStorage* imageStorage = _imageStorages[i];
             LWImageContainer* container = self.imageContainers[i];
             if (imageStorage.type == LWImageStorageWebImage) {
                 [container delayLayoutImageStorage:imageStorage];
@@ -194,8 +221,8 @@
 }
 
 - (void)_setImageStorages {
-    for (NSInteger i = 0; i < self.layout.container.imageStorages.count; i ++) {
-        LWImageStorage* imageStorage = self.layout.container.imageStorages[i];
+    for (NSInteger i = 0; i < _imageStorages.count; i ++) {
+        LWImageStorage* imageStorage = _imageStorages[i];
         LWImageContainer* container = self.imageContainers[i];
         if (imageStorage.type == LWImageStorageWebImage) {
             [container delayLayoutImageStorage:imageStorage];
@@ -226,9 +253,9 @@
 #pragma mark - RestImageContainers
 - (void)_autoReuseImageContainers {
     if (self.isNeedRestImageContainers) {
-        NSInteger delta = self.imageContainers.count - self.layout.container.imageStorages.count;
+        NSInteger delta = self.imageContainers.count - _imageStorages.count;
         if (delta < 0) {
-            for (NSInteger i = 0; i < self.layout.container.imageStorages.count; i ++) {
+            for (NSInteger i = 0; i < _imageStorages.count; i ++) {
                 if (i < ABS(delta)) {
                     LWImageContainer* container = [LWImageContainer layer];
                     [self.layer addSublayer:container];
@@ -237,7 +264,7 @@
             }
         } else if (delta > 0 ) {
             for (NSInteger i = 0; i < self.imageContainers.count; i ++ ) {
-                if (i >= self.layout.container.imageStorages.count) {
+                if (i >= _imageStorages.count) {
                     LWImageContainer* container = self.imageContainers[i];
                     [container cleanup];
                 }
@@ -247,7 +274,7 @@
 }
 
 - (BOOL)isNeedRestImageContainers {
-    if (self.imageContainers.count == self.layout.container.imageStorages.count) {
+    if (self.imageContainers.count == _imageStorages.count) {
         return NO;
     }
     return YES;
@@ -286,12 +313,12 @@
         [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
         [self.delegate extraAsyncDisplayIncontext:context size:size];
     }
-    for (LWImageStorage* imageStorage in self.layout.container.imageStorages) {
+    for (LWImageStorage* imageStorage in _imageStorages) {
         if (imageStorage.type == LWImageStorageLocalImage) {
             [imageStorage.image drawInRect:imageStorage.frame];
         }
     }
-    for (LWTextStorage* textStorage in self.layout.container.textStorages) {
+    for (LWTextStorage* textStorage in _textStorages) {
         [textStorage drawInContext:context layer:layer];
     }
 }
@@ -303,7 +330,7 @@
 #pragma mark - SignleTapGesture
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
-    for (LWImageStorage* imageStorage in self.layout.container.imageStorages) {
+    for (LWImageStorage* imageStorage in _imageStorages) {
         if (imageStorage == nil) {
             continue;
         }
@@ -313,7 +340,7 @@
             }
         }
     }
-    for (LWTextStorage* textStorage in self.layout.container.textStorages) {
+    for (LWTextStorage* textStorage in _textStorages) {
         if (textStorage == nil) {
             continue;
         }

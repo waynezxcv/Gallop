@@ -59,7 +59,7 @@
 /**
  *  排版模型
  */
-@property (nonatomic,copy) LWLayout* layout;
+@property (nonatomic,strong) LWLayout* layout;
 
 
 /**
