@@ -86,8 +86,8 @@ static inline NSRegularExpression* TopicRegularExpression() {
         NSString* content = [text substringWithRange:range];
         if (textStorage.text.length >= range.location + range.length) {
             UIImage* image = [UIImage imageNamed:content] ;
-//            text = [textStorage replaceTextWithImage:image imageSize:image.size inRange:range].string;
-            [textStorage replaceTextWithImageURL:[NSURL URLWithString:@"http://wenwen.soso.com/p/20090918/20090918224629-1678212122.jpg"] imageSize:CGSizeMake(20, 20) inRange:range];
+            text = [textStorage replaceTextWithImage:image imageSize:image.size inRange:range].string;
+            //            [textStorage replaceTextWithImageURL:[NSURL URLWithString:@"http://wenwen.soso.com/p/20090918/20090918224629-1678212122.jpg"] imageSize:CGSizeMake(20, 20) inRange:range];
         }
     }
     
