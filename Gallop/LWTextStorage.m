@@ -275,11 +275,11 @@ static CGFloat widthCallback(void* ref){
             CGFloat descent;
             runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
             runBounds.size.height = ascent + descent;
-
+            
             CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
             runBounds.origin.x = lineOrigins[i].x + xOffset;
             runBounds.origin.y = lineOrigins[i].y - descent;
-
+            
             CGPathRef pathRef = CTFrameGetPath(self.CTFrame);
             CGRect colRect = CGPathGetBoundingBox(pathRef);
             CGRect delegateRect = CGRectMake(runBounds.origin.x + colRect.origin.x,
@@ -289,13 +289,11 @@ static CGFloat widthCallback(void* ref){
             if (attach.type == LWTextAttachLocalImage) {
                 attach.imagePosition = delegateRect;
             } else if (attach.type == LWTextAttachWebImage) {
-                CGPathRef path = CTFrameGetPath(self.CTFrame);
-                CGRect boundsRect = CGPathGetBoundingBox(path);
-                CGAffineTransform transform = CGAffineTransformIdentity;
-                transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
-                transform = CGAffineTransformScale(transform, 1.f, -1.f);
-                CGRect rect = CGRectApplyAffineTransform(boundsRect, transform);
-                attach.imagePosition = CGRectMake(rect.origin.x, rect.origin.y, delegateRect.size.width, delegateRect.size.height);
+                CGRect rect = CGRectMake(delegateRect.origin.x,
+                                         delegateRect.origin.y - self.frame.size.height,
+                                         delegateRect.size.width,
+                                         delegateRect.size.height);
+                attach.imagePosition = rect;
             }
         }
     }
@@ -507,20 +505,20 @@ static CGFloat widthCallback(void* ref){
     }
     NSMutableAttributedString* attbutedString = [[NSMutableAttributedString alloc]
                                                  initWithString:text];
-
+    
     [self _mutableAttributedString:attbutedString
         addAttributesWithTextColor:_textColor
                            inRange:NSMakeRange(0, text.length)];
-
+    
     [self _mutableAttributedString:attbutedString
              addAttributesWithFont:_font
                            inRange:NSMakeRange(0, text.length)];
-
+    
     [self _mutableAttributedString:attbutedString addAttributesWithLineSpacing:_linespace
                      textAlignment:_textAlignment
                      lineBreakMode:_lineBreakMode
                            inRange:NSMakeRange(0, text.length)];
-
+    
     [self _mutableAttributedString:attbutedString addAttributesWithUnderlineStyle:_underlineStyle
                            inRange:NSMakeRange(0, text.length)];
     return attbutedString;
@@ -624,7 +622,7 @@ addAttributesWithCharacterSpacing:(unichar)characterSpacing
         return;
     }
     [attributedString removeAttribute:(NSString *)kCTKernAttributeName range:range];
-
+    
     CFNumberRef charSpacingNum =  CFNumberCreate(kCFAllocatorDefault,kCFNumberSInt8Type,&characterSpacing);
     if (charSpacingNum != nil) {
         [attributedString addAttribute:(NSString *)kCTKernAttributeName value:(__bridge id)charSpacingNum range:range];

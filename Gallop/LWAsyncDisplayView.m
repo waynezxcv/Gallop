@@ -30,7 +30,6 @@
 @property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
 @property (nonatomic,strong) NSMutableArray* imageContainers;
 
-@property (nonatomic,assign) BOOL setedFrame;
 @property (nonatomic,assign,getter=isDisplayed) BOOL displayed;
 @property (nonatomic,assign,getter=isSetedImageContents) BOOL setedImageContents;
 
@@ -129,7 +128,7 @@
 #pragma mark - Layout & Display
 
 - (void)setLayout:(LWLayout *)layout {
-    if (_layout == layout) {
+    if ([_layout isEqual:layout] || layout == _layout) {
         return;
     }
     [self _clenLayout];
@@ -139,6 +138,9 @@
 }
 
 - (void)_clenLayout {
+    for (LWTextStorage* textStorage in _textStorages) {
+        [textStorage removeAttachFromViewAndLayer];
+    }
     LWLayout* layout = _layout;
     NSArray* imageStorages = _imageStorages;
     NSArray* textStroages = _textStorages;
@@ -154,13 +156,9 @@
 
 - (void)_updateLayout {
     [self _cleanImageContainers];
-    for (LWTextStorage* textStorage in _textStorages) {
-        [textStorage removeAttachFromViewAndLayer];
-    }
-    self.setedFrame = NO;
     self.displayed = NO;
     self.setedImageContents = NO;
-
+    
     _textStorages = self.layout.container.textStorages;
     _imageStorages = self.layout.container.imageStorages;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -184,7 +182,6 @@
     if (!CGSizeEqualToSize(oldSize, newSize) &&
         !CGSizeEqualToSize(newSize,CGSizeZero)) {
         [super setFrame:frame];
-        self.setedFrame = YES;
         [self _setNeedDisplay];
     }
 }
@@ -234,7 +231,7 @@
 
 #pragma mark - Display
 - (void)_setNeedDisplay {
-    if (!self.displayed && self.setedFrame) {
+    if (!self.displayed) {
         [self _commitDisplay];
     }
 }

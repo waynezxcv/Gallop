@@ -85,6 +85,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
         if (textStorage.text.length >= range.location + range.length) {
             UIImage* image = [UIImage imageNamed:content] ;
             [textStorage replaceTextWithImage:image imageSize:image.size inRange:range];
+            //            [textStorage replaceTextWithImageURL:[NSURL URLWithString:@"http://wenwen.soso.com/p/20090918/20090918224629-1678212122.jpg"] imageSize:CGSizeMake(20, 20) inRange:range];
         }
     }
 }
@@ -113,7 +114,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
                           linkColor:(UIColor *)linkColor
                      highlightColor:(UIColor *)higlightColor
                      underlineStyle:(NSUnderlineStyle)underlineStyle {
-
+    
     NSString* text = textStorage.text;
     NSArray* resultArray = [AccountRegularExpression() matchesInString:text
                                                                options:0
@@ -134,7 +135,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
                           linkColor:(UIColor *)linkColor
                      highlightColor:(UIColor *)higlightColor
                      underlineStyle:(NSUnderlineStyle)underlineStyle {
-
+    
     NSString* text = textStorage.text;
     NSArray* resultArray = [TopicRegularExpression() matchesInString:text
                                                              options:0
