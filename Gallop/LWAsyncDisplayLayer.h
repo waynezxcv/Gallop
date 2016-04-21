@@ -73,5 +73,4 @@
 - (void)asyncDisplaySize:(CGSize)size;
 - (void)cleanUp;
 
-
 @end

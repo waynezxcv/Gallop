@@ -14,7 +14,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 @interface LWStorage : NSObject
 
 @property (nonatomic,copy) NSString* uniqueSign;

@@ -71,3 +71,22 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
 
 
 @end
+
+
+
+@interface LWImageContainer : CALayer
+
+@property (nonatomic,copy) NSString* containerIdentifier;
+
+- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage;
+- (void)layoutImageStorage:(LWImageStorage *)imageStorage;
+- (void)cleanup;
+
+
+
+- (void)delayLayoutImageStorage:(LWImageStorage *)imageStorage;
+- (void)delayCleanup;
+
+
+@end
+

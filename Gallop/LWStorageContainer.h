@@ -6,31 +6,30 @@
 //　　The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-////`
+////
 //
-//  LWAutoLayout.m
-//  LWAsyncDisplayViewDemo
 //
-//  Created by 刘微 on 16/4/7.
+//  Created by 刘微 on 16/4/21.
 //  Copyright © 2016年 WayneInc. All rights reserved.
 //
 
-#import "LWLayout.h"
-#import "LWStorage+Constraint.h"
+#import <UIKit/UIKit.h>
+#import "LWStorage.h"
+#import "LWTextStorage.h"
+#import "LWImageStorage.h"
 
-@implementation LWLayout
+@interface LWStorageContainer : NSObject
 
-- (id)initWithContainer:(LWStorageContainer *)container {
-    self = [super init];
-    if (self) {
-        self.container = container;
-    }
-    return self;
-}
+@property (nonatomic,strong,readonly) NSMutableArray<LWTextStorage *>* textStorages;
+@property (nonatomic,strong,readonly) NSMutableArray<LWImageStorage *>* imageStorages;
+@property (nonatomic,strong,readonly) NSMutableArray<LWStorage *>* totalStorages;
 
-- (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin {
-    return [self.container suggestHeightWithBottomMargin:bottomMargin];
-}
+- (void)addStorage:(LWStorage *)storage;
+- (void)addStorages:(NSArray <LWStorage *> *)storages;
 
+- (void)removeStorage:(LWStorage *)storage;
+- (void)removeStorages:(NSArray <LWStorage *> *)storages;
+
+- (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin;
 
 @end

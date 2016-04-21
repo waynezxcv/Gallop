@@ -21,7 +21,6 @@
 #import "LWRunLoopTransactions.h"
 #import "CALayer+WebCache.h"
 #import "CALayer+GallopAddtions.h"
-#import "LWImageContainer.h"
 #import "NSObject+SwizzleMethod.h"
 
 
@@ -130,7 +129,7 @@
         return;
     }
     [self _cleanImageContainers];
-    for (LWTextStorage* textStorage in self.layout.textStorages) {
+    for (LWTextStorage* textStorage in self.layout.container.textStorages) {
         [textStorage removeAttachFromViewAndLayer];
     }
     _layout = layout;
@@ -175,8 +174,8 @@
 
 - (void)_autoSetImageStorages {
     if (!self.setedImageContents) {
-        for (NSInteger i = 0 ; i < self.layout.imageStorages.count; i ++) {
-            LWImageStorage* imageStorage = self.layout.imageStorages[i];
+        for (NSInteger i = 0 ; i < self.layout.container.imageStorages.count; i ++) {
+            LWImageStorage* imageStorage = self.layout.container.imageStorages[i];
             LWImageContainer* container = self.imageContainers[i];
             if (imageStorage.type == LWImageStorageWebImage) {
                 [container delayLayoutImageStorage:imageStorage];
@@ -195,8 +194,8 @@
 }
 
 - (void)_setImageStorages {
-    for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
-        LWImageStorage* imageStorage = self.layout.imageStorages[i];
+    for (NSInteger i = 0; i < self.layout.container.imageStorages.count; i ++) {
+        LWImageStorage* imageStorage = self.layout.container.imageStorages[i];
         LWImageContainer* container = self.imageContainers[i];
         if (imageStorage.type == LWImageStorageWebImage) {
             [container delayLayoutImageStorage:imageStorage];
@@ -227,9 +226,9 @@
 #pragma mark - RestImageContainers
 - (void)_autoReuseImageContainers {
     if (self.isNeedRestImageContainers) {
-        NSInteger delta = self.imageContainers.count - self.layout.imageStorages.count;
+        NSInteger delta = self.imageContainers.count - self.layout.container.imageStorages.count;
         if (delta < 0) {
-            for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
+            for (NSInteger i = 0; i < self.layout.container.imageStorages.count; i ++) {
                 if (i < ABS(delta)) {
                     LWImageContainer* container = [LWImageContainer layer];
                     [self.layer addSublayer:container];
@@ -238,7 +237,7 @@
             }
         } else if (delta > 0 ) {
             for (NSInteger i = 0; i < self.imageContainers.count; i ++ ) {
-                if (i >= self.layout.imageStorages.count) {
+                if (i >= self.layout.container.imageStorages.count) {
                     LWImageContainer* container = self.imageContainers[i];
                     [container cleanup];
                 }
@@ -248,7 +247,7 @@
 }
 
 - (BOOL)isNeedRestImageContainers {
-    if (self.imageContainers.count == self.layout.imageStorages.count) {
+    if (self.imageContainers.count == self.layout.container.imageStorages.count) {
         return NO;
     }
     return YES;
@@ -287,12 +286,12 @@
         [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
         [self.delegate extraAsyncDisplayIncontext:context size:size];
     }
-    for (LWImageStorage* imageStorage in self.layout.imageStorages) {
+    for (LWImageStorage* imageStorage in self.layout.container.imageStorages) {
         if (imageStorage.type == LWImageStorageLocalImage) {
             [imageStorage.image drawInRect:imageStorage.frame];
         }
     }
-    for (LWTextStorage* textStorage in self.layout.textStorages) {
+    for (LWTextStorage* textStorage in self.layout.container.textStorages) {
         [textStorage drawInContext:context layer:layer];
     }
 }
@@ -304,7 +303,7 @@
 #pragma mark - SignleTapGesture
 - (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
     CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
-    for (LWImageStorage* imageStorage in self.layout.imageStorages) {
+    for (LWImageStorage* imageStorage in self.layout.container.imageStorages) {
         if (imageStorage == nil) {
             continue;
         }
@@ -314,7 +313,7 @@
             }
         }
     }
-    for (LWTextStorage* textStorage in self.layout.textStorages) {
+    for (LWTextStorage* textStorage in self.layout.container.textStorages) {
         if (textStorage == nil) {
             continue;
         }

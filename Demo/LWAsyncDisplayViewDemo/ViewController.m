@@ -49,7 +49,9 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self refreshBegin];
+    if (self.isNeedRefresh) {
+        [self refreshBegin];
+    }
 }
 
 - (void)setup {
@@ -362,29 +364,24 @@ const CGFloat kRefreshBoundary = 170.0f;
     /**************************将要在同一个LWAsyncDisplayView上显示的Storage要全部放入同一个LWLayout中***************************************/
     /**************************我们将尽量通过合并绘制的方式将所有在同一个View显示的内容全都异步绘制在同一个AsyncDisplayView上**************************/
     /**************************这样的做法能最大限度的节省系统的开销**************************/
-    NSMutableArray* textStorages = [[NSMutableArray alloc] init];
-    [textStorages addObject:nameTextStorage];
-    [textStorages addObject:contentTextStorage];
-    [textStorages addObject:dateTextStorage];
-    [textStorages addObjectsFromArray:commentTextStorages];
-
-    NSMutableArray* imageStorages = [[NSMutableArray alloc] init];
-    [imageStorages addObjectsFromArray:imageStorageArray];
-    [imageStorages addObject:avatarStorage];
-    [imageStorages addObject:menuStorage];
-    [imageStorages addObject:commentBgStorage];
-
-
+    LWStorageContainer* container = [[LWStorageContainer alloc] init];
+    [container addStorage:nameTextStorage];
+    [container addStorage:contentTextStorage];
+    [container addStorage:dateTextStorage];
+    [container addStorages:commentTextStorages];
+    [container addStorage:avatarStorage];
+    [container addStorage:menuStorage];
+    [container addStorage:commentBgStorage];
+    [container addStorages:imageStorageArray];
     //生成Layout
-    CellLayout* layout = [[CellLayout alloc] initWithTextStorages:textStorages imageStorages:imageStorages];
+    CellLayout* layout = [[CellLayout alloc] initWithContainer:container];
+    layout.cellHeight = [layout suggestHeightWithBottomMargin:15.0f];
     //一些其他属性
     layout.menuPosition = menuPosition;
     layout.commentBgPosition = commentBgPosition;
     layout.imagePostionArray = imagePositionArray;
     layout.statusModel = statusModel;
-
     //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
-    layout.cellHeight = [layout suggestHeightWithBottomMargin:15.0f];
     /******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
     /********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
     return layout;
