@@ -151,7 +151,7 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  *  用本地图片替换掉指定位置的文字
  *
  */
-- (void)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range;
+- (NSMutableAttributedString *)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range;
 
 /**
  *  用网络图片替换掉指定位置的文字

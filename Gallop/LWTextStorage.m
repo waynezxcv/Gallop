@@ -213,9 +213,9 @@ static CGFloat widthCallback(void* ref){
 
 #pragma mark - Add Image
 
-- (void)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range {
+- (NSMutableAttributedString *)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range {
     if (_attributedText == nil || _attributedText.length == 0) {
-        return;
+        return nil;
     }
     [self _resetFrameRef];
     CGFloat width = size.width;
@@ -229,6 +229,7 @@ static CGFloat widthCallback(void* ref){
     attach.type = LWTextAttachLocalImage;
     [self _setupImageAttachPositionWithAttach:attach];
     [self.localAttachs addObject:attach];
+    return _attributedText;
 }
 
 - (void)replaceTextWithImageURL:(NSURL *)URL imageSize:(CGSize)size inRange:(NSRange)range {
@@ -289,15 +290,21 @@ static CGFloat widthCallback(void* ref){
             if (attach.type == LWTextAttachLocalImage) {
                 attach.imagePosition = delegateRect;
             } else if (attach.type == LWTextAttachWebImage) {
-                CGRect rect = CGRectMake(delegateRect.origin.x,
-                                         delegateRect.origin.y - self.frame.size.height,
-                                         delegateRect.size.width,
-                                         delegateRect.size.height);
-                attach.imagePosition = rect;
+                
             }
         }
     }
 }
+
+- (CGRect)_getLineBounds:(CTLineRef)line point:(CGPoint)point {
+    CGFloat ascent = 0.0f;
+    CGFloat descent = 0.0f;
+    CGFloat leading = 0.0f;
+    CGFloat width = (CGFloat)CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+    CGFloat height = ascent + descent;
+    return CGRectMake(point.x, point.y - descent, width, height);
+}
+
 
 - (NSString *)_jsonWithImageWith:(CGFloat)width
                      imageHeight:(CGFloat)height {

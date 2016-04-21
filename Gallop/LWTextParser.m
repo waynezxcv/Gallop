@@ -75,19 +75,22 @@ static inline NSRegularExpression* TopicRegularExpression() {
 @implementation LWTextParser
 
 + (void)parseEmojiWithTextStorage:(LWTextStorage *)textStorage {
-    NSString* text = textStorage.text;
+    NSString* text = [textStorage.text copy];
     NSArray* resultArray = [EmojiRegularExpression() matchesInString:text
                                                              options:0
                                                                range:NSMakeRange(0,text.length)];
-    for(NSTextCheckingResult* match in resultArray) {
+    
+    for (NSInteger i = resultArray.count - 1; i >= 0 ; i --) {
+        NSTextCheckingResult* match = [resultArray objectAtIndex:i];
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         if (textStorage.text.length >= range.location + range.length) {
             UIImage* image = [UIImage imageNamed:content] ;
-            [textStorage replaceTextWithImage:image imageSize:image.size inRange:range];
-            //            [textStorage replaceTextWithImageURL:[NSURL URLWithString:@"http://wenwen.soso.com/p/20090918/20090918224629-1678212122.jpg"] imageSize:CGSizeMake(20, 20) inRange:range];
+//            text = [textStorage replaceTextWithImage:image imageSize:image.size inRange:range].string;
+            [textStorage replaceTextWithImageURL:[NSURL URLWithString:@"http://wenwen.soso.com/p/20090918/20090918224629-1678212122.jpg"] imageSize:CGSizeMake(20, 20) inRange:range];
         }
     }
+    
 }
 
 + (void)parseHttpURLWithTextStorage:(LWTextStorage *)textStorage
