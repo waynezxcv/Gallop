@@ -58,7 +58,8 @@
                     containerSize:imageStorage.frame.size
                      cornerRadius:imageStorage.cornerRadius
             cornerBackgroundColor:imageStorage.cornerBackgroundColor
-                cornerBorderColor:imageStorage.cornerBorderColor borderWidth:imageStorage.cornerBorderWidth];
+                cornerBorderColor:imageStorage.cornerBorderColor
+                      borderWidth:imageStorage.cornerBorderWidth];
             }
         } else {
             [self sd_setImageWithURL:imageStorage.URL

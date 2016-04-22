@@ -158,7 +158,6 @@
     [self _cleanImageContainers];
     self.displayed = NO;
     self.setedImageContents = NO;
-    
     _textStorages = self.layout.container.textStorages;
     _imageStorages = self.layout.container.imageStorages;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{

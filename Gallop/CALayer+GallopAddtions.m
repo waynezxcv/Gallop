@@ -29,6 +29,7 @@
 }
 
 
+
 - (void)lw_setImage:(UIImage *)image
       containerSize:(CGSize)size
        cornerRadius:(CGFloat)cornerRadius
@@ -51,7 +52,6 @@ cornerBackgroundColor:(UIColor *)color
         [borderColor setStroke];
         [cornerPath stroke];
         [cornerPath setLineWidth:borderWidth];
-
         id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
         UIGraphicsEndImageContext();
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -59,6 +59,5 @@ cornerBackgroundColor:(UIColor *)color
         });
     });
 }
-
 
 @end
