@@ -25,7 +25,7 @@
 
 
 static dispatch_queue_t GetAsyncDisplayQueue() {
-#define MAX_QUEUE_COUNT 16
+#define MAX_QUEUE_COUNT 20
     static int queueCount;
     static dispatch_queue_t queues[MAX_QUEUE_COUNT];
     static dispatch_once_t onceToken;
@@ -76,16 +76,12 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 }
 
 - (void)dealloc {
-    dispatch_async(GetAsyncDisplayQueue(), ^{
-        [self _cancelDisplay];
-    });
+    [self _cancelDisplay];
 }
 
 
 - (void)setNeedsDisplay {
-    dispatch_async(GetAsyncDisplayQueue(), ^{
-        [self _cancelDisplay];
-    });
+    [self _cancelDisplay];
     [super setNeedsDisplay];
 }
 
@@ -95,9 +91,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 }
 
 - (void)cleanUp {
-    dispatch_async(GetAsyncDisplayQueue(), ^{
-        [self _cancelDisplay];
-    });
+    [self _cancelDisplay];
 }
 
 - (void)asyncDisplaySize:(CGSize)size {

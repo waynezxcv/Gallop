@@ -22,7 +22,12 @@
  *  设置Image并设置圆角半径，同时避免离屏渲染
  *
  */
-- (void)lw_setImage:(UIImage *)image containerSize:(CGSize)size cornerRadius:(CGFloat)cornerRadius cornerBackgroundColor:(UIColor *)color;
+- (void)lw_setImage:(UIImage *)image
+      containerSize:(CGSize)size
+       cornerRadius:(CGFloat)cornerRadius
+cornerBackgroundColor:(UIColor *)color
+  cornerBorderColor:(UIColor *)borderColor
+         borderWidth:(CGFloat)borderWidth;
 
 
 /**

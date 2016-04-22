@@ -52,8 +52,10 @@ static char imageURLKey;
              containerSize:(CGSize)containerSize
               cornerRadius:(CGFloat)cornerRadius
      cornerBackgroundColor:(UIColor *)color
+         cornerBorderColor:(UIColor *)borderColor
+               borderWidth:(CGFloat)borderWidth
                  completed:(SDWebImageCompletionBlock)completedBlock {
-    [self sd_setImageWithURL:url placeholderImage:placeholder options:options containerSize:containerSize cornerRadius:cornerRadius cornerBackgroundColor:color progress:nil completed:completedBlock];
+    [self sd_setImageWithURL:url placeholderImage:placeholder options:options containerSize:containerSize cornerRadius:cornerRadius cornerBackgroundColor:color cornerBorderColor:borderColor borderWidth:borderWidth progress:nil completed:completedBlock];
 }
 
 
@@ -63,6 +65,8 @@ static char imageURLKey;
              containerSize:(CGSize)containerSize
               cornerRadius:(CGFloat)cornerRadius
      cornerBackgroundColor:(UIColor *)color
+         cornerBorderColor:(UIColor *)borderColor
+               borderWidth:(CGFloat)borderWidth
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock {
     [self sd_cancelCurrentImageLoad];
@@ -88,7 +92,8 @@ static char imageURLKey;
                                                                                                      return;
                                                                                                  } else if (image) {
                                                                                                      if (cornerRadius != 0) {
-                                                                                                         [wself lw_setImage:image containerSize:containerSize cornerRadius:cornerRadius cornerBackgroundColor:color];
+                                                                                                         [wself lw_setImage:image containerSize:containerSize cornerRadius:cornerRadius cornerBackgroundColor:color
+                                                                                                          cornerBorderColor:borderColor borderWidth:borderWidth];
                                                                                                      } else {
                                                                                                          [wself setContents:(__bridge id)image.CGImage];
                                                                                                      }

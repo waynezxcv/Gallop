@@ -29,7 +29,12 @@
 }
 
 
-- (void)lw_setImage:(UIImage *)image containerSize:(CGSize)size cornerRadius:(CGFloat)cornerRadius cornerBackgroundColor:(UIColor *)color {
+- (void)lw_setImage:(UIImage *)image
+      containerSize:(CGSize)size
+       cornerRadius:(CGFloat)cornerRadius
+cornerBackgroundColor:(UIColor *)color
+  cornerBorderColor:(UIColor *)borderColor
+        borderWidth:(CGFloat)borderWidth {
     CGFloat scale = [UIScreen mainScreen].scale;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         UIGraphicsBeginImageContextWithOptions(size, YES, scale);
@@ -43,6 +48,10 @@
         [backgroundRect fill];
         [cornerPath addClip];
         [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+        [borderColor setStroke];
+        [cornerPath stroke];
+        [cornerPath setLineWidth:borderWidth];
+
         id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
         UIGraphicsEndImageContext();
         dispatch_async(dispatch_get_main_queue(), ^{

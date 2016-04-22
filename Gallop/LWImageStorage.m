@@ -22,7 +22,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.type = LWImageStorageLocalImage;
+        self.type = LWImageStorageWebImage;
         self.image = nil;
         self.URL = nil;
         self.frame = CGRectZero;
@@ -32,6 +32,8 @@
         self.fadeShow = NO;
         self.cornerRadius = 0.0f;
         self.cornerBackgroundColor = [UIColor whiteColor];
+        self.cornerBorderWidth = 0.0f;
+        self.cornerBorderColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -43,35 +45,54 @@
 
 @end
 
-
-
 @implementation LWImageContainer
 
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
     if (imageStorage.type == LWImageStorageWebImage) {
-        [self sd_setImageWithURL:imageStorage.URL
-                placeholderImage:imageStorage.placeholder
-                         options:0
-                   containerSize:imageStorage.frame.size
-                    cornerRadius:imageStorage.cornerRadius
-           cornerBackgroundColor:imageStorage.cornerBackgroundColor
-                       completed:^(UIImage *image, NSError *error,
-                                   SDImageCacheType cacheType,
-                                   NSURL *imageURL) {
-                           if (imageStorage.fadeShow) {
-                               CATransition* transition = [CATransition animation];
-                               transition.duration = 0.2;
-                               transition.timingFunction = [CAMediaTimingFunction
-                                                            functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-                               transition.type = kCATransitionFade;
-                               [self addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
-                           }
-                       }];
+        if (imageStorage.image) {
+            if (imageStorage.cornerRadius == 0) {
+                [self setContents:(__bridge id _Nullable)imageStorage.image.CGImage];
+            }
+            else {
+                [self lw_setImage:imageStorage.image
+                    containerSize:imageStorage.frame.size
+                     cornerRadius:imageStorage.cornerRadius
+            cornerBackgroundColor:imageStorage.cornerBackgroundColor
+                cornerBorderColor:imageStorage.cornerBorderColor borderWidth:imageStorage.cornerBorderWidth];
+            }
+        } else {
+            [self sd_setImageWithURL:imageStorage.URL
+                    placeholderImage:imageStorage.placeholder
+                             options:0
+                       containerSize:imageStorage.frame.size
+                        cornerRadius:imageStorage.cornerRadius
+               cornerBackgroundColor:imageStorage.cornerBackgroundColor
+                   cornerBorderColor:imageStorage.cornerBorderColor
+                         borderWidth:imageStorage.cornerBorderWidth
+                           completed:^(UIImage *image, NSError *error,
+                                       SDImageCacheType cacheType,
+                                       NSURL *imageURL) {
+                               if (imageStorage.fadeShow) {
+                                   CATransition* transition = [CATransition animation];
+                                   transition.duration = 0.2;
+                                   transition.timingFunction = [CAMediaTimingFunction
+                                                                functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                                   transition.type = kCATransitionFade;
+                                   [self addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
+                               }
+                           }];
+        }
     } else {
-        [self lw_setImage:imageStorage.image
-            containerSize:imageStorage.frame.size
-             cornerRadius:imageStorage.cornerRadius
-    cornerBackgroundColor:imageStorage.cornerBackgroundColor];
+        if (imageStorage.cornerRadius == 0) {
+            [self setContents:(__bridge id _Nullable)imageStorage.image.CGImage];
+        }
+        else {
+            [self lw_setImage:imageStorage.image
+                containerSize:imageStorage.frame.size
+                 cornerRadius:imageStorage.cornerRadius
+        cornerBackgroundColor:imageStorage.cornerBackgroundColor
+            cornerBorderColor:imageStorage.cornerBorderColor borderWidth:imageStorage.cornerBorderWidth];
+        }
     }
 }
 

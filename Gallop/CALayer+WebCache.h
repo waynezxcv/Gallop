@@ -149,6 +149,8 @@
              containerSize:(CGSize)containerSize
               cornerRadius:(CGFloat)cornerRadius
      cornerBackgroundColor:(UIColor *)color
+         cornerBorderColor:(UIColor *)borderColor
+               borderWidth:(CGFloat)borderWidth
                  completed:(SDWebImageCompletionBlock)completedBlock;
 
 

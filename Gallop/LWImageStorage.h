@@ -66,6 +66,8 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
  */
 @property (nonatomic,strong) UIColor* cornerBackgroundColor;
 
+@property (nonatomic,strong) UIColor* cornerBorderColor;
+@property (nonatomic,assign) CGFloat cornerBorderWidth;
 
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
 
