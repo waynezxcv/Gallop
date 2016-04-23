@@ -236,7 +236,6 @@ static CGFloat widthCallback(void* ref){
     CGPathRef path = CTFrameGetPath(self.CTFrame);
     CGRect boundsRect = CGPathGetBoundingBox(path);
 
-
     NSMutableArray* positions = [[NSMutableArray alloc] init];
     NSInteger selectionStartPosition = selectRange.location;
     NSInteger selectionEndPosition = NSMaxRange(selectRange);
@@ -489,7 +488,6 @@ static CGFloat widthCallback(void* ref){
     if (self.CTFrame) {
         CFRelease(self.CTFrame);
         self.CTFrame = nil;
-        [self.hightlights removeAllObjects];
     }
 }
 
