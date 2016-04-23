@@ -24,6 +24,8 @@
 #import "NSObject+SwizzleMethod.h"
 
 
+typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAttributes);
+
 @interface LWAsyncDisplayView ()<LWAsyncDisplayLayerDelegate>
 
 @property (nonatomic,strong) NSMutableArray* imageContainers;
@@ -408,8 +410,8 @@
             if (textFrame == NULL) {
                 continue;
             }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                found = [self _handleLinkTouchIfNeed:textFrame touchPoint:touchPoint];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                found = [self _handleLinkTouchIfNeed:textStorage touchPoint:touchPoint];
             });
         }
     }
@@ -427,7 +429,40 @@
     return [super hitTest:point withEvent:event];
 }
 
+
+
 - (LWTextHightlight *)_isNeedShowHighlight:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
+    __block LWTextHightlight* highlight;
+    [self _foundLinkWithTextStroage:textStorage touchPoint:touchPoint
+                         completion:^(LWTextStorage *foundTextStorage, id linkAttributes) {
+                             for (LWTextHightlight* foundHighlight in foundTextStorage.hightlights) {
+                                 if ([foundHighlight.linkAttributes isEqual:linkAttributes]) {
+                                     highlight = foundHighlight;
+                                 }
+                             }
+                         }];
+    return highlight;
+}
+
+
+- (BOOL)_handleLinkTouchIfNeed:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
+    __block BOOL found = NO;
+    __weak typeof(self) weakSelf = self;
+    [self _foundLinkWithTextStroage:textStorage touchPoint:touchPoint
+                         completion:^(LWTextStorage *foundTextStorage, id linkAttributes) {
+                             __strong typeof(weakSelf) strongSelf = weakSelf;
+                             if ([strongSelf.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedLinkWithfData:)] &&
+                                 [strongSelf.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
+                                 [strongSelf.delegate lwAsyncDisplayView:strongSelf didCilickedLinkWithfData:linkAttributes];
+                                 found = YES;
+                             }
+                         }];
+    return found;
+}
+
+- (void)_foundLinkWithTextStroage:(LWTextStorage *)textStorage
+                       touchPoint:(CGPoint) touchPoint
+                       completion:(foundLinkCompleteBlock)completion {
     CTFrameRef textFrame = textStorage.CTFrame;
     CFArrayRef lines = CTFrameGetLines(textFrame);
     CGPoint origins[CFArrayGetCount(lines)];
@@ -459,17 +494,13 @@
                     touchedRun = runObj;
                     NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
                     if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
-                        for (LWTextHightlight* highlight in textStorage.hightlights) {
-                            if ([highlight.linkAttributes isEqual:[runAttribues objectForKey:kLWTextLinkAttributedName]]) {
-                                return highlight;
-                            }
-                        }
+                        completion(textStorage,[runAttribues objectForKey:kLWTextLinkAttributedName]);
+                        break;
                     }
                 }
             }
         }
     }
-    return nil;
 }
 
 - (void)_showHighlight:(LWTextHightlight *)highlight {
@@ -491,54 +522,6 @@
 - (void)_removeHightlight {
     [self _hideHightlight];
     _hightlight = nil;
-}
-
-- (BOOL)_handleLinkTouchIfNeed:(CTFrameRef)textFrame touchPoint:(CGPoint)touchPoint {
-    BOOL found = NO;
-    CFArrayRef lines = CTFrameGetLines(textFrame);
-    CGPoint origins[CFArrayGetCount(lines)];
-    CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
-    CGPathRef path = CTFrameGetPath(textFrame);
-    CGRect boundsRect = CGPathGetBoundingBox(path);
-
-    CGAffineTransform transform = CGAffineTransformIdentity;
-    transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
-    transform = CGAffineTransformScale(transform, 1.f, -1.f);
-    for (int i= 0; i < CFArrayGetCount(lines); i++) {
-        CGPoint linePoint = origins[i];
-        CTLineRef line = CFArrayGetValueAtIndex(lines, i);
-        CGRect flippedRect = [self _getLineBounds:line point:linePoint];
-        CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-        CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
-                                       rect.origin.y + boundsRect.origin.y,
-                                       rect.size.width,
-                                       rect.size.height);
-        if (CGRectContainsPoint(adjustRect, touchPoint)) {
-            CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
-                                                touchPoint.y - CGRectGetMinY(adjustRect));
-            CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
-            CTRunRef touchedRun;
-            NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
-            for (NSInteger i = 0; i < runObjArray.count; i ++) {
-                CTRunRef runObj = (__bridge CTRunRef)[runObjArray objectAtIndex:i];
-                CFRange range = CTRunGetStringRange((CTRunRef)runObj);
-
-                if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
-                    touchedRun = runObj;
-                    NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
-                    if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
-                        if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedLinkWithfData:)] &&
-                            [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
-                            [self.delegate lwAsyncDisplayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
-                            found = YES;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return found;
 }
 
 - (CGRect)_getLineBounds:(CTLineRef)line point:(CGPoint)point {
