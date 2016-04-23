@@ -70,6 +70,9 @@
  */
 @property (nonatomic,strong,readonly) LWFlag* flag;
 
+
+@property (nonatomic,assign) BOOL delaySetContent;
+
 - (void)asyncDisplaySize:(CGSize)size;
 - (void)cleanUp;
 

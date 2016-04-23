@@ -24,14 +24,13 @@
 #import "NSObject+SwizzleMethod.h"
 
 
-@interface LWAsyncDisplayView ()
-<LWAsyncDisplayLayerDelegate,UIGestureRecognizerDelegate>
 
-@property (nonatomic,strong) UITapGestureRecognizer* tapGestureRecognizer;
+@interface LWAsyncDisplayView ()<LWAsyncDisplayLayerDelegate>
+
 @property (nonatomic,strong) NSMutableArray* imageContainers;
-
 @property (nonatomic,assign,getter=isDisplayed) BOOL displayed;
 @property (nonatomic,assign,getter=isSetedImageContents) BOOL setedImageContents;
+
 
 /**
  *  是否自动管理ImageContainer。默认为YES。若为NO，则需指定一个 maxImageStorageCount
@@ -56,6 +55,8 @@
 {
     NSArray* _textStorages;
     NSArray* _imageStorages;
+    LWTextHightlight* _hightlight;
+    BOOL _showingHighlight;
 }
 
 #pragma mark - Initialization
@@ -119,10 +120,10 @@
 }
 
 - (void)setup {
+    _showingHighlight = NO;
     self.layer.opaque = NO;
     self.layer.contentsScale = [UIScreen mainScreen].scale;
     ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
-    [self addGestureRecognizer:self.tapGestureRecognizer];
 }
 
 #pragma mark - Layout & Display
@@ -144,13 +145,16 @@
     LWLayout* layout = _layout;
     NSArray* imageStorages = _imageStorages;
     NSArray* textStroages = _textStorages;
+    LWTextHightlight* hightlight = _hightlight;
     _layout = nil;
     _imageStorages = nil;
     _textStorages = nil;
+    _hightlight = nil;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [layout class];
         [imageStorages count];
         [textStroages count];
+        [hightlight class];
     });
 }
 
@@ -246,6 +250,10 @@
     [(LWAsyncDisplayLayer *)self.layer asyncDisplaySize:self.bounds.size];
 }
 
+- (void)setNeedRedDraw {
+    [self.layer setNeedsDisplay];
+}
+
 #pragma mark - RestImageContainers
 - (void)_autoReuseImageContainers {
     if (self.isNeedRestImageContainers) {
@@ -277,15 +285,6 @@
 }
 
 #pragma mark - Setter & Getter
-- (UITapGestureRecognizer *)tapGestureRecognizer {
-    if (!_tapGestureRecognizer) {
-        _tapGestureRecognizer = [[UITapGestureRecognizer alloc]
-                                 initWithTarget:self
-                                 action:@selector(_didSingleTapThisView:)];
-        _tapGestureRecognizer.delegate = self;
-    }
-    return _tapGestureRecognizer;
-}
 
 - (NSMutableArray *)imageContainers {
     if (_imageContainers) {
@@ -314,25 +313,67 @@
             [imageStorage.image drawInRect:imageStorage.frame];
         }
     }
+    if (_hightlight) {
+        for (NSString* rectString in _hightlight.positions) {
+            CGRect rect = CGRectFromString(rectString);
+            UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:2.0f];
+            [_hightlight.hightlightColor setFill];
+            [beizerPath fill];
+        }
+    }
     for (LWTextStorage* textStorage in _textStorages) {
         [textStorage drawInContext:context layer:layer];
     }
 }
 
 - (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL)isFinished {
-    return;
+    if (_hightlight) {
+        _showingHighlight = YES;
+    }
+    else {
+        _showingHighlight = NO;
+    }
 }
 
-#pragma mark - SignleTapGesture
-- (void)_didSingleTapThisView:(UITapGestureRecognizer *)tapGestureRecognizer {
-    CGPoint touchPoint = [tapGestureRecognizer locationInView:self];
+#pragma mark - Touch
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    UITouch* touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInView:self];
+    for (LWTextStorage* textStorage in _textStorages) {
+        if (textStorage == nil) {
+            continue;
+        }
+        if ([textStorage isKindOfClass:[LWTextStorage class]]) {
+            CTFrameRef textFrame = textStorage.CTFrame;
+            if (textFrame == NULL) {
+                continue;
+            }
+            [self _drawleLinkTouchHighlightIfNeed:textStorage touchPoint:touchPoint];
+        }
+    }
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (_hightlight && _showingHighlight) {
+        _hightlight = nil;
+        [self setNeedRedDraw];
+        [(LWAsyncDisplayLayer *)self.layer setDelaySetContent:YES];
+    }
+    UITouch* touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInView:self];
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (imageStorage == nil) {
             continue;
         }
         if (CGRectContainsPoint(imageStorage.frame, touchPoint)) {
-            if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:tapGesture:)]) {
-                [self.delegate lwAsyncDisplayView:self didCilickedImageStorage:imageStorage tapGesture:tapGestureRecognizer];
+            if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:touch:)]) {
+                [self.delegate lwAsyncDisplayView:self didCilickedImageStorage:imageStorage touch:touch];
             }
         }
     }
@@ -345,42 +386,104 @@
             if (textFrame == NULL) {
                 continue;
             }
-            CFArrayRef lines = CTFrameGetLines(textFrame);
-            CGPoint origins[CFArrayGetCount(lines)];
-            CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
-            CGPathRef path = CTFrameGetPath(textFrame);
-            CGRect boundsRect = CGPathGetBoundingBox(path);
-            CGAffineTransform transform = CGAffineTransformIdentity;
-            transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
-            transform = CGAffineTransformScale(transform, 1.f, -1.f);
-            for (int i= 0; i < CFArrayGetCount(lines); i++) {
-                CGPoint linePoint = origins[i];
-                CTLineRef line = CFArrayGetValueAtIndex(lines, i);
-                CGRect flippedRect = [self _getLineBounds:line point:linePoint];
-                CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-                CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
-                                               rect.origin.y + boundsRect.origin.y,
-                                               rect.size.width,
-                                               rect.size.height);
-                if (CGRectContainsPoint(adjustRect, touchPoint)) {
-                    CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
-                                                        touchPoint.y - CGRectGetMinY(adjustRect));
-                    CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
-                    CTRunRef touchedRun;
-                    NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
-                    for (NSInteger i = 0; i < runObjArray.count; i ++) {
-                        CTRunRef runObj = (__bridge CTRunRef)[runObjArray objectAtIndex:i];
-                        CFRange range = CTRunGetStringRange((CTRunRef)runObj);
-                        if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
-                            touchedRun = runObj;
-                            NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
-                            if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
-                                if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedLinkWithfData:)] &&
-                                    [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
-                                    [self.delegate lwAsyncDisplayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
-                                    break;
-                                }
+            [self _handleLinkTouchIfNeed:textFrame touchPoint:touchPoint];
+        }
+    }
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    return [super hitTest:point withEvent:event];
+}
+
+- (void)_drawleLinkTouchHighlightIfNeed:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
+    CTFrameRef textFrame = textStorage.CTFrame;
+    CFArrayRef lines = CTFrameGetLines(textFrame);
+    CGPoint origins[CFArrayGetCount(lines)];
+    CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
+    CGPathRef path = CTFrameGetPath(textFrame);
+    CGRect boundsRect = CGPathGetBoundingBox(path);
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
+    transform = CGAffineTransformScale(transform, 1.f, -1.f);
+    for (int i= 0; i < CFArrayGetCount(lines); i++) {
+        CGPoint linePoint = origins[i];
+        CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+        CGRect flippedRect = [self _getLineBounds:line point:linePoint];
+        CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
+        CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                       rect.origin.y + boundsRect.origin.y,
+                                       rect.size.width,
+                                       rect.size.height);
+        if (CGRectContainsPoint(adjustRect, touchPoint)) {
+            CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
+                                                touchPoint.y - CGRectGetMinY(adjustRect));
+            CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
+            CTRunRef touchedRun;
+            NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
+            for (NSInteger i = 0; i < runObjArray.count; i ++) {
+                CTRunRef runObj = (__bridge CTRunRef)[runObjArray objectAtIndex:i];
+                CFRange range = CTRunGetStringRange((CTRunRef)runObj);
+                if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
+                    touchedRun = runObj;
+                    NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
+                    if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
+                        for (LWTextHightlight* hightlight in textStorage.hightlights) {
+                            if ([hightlight.linkAttributes isEqual:[runAttribues objectForKey:kLWTextLinkAttributedName]]) {
+                                _hightlight = hightlight;
+                                [(LWAsyncDisplayLayer *)self.layer setDelaySetContent:NO];
+                                [self setNeedRedDraw];
+                                break;
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+- (void)_handleLinkTouchIfNeed:(CTFrameRef)textFrame touchPoint:(CGPoint)touchPoint {
+    CFArrayRef lines = CTFrameGetLines(textFrame);
+    CGPoint origins[CFArrayGetCount(lines)];
+    CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
+    CGPathRef path = CTFrameGetPath(textFrame);
+    CGRect boundsRect = CGPathGetBoundingBox(path);
+
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
+    transform = CGAffineTransformScale(transform, 1.f, -1.f);
+    for (int i= 0; i < CFArrayGetCount(lines); i++) {
+        CGPoint linePoint = origins[i];
+        CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+        CGRect flippedRect = [self _getLineBounds:line point:linePoint];
+        CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
+        CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                       rect.origin.y + boundsRect.origin.y,
+                                       rect.size.width,
+                                       rect.size.height);
+        if (CGRectContainsPoint(adjustRect, touchPoint)) {
+            CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
+                                                touchPoint.y - CGRectGetMinY(adjustRect));
+            CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
+            CTRunRef touchedRun;
+            NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
+            for (NSInteger i = 0; i < runObjArray.count; i ++) {
+                CTRunRef runObj = (__bridge CTRunRef)[runObjArray objectAtIndex:i];
+                CFRange range = CTRunGetStringRange((CTRunRef)runObj);
+
+                if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
+                    touchedRun = runObj;
+                    NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
+                    if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
+                        if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedLinkWithfData:)] &&
+                            [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
+                            [self.delegate lwAsyncDisplayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
+                            break;
                         }
                     }
                 }
@@ -396,17 +499,6 @@
     CGFloat width = (CGFloat)CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
     CGFloat height = ascent + descent;
     return CGRectMake(point.x, point.y - descent, width, height);
-}
-
-
-#pragma mark - UIGestrueRecognizer
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    return [super hitTest:point withEvent:event];
 }
 
 @end

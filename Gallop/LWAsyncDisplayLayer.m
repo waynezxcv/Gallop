@@ -71,6 +71,7 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         });
         self.contentsScale = scale;
         self.flag = [[LWFlag alloc] init];
+        self.delaySetContent = YES;
     }
     return self;
 }
@@ -164,7 +165,11 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         }
         UIGraphicsEndImageContext();
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [self lw_delaySetContents:content];
+            if (self.delaySetContent) {
+                [self lw_delaySetContents:content];
+            } else {
+                [self setContents:content];
+            }
             if ([self.asyncDisplayDelegate respondsToSelector:@selector(didFinishAsyncDisplay:isFiniedsh:)]) {
                 [self.asyncDisplayDelegate didFinishAsyncDisplay:self isFiniedsh:YES];
             }

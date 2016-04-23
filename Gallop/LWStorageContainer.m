@@ -60,7 +60,6 @@
     }
 }
 
-
 - (void)removeStorages:(NSArray <LWStorage *> *)storages {
     for (LWStorage* storage in storages) {
         if ([storage isMemberOfClass:[LWTextStorage class]]) {

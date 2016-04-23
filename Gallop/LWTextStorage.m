@@ -197,6 +197,7 @@ static CGFloat widthCallback(void* ref){
         return;
     }
     [self _resetFrameRef];
+
     if (linkColor != nil) {
         [self _mutableAttributedString:_attributedText addAttributesWithTextColor:linkColor
                                inRange:range];
@@ -209,10 +210,115 @@ static CGFloat widthCallback(void* ref){
         [self _mutableAttributedString:_attributedText addLinkAttributesNameWithValue:data inRange:range];
     }
     [self creatCTFrameRef];
+    UIColor* color = [UIColor grayColor];
+    if (highLightColor) {
+        color = highLightColor;
+    }
+    [self.hightlights addObject:[self _textHightlightWithCTframe:self.CTFrame
+                                                         InRange:range
+                                                 backgroundColor:color
+                                                  linkAttributes:data]];
 }
 
-#pragma mark - Add Image
+/**
+ *  获取LWTextHightlight
+ *
+ */
+- (LWTextHightlight *)_textHightlightWithCTframe:(CTFrameRef)frameRef
+                                         InRange:(NSRange)selectRange
+                                 backgroundColor:(UIColor *)bgColor
+                                  linkAttributes:(id)linkAttributes {
 
+    LWTextHightlight* highlight = [[LWTextHightlight alloc] init];
+    highlight.hightlightColor = bgColor;
+    highlight.linkAttributes = linkAttributes;
+
+    CGPathRef path = CTFrameGetPath(self.CTFrame);
+    CGRect boundsRect = CGPathGetBoundingBox(path);
+
+
+    NSMutableArray* positions = [[NSMutableArray alloc] init];
+    NSInteger selectionStartPosition = selectRange.location;
+    NSInteger selectionEndPosition = NSMaxRange(selectRange);
+    CFArrayRef lines = CTFrameGetLines(frameRef);
+    if (!lines) {
+        return nil;
+    }
+    CFIndex count = CFArrayGetCount(lines);
+    CGPoint origins[count];
+
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
+    transform = CGAffineTransformScale(transform, 1.f, -1.f);
+
+    CTFrameGetLineOrigins(frameRef, CFRangeMake(0,0), origins);
+    for (int i = 0; i < count; i++) {
+        CGPoint linePoint = origins[i];
+        CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+        CFRange range = CTLineGetStringRange(line);
+        //*** 在同一行 ***//
+        if ([self _isPosition:selectionStartPosition inRange:range] && [self _isPosition:selectionEndPosition inRange:range]) {
+            CGFloat ascent, descent, leading, offset, offset2;
+            offset = CTLineGetOffsetForStringIndex(line, selectionStartPosition, NULL);
+            offset2 = CTLineGetOffsetForStringIndex(line, selectionEndPosition, NULL);
+            CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+            CGRect lineRect = CGRectMake(linePoint.x + offset, linePoint.y - descent, offset2 - offset, ascent + descent);
+            CGRect rect = CGRectApplyAffineTransform(lineRect, transform);
+            CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                           rect.origin.y + boundsRect.origin.y,
+                                           rect.size.width,
+                                           rect.size.height);
+            [positions addObject:NSStringFromCGRect(adjustRect)];
+            break;
+        }
+        //*** 不在在同一行 ***//
+        if ([self _isPosition:selectionStartPosition inRange:range]) {
+            CGFloat ascent, descent, leading, width, offset;
+            offset = CTLineGetOffsetForStringIndex(line, selectionStartPosition, NULL);
+            width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+            CGRect lineRect = CGRectMake(linePoint.x + offset, linePoint.y - descent, width - offset, ascent + descent);
+            CGRect rect = CGRectApplyAffineTransform(lineRect, transform);
+            CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                           rect.origin.y + boundsRect.origin.y,
+                                           rect.size.width,
+                                           rect.size.height);
+            [positions addObject:NSStringFromCGRect(adjustRect)];
+        }
+        else if (selectionStartPosition < range.location && selectionEndPosition >= range.location + range.length) {
+            CGFloat ascent, descent, leading, width;
+            width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+            CGRect lineRect = CGRectMake(linePoint.x, linePoint.y - descent, width, ascent + descent);
+            CGRect rect = CGRectApplyAffineTransform(lineRect, transform);
+            CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                           rect.origin.y + boundsRect.origin.y,
+                                           rect.size.width,
+                                           rect.size.height);
+            [positions addObject:NSStringFromCGRect(adjustRect)];
+        }
+        else if (selectionStartPosition < range.location && [self _isPosition:selectionEndPosition inRange:range]) {
+            CGFloat ascent, descent, leading, width, offset;
+            offset = CTLineGetOffsetForStringIndex(line, selectionEndPosition, NULL);
+            width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+            CGRect lineRect = CGRectMake(linePoint.x, linePoint.y - descent, offset, ascent + descent);
+            CGRect rect = CGRectApplyAffineTransform(lineRect, transform);
+            CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                           rect.origin.y + boundsRect.origin.y,
+                                           rect.size.width,
+                                           rect.size.height);
+            [positions addObject:NSStringFromCGRect(adjustRect)];
+        }
+    }
+    highlight.positions = positions;
+    return highlight;
+}
+
+
+- (BOOL)_isPosition:(NSInteger)position inRange:(CFRange)range {
+    return (position >= range.location && position < range.location + range.length);
+}
+
+
+#pragma mark - Add Image
 - (NSMutableAttributedString *)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range {
     if (_attributedText == nil || _attributedText.length == 0) {
         return nil;
@@ -276,11 +382,11 @@ static CGFloat widthCallback(void* ref){
             CGFloat descent;
             runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
             runBounds.size.height = ascent + descent;
-            
+
             CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
             runBounds.origin.x = lineOrigins[i].x + xOffset;
             runBounds.origin.y = lineOrigins[i].y - descent;
-            
+
             CGPathRef pathRef = CTFrameGetPath(self.CTFrame);
             CGRect colRect = CGPathGetBoundingBox(pathRef);
             CGRect delegateRect = CGRectMake(runBounds.origin.x + colRect.origin.x,
@@ -290,7 +396,7 @@ static CGFloat widthCallback(void* ref){
             if (attach.type == LWTextAttachLocalImage) {
                 attach.imagePosition = delegateRect;
             } else if (attach.type == LWTextAttachWebImage) {
-                
+                //TODO:
             }
         }
     }
@@ -383,6 +489,7 @@ static CGFloat widthCallback(void* ref){
     if (self.CTFrame) {
         CFRelease(self.CTFrame);
         self.CTFrame = nil;
+        [self.hightlights removeAllObjects];
     }
 }
 
@@ -404,6 +511,14 @@ static CGFloat widthCallback(void* ref){
 
 - (NSString *)text {
     return _attributedText.string;
+}
+
+- (NSMutableArray *)hightlights {
+    if (_hightlights) {
+        return _hightlights;
+    }
+    _hightlights = [[NSMutableArray alloc] init];
+    return _hightlights;
 }
 
 #pragma mark - Setter
@@ -499,9 +614,7 @@ static CGFloat widthCallback(void* ref){
 }
 
 - (void)dealloc {
-    if (self.CTFrame) {
-        CFRelease(self.CTFrame);
-    }
+    [self _resetFrameRef];
 }
 
 #pragma mark - Attributes
@@ -512,20 +625,20 @@ static CGFloat widthCallback(void* ref){
     }
     NSMutableAttributedString* attbutedString = [[NSMutableAttributedString alloc]
                                                  initWithString:text];
-    
+
     [self _mutableAttributedString:attbutedString
         addAttributesWithTextColor:_textColor
                            inRange:NSMakeRange(0, text.length)];
-    
+
     [self _mutableAttributedString:attbutedString
              addAttributesWithFont:_font
                            inRange:NSMakeRange(0, text.length)];
-    
+
     [self _mutableAttributedString:attbutedString addAttributesWithLineSpacing:_linespace
                      textAlignment:_textAlignment
                      lineBreakMode:_lineBreakMode
                            inRange:NSMakeRange(0, text.length)];
-    
+
     [self _mutableAttributedString:attbutedString addAttributesWithUnderlineStyle:_underlineStyle
                            inRange:NSMakeRange(0, text.length)];
     return attbutedString;
@@ -617,6 +730,20 @@ static CGFloat widthCallback(void* ref){
     [attributedString addAttribute:(NSString *)kCTForegroundColorAttributeName value:(id)textColor.CGColor range:range];
 }
 
+/**
+ *  添加背景颜色属性
+ *
+ */
+- (void)_mutableAttributedString:(NSMutableAttributedString *)attributedString
+          addTextBackgroundColor:(UIColor *)backgroundColor
+                         inRange:(NSRange)range {
+    if (attributedString == nil || backgroundColor == nil) {
+        return;
+    }
+    NSDictionary* backgroundColorAttirs = @{NSBackgroundColorAttributeName:backgroundColor};
+    [attributedString addAttributes:backgroundColorAttirs range:range];
+}
+
 
 /**
  *  添加字间距属性
@@ -629,7 +756,7 @@ addAttributesWithCharacterSpacing:(unichar)characterSpacing
         return;
     }
     [attributedString removeAttribute:(NSString *)kCTKernAttributeName range:range];
-    
+
     CFNumberRef charSpacingNum =  CFNumberCreate(kCFAllocatorDefault,kCFNumberSInt8Type,&characterSpacing);
     if (charSpacingNum != nil) {
         [attributedString addAttribute:(NSString *)kCTKernAttributeName value:(__bridge id)charSpacingNum range:range];
@@ -736,6 +863,24 @@ static CTUnderlineStyle _coreTextUnderlineStyleFromNSUnderlineStyle(NSUnderlineS
     }
     return self;
 }
+
+@end
+
+
+@implementation LWTextHightlight
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        const CGFloat* components = CGColorGetComponents([UIColor grayColor].CGColor);
+        self.hightlightColor = [UIColor colorWithRed:components[0]/255.0f
+                                               green:components[1]/255.0f
+                                                blue:components[2]/255.0f
+                                               alpha:0.2f];
+    }
+    return self;
+}
+
 
 @end
 

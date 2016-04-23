@@ -60,6 +60,13 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 @property (nonatomic,strong) UIColor* textColor;
 
 /**
+ *  文本背景颜色
+ *
+ */
+@property (nonatomic,strong) UIColor* textBackgroundColor;
+
+
+/**
  *  字体，默认为[UIFont systemFontOfSize:14.0f]
  */
 @property (nonatomic,strong) UIFont* font;
@@ -118,6 +125,11 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  *  是否自动适配宽度
  */
 @property (nonatomic,assign,getter=isWidthToFit) BOOL widthToFit;
+
+/**
+ *
+ */
+@property (nonatomic,strong) NSMutableArray* hightlights;
 
 /**
  *  创建CTFrameRef
@@ -182,4 +194,14 @@ typedef NS_ENUM(NSUInteger, LWTextAttachType) {
 @property (nonatomic,strong) id content;
 
 @end
+
+
+@interface LWTextHightlight : NSObject
+
+@property (nonatomic,strong) UIColor* hightlightColor;
+@property (nonatomic,copy) NSArray* positions;
+@property (nonatomic,strong) id linkAttributes;
+
+@end
+
 

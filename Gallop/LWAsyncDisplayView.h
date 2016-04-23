@@ -39,7 +39,7 @@
  */
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
-                tapGesture:(UITapGestureRecognizer *)tapGesutrueRecognizer;
+                     touch:(UITouch *)touch;
 
 /**
  *  额外的绘制任务在这里实现

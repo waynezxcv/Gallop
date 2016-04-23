@@ -202,7 +202,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     nameTextStorage.font = [UIFont systemFontOfSize:15.0f];
     nameTextStorage.textAlignment = NSTextAlignmentLeft;
     nameTextStorage.linespace = 2.0f;
-    nameTextStorage.textColor = RGB(113, 129, 161, 1);
+    nameTextStorage.textColor = RGB(40, 40, 40, 1);
 
 
     //正文内容模型 contentTextStorage
@@ -224,14 +224,14 @@ const CGFloat kRefreshBoundary = 170.0f;
     /***********************************  添加点击Link 解析表情*********************************************/
     [nameTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",statusModel.name]
                              inRange:NSMakeRange(0,statusModel.name.length)
-                           linkColor:nil
-                      highLightColor:[UIColor grayColor]
+                           linkColor:RGB(113, 129, 161, 1)
+                      highLightColor:RGB(0, 0, 0, 0.15)
                       UnderLineStyle:NSUnderlineStyleNone];
 
     [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
     [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                     linkColor:RGB(113, 129, 161, 1)
-                               highlightColor:nil
+                               highlightColor:RGB(0, 0, 0, 0.15)
                                underlineStyle:NSUnderlineStyleNone];
     //发布的图片模型 imgsStorage
     NSInteger imageCount = [statusModel.imgs count];
@@ -312,19 +312,19 @@ const CGFloat kRefreshBoundary = 170.0f;
                 [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"from"]]
                                             inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                           linkColor:RGB(113, 129, 161, 1)
-                                     highLightColor:[UIColor grayColor]
+                                     highLightColor:RGB(0, 0, 0, 0.15)
                                      UnderLineStyle:NSUnderlineStyleNone];
 
                 [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"to"]]
                                             inRange:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
                                           linkColor:RGB(113, 129, 161, 1)
-                                     highLightColor:[UIColor grayColor]
+                                     highLightColor:RGB(0, 0, 0, 0.15)
                                      UnderLineStyle:NSUnderlineStyleNone];
 
                 [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
                 [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                 linkColor:RGB(113, 129, 161, 1)
-                                           highlightColor:nil
+                                           highlightColor:RGB(0, 0, 0, 0.15)
                                            underlineStyle:NSUnderlineStyleNone];
                 [tmp addObject:commentTextStorage];
                 offsetY += commentTextStorage.height;
@@ -341,12 +341,12 @@ const CGFloat kRefreshBoundary = 170.0f;
                 [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"from"]]
                                             inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                           linkColor:RGB(113, 129, 161, 1)
-                                     highLightColor:[UIColor grayColor]
+                                     highLightColor:RGB(0, 0, 0, 0.15)
                                      UnderLineStyle:NSUnderlineStyleNone];
                 [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
                 [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                 linkColor:RGB(113, 129, 161, 1)
-                                           highlightColor:nil
+                                           highlightColor:RGB(0, 0, 0, 0.15)
                                            underlineStyle:NSUnderlineStyleNone];
                 [tmp addObject:commentTextStorage];
                 offsetY += commentTextStorage.height;

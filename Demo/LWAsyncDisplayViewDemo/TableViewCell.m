@@ -36,8 +36,9 @@
 
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
-                tapGesture:(UITapGestureRecognizer *)tapGesutrueRecognizer{
-    CGPoint point = [tapGesutrueRecognizer locationInView:self];
+                     touch:(UITouch *)touch{
+
+    CGPoint point = [touch locationInView:self];
     for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
 
@@ -50,7 +51,6 @@
         }
 
     }
-
     //点击菜单按钮
     if (CGRectContainsPoint(self.cellLayout.menuPosition, point)) {
         if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedMenuWithCellLayout:atIndexPath:)]) {
