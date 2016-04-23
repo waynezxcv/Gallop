@@ -58,6 +58,8 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     NSArray* _imageStorages;
     LWTextHightlight* _hightlight;
     BOOL _showingHighlight;
+    BOOL _needUpdateTextStorages;
+    BOOL _needUpdatedImageStorages;
 }
 
 #pragma mark - Initialization
@@ -133,49 +135,86 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     if ([_layout isEqual:layout] || layout == _layout) {
         return;
     }
-    [self _clenLayout];
+    self.setedImageContents = YES;
+    self.displayed = YES;
+    _needUpdateTextStorages = NO;
+    _needUpdatedImageStorages = NO;
+    [self _clenLayoutWithLayout:layout];
+    [self _cleanTextStoragesWithTextStorages:layout.container.textStorages];
+    [self _cleanImageStroagesWihtImageStorage:layout.container.imageStorages];
     _layout = layout;
     [self _updateLayout];
     [self invalidateIntrinsicContentSize];
 }
 
-- (void)_clenLayout {
-    for (LWTextStorage* textStorage in _textStorages) {
-        [textStorage removeAttachFromViewAndLayer];
+- (void)_clenLayoutWithLayout:(LWLayout *)newLayout {
+    if (_layout != newLayout && ![_layout isEqual:newLayout]) {
+        LWLayout* layout = _layout;
+        _layout = nil;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            [layout class];
+        });
     }
-    LWLayout* layout = _layout;
-    NSArray* imageStorages = _imageStorages;
-    NSArray* textStroages = _textStorages;
-    LWTextHightlight* hightlight = _hightlight;
-    _layout = nil;
-    _imageStorages = nil;
-    _textStorages = nil;
-    _hightlight = nil;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        [layout class];
-        [imageStorages count];
-        [textStroages count];
-        [hightlight class];
-    });
 }
 
+- (void)_cleanImageStroagesWihtImageStorage:(NSArray* )newImageStorages {
+    if (_imageStorages != newImageStorages && ![_imageStorages isEqualToArray:newImageStorages]) {
+        NSArray* imageStorages = _imageStorages;
+        _imageStorages = nil;
+        _needUpdatedImageStorages = YES;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            [imageStorages count];
+        });
+        
+    }
+}
+
+
+- (void)_cleanTextStoragesWithTextStorages:(NSArray *)newTextStorages {
+    if (_textStorages != newTextStorages && ![_textStorages isEqualToArray:newTextStorages]) {
+        for (LWTextStorage* textStorage in _textStorages) {
+            [textStorage removeAttachFromViewAndLayer];
+        }
+        NSArray* textStroages = _textStorages;
+        _textStorages = nil;
+        LWTextHightlight* hightlight = _hightlight;
+        _hightlight = nil;
+        _needUpdateTextStorages = YES;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            [textStroages count];
+            [hightlight class];
+        });
+    }
+}
+
+
 - (void)_updateLayout {
-    [self _cleanImageContainers];
-    self.displayed = NO;
-    self.setedImageContents = NO;
-    _textStorages = self.layout.container.textStorages;
-    _imageStorages = self.layout.container.imageStorages;
+    if (_needUpdatedImageStorages) {
+        [self _cleanImageContainers];
+        _imageStorages = self.layout.container.imageStorages;
+        self.setedImageContents = NO;
+    }
+    if (_needUpdateTextStorages) {
+        _textStorages = self.layout.container.textStorages;
+        self.displayed = NO;
+    }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        if (self.autoReuseImageContainer == YES) {
-            [self _autoReuseImageContainers];
+        if (_needUpdatedImageStorages) {
+            if (self.autoReuseImageContainer == YES) {
+                [self _autoReuseImageContainers];
+            }
         }
         dispatch_sync(dispatch_get_main_queue(), ^{
-            if (self.autoReuseImageContainer == YES) {
-                [self _autoSetImageStorages];
-            } else {
-                [self _setImageStorages];
+            if (_needUpdatedImageStorages) {
+                if (self.autoReuseImageContainer == YES) {
+                    [self _autoSetImageStorages];
+                } else {
+                    [self _setImageStorages];
+                }
             }
-            [self _setNeedDisplay];
+            if (_needUpdateTextStorages) {
+                [self _setNeedDisplay];
+            }
         });
     });
 }
@@ -360,7 +399,7 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     BOOL found = NO;
-
+    
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWTextStorage* textStorage in _textStorages) {
@@ -409,13 +448,12 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
             if (textFrame == NULL) {
                 continue;
             }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self _hideHightlight];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 found = [self _handleLinkTouchIfNeed:textStorage touchPoint:touchPoint];
+                [self _removeHightlight];
             });
         }
     }
-    [self _removeHightlight];
     if (!found) {
         [super touchesEnded:touches withEvent:event];
     }
@@ -505,7 +543,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 - (void)_showHighlight:(LWTextHightlight *)highlight {
     _showingHighlight = YES;
     _hightlight = highlight;
-    [(LWAsyncDisplayLayer *)self.layer setDelaySetContent:NO];
     [self setNeedRedDraw];
 }
 
@@ -514,7 +551,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
         return;
     }
     _showingHighlight = NO;
-    [(LWAsyncDisplayLayer *)self.layer setDelaySetContent:YES];
     [self setNeedRedDraw];
 }
 

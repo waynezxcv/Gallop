@@ -18,6 +18,7 @@
 #import "LWStorage+Constraint.h"
 #import "LWConstraintManager.h"
 #import "CommentView.h"
+#import "CommentModel.h"
 
 
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
@@ -28,6 +29,7 @@
 @property (nonatomic,strong) UITableView* tableView;
 @property (nonatomic,strong) NSMutableArray* dataSource;
 @property (nonatomic,assign,getter = isNeedRefresh) BOOL needRefresh;
+@property (nonatomic,strong) CommentModel* postComment;
 
 @end
 
@@ -58,7 +60,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidAppearNotifications:)
                                                  name:UIKeyboardWillShowNotification object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidHidenNotifications:)
                                                  name:UIKeyboardWillHideNotification object:nil];
@@ -69,7 +71,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidHideNotification
                                                   object:nil];
@@ -97,18 +99,18 @@ const CGFloat kRefreshBoundary = 170.0f;
  */
 /****************************************************************************/
 
-- (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel {
+- (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel index:(NSInteger)index {
     /****************************生成Storage 相当于模型*************************************/
     /*********LWAsyncDisplayView用将所有文本跟图片的模型都抽象成LWStorage，方便你能预先将所有的需要计算的布局内容直接缓存起来***/
     /*******而不是在渲染的时候才进行计算,提高性能*******************************************/
-
+    
     //头像模型 avatarImageStorage
     LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
     avatarStorage.type = LWImageStorageWebImage;
     avatarStorage.URL = statusModel.avatar;
     avatarStorage.cornerRadius = 20.0f;
     avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
-
+    
     //名字模型 nameTextStorage
     LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
     nameTextStorage.text = statusModel.name;
@@ -116,15 +118,15 @@ const CGFloat kRefreshBoundary = 170.0f;
     nameTextStorage.textAlignment = NSTextAlignmentLeft;
     nameTextStorage.linespace = 2.0f;
     nameTextStorage.textColor = RGB(40, 40, 40, 1);
-
-
+    
+    
     //正文内容模型 contentTextStorage
     LWTextStorage* contentTextStorage = [[LWTextStorage alloc] init];
     contentTextStorage.text = statusModel.content;
     contentTextStorage.font = [UIFont systemFontOfSize:15.0f];
     contentTextStorage.textColor = RGB(40, 40, 40, 1);
     contentTextStorage.linespace = 2.0f;
-
+    
     /**
      *  TODO:设置约束自动布局还在完善中。。。。
      *
@@ -133,20 +135,20 @@ const CGFloat kRefreshBoundary = 170.0f;
     [LWConstraintManager lw_makeConstraint:avatarStorage.constraint.leftMargin(10).topMargin(20).widthLength(40.0f).heightLength(40.0f)];
     [LWConstraintManager lw_makeConstraint:nameTextStorage.constraint.leftMarginToStorage(avatarStorage,10).topMargin(20).widthLength(SCREEN_WIDTH)];
     [LWConstraintManager lw_makeConstraint:contentTextStorage.constraint.leftMarginToStorage(avatarStorage,10).topMarginToStorage(nameTextStorage,10).rightMargin(20)];
-
+    
     /***********************************  添加点击Link 解析表情*********************************************/
     [nameTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",statusModel.name]
                              inRange:NSMakeRange(0,statusModel.name.length)
                            linkColor:RGB(113, 129, 161, 1)
                       highLightColor:RGB(0, 0, 0, 0.15)
                       UnderLineStyle:NSUnderlineStyleNone];
-
+    
     [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
     [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                     linkColor:RGB(113, 129, 161, 1)
                                highlightColor:RGB(0, 0, 0, 0.15)
                                underlineStyle:NSUnderlineStyleNone];
-
+    
     //发布的图片模型 imgsStorage
     NSInteger imageCount = [statusModel.imgs count];
     NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
@@ -170,9 +172,9 @@ const CGFloat kRefreshBoundary = 170.0f;
         imageStorage.fadeShow = YES;
         imageStorage.masksToBounds = YES;
         imageStorage.contentMode = kCAGravityResizeAspectFill;
-
+        
         [imageStorageArray addObject:imageStorage];
-
+        
         column = column + 1;
         if (column > 2) {
             column = 0;
@@ -181,7 +183,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
     CGFloat imagesHeight = 0.0f;
     row < 3 ? (imagesHeight = (row + 1) * 85.0f):(imagesHeight = row  * 85.0f);
-
+    
     //获取最后一张图片的模型
     LWImageStorage* lastImageStorage = (LWImageStorage *)[imageStorageArray lastObject];
     //生成时间的模型 dateTextStorage
@@ -189,18 +191,18 @@ const CGFloat kRefreshBoundary = 170.0f;
     dateTextStorage.text = [[self dateFormatter] stringFromDate:statusModel.date];
     dateTextStorage.font = [UIFont systemFontOfSize:13.0f];
     dateTextStorage.textColor = [UIColor grayColor];
-
-
+    
+    
     /***********************************  设置约束 自动布局 *********************************************/
     [LWConstraintManager lw_makeConstraint:dateTextStorage.constraint.leftEquelToStorage(contentTextStorage).topMarginToStorage(lastImageStorage,10)];
-
+    
     //生成菜单图片的模型 dateTextStorage
     CGRect menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,20.0f + imagesHeight + contentTextStorage.bottom,20.0f,15.0f);
     LWImageStorage* menuStorage = [[LWImageStorage alloc] init];
     menuStorage.type = LWImageStorageLocalImage;
     menuStorage.frame = menuPosition;
     menuStorage.image = [UIImage imageNamed:@"menu"];
-
+    
     //comment
     //生成评论背景Storage
     LWImageStorage* commentBgStorage = [[LWImageStorage alloc] init];
@@ -221,27 +223,41 @@ const CGFloat kRefreshBoundary = 170.0f;
                 commentTextStorage.linespace = 2.0f;
                 commentTextStorage.textColor = RGB(40, 40, 40, 1);
                 commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
-                [commentTextStorage addLinkWithData:@{@"touchComment":commentDict[@"from"]}
+                
+                CommentModel* commentModel_1 = [[CommentModel alloc] init];
+                commentModel_1.to = commentDict[@"from"];
+                commentModel_1.index = index;
+                [commentTextStorage addLinkWithData:commentModel_1
                                      highLightColor:RGB(0, 0, 0, 0.15)];
-
-                [commentTextStorage addLinkWithData:@{@"comment":[NSString stringWithFormat:@"%@",commentDict[@"from"]]}
+                
+                
+                CommentModel* commentModel_2 = [[CommentModel alloc] init];
+                commentModel_2.to = commentDict[@"from"];
+                commentModel_2.index = index;
+                [commentTextStorage addLinkWithData:commentModel_2
                                             inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                           linkColor:RGB(113, 129, 161, 1)
                                      highLightColor:RGB(0, 0, 0, 0.15)
                                      UnderLineStyle:NSUnderlineStyleNone];
-
-                [commentTextStorage addLinkWithData:@{@"comment":[NSString stringWithFormat:@"%@",commentDict[@"to"]]}
+                
+                
+                CommentModel* commentModel_3 = [[CommentModel alloc] init];
+                commentModel_3.to = [NSString stringWithFormat:@"%@",commentDict[@"to"]];
+                commentModel_3.index = index;
+                [commentTextStorage addLinkWithData:commentModel_3
                                             inRange:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
                                           linkColor:RGB(113, 129, 161, 1)
                                      highLightColor:RGB(0, 0, 0, 0.15)
                                      UnderLineStyle:NSUnderlineStyleNone];
-
+                
+                
+                
                 [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
                 [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                 linkColor:RGB(113, 129, 161, 1)
                                            highlightColor:RGB(0, 0, 0, 0.15)
                                            underlineStyle:NSUnderlineStyleNone];
-
+                
                 [tmp addObject:commentTextStorage];
                 offsetY += commentTextStorage.height;
             } else {
@@ -253,22 +269,28 @@ const CGFloat kRefreshBoundary = 170.0f;
                 commentTextStorage.linespace = 2.0f;
                 commentTextStorage.textColor = RGB(40, 40, 40, 1);
                 commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
-
-                [commentTextStorage addLinkWithData:@{@"touchComment":commentDict[@"from"]}
+                
+                CommentModel* commentModel_1 = [[CommentModel alloc] init];
+                commentModel_1.to = commentDict[@"from"];
+                commentModel_1.index = index;
+                [commentTextStorage addLinkWithData:commentModel_1
                                      highLightColor:RGB(0, 0, 0, 0.15)];
-
-                [commentTextStorage addLinkWithData:@{@"comment":commentDict[@"from"]}
+                
+                CommentModel* commentModel_2 = [[CommentModel alloc] init];
+                commentModel_2.to = commentDict[@"from"];
+                commentModel_2.index = index;
+                [commentTextStorage addLinkWithData:commentModel_2
                                             inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                           linkColor:RGB(113, 129, 161, 1)
                                      highLightColor:RGB(0, 0, 0, 0.15)
                                      UnderLineStyle:NSUnderlineStyleNone];
-
+                
                 [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
                 [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                 linkColor:RGB(113, 129, 161, 1)
                                            highlightColor:RGB(0, 0, 0, 0.15)
                                            underlineStyle:NSUnderlineStyleNone];
-
+                
                 [tmp addObject:commentTextStorage];
                 offsetY += commentTextStorage.height;
             }
@@ -281,7 +303,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         commentBgStorage.image = [UIImage imageNamed:@"comment"];
         [commentBgStorage stretchableImageWithLeftCapWidth:40 topCapHeight:15];
     }
-
+    
     /**************************将要在同一个LWAsyncDisplayView上显示的Storage要全部放入同一个LWLayout中***************************************/
     /**************************我们将尽量通过合并绘制的方式将所有在同一个View显示的内容全都异步绘制在同一个AsyncDisplayView上**************************/
     /**************************这样的做法能最大限度的节省系统的开销**************************/
@@ -342,21 +364,14 @@ const CGFloat kRefreshBoundary = 170.0f;
  *
  */
 - (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
-    if ([data isKindOfClass:[NSDictionary class]]) {
-        NSDictionary* dict = (NSDictionary *)data;
-        NSArray* key = [dict allKeys];
-        if ([key containsObject:@"comment"]) {
-            NSString* to = [dict objectForKey:@"comment"];
-            self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",to];
-            [self.commentView.textView becomeFirstResponder];
-        }
-        if ([key containsObject:@"touchComment"]) {
-            NSString* to = [dict objectForKey:@"touchComment"];
-            self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",to];
-            [self.commentView.textView becomeFirstResponder];
-        }
-    }
-    else {
+    if ([data isKindOfClass:[CommentModel class]]) {
+        CommentModel* commentModel = (CommentModel *)data;
+        self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",commentModel.to];
+        [self.commentView.textView becomeFirstResponder];
+        self.postComment.from = @"Waynezxcv的粉丝";
+        self.postComment.to = commentModel.to;
+        self.postComment.index = commentModel.index;
+    } else {
         UIViewController* vc = [[UIViewController alloc] init];
         vc.view.backgroundColor = [UIColor whiteColor];
         vc.title = data;
@@ -364,6 +379,25 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
 }
 
+
+/**
+ *  发表评论
+ *
+ */
+- (void)postCommentWithCommentModel:(CommentModel *)model {
+    CellLayout* layout = [self.dataSource objectAtIndex:model.index];
+    NSMutableArray* newCommentLists = [[NSMutableArray alloc] initWithArray:layout.statusModel.commentList];
+    NSDictionary* newComment = @{@"from":model.from,
+                                 @"to":model.to,
+                                 @"content":model.content};
+    [newCommentLists addObject:newComment];
+    StatusModel* statusModel = layout.statusModel;
+    statusModel.commentList = newCommentLists;
+    CellLayout* newLayout = [self layoutWithStatusModel:statusModel index:model.index];
+    [self.dataSource replaceObjectAtIndex:model.index withObject:newLayout];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.index inSection:0]]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+}
 
 /**
  *  点击菜单按钮
@@ -381,6 +415,8 @@ const CGFloat kRefreshBoundary = 170.0f;
         [self.tableView reloadData];
         self.needRefresh = NO;
     }];
+    
+    
 }
 
 #pragma mark - KeyboardNotifications
@@ -467,13 +503,17 @@ const CGFloat kRefreshBoundary = 170.0f;
 - (void)downloadData {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self.dataSource removeAllObjects];
-        for (NSInteger i = 0; i < self.fakeDatasource.count; i ++) {
-            StatusModel* statusModel = [StatusModel modelWithJSON:self.fakeDatasource[i]];
-            LWLayout* layout = [self layoutWithStatusModel:statusModel];
+        //复制一下，让数据更多
+        NSMutableArray* fakes = [[NSMutableArray alloc] init];
+        [fakes addObjectsFromArray:self.fakeDatasource];
+        [fakes addObjectsFromArray:self.fakeDatasource];
+        [fakes addObjectsFromArray:self.fakeDatasource];
+
+        for (NSInteger i = 0; i < fakes.count; i ++) {
+            StatusModel* statusModel = [StatusModel modelWithJSON:fakes[i]];
+            LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
             [self.dataSource addObject:layout];
         }
-        [self.dataSource addObjectsFromArray:self.dataSource];
-        [self.dataSource addObjectsFromArray:self.dataSource];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self refreshComplete];
         });
@@ -482,6 +522,21 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 
 #pragma mark - Getter
+
+
+- (CommentView *)commentView {
+    if (_commentView) {
+        return _commentView;
+    }
+    __weak typeof(self) wself = self;
+    _commentView = [[CommentView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f)
+                                            sendBlock:^(NSString *content) {
+                                                __strong  typeof(wself) swself = wself;
+                                                swself.postComment.content = content;
+                                                [swself postCommentWithCommentModel:swself.postComment];
+                                            }];
+    return _commentView;
+}
 
 - (UITableView *)tableView {
     if (!_tableView) {
@@ -520,14 +575,13 @@ const CGFloat kRefreshBoundary = 170.0f;
     return dateFormatter;
 }
 
-- (CommentView *)commentView {
-    if (_commentView) {
-        return _commentView;
+- (CommentModel *)postComment {
+    if (_postComment) {
+        return _postComment;
     }
-    _commentView = [[CommentView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f)];
-    return _commentView;
+    _postComment = [[CommentModel alloc] init];
+    return _postComment;
 }
-
 /**
  *  模拟数据
  *

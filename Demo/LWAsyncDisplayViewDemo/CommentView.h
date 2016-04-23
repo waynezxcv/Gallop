@@ -14,10 +14,15 @@
 #define RGB(A,B,C,D) [UIColor colorWithRed:A/255.0f green:B/255.0f blue:C/255.0f alpha:D]
 
 
+typedef void(^PressSendBlock)(NSString * content);
 
 @interface CommentView : UIView
 
 @property (nonatomic,strong) UITextView* textView;
 @property (nonatomic,copy) NSString* placeHolder;
+@property (nonatomic,copy) PressSendBlock sendBlock;
+
+
+- (id)initWithFrame:(CGRect)frame sendBlock:(PressSendBlock)sendBlock;
 
 @end

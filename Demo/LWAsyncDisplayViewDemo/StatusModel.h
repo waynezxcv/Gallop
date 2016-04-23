@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LWAlchemy.h"
 
 @interface StatusModel : NSObject
 

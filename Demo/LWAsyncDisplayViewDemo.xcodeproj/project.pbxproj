@@ -37,6 +37,7 @@
 		01AE7F521CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4C1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m */; };
 		01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4E1CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m */; };
 		01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */; };
+		01DA273C1CCBF1AE004179AB /* CommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DA273B1CCBF1AE004179AB /* CommentModel.m */; };
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
 		B00257961CB65817008700D5 /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B00257951CB65817008700D5 /* CellLayout.m */; };
@@ -128,6 +129,8 @@
 		01AE7F4E1CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyValueTransformer.m; path = ../LWAlchemy/LWAlchemyValueTransformer.m; sourceTree = "<group>"; };
 		01AE7F4F1CA1AEAF00E9F862 /* NSObject+LWAlchemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+LWAlchemy.h"; path = "../LWAlchemy/NSObject+LWAlchemy.h"; sourceTree = "<group>"; };
 		01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+LWAlchemy.m"; path = "../LWAlchemy/NSObject+LWAlchemy.m"; sourceTree = "<group>"; };
+		01DA273A1CCBF1AE004179AB /* CommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentModel.h; sourceTree = "<group>"; };
+		01DA273B1CCBF1AE004179AB /* CommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentModel.m; sourceTree = "<group>"; };
 		01F51A0D1CA1B1CE00463571 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B00257941CB65817008700D5 /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
@@ -251,6 +254,8 @@
 				017F67311C988BB700309E92 /* TableViewCell.m */,
 				B019A7BD1CCBC56E000DF1C7 /* CommentView.h */,
 				B019A7BE1CCBC56E000DF1C7 /* CommentView.m */,
+				01DA273A1CCBF1AE004179AB /* CommentModel.h */,
+				01DA273B1CCBF1AE004179AB /* CommentModel.m */,
 				011DFA1D1C987CD6000410D7 /* Supporting Files */,
 			);
 			name = Demo;
@@ -560,6 +565,7 @@
 				B074CC891CBB3A7F00ADECC1 /* LWAsyncDisplayView.m in Sources */,
 				B074CC941CBB3A7F00ADECC1 /* LWTextStorage.m in Sources */,
 				01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */,
+				01DA273C1CCBF1AE004179AB /* CommentModel.m in Sources */,
 				01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */,
 				B074CC871CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.m in Sources */,
 				B074CC911CBB3A7F00ADECC1 /* LWStorage+Constraint.m in Sources */,

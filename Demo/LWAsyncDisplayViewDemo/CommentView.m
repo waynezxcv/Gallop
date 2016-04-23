@@ -11,6 +11,7 @@
 @interface CommentView ()<UITextViewDelegate>
 
 @property (nonatomic,strong) UILabel* placeholderLabel;
+@property (nonatomic,assign) CGFloat textViewHeight;
 
 @end
 
@@ -19,6 +20,17 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundColor = RGB(247, 247, 247, 0.9);
+        [self addSubview:self.placeholderLabel];
+        [self addSubview:self.textView];
+    }
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame sendBlock:(PressSendBlock)sendBlock {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.sendBlock = [sendBlock copy];
         self.backgroundColor = RGB(247, 247, 247, 0.9);
         [self addSubview:self.placeholderLabel];
         [self addSubview:self.textView];
@@ -50,6 +62,54 @@
 #pragma mark  - UITextViewDelegate
 
 - (void)textViewDidChange:(UITextView *)textView {
+    [self placeholderHidenOrShow:textView];
+    //    [self TextViewSizeToFit:textView];
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range
+ replacementText:(NSString *)text {
+    if ([text isEqualToString:@"\n"]){
+        if (self.textView.text.length != 0) {
+            if (self.sendBlock) {
+                NSString* content = [self.textView.text copy];
+                self.sendBlock(content);
+                self.textView.text = @"";
+                [self.textView resignFirstResponder];
+            }
+        }
+        [self textViewDidChange:textView];
+        return NO;
+    }
+    return YES;
+}
+
+
+- (void)TextViewSizeToFit:(UITextView *)textView {
+    [textView flashScrollIndicators];
+    static CGFloat maxHeight = 100.0f;
+    CGRect frame = textView.frame;
+    CGSize constraintSize = CGSizeMake(frame.size.width, MAXFLOAT);
+    CGSize size = [textView sizeThatFits:constraintSize];
+    if (size.height >= maxHeight) {
+        size.height = maxHeight;
+        textView.scrollEnabled = YES;
+    } else {
+        textView.scrollEnabled = NO;
+    }
+    textView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, size.height);
+    if (self.textViewHeight != textView.frame.size.height) {
+        [UIView animateWithDuration:0.1f animations:^{
+            self.frame = CGRectMake(0,
+                                    self.frame.origin.y - (textView.frame.size.height - self.textViewHeight),
+                                    SCREEN_WIDTH,
+                                    textView.frame.size.height);
+        }];
+        self.textViewHeight = textView.frame.size.height;
+    }
+    [textView setContentOffset:CGPointMake(0.0f, textView.contentSize.height - textView.bounds.size.height) animated:NO];
+}
+
+- (void)placeholderHidenOrShow:(UITextView *)textView {
     if (textView.text.length == 0) {
         self.placeholderLabel.hidden = NO;
     }
