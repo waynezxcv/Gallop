@@ -24,7 +24,6 @@
 #import "NSObject+SwizzleMethod.h"
 
 
-
 @interface LWAsyncDisplayView ()<LWAsyncDisplayLayerDelegate>
 
 @property (nonatomic,strong) NSMutableArray* imageContainers;
@@ -120,10 +119,10 @@
 }
 
 - (void)setup {
-    _showingHighlight = NO;
     self.layer.opaque = NO;
     self.layer.contentsScale = [UIScreen mainScreen].scale;
     ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
+    _showingHighlight = NO;
 }
 
 #pragma mark - Layout & Display
@@ -313,7 +312,7 @@
             [imageStorage.image drawInRect:imageStorage.frame];
         }
     }
-    if (_hightlight) {
+    if (_showingHighlight && _hightlight) {
         for (NSString* rectString in _hightlight.positions) {
             CGRect rect = CGRectFromString(rectString);
             UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:2.0f];
@@ -327,17 +326,13 @@
 }
 
 - (void)didFinishAsyncDisplay:(LWAsyncDisplayLayer *)layer isFiniedsh:(BOOL)isFinished {
-    if (_hightlight) {
-        _showingHighlight = YES;
-    }
-    else {
-        _showingHighlight = NO;
-    }
+    return;
 }
 
 #pragma mark - Touch
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    BOOL found = NO;
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWTextStorage* textStorage in _textStorages) {
@@ -349,22 +344,49 @@
             if (textFrame == NULL) {
                 continue;
             }
-            [self _drawleLinkTouchHighlightIfNeed:textStorage touchPoint:touchPoint];
+            LWTextHightlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
+            if (hightlight) {
+                [self _showHighlight:hightlight];
+                found = YES;
+            }
         }
+    }
+    if (!found) {
+        [super touchesBegan:touches withEvent:event];
     }
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesMoved:touches withEvent:event];
+    BOOL found = NO;
 
+    UITouch* touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInView:self];
+    for (LWTextStorage* textStorage in _textStorages) {
+        if (textStorage == nil) {
+            continue;
+        }
+        if ([textStorage isKindOfClass:[LWTextStorage class]]) {
+            CTFrameRef textFrame = textStorage.CTFrame;
+            if (textFrame == NULL) {
+                continue;
+            }
+            LWTextHightlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
+            if (hightlight) {
+                [self _showHighlight:hightlight];
+                found = YES;
+            } else {
+                [self _hideHightlight];
+            }
+        }
+    }
+    if (!found) {
+        [super touchesMoved:touches withEvent:event];
+    }
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (_hightlight && _showingHighlight) {
-        _hightlight = nil;
-        [self setNeedRedDraw];
-        [(LWAsyncDisplayLayer *)self.layer setDelaySetContent:YES];
-    }
+    __block BOOL found = NO;
+    [self _hideHightlight];
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWImageStorage* imageStorage in _imageStorages) {
@@ -386,8 +408,14 @@
             if (textFrame == NULL) {
                 continue;
             }
-            [self _handleLinkTouchIfNeed:textFrame touchPoint:touchPoint];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                found = [self _handleLinkTouchIfNeed:textFrame touchPoint:touchPoint];
+            });
         }
+    }
+    [self _removeHightlight];
+    if (!found) {
+        [super touchesEnded:touches withEvent:event];
     }
 }
 
@@ -399,7 +427,7 @@
     return [super hitTest:point withEvent:event];
 }
 
-- (void)_drawleLinkTouchHighlightIfNeed:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
+- (LWTextHightlight *)_isNeedShowHighlight:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
     CTFrameRef textFrame = textStorage.CTFrame;
     CFArrayRef lines = CTFrameGetLines(textFrame);
     CGPoint origins[CFArrayGetCount(lines)];
@@ -431,12 +459,9 @@
                     touchedRun = runObj;
                     NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
                     if ([runAttribues objectForKey:kLWTextLinkAttributedName]) {
-                        for (LWTextHightlight* hightlight in textStorage.hightlights) {
-                            if ([hightlight.linkAttributes isEqual:[runAttribues objectForKey:kLWTextLinkAttributedName]]) {
-                                _hightlight = hightlight;
-                                [(LWAsyncDisplayLayer *)self.layer setDelaySetContent:NO];
-                                [self setNeedRedDraw];
-                                break;
+                        for (LWTextHightlight* highlight in textStorage.hightlights) {
+                            if ([highlight.linkAttributes isEqual:[runAttribues objectForKey:kLWTextLinkAttributedName]]) {
+                                return highlight;
                             }
                         }
                     }
@@ -444,10 +469,32 @@
             }
         }
     }
+    return nil;
 }
 
+- (void)_showHighlight:(LWTextHightlight *)highlight {
+    _showingHighlight = YES;
+    _hightlight = highlight;
+    [(LWAsyncDisplayLayer *)self.layer setDelaySetContent:NO];
+    [self setNeedRedDraw];
+}
 
-- (void)_handleLinkTouchIfNeed:(CTFrameRef)textFrame touchPoint:(CGPoint)touchPoint {
+- (void)_hideHightlight {
+    if (!_showingHighlight) {
+        return;
+    }
+    _showingHighlight = NO;
+    [(LWAsyncDisplayLayer *)self.layer setDelaySetContent:YES];
+    [self setNeedRedDraw];
+}
+
+- (void)_removeHightlight {
+    [self _hideHightlight];
+    _hightlight = nil;
+}
+
+- (BOOL)_handleLinkTouchIfNeed:(CTFrameRef)textFrame touchPoint:(CGPoint)touchPoint {
+    BOOL found = NO;
     CFArrayRef lines = CTFrameGetLines(textFrame);
     CGPoint origins[CFArrayGetCount(lines)];
     CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
@@ -483,6 +530,7 @@
                         if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedLinkWithfData:)] &&
                             [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
                             [self.delegate lwAsyncDisplayView:self didCilickedLinkWithfData:[runAttribues objectForKey:kLWTextLinkAttributedName]];
+                            found = YES;
                             break;
                         }
                     }
@@ -490,6 +538,7 @@
             }
         }
     }
+    return found;
 }
 
 - (CGRect)_getLineBounds:(CTLineRef)line point:(CGPoint)point {

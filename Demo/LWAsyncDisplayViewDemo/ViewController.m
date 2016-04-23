@@ -233,6 +233,12 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     linkColor:RGB(113, 129, 161, 1)
                                highlightColor:RGB(0, 0, 0, 0.15)
                                underlineStyle:NSUnderlineStyleNone];
+
+//    [contentTextStorage replaceTextWithImageURL:[NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"]
+//                                      imageSize:CGSizeMake(40, 40)
+//                                        inRange:NSMakeRange(0, 1)];
+
+
     //发布的图片模型 imgsStorage
     NSInteger imageCount = [statusModel.imgs count];
     NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];

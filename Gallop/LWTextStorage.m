@@ -187,6 +187,7 @@ static CGFloat widthCallback(void* ref){
     }
 }
 
+
 #pragma mark - Add Link
 - (void)addLinkWithData:(id)data
                 inRange:(NSRange)range
@@ -332,7 +333,7 @@ static CGFloat widthCallback(void* ref){
     LWTextAttach* attach = [[LWTextAttach alloc] init];
     attach.image = image;
     attach.type = LWTextAttachLocalImage;
-    [self _setupImageAttachPositionWithAttach:attach];
+    [self _setLocalImageAttachPositionWithAttach:attach];
     [self.localAttachs addObject:attach];
     return _attributedText;
 }
@@ -352,12 +353,13 @@ static CGFloat widthCallback(void* ref){
     attach.content = [CALayer layer];
     attach.type = LWTextAttachWebImage;
     attach.URL = URL;
-    [self _setupImageAttachPositionWithAttach:attach];
+    [self _setWebImageAttachPositionWithAttach:attach
+                                       ctFrame:self.CTFrame
+                                         range:NSMakeRange(range.location, 1)];
     [self.webAttachs addObject:attach];
 }
 
-
-- (void)_setupImageAttachPositionWithAttach:(LWTextAttach *)attach {
+- (void)_setLocalImageAttachPositionWithAttach:(LWTextAttach *)attach {
     NSArray* lines = (NSArray *)CTFrameGetLines(self.CTFrame);
     NSUInteger lineCount = [lines count];
     CGPoint lineOrigins[lineCount];
@@ -394,9 +396,46 @@ static CGFloat widthCallback(void* ref){
                                              runBounds.size.height);
             if (attach.type == LWTextAttachLocalImage) {
                 attach.imagePosition = delegateRect;
-            } else if (attach.type == LWTextAttachWebImage) {
-                //TODO:
+                break;
             }
+        }
+    }
+}
+
+- (void)_setWebImageAttachPositionWithAttach:(LWTextAttach *)attach
+                                     ctFrame:(CTFrameRef)frameRef
+                                       range:(NSRange)selectRange {
+    CGPathRef path = CTFrameGetPath(self.CTFrame);
+    CGRect boundsRect = CGPathGetBoundingBox(path);
+
+    NSInteger selectionStartPosition = selectRange.location;
+    NSInteger selectionEndPosition = NSMaxRange(selectRange);
+    CFArrayRef lines = CTFrameGetLines(frameRef);
+    if (!lines) {
+        return;
+    }
+    CFIndex count = CFArrayGetCount(lines);
+    CGPoint origins[count];
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
+    transform = CGAffineTransformScale(transform, 1.f, -1.f);
+    CTFrameGetLineOrigins(frameRef, CFRangeMake(0,0), origins);
+    for (int i = 0; i < count; i++) {
+        CGPoint linePoint = origins[i];
+        CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+        CGFloat ascent, descent, leading, offset, offset2;
+        offset = CTLineGetOffsetForStringIndex(line, selectionStartPosition, NULL);
+        offset2 = CTLineGetOffsetForStringIndex(line, selectionEndPosition, NULL);
+        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+        CGRect lineRect = CGRectMake(linePoint.x + offset, linePoint.y - descent, offset2 - offset, ascent + descent);
+        CGRect rect = CGRectApplyAffineTransform(lineRect, transform);
+        CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
+                                       rect.origin.y + boundsRect.origin.y,
+                                       rect.size.width,
+                                       rect.size.height);
+        if (attach.type == LWTextAttachWebImage) {
+            attach.imagePosition = adjustRect;
+            break;
         }
     }
 }
