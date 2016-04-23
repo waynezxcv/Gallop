@@ -132,15 +132,11 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 #pragma mark - Layout & Display
 
 - (void)setLayout:(LWLayout *)layout {
-    if ([_layout isEqual:layout] || layout == _layout) {
-        return;
-    }
     self.setedImageContents = YES;
     self.displayed = YES;
     _needUpdateTextStorages = NO;
     _needUpdatedImageStorages = NO;
     [self _clenLayoutWithLayout:layout];
-    [self _cleanTextStoragesWithTextStorages:layout.container.textStorages];
     [self _cleanImageStroagesWihtImageStorage:layout.container.imageStorages];
     _layout = layout;
     [self _updateLayout];
@@ -148,17 +144,25 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 }
 
 - (void)_clenLayoutWithLayout:(LWLayout *)newLayout {
-    if (_layout != newLayout && ![_layout isEqual:newLayout]) {
-        LWLayout* layout = _layout;
-        _layout = nil;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            [layout class];
-        });
+    for (LWTextStorage* textStorage in _textStorages) {
+        [textStorage removeAttachFromViewAndLayer];
     }
+    NSArray* textStroages = _textStorages;
+    _textStorages = nil;
+    LWTextHightlight* hightlight = _hightlight;
+    _hightlight = nil;
+    _needUpdateTextStorages = YES;
+    LWLayout* layout = _layout;
+    _layout = nil;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [textStroages count];
+        [hightlight class];
+        [layout class];
+    });
 }
 
 - (void)_cleanImageStroagesWihtImageStorage:(NSArray* )newImageStorages {
-    if (_imageStorages != newImageStorages && ![_imageStorages isEqualToArray:newImageStorages]) {
+    if (![_imageStorages isEqualToArray:newImageStorages]) {
         NSArray* imageStorages = _imageStorages;
         _imageStorages = nil;
         _needUpdatedImageStorages = YES;
@@ -166,24 +170,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
             [imageStorages count];
         });
         
-    }
-}
-
-
-- (void)_cleanTextStoragesWithTextStorages:(NSArray *)newTextStorages {
-    if (_textStorages != newTextStorages && ![_textStorages isEqualToArray:newTextStorages]) {
-        for (LWTextStorage* textStorage in _textStorages) {
-            [textStorage removeAttachFromViewAndLayer];
-        }
-        NSArray* textStroages = _textStorages;
-        _textStorages = nil;
-        LWTextHightlight* hightlight = _hightlight;
-        _hightlight = nil;
-        _needUpdateTextStorages = YES;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            [textStroages count];
-            [hightlight class];
-        });
     }
 }
 

@@ -20,7 +20,7 @@
 
 - (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data;
 
-- (void)tableViewCell:(TableViewCell *)cell didClickedMenuWithCellLayout:(CellLayout *)layout
+- (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
               atIndexPath:(NSIndexPath *)indexPath;
 
 
@@ -31,6 +31,7 @@
 @property (nonatomic,weak) id <TableViewCellDelegate> delegate;
 @property (nonatomic,strong) CellLayout* cellLayout;
 @property (nonatomic,strong) NSIndexPath* indexPath;
+
 
 @end
 

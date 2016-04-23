@@ -9,15 +9,18 @@
 #import "TableViewCell.h"
 #import "LWDefine.h"
 #import "LWImageStorage.h"
+#import "Menu.h"
 
 
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate>
 
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
+@property (nonatomic,strong) Menu* menu;
 
 @end
 
 @implementation TableViewCell
+
 
 #pragma mark - Init
 
@@ -26,6 +29,8 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
+        [self.contentView addSubview:self.menu];
+        
     }
     return self;
 }
@@ -37,11 +42,11 @@
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                      touch:(UITouch *)touch{
-
+    
     CGPoint point = [touch locationInView:self];
     for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
-
+        
         //点击查看大图
         if (CGRectContainsPoint(imagePosition, point)) {
             if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedImageWithCellLayout:atIndex:)] &&
@@ -49,13 +54,14 @@
                 [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.cellLayout atIndex:i];
             }
         }
-
+        
     }
     //点击菜单按钮
-    if (CGRectContainsPoint(self.cellLayout.menuPosition, point)) {
-        if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedMenuWithCellLayout:atIndexPath:)]) {
-            [self.delegate tableViewCell:self didClickedMenuWithCellLayout:self.cellLayout atIndexPath:self.indexPath];
-        }
+    if (CGRectContainsPoint(CGRectMake(self.cellLayout.menuPosition.origin.x - 10,
+                                       self.cellLayout.menuPosition.origin.y - 10,
+                                       self.cellLayout.menuPosition.size.width + 20,
+                                       self.cellLayout.menuPosition.size.height + 20), point)) {
+        [self.menu clickedMenu];
     }
 }
 
@@ -71,6 +77,19 @@
     }
 }
 
+
+/**
+ *  点击评论
+ *
+ */
+- (void)didClickedCommentButton {
+    if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedCommentWithCellLayout:atIndexPath:)]) {
+        [self.delegate tableViewCell:self didClickedCommentWithCellLayout:self.cellLayout atIndexPath:self.indexPath];
+        [self.menu menuHide];
+    }
+}
+
+
 #pragma mark - Draw and setup
 
 - (void)setCellLayout:(CellLayout *)cellLayout {
@@ -83,7 +102,14 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.cellLayout.cellHeight);
+    self.asyncDisplayView.frame = CGRectMake(0,
+                                             0,
+                                             SCREEN_WIDTH,
+                                             self.cellLayout.cellHeight);
+    self.menu.frame = CGRectMake(self.cellLayout.menuPosition.origin.x - 5.0f,
+                                 self.cellLayout.menuPosition.origin.y - 9.0f,
+                                 0,
+                                 34);
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size {
@@ -115,5 +141,14 @@
     return _asyncDisplayView;
 }
 
+
+- (Menu *)menu {
+    if (_menu) {
+        return _menu;
+    }
+    _menu = [[Menu alloc] initWithFrame:CGRectZero];
+    [_menu.commentButton addTarget:self action:@selector(didClickedCommentButton) forControlEvents:UIControlEventTouchUpInside];
+    return _menu;
+}
 
 @end

@@ -21,6 +21,7 @@
 #import "CommentModel.h"
 
 
+
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
 
 @property (nonnull,strong) NSArray* fakeDatasource;
@@ -368,7 +369,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         CommentModel* commentModel = (CommentModel *)data;
         self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",commentModel.to];
         [self.commentView.textView becomeFirstResponder];
-        self.postComment.from = @"Waynezxcv的粉丝";
+        self.postComment.from = @"waynezxcv的粉丝";
         self.postComment.to = commentModel.to;
         self.postComment.index = commentModel.index;
     } else {
@@ -379,6 +380,14 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
 }
 
+- (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
+          atIndexPath:(NSIndexPath *)indexPath {
+    self.commentView.placeHolder = @"评论";
+    [self.commentView.textView becomeFirstResponder];
+    self.postComment.from = @"Waynezxcv的粉丝";
+    self.postComment.to = @"";
+    self.postComment.index = indexPath.row;
+}
 
 /**
  *  发表评论
@@ -393,18 +402,10 @@ const CGFloat kRefreshBoundary = 170.0f;
     [newCommentLists addObject:newComment];
     StatusModel* statusModel = layout.statusModel;
     statusModel.commentList = newCommentLists;
-    CellLayout* newLayout = [self layoutWithStatusModel:statusModel index:model.index];
-    [self.dataSource replaceObjectAtIndex:model.index withObject:newLayout];
+    layout = [self layoutWithStatusModel:statusModel index:model.index];
+    [self.dataSource replaceObjectAtIndex:model.index withObject:layout];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.index inSection:0]]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-
-/**
- *  点击菜单按钮
- *
- */
-- (void)tableViewCell:(TableViewCell *)cell didClickedMenuWithCellLayout:(CellLayout *)layout atIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%@",indexPath);
 }
 
 - (void)refreshComplete {
@@ -502,17 +503,19 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 - (void)downloadData {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self.dataSource removeAllObjects];
-        //复制一下，让数据更多
-        NSMutableArray* fakes = [[NSMutableArray alloc] init];
-        [fakes addObjectsFromArray:self.fakeDatasource];
-        [fakes addObjectsFromArray:self.fakeDatasource];
-        [fakes addObjectsFromArray:self.fakeDatasource];
-
-        for (NSInteger i = 0; i < fakes.count; i ++) {
-            StatusModel* statusModel = [StatusModel modelWithJSON:fakes[i]];
-            LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
-            [self.dataSource addObject:layout];
+        if (self.needRefresh) {
+            [self.dataSource removeAllObjects];
+            //复制一下，让数据更多
+            NSMutableArray* fakes = [[NSMutableArray alloc] init];
+            [fakes addObjectsFromArray:self.fakeDatasource];
+            [fakes addObjectsFromArray:self.fakeDatasource];
+            [fakes addObjectsFromArray:self.fakeDatasource];
+            
+            for (NSInteger i = 0; i < fakes.count; i ++) {
+                StatusModel* statusModel = [StatusModel modelWithJSON:fakes[i]];
+                LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
+                [self.dataSource addObject:layout];
+            }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [self refreshComplete];
@@ -582,6 +585,8 @@ const CGFloat kRefreshBoundary = 170.0f;
     _postComment = [[CommentModel alloc] init];
     return _postComment;
 }
+
+
 /**
  *  模拟数据
  *

@@ -21,7 +21,7 @@
 		011DFA5D1C9880D2000410D7 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA541C9880D2000410D7 /* UIImage+ImageEffects.m */; };
 		011DFAC71C988479000410D7 /* [心]@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABB1C988479000410D7 /* [心]@2x.png */; };
 		011DFAC81C988479000410D7 /* [心]@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABC1C988479000410D7 /* [心]@3x.png */; };
-		011DFAC91C988479000410D7 /* comment.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABD1C988479000410D7 /* comment.png */; };
+		011DFAC91C988479000410D7 /* c.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFABD1C988479000410D7 /* c.png */; };
 		011DFACC1C988479000410D7 /* like.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFAC01C988479000410D7 /* like.png */; };
 		011DFACD1C988479000410D7 /* loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFAC11C988479000410D7 /* loading.png */; };
 		011DFACE1C988479000410D7 /* loading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011DFAC21C988479000410D7 /* loading@2x.png */; };
@@ -38,6 +38,7 @@
 		01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4E1CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m */; };
 		01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */; };
 		01DA273C1CCBF1AE004179AB /* CommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DA273B1CCBF1AE004179AB /* CommentModel.m */; };
+		01DA273F1CCC0680004179AB /* Menu.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DA273E1CCC0680004179AB /* Menu.m */; };
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
 		B00257961CB65817008700D5 /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B00257951CB65817008700D5 /* CellLayout.m */; };
@@ -106,7 +107,7 @@
 		011DFA541C9880D2000410D7 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageEffects.m"; path = "../LWImageBrowser/UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		011DFABB1C988479000410D7 /* [心]@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "[心]@2x.png"; path = "Resource/[心]@2x.png"; sourceTree = SOURCE_ROOT; };
 		011DFABC1C988479000410D7 /* [心]@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "[心]@3x.png"; path = "Resource/[心]@3x.png"; sourceTree = SOURCE_ROOT; };
-		011DFABD1C988479000410D7 /* comment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = comment.png; path = Resource/comment.png; sourceTree = SOURCE_ROOT; };
+		011DFABD1C988479000410D7 /* c.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = c.png; path = Resource/c.png; sourceTree = SOURCE_ROOT; };
 		011DFAC01C988479000410D7 /* like.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = like.png; path = Resource/like.png; sourceTree = SOURCE_ROOT; };
 		011DFAC11C988479000410D7 /* loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = loading.png; path = Resource/loading.png; sourceTree = SOURCE_ROOT; };
 		011DFAC21C988479000410D7 /* loading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "loading@2x.png"; path = "Resource/loading@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -131,6 +132,8 @@
 		01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+LWAlchemy.m"; path = "../LWAlchemy/NSObject+LWAlchemy.m"; sourceTree = "<group>"; };
 		01DA273A1CCBF1AE004179AB /* CommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentModel.h; sourceTree = "<group>"; };
 		01DA273B1CCBF1AE004179AB /* CommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentModel.m; sourceTree = "<group>"; };
+		01DA273D1CCC0680004179AB /* Menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Menu.h; sourceTree = "<group>"; };
+		01DA273E1CCC0680004179AB /* Menu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Menu.m; sourceTree = "<group>"; };
 		01F51A0D1CA1B1CE00463571 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B00257941CB65817008700D5 /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
@@ -256,6 +259,8 @@
 				B019A7BE1CCBC56E000DF1C7 /* CommentView.m */,
 				01DA273A1CCBF1AE004179AB /* CommentModel.h */,
 				01DA273B1CCBF1AE004179AB /* CommentModel.m */,
+				01DA273D1CCC0680004179AB /* Menu.h */,
+				01DA273E1CCC0680004179AB /* Menu.m */,
 				011DFA1D1C987CD6000410D7 /* Supporting Files */,
 			);
 			name = Demo;
@@ -371,7 +376,7 @@
 				0152F8C71CB239010062CB32 /* comment@3x.png */,
 				011DFABB1C988479000410D7 /* [心]@2x.png */,
 				011DFABC1C988479000410D7 /* [心]@3x.png */,
-				011DFABD1C988479000410D7 /* comment.png */,
+				011DFABD1C988479000410D7 /* c.png */,
 				011DFAC01C988479000410D7 /* like.png */,
 				011DFAC11C988479000410D7 /* loading.png */,
 				011DFAC21C988479000410D7 /* loading@2x.png */,
@@ -537,7 +542,7 @@
 				011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */,
 				011DFACF1C988479000410D7 /* loading@3x.png in Resources */,
 				0152F8C81CB239010062CB32 /* comment@2x.png in Resources */,
-				011DFAC91C988479000410D7 /* comment.png in Resources */,
+				011DFAC91C988479000410D7 /* c.png in Resources */,
 				011DFAD01C988479000410D7 /* menu.png in Resources */,
 				0152F8C91CB239010062CB32 /* comment@3x.png in Resources */,
 				011DFAC81C988479000410D7 /* [心]@3x.png in Resources */,
@@ -554,6 +559,7 @@
 			files = (
 				B0D980371CB392D7006D0071 /* StatusModel.m in Sources */,
 				011DFA221C987CD6000410D7 /* AppDelegate.m in Sources */,
+				01DA273F1CCC0680004179AB /* Menu.m in Sources */,
 				011DFA5D1C9880D2000410D7 /* UIImage+ImageEffects.m in Sources */,
 				B074CC8A1CBB3A7F00ADECC1 /* LWConstraint.m in Sources */,
 				B0D9EB471CB0F436009FDCCF /* UIImage+GIF.m in Sources */,
