@@ -221,6 +221,33 @@ static CGFloat widthCallback(void* ref){
                                                   linkAttributes:data]];
 }
 
+
+/**
+ *  为这个TextStorage添加链接
+ *
+ */
+- (void)addLinkWithData:(id)data
+         highLightColor:(UIColor *)highLightColor {
+    if (!data) {
+        return;
+    }
+    [self _mutableAttributedString:_attributedText
+    addLinkAttributesNameWithValue:data
+                           inRange:NSMakeRange(0, self.attributedText.length)];
+    [self creatCTFrameRef];
+    UIColor* color = [UIColor grayColor];
+    if (highLightColor) {
+        color = highLightColor;
+    }
+    LWTextHightlight* highlight = [[LWTextHightlight alloc] init];
+    highlight.hightlightColor = color;
+    highlight.linkAttributes = data;
+    CGPathRef path = CTFrameGetPath(self.CTFrame);
+    CGRect boundsRect = CGPathGetBoundingBox(path);
+    highlight.positions = @[NSStringFromCGRect(boundsRect)];
+    [self.hightlights addObject:highlight];
+}
+
 /**
  *  获取LWTextHightlight
  *

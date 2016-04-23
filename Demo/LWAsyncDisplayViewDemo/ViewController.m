@@ -17,14 +17,14 @@
 #import "CellLayout.h"
 #import "LWStorage+Constraint.h"
 #import "LWConstraintManager.h"
-
-
+#import "CommentView.h"
 
 
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
 
 @property (nonnull,strong) NSArray* fakeDatasource;
 @property (nonatomic,strong) TableViewHeader* tableViewHeader;
+@property (nonatomic,strong) CommentView* commentView;
 @property (nonatomic,strong) UITableView* tableView;
 @property (nonatomic,strong) NSMutableArray* dataSource;
 @property (nonatomic,assign,getter = isNeedRefresh) BOOL needRefresh;
@@ -44,7 +44,35 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    UITapGestureRecognizer* tapGestureRecognizer = [[UITapGestureRecognizer alloc]
+                                                    initWithTarget:self
+                                                    action:@selector(tapView:)];
+    tapGestureRecognizer.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:tapGestureRecognizer];
     [self.view addSubview:self.tableView];
+    [self.view addSubview:self.commentView];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidAppearNotifications:)
+                                                 name:UIKeyboardWillShowNotification object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidHidenNotifications:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
+                                                  object:nil];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidHideNotification
+                                                  object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -61,121 +89,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     NSDictionary* attributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
     self.navigationController.navigationBar.titleTextAttributes = attributes;
     self.navigationItem.title = @"朋友圈";
-}
-
-#pragma mark - Actions
-
-/**
- *  点击图片
- *
- */
-- (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index {
-    NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:layout.imagePostionArray.count];
-    for (NSInteger i = 0; i < layout.imagePostionArray.count; i ++) {
-        LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
-                                                                              thumbnailURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
-                                                                                     HDURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
-                                                                        imageViewSuperView:cell.contentView
-                                                                       positionAtSuperView:CGRectFromString(layout.imagePostionArray[i])
-                                                                                     index:index];
-        [tmp addObject:imageModel];
-    }
-    LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self
-                                                                                  style:LWImageBrowserAnimationStyleScale
-                                                                            imageModels:tmp
-                                                                           currentIndex:index];
-    imageBrowser.view.backgroundColor = [UIColor blackColor];
-    [imageBrowser show];
-}
-
-/**
- *  点击链接
- *
- */
-- (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
-    UIViewController* vc = [[UIViewController alloc] init];
-    vc.view.backgroundColor = [UIColor whiteColor];
-    vc.title = data;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-
-/**
- *  点击菜单按钮
- *
- */
-- (void)tableViewCell:(TableViewCell *)cell didClickedMenuWithCellLayout:(CellLayout *)layout atIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%@",indexPath);
-}
-
-#pragma mark - UITableViewDataSource
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.dataSource.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString* cellIdentifier = @"cellIdentifier";
-    TableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[TableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-    cell.delegate = self;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.indexPath = indexPath;
-    if (self.dataSource.count >= indexPath.row) {
-        CellLayout* cellLayout = self.dataSource[indexPath.row];
-        cell.cellLayout = cellLayout;
-    }
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.dataSource.count >= indexPath.row) {
-        CellLayout* layout = self.dataSource[indexPath.row];
-        return layout.cellHeight;
-    }
-    return 0;
-}
-
-#pragma mark - UIScrollViewDelegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat offset = scrollView.contentOffset.y;
-    [self.tableViewHeader loadingViewAnimateWithScrollViewContentOffset:offset];
-}
-
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-    CGFloat offset = scrollView.contentOffset.y;
-    if (offset <= -kRefreshBoundary) {
-        [self refreshBegin];
-    }
-}
-
-- (void)refreshBegin {
-    [UIView animateWithDuration:0.2f animations:^{
-        self.tableView.contentInset = UIEdgeInsetsMake(kRefreshBoundary, 0.0f, 0.0f, 0.0f);
-    } completion:^(BOOL finished) {
-        [self.tableViewHeader refreshingAnimateBegin];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self downloadData];
-        });
-    }];
-}
-
-- (void)downloadData {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self.dataSource removeAllObjects];
-        for (NSInteger i = 0; i < self.fakeDatasource.count; i ++) {
-            StatusModel* statusModel = [StatusModel modelWithJSON:self.fakeDatasource[i]];
-            LWLayout* layout = [self layoutWithStatusModel:statusModel];
-            [self.dataSource addObject:layout];
-        }
-        [self.dataSource addObjectsFromArray:self.dataSource];
-        [self.dataSource addObjectsFromArray:self.dataSource];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self refreshComplete];
-        });
-    });
 }
 
 /****************************************************************************/
@@ -234,11 +147,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                                highlightColor:RGB(0, 0, 0, 0.15)
                                underlineStyle:NSUnderlineStyleNone];
 
-//    [contentTextStorage replaceTextWithImageURL:[NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"]
-//                                      imageSize:CGSizeMake(40, 40)
-//                                        inRange:NSMakeRange(0, 1)];
-
-
     //发布的图片模型 imgsStorage
     NSInteger imageCount = [statusModel.imgs count];
     NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
@@ -293,7 +201,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     menuStorage.frame = menuPosition;
     menuStorage.image = [UIImage imageNamed:@"menu"];
 
-
     //comment
     //生成评论背景Storage
     LWImageStorage* commentBgStorage = [[LWImageStorage alloc] init];
@@ -314,14 +221,16 @@ const CGFloat kRefreshBoundary = 170.0f;
                 commentTextStorage.linespace = 2.0f;
                 commentTextStorage.textColor = RGB(40, 40, 40, 1);
                 commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
-                [commentTextStorage creatCTFrameRef];
-                [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"from"]]
+                [commentTextStorage addLinkWithData:@{@"touchComment":commentDict[@"from"]}
+                                     highLightColor:RGB(0, 0, 0, 0.15)];
+
+                [commentTextStorage addLinkWithData:@{@"comment":[NSString stringWithFormat:@"%@",commentDict[@"from"]]}
                                             inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                           linkColor:RGB(113, 129, 161, 1)
                                      highLightColor:RGB(0, 0, 0, 0.15)
                                      UnderLineStyle:NSUnderlineStyleNone];
 
-                [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"to"]]
+                [commentTextStorage addLinkWithData:@{@"comment":[NSString stringWithFormat:@"%@",commentDict[@"to"]]}
                                             inRange:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
                                           linkColor:RGB(113, 129, 161, 1)
                                      highLightColor:RGB(0, 0, 0, 0.15)
@@ -332,6 +241,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                 linkColor:RGB(113, 129, 161, 1)
                                            highlightColor:RGB(0, 0, 0, 0.15)
                                            underlineStyle:NSUnderlineStyleNone];
+
                 [tmp addObject:commentTextStorage];
                 offsetY += commentTextStorage.height;
             } else {
@@ -343,17 +253,22 @@ const CGFloat kRefreshBoundary = 170.0f;
                 commentTextStorage.linespace = 2.0f;
                 commentTextStorage.textColor = RGB(40, 40, 40, 1);
                 commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, 20.0f);
-                [commentTextStorage creatCTFrameRef];
-                [commentTextStorage addLinkWithData:[NSString stringWithFormat:@"%@",commentDict[@"from"]]
+
+                [commentTextStorage addLinkWithData:@{@"touchComment":commentDict[@"from"]}
+                                     highLightColor:RGB(0, 0, 0, 0.15)];
+
+                [commentTextStorage addLinkWithData:@{@"comment":commentDict[@"from"]}
                                             inRange:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                           linkColor:RGB(113, 129, 161, 1)
                                      highLightColor:RGB(0, 0, 0, 0.15)
                                      UnderLineStyle:NSUnderlineStyleNone];
+
                 [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
                 [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                 linkColor:RGB(113, 129, 161, 1)
                                            highlightColor:RGB(0, 0, 0, 0.15)
                                            underlineStyle:NSUnderlineStyleNone];
+
                 [tmp addObject:commentTextStorage];
                 offsetY += commentTextStorage.height;
             }
@@ -395,6 +310,69 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 /****************************************************************************/
 
+
+#pragma mark - Actions
+
+
+/**
+ *  点击图片
+ *
+ */
+- (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index {
+    NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:layout.imagePostionArray.count];
+    for (NSInteger i = 0; i < layout.imagePostionArray.count; i ++) {
+        LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
+                                                                              thumbnailURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
+                                                                                     HDURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
+                                                                        imageViewSuperView:cell.contentView
+                                                                       positionAtSuperView:CGRectFromString(layout.imagePostionArray[i])
+                                                                                     index:index];
+        [tmp addObject:imageModel];
+    }
+    LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self
+                                                                                  style:LWImageBrowserAnimationStyleScale
+                                                                            imageModels:tmp
+                                                                           currentIndex:index];
+    imageBrowser.view.backgroundColor = [UIColor blackColor];
+    [imageBrowser show];
+}
+
+/**
+ *  点击链接
+ *
+ */
+- (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
+    if ([data isKindOfClass:[NSDictionary class]]) {
+        NSDictionary* dict = (NSDictionary *)data;
+        NSArray* key = [dict allKeys];
+        if ([key containsObject:@"comment"]) {
+            NSString* to = [dict objectForKey:@"comment"];
+            self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",to];
+            [self.commentView.textView becomeFirstResponder];
+        }
+        if ([key containsObject:@"touchComment"]) {
+            NSString* to = [dict objectForKey:@"touchComment"];
+            self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",to];
+            [self.commentView.textView becomeFirstResponder];
+        }
+    }
+    else {
+        UIViewController* vc = [[UIViewController alloc] init];
+        vc.view.backgroundColor = [UIColor whiteColor];
+        vc.title = data;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+
+/**
+ *  点击菜单按钮
+ *
+ */
+- (void)tableViewCell:(TableViewCell *)cell didClickedMenuWithCellLayout:(CellLayout *)layout atIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%@",indexPath);
+}
+
 - (void)refreshComplete {
     [self.tableViewHeader refreshingAnimateStop];
     [UIView animateWithDuration:0.35f animations:^{
@@ -404,6 +382,104 @@ const CGFloat kRefreshBoundary = 170.0f;
         self.needRefresh = NO;
     }];
 }
+
+#pragma mark - KeyboardNotifications
+
+- (void)tapView:(id)sender {
+    [self.commentView endEditing:YES];
+}
+
+/**
+ *  键盘出现
+ *
+ */
+- (void)keyboardDidAppearNotifications:(NSNotification *)notifications {
+    NSDictionary *userInfo = [notifications userInfo];
+    CGSize keyboardSize = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGFloat keyboardHeight = keyboardSize.height;
+    self.commentView.frame = CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f - keyboardHeight, SCREEN_WIDTH, 44.0f);
+}
+
+/**
+ *  键盘隐藏
+ *
+ */
+- (void)keyboardDidHidenNotifications:(NSNotification *)notifications {
+    self.commentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f);
+}
+
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.dataSource.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString* cellIdentifier = @"cellIdentifier";
+    TableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[TableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    cell.delegate = self;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.indexPath = indexPath;
+    if (self.dataSource.count >= indexPath.row) {
+        CellLayout* cellLayout = self.dataSource[indexPath.row];
+        cell.cellLayout = cellLayout;
+    }
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.dataSource.count >= indexPath.row) {
+        CellLayout* layout = self.dataSource[indexPath.row];
+        return layout.cellHeight;
+    }
+    return 0;
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.commentView endEditing:YES];
+    CGFloat offset = scrollView.contentOffset.y;
+    [self.tableViewHeader loadingViewAnimateWithScrollViewContentOffset:offset];
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    CGFloat offset = scrollView.contentOffset.y;
+    if (offset <= -kRefreshBoundary) {
+        [self refreshBegin];
+    }
+}
+
+- (void)refreshBegin {
+    [UIView animateWithDuration:0.2f animations:^{
+        self.tableView.contentInset = UIEdgeInsetsMake(kRefreshBoundary, 0.0f, 0.0f, 0.0f);
+    } completion:^(BOOL finished) {
+        [self.tableViewHeader refreshingAnimateBegin];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self downloadData];
+        });
+    }];
+}
+
+- (void)downloadData {
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self.dataSource removeAllObjects];
+        for (NSInteger i = 0; i < self.fakeDatasource.count; i ++) {
+            StatusModel* statusModel = [StatusModel modelWithJSON:self.fakeDatasource[i]];
+            LWLayout* layout = [self layoutWithStatusModel:statusModel];
+            [self.dataSource addObject:layout];
+        }
+        [self.dataSource addObjectsFromArray:self.dataSource];
+        [self.dataSource addObjectsFromArray:self.dataSource];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self refreshComplete];
+        });
+    });
+}
+
 
 #pragma mark - Getter
 
@@ -444,43 +520,13 @@ const CGFloat kRefreshBoundary = 170.0f;
     return dateFormatter;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- (CommentView *)commentView {
+    if (_commentView) {
+        return _commentView;
+    }
+    _commentView = [[CommentView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f)];
+    return _commentView;
+}
 
 /**
  *  模拟数据

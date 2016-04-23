@@ -160,6 +160,13 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
          UnderLineStyle:(NSUnderlineStyle)underlineStyle;
 
 /**
+ *  为这个TextStorage添加链接
+ *
+ */
+- (void)addLinkWithData:(id)data
+         highLightColor:(UIColor *)highLightColor;
+
+/**
  *  用本地图片替换掉指定位置的文字
  *
  */

@@ -388,7 +388,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     __block BOOL found = NO;
-    [self _hideHightlight];
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWImageStorage* imageStorage in _imageStorages) {
@@ -411,6 +410,7 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
                 continue;
             }
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self _hideHightlight];
                 found = [self _handleLinkTouchIfNeed:textStorage touchPoint:touchPoint];
             });
         }
@@ -428,7 +428,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     return [super hitTest:point withEvent:event];
 }
-
 
 
 - (LWTextHightlight *)_isNeedShowHighlight:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {

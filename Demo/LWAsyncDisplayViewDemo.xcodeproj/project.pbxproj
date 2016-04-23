@@ -40,6 +40,7 @@
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
 		B00257961CB65817008700D5 /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B00257951CB65817008700D5 /* CellLayout.m */; };
+		B019A7BF1CCBC56E000DF1C7 /* CommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = B019A7BE1CCBC56E000DF1C7 /* CommentView.m */; };
 		B074CC861CBB3A7F00ADECC1 /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B074CC681CBB3A7F00ADECC1 /* CALayer+WebCache.m */; };
 		B074CC871CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B074CC6A1CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.m */; };
 		B074CC881CBB3A7F00ADECC1 /* LWAsyncDisplayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B074CC6C1CBB3A7F00ADECC1 /* LWAsyncDisplayLayer.m */; };
@@ -131,6 +132,8 @@
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B00257941CB65817008700D5 /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
 		B00257951CB65817008700D5 /* CellLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellLayout.m; sourceTree = "<group>"; };
+		B019A7BD1CCBC56E000DF1C7 /* CommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentView.h; sourceTree = "<group>"; };
+		B019A7BE1CCBC56E000DF1C7 /* CommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentView.m; sourceTree = "<group>"; };
 		B074CC671CBB3A7F00ADECC1 /* CALayer+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+WebCache.h"; path = "../Gallop/CALayer+WebCache.h"; sourceTree = "<group>"; };
 		B074CC681CBB3A7F00ADECC1 /* CALayer+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+WebCache.m"; path = "../Gallop/CALayer+WebCache.m"; sourceTree = "<group>"; };
 		B074CC691CBB3A7F00ADECC1 /* CALayer+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+WebCacheOperation.h"; path = "../Gallop/CALayer+WebCacheOperation.h"; sourceTree = "<group>"; };
@@ -246,6 +249,8 @@
 				B00257951CB65817008700D5 /* CellLayout.m */,
 				017F67301C988BB700309E92 /* TableViewCell.h */,
 				017F67311C988BB700309E92 /* TableViewCell.m */,
+				B019A7BD1CCBC56E000DF1C7 /* CommentView.h */,
+				B019A7BE1CCBC56E000DF1C7 /* CommentView.m */,
 				011DFA1D1C987CD6000410D7 /* Supporting Files */,
 			);
 			name = Demo;
@@ -576,6 +581,7 @@
 				B0D9EB441CB0F435009FDCCF /* SDWebImageManager.m in Sources */,
 				B0D9EB3F1CB0F435009FDCCF /* SDImageCache.m in Sources */,
 				01AE7F521CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m in Sources */,
+				B019A7BF1CCBC56E000DF1C7 /* CommentView.m in Sources */,
 				B074CC901CBB3A7F00ADECC1 /* LWStorage.m in Sources */,
 				B0D9EB451CB0F436009FDCCF /* SDWebImagePrefetcher.m in Sources */,
 				011DFA5A1C9880D2000410D7 /* LWImageBrowserFlowLayout.m in Sources */,
