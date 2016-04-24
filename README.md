@@ -78,6 +78,11 @@ nameTextStorage.textColor = RGB(113, 129, 161, 1);
 LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
 avatarStorage.type = LWImageStorageWebImage;
 avatarStorage.URL = @"http://xxxxxx.jpg";
+//为图片设置圆角
+avatarStorage.cornerRadius = 20.0f;
+avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
+avatarStorage.cornerBorderColor = [UIColor blackColor];
+avatarStorage.cornerBorderWidth = 1.0f;
 ```
 3.生成一个本地图片模型
 ```objc
@@ -125,7 +130,7 @@ asyncDisplayView.layout = layout;
 ```
 
 * **如果需要更加详细的内容，请看各个头文件和Demo，有详细的注释**
-*  下载Demo真机调试查看效果
+*  Demo中有用Gallop构建的微信朋友圈，真机测试滚动时保持在60FPS。
 
 ## 正在不断完善中...  Enjoy~
 ## 有任何问题请联系我 liuweiself@126.com
