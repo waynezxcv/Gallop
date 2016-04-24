@@ -137,7 +137,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     _needUpdateTextStorages = NO;
     _needUpdatedImageStorages = NO;
     [self _clenLayoutWithLayout:layout];
-    [self _cleanImageStroagesWihtImageStorage:layout.container.imageStorages];
     _layout = layout;
     [self _updateLayout];
     [self invalidateIntrinsicContentSize];
@@ -147,30 +146,26 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     for (LWTextStorage* textStorage in _textStorages) {
         [textStorage removeAttachFromViewAndLayer];
     }
-    NSArray* textStroages = _textStorages;
-    _textStorages = nil;
-    LWTextHightlight* hightlight = _hightlight;
-    _hightlight = nil;
-    _needUpdateTextStorages = YES;
     LWLayout* layout = _layout;
     _layout = nil;
+    
+    NSArray* textStroages = _textStorages;
+    _textStorages = nil;
+    _needUpdateTextStorages = YES;
+    
+    LWTextHightlight* hightlight = _hightlight;
+    _hightlight = nil;
+    
+    NSArray* imageStorages = _imageStorages;
+    _imageStorages = nil;
+    _needUpdatedImageStorages = YES;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [textStroages count];
         [hightlight class];
         [layout class];
+        [imageStorages count];
     });
-}
-
-- (void)_cleanImageStroagesWihtImageStorage:(NSArray* )newImageStorages {
-    if (![_imageStorages isEqualToArray:newImageStorages]) {
-        NSArray* imageStorages = _imageStorages;
-        _imageStorages = nil;
-        _needUpdatedImageStorages = YES;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            [imageStorages count];
-        });
-        
-    }
 }
 
 
@@ -330,10 +325,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 }
 
 - (void)didAsyncDisplay:(LWAsyncDisplayLayer *)layer context:(CGContextRef)context size:(CGSize)size {
-    if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:)] &&
-        [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
-        [self.delegate extraAsyncDisplayIncontext:context size:size];
-    }
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (imageStorage.type == LWImageStorageLocalImage) {
             [imageStorage.image drawInRect:imageStorage.frame];
@@ -349,6 +340,10 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     }
     for (LWTextStorage* textStorage in _textStorages) {
         [textStorage drawInContext:context layer:layer];
+    }
+    if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:)] &&
+        [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
+        [self.delegate extraAsyncDisplayIncontext:context size:size];
     }
 }
 

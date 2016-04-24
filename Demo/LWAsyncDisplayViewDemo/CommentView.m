@@ -7,6 +7,7 @@
 //
 
 #import "CommentView.h"
+#import "LWDefine.h"
 
 @interface CommentView ()<UITextViewDelegate>
 
@@ -36,6 +37,7 @@
         self.backgroundColor = RGB(247, 247, 247, 0.9);
         [self addSubview:self.placeholderLabel];
         [self addSubview:self.textView];
+        [self addSubview:self.emojiButton];
     }
     return self;
 }
@@ -48,7 +50,12 @@
     CGContextSetLineWidth(context, 0.3f);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextStrokePath(context);
-    UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(10.0f, 12.0f, SCREEN_WIDTH - 20.0f, rect.size.height - 24.0f) cornerRadius:3.0f];
+    UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:
+                                CGRectMake(10.0f,
+                                           12.0f,
+                                           SCREEN_WIDTH - 55.0f,
+                                           rect.size.height - 24.0f)
+                                                          cornerRadius:3.0f];
     [[UIColor grayColor] setStroke];
     [bezierPath stroke];
     [[UIColor whiteColor] setFill];
@@ -58,15 +65,18 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.textView.frame = CGRectMake(10.0f, 12.0f, SCREEN_WIDTH - 20.0f, self.bounds.size.height - 24.0f);
-    self.placeholderLabel.frame = CGRectMake(15.0f, 12.0f, SCREEN_WIDTH - 20.0f, self.bounds.size.height - 24.0f);
+    self.textView.frame = CGRectMake(10.0f, 12.0f, SCREEN_WIDTH - 55.0f, self.bounds.size.height - 24.0f);
+    self.placeholderLabel.frame = CGRectMake(15.0f, 12.0f, SCREEN_WIDTH - 55.0f, self.bounds.size.height - 24.0f);
+    self.emojiButton.frame = CGRectMake(SCREEN_WIDTH - 40.0f, 4.5f, 35.0f, 35.0f);
 }
 
 #pragma mark  - UITextViewDelegate
 
 - (void)textView:(AutoFitSizeTextView *)textView heightChanged:(NSInteger)height {
     [self setNeedsDisplay];
-    if (self.frame.size.height <= 100.0f && self.frame.origin.y != SCREEN_HEIGHT) {
+    if (self.frame.size.height <= 100.0f &&
+        self.frame.origin.y != SCREEN_HEIGHT &&
+        self.frame.size.height >= 44.0f) {
         self.frame = CGRectMake(self.frame.origin.x,
                                 self.frame.origin.y - height - 3.0f,
                                 self.frame.size.width,

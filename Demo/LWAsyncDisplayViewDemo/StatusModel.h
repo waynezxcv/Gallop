@@ -18,5 +18,6 @@
 @property (nullable, nonatomic, retain) NSString *name;
 @property (nullable, nonatomic, retain) NSNumber *statusID;
 @property (nullable, nonatomic, retain) NSArray* commentList;
+@property (nullable, nonatomic, retain) NSArray* likeList;
 
 @end

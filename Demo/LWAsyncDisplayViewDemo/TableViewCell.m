@@ -38,7 +38,6 @@
 
 #pragma mark - Actions
 
-
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                      touch:(UITouch *)touch{
@@ -141,13 +140,13 @@
     return _asyncDisplayView;
 }
 
-
 - (Menu *)menu {
     if (_menu) {
         return _menu;
     }
     _menu = [[Menu alloc] initWithFrame:CGRectZero];
-    [_menu.commentButton addTarget:self action:@selector(didClickedCommentButton) forControlEvents:UIControlEventTouchUpInside];
+    [_menu.commentButton addTarget:self action:@selector(didClickedCommentButton)
+                  forControlEvents:UIControlEventTouchUpInside];
     return _menu;
 }
 

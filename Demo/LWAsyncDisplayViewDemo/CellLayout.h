@@ -21,4 +21,8 @@
 @property (nonatomic,copy) NSArray* imagePostionArray;
 @property (nonatomic,strong) StatusModel* statusModel;
 
+- (id)initWithContainer:(LWStorageContainer *)container
+            statusModel:(StatusModel *)statusModel
+                  index:(NSInteger)index
+          dateFormatter:(NSDateFormatter *)dateFormatter;
 @end
