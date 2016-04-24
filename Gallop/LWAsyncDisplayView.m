@@ -244,10 +244,12 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 - (void)_setImageStorages {
     for (NSInteger i = 0; i < _imageStorages.count; i ++) {
         LWImageStorage* imageStorage = _imageStorages[i];
-        LWImageContainer* container = self.imageContainers[i];
-        if (imageStorage.type == LWImageStorageWebImage) {
-            [container delayLayoutImageStorage:imageStorage];
-            [container setContentWithImageStorage:imageStorage];
+        if (self.imageContainers.count > i) {
+            LWImageContainer* container = self.imageContainers[i];
+            if (imageStorage.type == LWImageStorageWebImage) {
+                [container delayLayoutImageStorage:imageStorage];
+                [container setContentWithImageStorage:imageStorage];
+            }
         }
     }
     self.setedImageContents = YES;

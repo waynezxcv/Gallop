@@ -134,7 +134,7 @@
 
 - (LWAsyncDisplayView *)asyncDisplayView {
     if (!_asyncDisplayView) {
-        _asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero maxImageStorageCount:12.0f];
+        _asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero maxImageStorageCount:10];
         _asyncDisplayView.delegate = self;
     }
     return _asyncDisplayView;
