@@ -532,7 +532,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         return _commentView;
     }
     __weak typeof(self) wself = self;
-    _commentView = [[CommentView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f)
+    _commentView = [[CommentView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 54.0f)
                                             sendBlock:^(NSString *content) {
                                                 __strong  typeof(wself) swself = wself;
                                                 swself.postComment.content = content;

@@ -12,6 +12,7 @@
 
 @property (nonatomic,strong) UILabel* placeholderLabel;
 @property (nonatomic,assign) CGFloat textViewHeight;
+@property (nonatomic,strong) UIButton* emojiButton;
 
 @end
 
@@ -23,6 +24,7 @@
         self.backgroundColor = RGB(247, 247, 247, 0.9);
         [self addSubview:self.placeholderLabel];
         [self addSubview:self.textView];
+        [self addSubview:self.emojiButton];
     }
     return self;
 }
@@ -46,24 +48,34 @@
     CGContextSetLineWidth(context, 0.3f);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextStrokePath(context);
-    UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(10.0f, 7.0f, SCREEN_WIDTH - 20.0f, 30.0f) cornerRadius:3.0f];
+    UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(10.0f, 12.0f, SCREEN_WIDTH - 20.0f, rect.size.height - 24.0f) cornerRadius:3.0f];
     [[UIColor grayColor] setStroke];
     [bezierPath stroke];
     [[UIColor whiteColor] setFill];
     [bezierPath fill];
 }
 
+
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.placeholderLabel.frame = CGRectMake(15.0f, 7.0f,  SCREEN_WIDTH - 20.0f, 30.0f);
-    self.textView.frame = CGRectMake(10.0f, 7.0f, SCREEN_WIDTH - 20.0f, 30.0f);
+    self.textView.frame = CGRectMake(10.0f, 12.0f, SCREEN_WIDTH - 20.0f, self.bounds.size.height - 24.0f);
+    self.placeholderLabel.frame = CGRectMake(15.0f, 12.0f, SCREEN_WIDTH - 20.0f, self.bounds.size.height - 24.0f);
 }
 
 #pragma mark  - UITextViewDelegate
 
+- (void)textView:(AutoFitSizeTextView *)textView heightChanged:(NSInteger)height {
+    [self setNeedsDisplay];
+    if (self.frame.size.height <= 100.0f && self.frame.origin.y != SCREEN_HEIGHT) {
+        self.frame = CGRectMake(self.frame.origin.x,
+                                self.frame.origin.y - height - 3.0f,
+                                self.frame.size.width,
+                                self.frame.size.height + height + 3.0f);
+    }
+}
+
 - (void)textViewDidChange:(UITextView *)textView {
     [self placeholderHidenOrShow:textView];
-    //    [self TextViewSizeToFit:textView];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range
@@ -83,31 +95,6 @@
     return YES;
 }
 
-
-- (void)TextViewSizeToFit:(UITextView *)textView {
-    [textView flashScrollIndicators];
-    static CGFloat maxHeight = 100.0f;
-    CGRect frame = textView.frame;
-    CGSize constraintSize = CGSizeMake(frame.size.width, MAXFLOAT);
-    CGSize size = [textView sizeThatFits:constraintSize];
-    if (size.height >= maxHeight) {
-        size.height = maxHeight;
-        textView.scrollEnabled = YES;
-    } else {
-        textView.scrollEnabled = NO;
-    }
-    textView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, size.height);
-    if (self.textViewHeight != textView.frame.size.height) {
-        [UIView animateWithDuration:0.1f animations:^{
-            self.frame = CGRectMake(0,
-                                    self.frame.origin.y - (textView.frame.size.height - self.textViewHeight),
-                                    SCREEN_WIDTH,
-                                    textView.frame.size.height);
-        }];
-        self.textViewHeight = textView.frame.size.height;
-    }
-    [textView setContentOffset:CGPointMake(0.0f, textView.contentSize.height - textView.bounds.size.height) animated:NO];
-}
 
 - (void)placeholderHidenOrShow:(UITextView *)textView {
     if (textView.text.length == 0) {
@@ -131,12 +118,14 @@
     if (_textView) {
         return _textView;
     }
-    _textView = [[UITextView alloc] initWithFrame:CGRectZero];
+    _textView = [[AutoFitSizeTextView alloc] initWithFrame:CGRectZero];
     _textView.layer.cornerRadius = 3.0f;
     _textView.backgroundColor = [UIColor clearColor];
-    _textView.font = [UIFont systemFontOfSize:15.0f];
+    _textView.font = [UIFont systemFontOfSize:16];
     _textView.delegate = self;
     _textView.returnKeyType = UIReturnKeySend;
+    _textView.fitSizeDelegate = self;
+    _textView.layoutManager.allowsNonContiguousLayout = NO;
     return _textView;
 }
 
@@ -148,6 +137,15 @@
     _placeholderLabel.textColor = [UIColor grayColor];
     _placeholderLabel.font = [UIFont systemFontOfSize:15.0f];
     return _placeholderLabel;
+}
+
+- (UIButton *)emojiButton {
+    if (_emojiButton) {
+        return _emojiButton;
+    }
+    _emojiButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_emojiButton setImage:[UIImage imageNamed:@"face"] forState:UIControlStateNormal];
+    return _emojiButton;
 }
 
 @end

@@ -39,6 +39,9 @@
 		01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */; };
 		01DA273C1CCBF1AE004179AB /* CommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DA273B1CCBF1AE004179AB /* CommentModel.m */; };
 		01DA273F1CCC0680004179AB /* Menu.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DA273E1CCC0680004179AB /* Menu.m */; };
+		01DA27421CCCBF12004179AB /* AutoFitSizeTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DA27411CCCBF12004179AB /* AutoFitSizeTextView.m */; };
+		01DA27451CCCCCDE004179AB /* face.png in Resources */ = {isa = PBXBuildFile; fileRef = 01DA27431CCCCCDE004179AB /* face.png */; };
+		01DA27461CCCCCDE004179AB /* selectedFace.png in Resources */ = {isa = PBXBuildFile; fileRef = 01DA27441CCCCCDE004179AB /* selectedFace.png */; };
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
 		B00257961CB65817008700D5 /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B00257951CB65817008700D5 /* CellLayout.m */; };
@@ -134,6 +137,10 @@
 		01DA273B1CCBF1AE004179AB /* CommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentModel.m; sourceTree = "<group>"; };
 		01DA273D1CCC0680004179AB /* Menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Menu.h; sourceTree = "<group>"; };
 		01DA273E1CCC0680004179AB /* Menu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Menu.m; sourceTree = "<group>"; };
+		01DA27401CCCBF12004179AB /* AutoFitSizeTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoFitSizeTextView.h; sourceTree = "<group>"; };
+		01DA27411CCCBF12004179AB /* AutoFitSizeTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoFitSizeTextView.m; sourceTree = "<group>"; };
+		01DA27431CCCCCDE004179AB /* face.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = face.png; sourceTree = "<group>"; };
+		01DA27441CCCCCDE004179AB /* selectedFace.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = selectedFace.png; sourceTree = "<group>"; };
 		01F51A0D1CA1B1CE00463571 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		B00257941CB65817008700D5 /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
@@ -261,6 +268,8 @@
 				01DA273B1CCBF1AE004179AB /* CommentModel.m */,
 				01DA273D1CCC0680004179AB /* Menu.h */,
 				01DA273E1CCC0680004179AB /* Menu.m */,
+				01DA27401CCCBF12004179AB /* AutoFitSizeTextView.h */,
+				01DA27411CCCBF12004179AB /* AutoFitSizeTextView.m */,
 				011DFA1D1C987CD6000410D7 /* Supporting Files */,
 			);
 			name = Demo;
@@ -372,6 +381,8 @@
 		011DFABA1C9883F3000410D7 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				01DA27431CCCCCDE004179AB /* face.png */,
+				01DA27441CCCCCDE004179AB /* selectedFace.png */,
 				0152F8C61CB239010062CB32 /* comment@2x.png */,
 				0152F8C71CB239010062CB32 /* comment@3x.png */,
 				011DFABB1C988479000410D7 /* [心]@2x.png */,
@@ -540,8 +551,10 @@
 				011DFAD11C988479000410D7 /* menu@2x.png in Resources */,
 				011DFACE1C988479000410D7 /* loading@2x.png in Resources */,
 				011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */,
+				01DA27451CCCCCDE004179AB /* face.png in Resources */,
 				011DFACF1C988479000410D7 /* loading@3x.png in Resources */,
 				0152F8C81CB239010062CB32 /* comment@2x.png in Resources */,
+				01DA27461CCCCCDE004179AB /* selectedFace.png in Resources */,
 				011DFAC91C988479000410D7 /* c.png in Resources */,
 				011DFAD01C988479000410D7 /* menu.png in Resources */,
 				0152F8C91CB239010062CB32 /* comment@3x.png in Resources */,
@@ -602,6 +615,7 @@
 				B074CC881CBB3A7F00ADECC1 /* LWAsyncDisplayLayer.m in Sources */,
 				011DFA591C9880D2000410D7 /* LWImageBrowserCell.m in Sources */,
 				B0D9EB411CB0F435009FDCCF /* SDWebImageDecoder.m in Sources */,
+				01DA27421CCCBF12004179AB /* AutoFitSizeTextView.m in Sources */,
 				B0D9EB4A1CB0F436009FDCCF /* UIImageView+HighlightedWebCache.m in Sources */,
 				011DFA561C9880D2000410D7 /* LWActionSheetView.m in Sources */,
 				B0D9EB461CB0F436009FDCCF /* UIButton+WebCache.m in Sources */,

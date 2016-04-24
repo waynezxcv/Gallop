@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AutoFitSizeTextView.h"
+
+
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
@@ -16,9 +19,9 @@
 
 typedef void(^PressSendBlock)(NSString * content);
 
-@interface CommentView : UIView
+@interface CommentView : UIView<AutoFitSizeTextViewDelegate>
 
-@property (nonatomic,strong) UITextView* textView;
+@property (nonatomic,strong) AutoFitSizeTextView* textView;
 @property (nonatomic,copy) NSString* placeHolder;
 @property (nonatomic,copy) PressSendBlock sendBlock;
 
