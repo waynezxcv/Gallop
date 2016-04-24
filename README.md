@@ -130,7 +130,7 @@ asyncDisplayView.layout = layout;
 ```
 
 * **如果需要更加详细的内容，请看各个头文件和Demo，有详细的注释**
-*  Demo中有用Gallop构建的微信朋友圈，真机测试滚动时保持在60FPS。
+*  Demo中有用Gallop构建的微信朋友圈,下载Demo真机调试。
 
 ## 正在不断完善中...  Enjoy~
 ## 有任何问题请联系我 liuweiself@126.com
