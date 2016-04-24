@@ -107,7 +107,7 @@ LWStorageContainer* container = [[LWStorageContainer alloc] init];
 ```
 8.用模型容器LWStorageContainer生成布局模型
 ```objc
-LWLayout* layout = [[LWLayout alloc] initWithContainercontainer];
+LWLayout* layout = [[LWLayout alloc] initWithContainer:container];
 ```
 9.创建LWAsyncDisplayView
 ```objc
