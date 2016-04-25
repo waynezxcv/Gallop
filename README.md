@@ -30,6 +30,8 @@ Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文
  ![image](https://github.com/waynezxcv/Gallop/raw/master/pics/1.jpg)
 
 * **API Quickstart**
+
+
 ### 使用示例
 
 1.生成一个文本模型
