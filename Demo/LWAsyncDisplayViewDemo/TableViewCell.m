@@ -50,11 +50,9 @@
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                      touch:(UITouch *)touch{
-    
     CGPoint point = [touch locationInView:self];
     for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
-        
         //点击查看大图
         if (CGRectContainsPoint(imagePosition, point)) {
             if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedImageWithCellLayout:atIndex:)] &&

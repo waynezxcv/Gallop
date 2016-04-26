@@ -72,8 +72,11 @@ const CGFloat kDuration = 0.18f;
 
 
 - (void)loadHdImage:(BOOL)animated {
-    if (self.imageModel.thumbnailImage == nil) {
+    if (!self.imageModel.thumbnailImage) {
         self.imageView.image = self.imageModel.placeholder;
+        if (!self.imageModel.placeholder) {
+            return;
+        }
         self.imageView.frame = [self calculateDestinationFrameWithSize:self.imageModel.placeholder.size];
         return;
     }
