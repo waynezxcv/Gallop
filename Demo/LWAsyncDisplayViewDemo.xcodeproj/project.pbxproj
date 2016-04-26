@@ -420,10 +420,10 @@
 		B085B3421CB68CF500087739 /* DisplayView */ = {
 			isa = PBXGroup;
 			children = (
-				B074CC6B1CBB3A7F00ADECC1 /* LWAsyncDisplayLayer.h */,
-				B074CC6C1CBB3A7F00ADECC1 /* LWAsyncDisplayLayer.m */,
 				B074CC6D1CBB3A7F00ADECC1 /* LWAsyncDisplayView.h */,
 				B074CC6E1CBB3A7F00ADECC1 /* LWAsyncDisplayView.m */,
+				B074CC6B1CBB3A7F00ADECC1 /* LWAsyncDisplayLayer.h */,
+				B074CC6C1CBB3A7F00ADECC1 /* LWAsyncDisplayLayer.m */,
 			);
 			name = DisplayView;
 			sourceTree = "<group>";

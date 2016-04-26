@@ -25,7 +25,7 @@
 
 
 static dispatch_queue_t GetAsyncDisplayQueue() {
-#define MAX_QUEUE_COUNT 20
+#define MAX_QUEUE_COUNT 16
     static int queueCount;
     static dispatch_queue_t queues[MAX_QUEUE_COUNT];
     static dispatch_once_t onceToken;
@@ -51,12 +51,6 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 #undef MAX_QUEUE_COUNT
 }
 
-@interface LWAsyncDisplayLayer ()
-
-@property (nonatomic,strong,readwrite) LWFlag* flag;
-
-@end
-
 @implementation LWAsyncDisplayLayer
 
 #pragma mark - Override
@@ -70,49 +64,19 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
             scale = [UIScreen mainScreen].scale;
         });
         self.contentsScale = scale;
-        self.flag = [[LWFlag alloc] init];
     }
     return self;
 }
 
-- (void)dealloc {
-    [self _cancelDisplay];
-}
-
-
-- (void)setNeedsDisplay {
-    [self _cancelDisplay];
-    [super setNeedsDisplay];
-}
-
 - (void)display {
     super.contents = super.contents;
-    [self _asyncDisplaySize:self.bounds.size];
-}
-
-- (void)cleanUp {
-    [self _cancelDisplay];
-}
-
-- (void)asyncDisplaySize:(CGSize)size {
-    [self _asyncDisplaySize:size];
+    [self _asyncDisplay];
 }
 
 #pragma mark - Private
-- (void)_asyncDisplaySize:(CGSize)size {
+- (void)_asyncDisplay {
+    CGSize size = self.bounds.size;
     dispatch_async(GetAsyncDisplayQueue(), ^{
-        LWFlag* flag = self.flag;
-        int32_t value = flag.value;
-        BOOL (^isCancelled)() = ^BOOL() {
-            return value != flag.value;
-        };
-        if (isCancelled()) {
-            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
-                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
-                [self.delegate displayDidCancled];
-            }
-            return;
-        }
         BOOL opaque = self.opaque;
         CGFloat scale = self.contentsScale;
         if (size.width < 1 || size.height < 1) {
@@ -122,21 +86,6 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
                     CFRelease(image);
                 });
             }
-            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
-                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
-                [self.delegate displayDidCancled];
-            }
-            return;
-        }
-        if (isCancelled()) {
-            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
-                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
-                [self.delegate displayDidCancled];
-            }
-            return;
-        }
-        BOOL isWillDisplay = [self.asyncDisplayDelegate willBeginAsyncDisplay:self];
-        if (!isWillDisplay) {
             return;
         }
         UIGraphicsBeginImageContextWithOptions(size,opaque, scale);
@@ -144,36 +93,14 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         if (context == NULL) {
             return;
         }
-        if (isCancelled()) {
-            UIGraphicsEndImageContext();
-            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
-                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
-                [self.delegate displayDidCancled];
-            }
-            return;
-        }
-        [self.asyncDisplayDelegate didAsyncDisplay:self context:context size:size];
+        [self.asyncDisplayDelegate asyncDisplayLayer:self displayIncontext:context size:size];
         id content = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
-        if (isCancelled()) {
-            UIGraphicsEndImageContext();
-            if ([self.delegate respondsToSelector:@selector(displayDidCancled)] &&
-                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayLayerDelegate)]) {
-                [self.delegate displayDidCancled];
-            }
-            return;
-        }
         UIGraphicsEndImageContext();
         dispatch_sync(dispatch_get_main_queue(), ^{
             [self setContents:content];
-            if ([self.asyncDisplayDelegate respondsToSelector:@selector(didFinishAsyncDisplay:isFiniedsh:)]) {
-                [self.asyncDisplayDelegate didFinishAsyncDisplay:self isFiniedsh:YES];
-            }
+            [self.asyncDisplayDelegate asyncDisplayLayerDidFinishDisplay];
         });
     });
-}
-
-- (void)_cancelDisplay {
-    [self.flag increase];
 }
 
 @end

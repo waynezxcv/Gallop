@@ -29,7 +29,7 @@
 
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
 
-@property (nonnull,strong) NSArray* fakeDatasource;
+@property (nonatomic,strong) NSArray* fakeDatasource;
 @property (nonatomic,strong) TableViewHeader* tableViewHeader;
 @property (nonatomic,strong) CommentView* commentView;
 @property (nonatomic,strong) UITableView* tableView;
