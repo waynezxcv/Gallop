@@ -52,14 +52,11 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 @end
 
 
-@implementation LWAsyncDisplayView
-{
+@implementation LWAsyncDisplayView {
     NSArray* _textStorages;
     NSArray* _imageStorages;
     LWTextHightlight* _hightlight;
     BOOL _showingHighlight;
-    BOOL _needUpdateTextStorages;
-    BOOL _needUpdatedImageStorages;
 }
 
 #pragma mark - Initialization
@@ -132,72 +129,13 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 #pragma mark - Layout & Display
 
 - (void)setLayout:(LWLayout *)layout {
-    self.setedImageContents = YES;
-    self.displayed = YES;
-    _needUpdateTextStorages = NO;
-    _needUpdatedImageStorages = NO;
+    if (_layout == layout || [_layout isEqual:layout]) {
+        return;
+    }
     [self _clenLayoutWithLayout:layout];
     _layout = layout;
     [self _updateLayout];
     [self invalidateIntrinsicContentSize];
-}
-
-- (void)_clenLayoutWithLayout:(LWLayout *)newLayout {
-    for (LWTextStorage* textStorage in _textStorages) {
-        [textStorage removeAttachFromViewAndLayer];
-    }
-    LWLayout* layout = _layout;
-    _layout = nil;
-    
-    NSArray* textStroages = _textStorages;
-    _textStorages = nil;
-    _needUpdateTextStorages = YES;
-    
-    LWTextHightlight* hightlight = _hightlight;
-    _hightlight = nil;
-    
-    NSArray* imageStorages = _imageStorages;
-    _imageStorages = nil;
-    _needUpdatedImageStorages = YES;
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        [textStroages count];
-        [hightlight class];
-        [layout class];
-        [imageStorages count];
-    });
-}
-
-
-- (void)_updateLayout {
-    if (_needUpdatedImageStorages) {
-        [self _cleanImageContainers];
-        _imageStorages = self.layout.container.imageStorages;
-        self.setedImageContents = NO;
-    }
-    if (_needUpdateTextStorages) {
-        _textStorages = self.layout.container.textStorages;
-        self.displayed = NO;
-    }
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        if (_needUpdatedImageStorages) {
-            if (self.autoReuseImageContainer == YES) {
-                [self _autoReuseImageContainers];
-            }
-        }
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            if (_needUpdatedImageStorages) {
-                if (self.autoReuseImageContainer == YES) {
-                    [self _autoSetImageStorages];
-                } else {
-                    [self _setImageStorages];
-                }
-            }
-            if (_needUpdateTextStorages) {
-                [self _setNeedDisplay];
-            }
-        });
-    });
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -220,6 +158,61 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     }
 }
 
+
+#pragma mark - Private
+
+- (void)_clenLayoutWithLayout:(LWLayout *)newLayout {
+    for (LWTextStorage* textStorage in _textStorages) {
+        [textStorage removeAttachFromViewAndLayer];
+    }
+    LWLayout* layout = _layout;
+    _layout = nil;
+
+    NSArray* textStroages = _textStorages;
+    _textStorages = nil;
+
+    LWTextHightlight* hightlight = _hightlight;
+    _hightlight = nil;
+
+    NSArray* imageStorages = _imageStorages;
+    _imageStorages = nil;
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [textStroages count];
+        [hightlight class];
+        [layout class];
+        [imageStorages count];
+    });
+}
+
+
+- (void)_updateLayout {
+    [self _cleanImageContainers];
+    _imageStorages = self.layout.container.imageStorages;
+    self.setedImageContents = NO;
+
+    _textStorages = self.layout.container.textStorages;
+    self.displayed = NO;
+
+    [self _auotoUpdateImgeContainersIfNeed];
+    [self _setImageStorages];
+    [self _setNeedDisplay];
+}
+
+- (void)_cleanImageContainers {
+    for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
+        LWImageContainer* container = self.imageContainers[i];
+        [container cleanup];
+    }
+}
+
+- (void)_auotoUpdateImgeContainersIfNeed {
+    if (self.autoReuseImageContainer == YES) {
+        [self _autoReuseImageContainers];
+        [self _autoSetImageStorages];
+    }
+}
+
 - (void)_autoSetImageStorages {
     if (!self.setedImageContents) {
         for (NSInteger i = 0 ; i < _imageStorages.count; i ++) {
@@ -234,26 +227,22 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     }
 }
 
-- (void)_cleanImageContainers {
-    for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
-        LWImageContainer* container = self.imageContainers[i];
-        [container cleanup];
+- (void)_setImageStorages {
+    if (!self.autoReuseImageContainer && !self.setedImageContents) {
+        for (NSInteger i = 0; i < _imageStorages.count; i ++) {
+            LWImageStorage* imageStorage = _imageStorages[i];
+            if (self.imageContainers.count > i) {
+                LWImageContainer* container = self.imageContainers[i];
+                if (imageStorage.type == LWImageStorageWebImage) {
+                    [container delayLayoutImageStorage:imageStorage];
+                    [container setContentWithImageStorage:imageStorage];
+                }
+            }
+        }
+        self.setedImageContents = YES;
     }
 }
 
-- (void)_setImageStorages {
-    for (NSInteger i = 0; i < _imageStorages.count; i ++) {
-        LWImageStorage* imageStorage = _imageStorages[i];
-        if (self.imageContainers.count > i) {
-            LWImageContainer* container = self.imageContainers[i];
-            if (imageStorage.type == LWImageStorageWebImage) {
-                [container delayLayoutImageStorage:imageStorage];
-                [container setContentWithImageStorage:imageStorage];
-            }
-        }
-    }
-    self.setedImageContents = YES;
-}
 
 #pragma mark - Display
 - (void)_setNeedDisplay {
@@ -307,7 +296,7 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     return YES;
 }
 
-#pragma mark - Setter & Getter
+#pragma mark - Setter
 
 - (NSMutableArray *)imageContainers {
     if (_imageContainers) {
@@ -382,7 +371,7 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     BOOL found = NO;
-    
+
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWTextStorage* textStorage in _textStorages) {
@@ -412,12 +401,14 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     __block BOOL found = NO;
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
+
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (imageStorage == nil) {
             continue;
         }
         if (CGRectContainsPoint(imageStorage.frame, touchPoint)) {
             if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:touch:)]) {
+                found = YES;
                 [self.delegate lwAsyncDisplayView:self didCilickedImageStorage:imageStorage touch:touch];
             }
         }
@@ -444,10 +435,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesCancelled:touches withEvent:event];
-}
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    return [super hitTest:point withEvent:event];
 }
 
 
