@@ -96,13 +96,13 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 
 #pragma mark - Private
 - (void)_asyncDisplay {
+    LWFlag* flag = self.flag;
+    int32_t value = flag.value;
+    AsyncDisplayCancelBlock cancleBlock = ^BOOL() {
+        return value != flag.value;
+    };
     CGSize size = self.bounds.size;
     dispatch_async(GetAsyncDisplayQueue(), ^{
-        LWFlag* flag = self.flag;
-        int32_t value = flag.value;
-        AsyncDisplayCancelBlock cancleBlock = ^BOOL() {
-            return value != flag.value;
-        };
         if (cancleBlock()) {
             return ;
         }
@@ -121,6 +121,10 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (context == NULL) {
             return;
+        }
+        if (cancleBlock()) {
+            UIGraphicsEndImageContext();
+            return ;
         }
         [self.asyncDisplayDelegate asyncDisplayLayer:self displayIncontext:context size:size];
         id content = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
