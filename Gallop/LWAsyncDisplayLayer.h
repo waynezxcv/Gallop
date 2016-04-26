@@ -18,7 +18,12 @@
 //
 
 
+
 #import <QuartzCore/QuartzCore.h>
+
+
+typedef BOOL(^AsyncDisplayCancelBlock)(void);
+
 
 @class LWAsyncDisplayLayer;
 
@@ -30,7 +35,6 @@
 - (void)asyncDisplayLayer:(LWAsyncDisplayLayer *)layer
          displayIncontext:(CGContextRef)context
                      size:(CGSize)size;
-
 /**
  *  异步绘制结束
  */
@@ -44,5 +48,7 @@
 @interface LWAsyncDisplayLayer : CALayer
 
 @property (nonatomic,weak) id <LWAsyncDisplayLayerDelegate>asyncDisplayDelegate;
+
+- (void)cancelDisplay;
 
 @end

@@ -22,6 +22,7 @@
 #import <libkern/OSAtomic.h>
 #import "CALayer+WebCache.h"
 #import "CALayer+GallopAddtions.h"
+#import "LWFlag.h"
 
 
 static dispatch_queue_t GetAsyncDisplayQueue() {
@@ -51,6 +52,12 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 #undef MAX_QUEUE_COUNT
 }
 
+@interface LWAsyncDisplayLayer ()
+
+@property (nonatomic,strong,readwrite) LWFlag* flag;
+
+@end
+
 @implementation LWAsyncDisplayLayer
 
 #pragma mark - Override
@@ -64,8 +71,22 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
             scale = [UIScreen mainScreen].scale;
         });
         self.contentsScale = scale;
+        self.flag = [[LWFlag alloc] init];
     }
     return self;
+}
+
+- (void)cancelDisplay {
+    [self _cancelDisplay];
+}
+
+- (void)dealloc {
+    [self _cancelDisplay];
+}
+
+- (void)setNeedsDisplay {
+    [self _cancelDisplay];
+    [super setNeedsDisplay];
 }
 
 - (void)display {
@@ -77,6 +98,14 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
 - (void)_asyncDisplay {
     CGSize size = self.bounds.size;
     dispatch_async(GetAsyncDisplayQueue(), ^{
+        LWFlag* flag = self.flag;
+        int32_t value = flag.value;
+        AsyncDisplayCancelBlock cancleBlock = ^BOOL() {
+            return value != flag.value;
+        };
+        if (cancleBlock()) {
+            return ;
+        }
         BOOL opaque = self.opaque;
         CGFloat scale = self.contentsScale;
         if (size.width < 1 || size.height < 1) {
@@ -96,11 +125,19 @@ static dispatch_queue_t GetAsyncDisplayQueue() {
         [self.asyncDisplayDelegate asyncDisplayLayer:self displayIncontext:context size:size];
         id content = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
         UIGraphicsEndImageContext();
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (cancleBlock()) {
+                return;
+            }
             [self setContents:content];
             [self.asyncDisplayDelegate asyncDisplayLayerDidFinishDisplay];
         });
     });
 }
+
+- (void)_cancelDisplay {
+    [self.flag increase];
+}
+
 
 @end

@@ -83,9 +83,6 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage;
 - (void)layoutImageStorage:(LWImageStorage *)imageStorage;
 - (void)cleanup;
-
-
-
 - (void)delayLayoutImageStorage:(LWImageStorage *)imageStorage;
 - (void)delayCleanup;
 

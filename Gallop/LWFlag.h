@@ -23,7 +23,7 @@
 
 @interface LWFlag : NSObject
 
-@property (nonatomic,assign,readonly) int32_t value;
+@property (atomic,assign,readonly) int32_t value;
 
 - (int32_t)increase;
 

@@ -259,8 +259,13 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 
 - (void)_commitDisplay {
     [[LWRunLoopTransactions transactionsWithTarget:self
-                                          selector:@selector(setNeedRedDraw)
+                                          selector:@selector(_asyncDisplay)
                                             object:nil] commit];
+}
+
+- (void)_asyncDisplay {
+    [(LWAsyncDisplayLayer *)self.layer cancelDisplay];
+    [(LWAsyncDisplayLayer *)self.layer setNeedsDisplay];
 }
 
 - (void)setNeedRedDraw {
@@ -309,7 +314,7 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 
 #pragma mark - LWAsyncDisplayLayerDelegate
 
-- (void)asyncDisplayLayer:(LWAsyncDisplayLayer *)layer displayIncontext:(CGContextRef)context size:(CGSize)size {
+- (void)asyncDisplayLayer:(LWAsyncDisplayLayer *)layer displayIncontext:(CGContextRef)context size:(CGSize)size{
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (imageStorage.type == LWImageStorageLocalImage) {
             [imageStorage.image drawInRect:imageStorage.frame];
