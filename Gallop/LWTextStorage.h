@@ -179,12 +179,6 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 - (void)replaceTextWithImageURL:(NSURL *)URL imageSize:(CGSize)size inRange:(NSRange)range;
 
 
-
-
-
-- (void)repalceCharactersAttributesWithImageSize:(CGSize)size inRange:(NSRange)range;
-- (void)setupLocalAttarchWithImage:(UIImage *)image;
-
 #define kLWTextLinkAttributedName @"LWTextLinkAttributedName"
 
 @end

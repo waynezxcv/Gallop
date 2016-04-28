@@ -481,7 +481,8 @@ static CGFloat widthCallback(void* ref){
                      imageHeight:(CGFloat)height
                             type:(NSString *)type
                            range:(NSRange) range {
-    NSString* jsonString = [NSString stringWithFormat:@"{\"width\":\"%f\",\"height\":\"%f\",\"type\":\"%@\",\"range\":\"%@\"}",width,height,type,NSStringFromRange(range)];
+    NSString* jsonString = [NSString stringWithFormat:@"{\"width\":\"%f\",\"height\":\"%f\",\"type\":\"%@\",\"range\":\"%@\"}",
+                            width,height,type,NSStringFromRange(range)];
     return jsonString;
 }
 
