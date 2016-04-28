@@ -24,9 +24,9 @@
  *
  */
 + (void)parseHttpURLWithTextStorage:(LWTextStorage *)textStorage
-                         linkColor:(UIColor *)linkColor
-                    highlightColor:(UIColor *)higlightColor
-                    underlineStyle:(NSUnderlineStyle)underlineStyle;
+                          linkColor:(UIColor *)linkColor
+                     highlightColor:(UIColor *)higlightColor
+                     underlineStyle:(NSUnderlineStyle)underlineStyle;
 
 /**
  *  解析 @用户 并添加链接
@@ -34,9 +34,9 @@
  */
 
 + (void)parseAccountWithTextStorage:(LWTextStorage *)textStorage
-                         linkColor:(UIColor *)linkColor
-                    highlightColor:(UIColor *)higlightColor
-                    underlineStyle:(NSUnderlineStyle)underlineStyle;
+                          linkColor:(UIColor *)linkColor
+                     highlightColor:(UIColor *)higlightColor
+                     underlineStyle:(NSUnderlineStyle)underlineStyle;
 
 
 /**
@@ -44,7 +44,7 @@
  *
  */
 + (void)parseTopicWithLWTextStorage:(LWTextStorage *)textStorage
-                       linkColor:(UIColor *)linkColor
-                  highlightColor:(UIColor *)higlightColor
-                  underlineStyle:(NSUnderlineStyle)underlineStyle;
+                          linkColor:(UIColor *)linkColor
+                     highlightColor:(UIColor *)higlightColor
+                     underlineStyle:(NSUnderlineStyle)underlineStyle;
 @end

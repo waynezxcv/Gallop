@@ -29,7 +29,7 @@ static CGFloat ascentCallback(void *ref){
     NSString* callback = (__bridge NSString *)(ref);
     NSData* jsonData = [callback dataUsingEncoding:NSUTF8StringEncoding];
     NSError* err;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+    NSDictionary* dic = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];
     return [[dic objectForKey:@"height"] floatValue];
@@ -39,7 +39,7 @@ static CGFloat widthCallback(void* ref){
     NSString* callback = (__bridge NSString *)(ref);
     NSData* jsonData = [callback dataUsingEncoding:NSUTF8StringEncoding];
     NSError* err;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+    NSDictionary* dic = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];
     return [[dic objectForKey:@"width"] floatValue];
@@ -51,6 +51,8 @@ static CGFloat widthCallback(void* ref){
 @property (nonatomic,strong) NSMutableArray* localAttachs;
 @property (nonatomic,assign) NSInteger webImageCount;
 @property (nonatomic,assign) CGSize suggestSize;
+@property (nonatomic,assign) NSInteger localAttachOffset;
+@property (nonatomic,assign) NSInteger webAttachOffset;
 
 @end
 
@@ -92,6 +94,7 @@ static CGFloat widthCallback(void* ref){
         self.characterSpacing = 1.0f;
         self.underlineStyle = NSUnderlineStyleNone;
         self.widthToFit = YES;
+        self.localAttachOffset = -1;
     }
     return self;
 }
@@ -346,23 +349,72 @@ static CGFloat widthCallback(void* ref){
 
 
 #pragma mark - Add Image
-- (NSMutableAttributedString *)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range {
+
+- (void)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range {
     if (_attributedText == nil || _attributedText.length == 0) {
-        return nil;
+        return;
     }
     [self _resetFrameRef];
     CGFloat width = size.width;
     CGFloat height = size.height;
     NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width
-                                                                                    imageHeight:height]];
+                                                                                    imageHeight:height
+                                                                                           type:@"local"
+                                                                                          range:range]];
     [_attributedText replaceCharactersInRange:range withAttributedString:placeholder];
     [self creatCTFrameRef];
-    LWTextAttach* attach = [[LWTextAttach alloc] init];
-    attach.image = image;
-    attach.type = LWTextAttachLocalImage;
-    [self _setLocalImageAttachPositionWithAttach:attach];
-    [self.localAttachs addObject:attach];
-    return _attributedText;
+    //LocalAttachPosition
+    NSArray* lines = (NSArray *)CTFrameGetLines(self.CTFrame);
+    NSUInteger lineCount = [lines count];
+    CGPoint lineOrigins[lineCount];
+    CTFrameGetLineOrigins(self.CTFrame, CFRangeMake(0, 0), lineOrigins);
+    for (int i = 0; i < lineCount; i++) {
+        CTLineRef line = (__bridge CTLineRef)lines[i];
+        NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
+        for (id runObj in runObjArray) {
+            CTRunRef run = (__bridge CTRunRef)runObj;
+            NSDictionary* runAttributes = (NSDictionary *)CTRunGetAttributes(run);
+            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes
+                                                                    valueForKey:(id)kCTRunDelegateAttributeName];
+            if (!delegate) {
+                continue;
+            }
+            id data = CTRunDelegateGetRefCon(delegate);
+            NSData* jsonData = [data dataUsingEncoding:NSUTF8StringEncoding];
+            NSError* err;
+            NSDictionary* dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                options:NSJSONReadingMutableContainers
+                                                                  error:&err];
+            if (![[dic objectForKey:@"type"] isEqualToString:@"local"]) {
+                continue;
+            }
+            CGRect runBounds;
+            CGFloat ascent;
+            CGFloat descent;
+            runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
+            runBounds.size.height = ascent + descent;
+            CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
+            runBounds.origin.x = lineOrigins[i].x + xOffset;
+            runBounds.origin.y = lineOrigins[i].y - descent;
+            CGPathRef pathRef = CTFrameGetPath(self.CTFrame);
+            CGRect colRect = CGPathGetBoundingBox(pathRef);
+            CGRect delegateRect = CGRectMake(runBounds.origin.x + colRect.origin.x,
+                                             runBounds.origin.y + colRect.origin.y,
+                                             runBounds.size.width,
+                                             runBounds.size.height);
+            NSRange delegateRange = NSRangeFromString(dic[@"range"]);
+            if (delegateRange.location != range.location || delegateRange.length != range.length) {
+                continue;
+            }
+            LWTextAttach* attach = [[LWTextAttach alloc] init];
+            attach.range = range;
+            attach.image = image;
+            attach.type = LWTextAttachLocalImage;
+            attach.imagePosition = delegateRect;
+            [self.localAttachs addObject:attach];
+            self.localAttachOffset = range.location;
+        }
+    }
 }
 
 - (void)replaceTextWithImageURL:(NSURL *)URL imageSize:(CGSize)size inRange:(NSRange)range {
@@ -373,71 +425,16 @@ static CGFloat widthCallback(void* ref){
     CGFloat width = size.width;
     CGFloat height = size.height;
     NSAttributedString* placeholder = [self _placeHolderStringWithJson:[self _jsonWithImageWith:width
-                                                                                    imageHeight:height]];
+                                                                                    imageHeight:height
+                                                                                           type:@"web"
+                                                                                          range:range]];
     [_attributedText replaceCharactersInRange:range withAttributedString:placeholder];
     [self creatCTFrameRef];
-    LWTextAttach* attach = [[LWTextAttach alloc] init];
-    attach.content = [CALayer layer];
-    attach.type = LWTextAttachWebImage;
-    attach.URL = URL;
-    [self _setWebImageAttachPositionWithAttach:attach
-                                       ctFrame:self.CTFrame
-                                         range:NSMakeRange(range.location, 1)];
-    [self.webAttachs addObject:attach];
-}
-
-- (void)_setLocalImageAttachPositionWithAttach:(LWTextAttach *)attach {
-    NSArray* lines = (NSArray *)CTFrameGetLines(self.CTFrame);
-    NSUInteger lineCount = [lines count];
-    CGPoint lineOrigins[lineCount];
-    CTFrameGetLineOrigins(self.CTFrame, CFRangeMake(0, 0), lineOrigins);
-    for (int i = 0; i < lineCount; i++) {
-        if (attach == nil) {
-            break;
-        }
-        CTLineRef line = (__bridge CTLineRef)lines[i];
-        NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
-        for (id runObj in runObjArray) {
-            CTRunRef run = (__bridge CTRunRef)runObj;
-            NSDictionary* runAttributes = (NSDictionary *)CTRunGetAttributes(run);
-            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes
-                                                                    valueForKey:(id)kCTRunDelegateAttributeName];
-            if (delegate == nil) {
-                continue;
-            }
-            CGRect runBounds;
-            CGFloat ascent;
-            CGFloat descent;
-            runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
-            runBounds.size.height = ascent + descent;
-
-            CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
-            runBounds.origin.x = lineOrigins[i].x + xOffset;
-            runBounds.origin.y = lineOrigins[i].y - descent;
-
-            CGPathRef pathRef = CTFrameGetPath(self.CTFrame);
-            CGRect colRect = CGPathGetBoundingBox(pathRef);
-            CGRect delegateRect = CGRectMake(runBounds.origin.x + colRect.origin.x,
-                                             runBounds.origin.y + colRect.origin.y,
-                                             runBounds.size.width,
-                                             runBounds.size.height);
-            if (attach.type == LWTextAttachLocalImage) {
-                attach.imagePosition = delegateRect;
-                break;
-            }
-        }
-    }
-}
-
-- (void)_setWebImageAttachPositionWithAttach:(LWTextAttach *)attach
-                                     ctFrame:(CTFrameRef)frameRef
-                                       range:(NSRange)selectRange {
     CGPathRef path = CTFrameGetPath(self.CTFrame);
     CGRect boundsRect = CGPathGetBoundingBox(path);
-
-    NSInteger selectionStartPosition = selectRange.location;
-    NSInteger selectionEndPosition = NSMaxRange(selectRange);
-    CFArrayRef lines = CTFrameGetLines(frameRef);
+    NSInteger selectionStartPosition = range.location;
+    NSInteger selectionEndPosition = NSMaxRange(range);
+    CFArrayRef lines = CTFrameGetLines(self.CTFrame);
     if (!lines) {
         return;
     }
@@ -446,7 +443,7 @@ static CGFloat widthCallback(void* ref){
     CGAffineTransform transform = CGAffineTransformIdentity;
     transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
     transform = CGAffineTransformScale(transform, 1.f, -1.f);
-    CTFrameGetLineOrigins(frameRef, CFRangeMake(0,0), origins);
+    CTFrameGetLineOrigins(self.CTFrame,CFRangeMake(0,0), origins);
     for (int i = 0; i < count; i++) {
         CGPoint linePoint = origins[i];
         CTLineRef line = CFArrayGetValueAtIndex(lines, i);
@@ -460,12 +457,15 @@ static CGFloat widthCallback(void* ref){
                                        rect.origin.y + boundsRect.origin.y,
                                        rect.size.width,
                                        rect.size.height);
-        if (attach.type == LWTextAttachWebImage) {
-            attach.imagePosition = adjustRect;
-            break;
-        }
+        LWTextAttach* attach = [[LWTextAttach alloc] init];
+        attach.content = [CALayer layer];
+        attach.type = LWTextAttachWebImage;
+        attach.URL = URL;
+        attach.imagePosition = adjustRect;
+        [self.webAttachs addObject:attach];
     }
 }
+
 
 - (CGRect)_getLineBounds:(CTLineRef)line point:(CGPoint)point {
     CGFloat ascent = 0.0f;
@@ -478,8 +478,10 @@ static CGFloat widthCallback(void* ref){
 
 
 - (NSString *)_jsonWithImageWith:(CGFloat)width
-                     imageHeight:(CGFloat)height {
-    NSString* jsonString = [NSString stringWithFormat:@"{\"width\":\"%f\",\"height\":\"%f\"}",width,height];
+                     imageHeight:(CGFloat)height
+                            type:(NSString *)type
+                           range:(NSRange) range {
+    NSString* jsonString = [NSString stringWithFormat:@"{\"width\":\"%f\",\"height\":\"%f\",\"type\":\"%@\",\"range\":\"%@\"}",width,height,type,NSStringFromRange(range)];
     return jsonString;
 }
 
@@ -499,8 +501,6 @@ static CGFloat widthCallback(void* ref){
     CFRelease(delegate);
     return space;
 }
-
-
 
 - (void)removeAttachFromViewAndLayer {
     if (self.webAttachs.count == 0) {

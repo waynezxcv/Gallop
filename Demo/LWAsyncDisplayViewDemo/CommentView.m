@@ -162,7 +162,7 @@
         return _emojiButton;
     }
     _emojiButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_emojiButton setImage:[UIImage imageNamed:@"face"] forState:UIControlStateNormal];
+    [_emojiButton setImage:[UIImage imageNamed:@"[face]"] forState:UIControlStateNormal];
     return _emojiButton;
 }
 

@@ -8,7 +8,6 @@
 
 #import "LWTextParser.h"
 
-
 #define URLRegular @""
 #define EmojiRegular @"\\[[a-zA-Z0-9\\u4e00-\\u9fa5]+\\]"
 #define AccountRegular @"@[\u4e00-\u9fa5a-zA-Z0-9_-]{2,30}"
@@ -64,21 +63,22 @@ static inline NSRegularExpression* TopicRegularExpression() {
 @implementation LWTextParser
 
 + (void)parseEmojiWithTextStorage:(LWTextStorage *)textStorage {
-    NSString* text = [textStorage.text copy];
+    NSString* text = textStorage.text;
     NSArray* resultArray = [EmojiRegularExpression() matchesInString:text
                                                              options:0
                                                                range:NSMakeRange(0,text.length)];
-    
-    for (NSInteger i = resultArray.count - 1; i >= 0 ; i --) {
+    for (NSInteger i = resultArray.count - 1; i >= 0; i --) {
         NSTextCheckingResult* match = [resultArray objectAtIndex:i];
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         if (textStorage.text.length >= range.location + range.length) {
-            UIImage* image = [UIImage imageNamed:content] ;
-            text = [textStorage replaceTextWithImage:image imageSize:image.size inRange:range].string;
+            [textStorage replaceTextWithImage:[UIImage imageNamed:content]
+                                    imageSize:CGSizeMake(14, 14)
+                                      inRange:range];
         }
     }
 }
+
 
 + (void)parseHttpURLWithTextStorage:(LWTextStorage *)textStorage
                           linkColor:(UIColor *)linkColor
@@ -104,7 +104,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
                           linkColor:(UIColor *)linkColor
                      highlightColor:(UIColor *)higlightColor
                      underlineStyle:(NSUnderlineStyle)underlineStyle {
-    
+
     NSString* text = textStorage.text;
     NSArray* resultArray = [AccountRegularExpression() matchesInString:text
                                                                options:0
@@ -125,7 +125,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
                           linkColor:(UIColor *)linkColor
                      highlightColor:(UIColor *)higlightColor
                      underlineStyle:(NSUnderlineStyle)underlineStyle {
-    
+
     NSString* text = textStorage.text;
     NSArray* resultArray = [TopicRegularExpression() matchesInString:text
                                                              options:0

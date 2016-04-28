@@ -170,7 +170,7 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
  *  用本地图片替换掉指定位置的文字
  *
  */
-- (NSMutableAttributedString *)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range;
+- (void)replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range;
 
 /**
  *  用网络图片替换掉指定位置的文字
@@ -179,6 +179,11 @@ typedef NS_ENUM(NSUInteger, LWVerticalAlignment){
 - (void)replaceTextWithImageURL:(NSURL *)URL imageSize:(CGSize)size inRange:(NSRange)range;
 
 
+
+
+
+- (void)repalceCharactersAttributesWithImageSize:(CGSize)size inRange:(NSRange)range;
+- (void)setupLocalAttarchWithImage:(UIImage *)image;
 
 #define kLWTextLinkAttributedName @"LWTextLinkAttributedName"
 

@@ -51,8 +51,7 @@
         nameTextStorage.textAlignment = NSTextAlignmentLeft;
         nameTextStorage.linespace = 2.0f;
         nameTextStorage.textColor = RGB(40, 40, 40, 1);
-        
-        
+
         //正文内容模型 contentTextStorage
         LWTextStorage* contentTextStorage = [[LWTextStorage alloc] init];
         contentTextStorage.text = statusModel.content;
@@ -77,7 +76,7 @@
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)
                                    underlineStyle:NSUnderlineStyleNone];
-        
+
         //发布的图片模型 imgsStorage
         NSInteger imageCount = [statusModel.imgs count];
         NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
@@ -120,8 +119,7 @@
         dateTextStorage.text = [dateFormatter stringFromDate:statusModel.date];
         dateTextStorage.font = [UIFont systemFontOfSize:13.0f];
         dateTextStorage.textColor = [UIColor grayColor];
-        
-        
+
         /***********************************  设置约束 自动布局 *********************************************/
         [LWConstraintManager lw_makeConstraint:dateTextStorage.constraint.leftEquelToStorage(contentTextStorage).topMarginToStorage(lastImageStorage,10)];
         
@@ -130,7 +128,7 @@
         LWImageStorage* menuStorage = [[LWImageStorage alloc] init];
         menuStorage.type = LWImageStorageLocalImage;
         menuStorage.frame = menuPosition;
-        menuStorage.image = [UIImage imageNamed:@"menu"];
+        menuStorage.image = [UIImage imageNamed:@"[menu]"];
         
         //comment
         //生成评论背景Storage

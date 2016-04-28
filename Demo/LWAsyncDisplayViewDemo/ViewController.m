@@ -66,7 +66,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidAppearNotifications:)
                                                  name:UIKeyboardWillShowNotification object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidHidenNotifications:)
                                                  name:UIKeyboardWillHideNotification object:nil];
@@ -77,7 +77,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidHideNotification
                                                   object:nil];
@@ -288,12 +288,10 @@ const CGFloat kRefreshBoundary = 170.0f;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if (self.needRefresh) {
             [self.dataSource removeAllObjects];
-            //复制一下，让数据更多
             NSMutableArray* fakes = [[NSMutableArray alloc] init];
             [fakes addObjectsFromArray:self.fakeDatasource];
             [fakes addObjectsFromArray:self.fakeDatasource];
             [fakes addObjectsFromArray:self.fakeDatasource];
-            
             for (NSInteger i = 0; i < fakes.count; i ++) {
                 StatusModel* statusModel = [StatusModel modelWithJSON:fakes[i]];
                 LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
@@ -397,7 +395,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"哈哈哈哈"},
                                            @{@"from":@"SIZE潮流生活",
                                              @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[心]和点击链接#Gallop#"}]},
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接#Gallop#"}]},
                         @{@"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
                           @"content":@"出国留学的儿子为思念自己的家人们寄来一个用自己照片做成的人形立牌",
