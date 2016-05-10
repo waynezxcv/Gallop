@@ -116,6 +116,11 @@ static CGFloat widthCallback(void* ref){
     CFRelease(textPath);
 }
 
+- (void)_creatCTFrameRef {
+    
+}
+
+
 
 - (CGSize)suggestSize {
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedText);
@@ -131,10 +136,10 @@ static CGFloat widthCallback(void* ref){
 
 
 #pragma mark - Draw
-- (void)drawInContext:(CGContextRef)context layer:(CALayer *)layer {
+- (void)drawInContext:(CGContextRef)context {
     [self _drawTextInContent:context];
     [self _drawLocalAttachsInContext:context];
-    [self _drawWebAttachsInLayer:layer];
+//    [self _drawWebAttachsInLayer:layer];
 }
 
 - (void)_drawTextInContent:(CGContextRef)context {
@@ -167,28 +172,28 @@ static CGFloat widthCallback(void* ref){
     }
 }
 
-- (void)_drawWebAttachsInLayer:(CALayer *)layer {
-    if (self.webAttachs.count == 0) {
-        return;
-    }
-    for (NSInteger i = 0; i < self.webAttachs.count; i ++) {
-        @autoreleasepool {
-            LWTextAttach* attach = self.webAttachs[i];
-            id content = attach.content;
-            if (!content) {
-                return;
-            }
-            if ([content isKindOfClass:[CALayer class]]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    CALayer* subLayer = (CALayer *)content;
-                    subLayer.frame = attach.imagePosition;
-                    [layer addSublayer:subLayer];
-                    [subLayer sd_setImageWithURL:attach.URL];
-                });
-            }
-        }
-    }
-}
+//- (void)_drawWebAttachsInLayer:(CALayer *)layer {
+//    if (self.webAttachs.count == 0) {
+//        return;
+//    }
+//    for (NSInteger i = 0; i < self.webAttachs.count; i ++) {
+//        @autoreleasepool {
+//            LWTextAttach* attach = self.webAttachs[i];
+//            id content = attach.content;
+//            if (!content) {
+//                return;
+//            }
+//            if ([content isKindOfClass:[CALayer class]]) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    CALayer* subLayer = (CALayer *)content;
+//                    subLayer.frame = attach.imagePosition;
+//                    [layer addSublayer:subLayer];
+//                    [subLayer sd_setImageWithURL:attach.URL];
+//                });
+//            }
+//        }
+//    }
+//}
 
 
 #pragma mark - Add Link
@@ -494,6 +499,7 @@ static CGFloat widthCallback(void* ref){
     callbacks.getDescent = descentCallback;
     callbacks.getWidth = widthCallback;
     CTRunDelegateRef delegate = CTRunDelegateCreate(&callbacks, (__bridge void *)(json));
+    
     unichar objectReplacementChar = 0xFFFC;
     NSString* content = [NSString stringWithCharacters:&objectReplacementChar length:1];
     NSMutableAttributedString* space = [[NSMutableAttributedString alloc] initWithString:content];

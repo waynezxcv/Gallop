@@ -1,32 +1,38 @@
-//
-//  The MIT License (MIT)
-//  Copyright (c) 2016 Wayne Liu <liuweiself@126.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-//　　The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-////
-//  LWLabel.m
-//  LWAsyncLayerDemo
-//
-//  Created by 刘微 on 16/2/1.
-//  Copyright © 2016年 Wayne Liu. All rights reserved.
-//  https://github.com/waynezxcv/LWAsyncDisplayView
-//  See LICENSE for this sample’s licensing information
-//
+/*
+ https://github.com/waynezxcv/Gallop
+ 
+ Copyright (c) 2016 waynezxcv <liuweiself@126.com>
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
+
 
 #import "LWAsyncDisplayView.h"
-#import "LWAsyncDisplayLayer.h"
-#import "LWRunLoopTransactions.h"
 #import "CALayer+WebCache.h"
 #import "CALayer+GallopAddtions.h"
 #import "NSObject+SwizzleMethod.h"
+#import "UIView+AsyncDisplay.h"
 
 
 typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAttributes);
 
-@interface LWAsyncDisplayView ()<LWAsyncDisplayLayerDelegate>
+@interface LWAsyncDisplayView ()
 
 @property (nonatomic,strong) NSMutableArray* imageContainers;
 
@@ -60,14 +66,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 }
 
 #pragma mark - Initialization
-/**
- *  “default is [CALayer class].
- *  Used when creating the underlying layer for the view.”
- *
- */
-+ (Class)layerClass {
-    return [LWAsyncDisplayLayer class];
-}
 
 - (id)initWithmaxImageStorageCount:(NSInteger)count {
     self = [super init];
@@ -122,7 +120,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 - (void)setup {
     self.layer.opaque = NO;
     self.layer.contentsScale = [UIScreen mainScreen].scale;
-    ((LWAsyncDisplayLayer *)self.layer).asyncDisplayDelegate = self;
     _showingHighlight = NO;
     _cleanedImageContainer = YES;
     _setedImageContents = NO;
@@ -258,18 +255,43 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 }
 
 - (void)_commitDisplay {
-    [[LWRunLoopTransactions transactionsWithTarget:self
-                                          selector:@selector(_asyncDisplay)
-                                            object:nil] commit];
-}
-
-- (void)_asyncDisplay {
-    [(LWAsyncDisplayLayer *)self.layer cancelDisplay];
-    [(LWAsyncDisplayLayer *)self.layer setNeedsDisplay];
+    [self lw_addDisplayTransactionsWithasyncDisplay:^(CGContextRef context, CGSize size) {
+        [self _drawStoragesInContext:context];
+    } complete:^(id displayContent, BOOL isFinished) {
+        if (isFinished) {
+            _displayed = YES;
+        }
+    }];
 }
 
 - (void)setNeedRedDraw {
-    [self.layer setNeedsDisplay];
+    [self lw_asyncDisplay:^(CGContextRef context, CGSize size) {
+        [self _drawStoragesInContext:context];
+    } complete:^(id displayContent, BOOL isFinished) {
+        if (isFinished) {
+            _displayed = YES;
+        }
+    }];
+}
+
+- (void)_drawStoragesInContext:(CGContextRef)context {
+    for (LWImageStorage* imageStorage in _imageStorages) {
+        if (imageStorage.type == LWImageStorageLocalImage) {
+            [imageStorage.image drawInRect:imageStorage.frame];
+        }
+    }
+    if (_showingHighlight && _hightlight) {
+        for (NSString* rectString in _hightlight.positions) {
+            CGRect rect = CGRectFromString(rectString);
+            UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:rect
+                                                                  cornerRadius:2.0f];
+            [_hightlight.hightlightColor setFill];
+            [beizerPath fill];
+        }
+    }
+    for (LWTextStorage* textStorage in _textStorages) {
+        [textStorage drawInContext:context];
+    }
 }
 
 #pragma mark - RestImageContainers
@@ -311,36 +333,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     _imageContainers = [[NSMutableArray alloc] init];
     return _imageContainers;
 }
-
-#pragma mark - LWAsyncDisplayLayerDelegate
-
-- (void)asyncDisplayLayer:(LWAsyncDisplayLayer *)layer displayIncontext:(CGContextRef)context size:(CGSize)size{
-    for (LWImageStorage* imageStorage in _imageStorages) {
-        if (imageStorage.type == LWImageStorageLocalImage) {
-            [imageStorage.image drawInRect:imageStorage.frame];
-        }
-    }
-    if (_showingHighlight && _hightlight) {
-        for (NSString* rectString in _hightlight.positions) {
-            CGRect rect = CGRectFromString(rectString);
-            UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:2.0f];
-            [_hightlight.hightlightColor setFill];
-            [beizerPath fill];
-        }
-    }
-    for (LWTextStorage* textStorage in _textStorages) {
-        [textStorage drawInContext:context layer:layer];
-    }
-    if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:)] &&
-        [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
-        [self.delegate extraAsyncDisplayIncontext:context size:size];
-    }
-}
-
-- (void)asyncDisplayLayerDidFinishDisplay {
-    _displayed = YES;
-}
-
 
 #pragma mark - Touch
 
