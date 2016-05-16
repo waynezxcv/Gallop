@@ -61,13 +61,10 @@
  */
 + (LWTextLayout *)lw_layoutWithContainer:(LWTextContainer *)container text:(NSAttributedString *)text;
 
-
 - (void)drawIncontext:(CGContextRef)context
                  size:(CGSize)size
                 point:(CGPoint)point
         containerView:(UIView *)containerView
        containerLayer:(CALayer *)containerLayer;
-
-
 
 @end

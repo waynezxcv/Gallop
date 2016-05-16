@@ -7,7 +7,6 @@
 //
 
 #import "RootViewController.h"
-#import "ViewController.h"
 #import "CoreTextDemoViewController.h"
 
 @interface RootViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -56,8 +55,7 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (indexPath.row == 1) {
-        ViewController* vc = [[ViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
+
     }
 }
 

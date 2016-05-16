@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,9 +30,12 @@
 
 @implementation NSMutableAttributedString(Gallop)
 
-
 - (void)setTextColor:(UIColor *)textColor range:(NSRange)range {
     [self setAttribute:NSFontAttributeName value:textColor range:range];
+}
+
+- (void)settextBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range {
+
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range {
@@ -43,25 +46,29 @@
     [self setAttribute:NSFontAttributeName value:font range:range];
 }
 
-//- (void)setLineSpacing:(CGFloat)lineSpacing range:(NSRange)range {
-//    [self setAttribute:NSFontAttributeName value:font range:range];
-//}
-//
-//- (void)setCharacterSpacing:(unichar)characterSpacing range:(NSRange)range {
-//    [self setAttribute:NSFontAttributeName value:font range:range];
-//}
-//
-//- (void)setTextAlignment:(NSTextAlignment)textAlignment range:(NSRange)range {
-//    [self setAttribute:NSFontAttributeName value:font range:range];
-//}
-//
-//- (void)setUnderlineStyle:(NSUnderlineStyle)underlineStyle range:(NSRange)range {
-//    [self setAttribute:NSFontAttributeName value:font range:range];
-//}
-//
-//- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode range:(NSRange)range {
-//    [self setAttribute:NSFontAttributeName value:font range:range];
-//}
+- (void)setCharacterSpacing:(unichar)characterSpacing range:(NSRange)range {
+    CFNumberRef charSpacingNum =  CFNumberCreate(kCFAllocatorDefault,kCFNumberSInt8Type,&characterSpacing);
+    if (charSpacingNum != nil) {
+        [self setAttribute:(NSString *)kCTKernAttributeName value:(__bridge id)charSpacingNum range:range];
+        CFRelease(charSpacingNum);
+    }
+}
+
+- (void)setUnderlineStyle:(NSUnderlineStyle)underlineStyle underlineColor:(UIColor *)underlineColor range:(NSRange)range {
+    [self setAttribute:NSUnderlineColorAttributeName value:underlineColor range:range];
+    [self setAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:(underlineStyle)] range:range];
+}
+
+- (void)setLineSpacing:(CGFloat)lineSpacing range:(NSRange)range {
+
+}
+
+- (void)setTextAlignment:(NSTextAlignment)textAlignment range:(NSRange)range {
+}
+
+- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode range:(NSRange)range {
+
+}
 
 - (void)addLinkWithData:(id)data range:(NSRange)range linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor {
     LWTextHighlight* highlight = [[LWTextHighlight alloc] init];
@@ -69,10 +76,8 @@
     highlight.linkColor = linkColor;
     highlight.content = data;
     highlight.range = NSMakeRange(range.location, range.length);
-    
     [self setAttribute:LWTextLinkAttributedName value:highlight range:range];
     [self setAttribute:NSForegroundColorAttributeName value:linkColor range:range];
-    
 }
 
 + (NSMutableAttributedString *)lw_textAttachmentStringWithContent:(id)content
@@ -83,12 +88,11 @@
     unichar objectReplacementChar = 0xFFFC;
     NSString* contentString = [NSString stringWithCharacters:&objectReplacementChar length:1];
     NSMutableAttributedString* space = [[NSMutableAttributedString alloc] initWithString:contentString];
-    
+
     LWTextAttachment* attachment = [[LWTextAttachment alloc] init];
     attachment.content = content;
     attachment.contentMode = contentMode;
     [space addAttribute:LWTextAttachmentAttributeName value:attachment range:NSMakeRange(0, space.length)];
-    
     LWTextRunDelegate* delegate = [[LWTextRunDelegate alloc] init];
     delegate.width = width;
     delegate.ascent = ascent;
@@ -111,30 +115,5 @@
 - (void)removeAttributesInRange:(NSRange)range {
     [self setAttributes:nil range:range];
 }
-
-
-#define ParagraphStyleSet(_attr_) \
-[self enumerateAttribute:NSParagraphStyleAttributeName \
-inRange:range \
-options:kNilOptions \
-usingBlock: ^(NSParagraphStyle *value, NSRange subRange, BOOL *stop) { \
-NSMutableParagraphStyle *style = nil; \
-if (value) { \
-if (CFGetTypeID((__bridge CFTypeRef)(value)) == CTParagraphStyleGetTypeID()) { \
-value = [NSParagraphStyle styleWithCTStyle:(__bridge CTParagraphStyleRef)(value)]; \
-} \
-if (value. _attr_ == _attr_) return; \
-if ([value isKindOfClass:[NSMutableParagraphStyle class]]) { \
-style = (id)value; \
-} else { \
-style = value.mutableCopy; \
-} \
-} else { \
-if ([NSParagraphStyle defaultParagraphStyle]. _attr_ == _attr_) return; \
-style = [NSParagraphStyle defaultParagraphStyle].mutableCopy; \
-} \
-style. _attr_ = _attr_; \
-[self setParagraphStyle:style range:subRange]; \
-}];
 
 @end

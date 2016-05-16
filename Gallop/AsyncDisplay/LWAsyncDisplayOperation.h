@@ -24,10 +24,8 @@
 
 #import <UIKit/UIKit.h>
 
-
 typedef void(^LWAsyncDisplayBlock)(CGContextRef context,CGSize size);
 typedef void(^LWAsyncDisplayCompleteBlock)(id displayContent,BOOL isFinished);
-
 
 @interface LWAsyncDisplayOperation : NSOperation
 
@@ -37,6 +35,4 @@ typedef void(^LWAsyncDisplayCompleteBlock)(id displayContent,BOOL isFinished);
                                    contentsScale:(CGFloat)contentsScale
                                     asyncDisplay:(LWAsyncDisplayBlock)display
                                       completion:(LWAsyncDisplayCompleteBlock)completion;
-
-
 @end

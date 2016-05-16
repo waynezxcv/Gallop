@@ -88,7 +88,6 @@
     }
 }
 
-
 #pragma mark - Setter
 //** 设置CTLine，并计算出其他相关属性的值 **//
 - (void)setCTLine:(CTLineRef)CTLine {
@@ -227,6 +226,5 @@
 - (CGFloat)right {
     return CGRectGetMaxX(self.frame);
 }
-
 
 @end

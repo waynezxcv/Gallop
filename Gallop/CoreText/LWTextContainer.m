@@ -24,7 +24,6 @@
 
 #import "LWTextContainer.h"
 
-
 @interface LWTextContainer ()
 
 @property (nonatomic,assign) CGSize size;
@@ -32,7 +31,6 @@
 @property (nonatomic,assign) UIEdgeInsets edgeInsets;
 
 @end
-
 
 @implementation LWTextContainer{
     dispatch_semaphore_t _lock;
@@ -66,12 +64,6 @@
     return textContainer;
 }
 
-+ (id)lw_textContainerWithPath:(UIBezierPath *)path {
-    LWTextContainer* textContainer = [[LWTextContainer alloc] init];
-    textContainer.path = path;
-    return textContainer;
-}
-
 #pragma mark - Getter
 
 - (CGFloat)pathLineWidth {
@@ -80,6 +72,5 @@
     dispatch_semaphore_signal(_lock);
     return width;
 }
-
 
 @end

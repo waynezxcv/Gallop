@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,6 +25,7 @@
 
 #import "LWTextLayout.h"
 #import "LWTextLine.h"
+#import "GallopUtils.h"
 
 
 @interface LWTextLayout ()
@@ -48,7 +49,6 @@
 @end
 
 
-
 @implementation LWTextLayout
 
 #pragma mark - Init
@@ -59,13 +59,17 @@
     }
     NSMutableAttributedString* mutableAtrributedText = text.mutableCopy;
     //******* cgPath、cgPathBox *****//
-    CGMutablePathRef cgPath = CGPathCreateMutableCopy(container.path.CGPath);//UIKit坐标系
+    CGPathRef cgPath = container.path.CGPath;//UIKit坐标系
     CGRect cgPathBox = CGPathGetPathBoundingBox(cgPath);//UIKit坐标系
     //******* ctframeSetter、ctFrame *****//
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFTypeRef)mutableAtrributedText);
-    CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,CFRangeMake(0, text.length),NULL,CGSizeMake(cgPathBox.size.width, CGFLOAT_MAX),NULL);
+    CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,CFRangeMake(0,text.length),NULL,CGSizeMake(cgPathBox.size.width, cgPathBox.size.height),NULL);
+    cgPathBox = CGRectMake(cgPathBox.origin.x, cgPathBox.origin.y,cgPathBox.size.width,suggestSize.height);
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, cgPathBox);
+    cgPath = CGPathCreateMutableCopy(path);
+    CFRelease(path);
     CTFrameRef ctFrame = CTFramesetterCreateFrame(ctFrameSetter,CFRangeMake(0, mutableAtrributedText.length),cgPath,NULL);
-    
     //******* LWTextLine *****//
     NSInteger rowIndex = -1;
     NSUInteger rowCount = 0;
@@ -145,6 +149,12 @@
             textBoundingRect = CGRectUnion(textBoundingRect,rect);
         }
     }
+    CFRelease(cgPath);
+    cgPathBox = CGRectMake(cgPathBox.origin.x - container.edgeInsets.left,
+                           cgPathBox.origin.y - container.edgeInsets.top,
+                           cgPathBox.size.width + container.edgeInsets.left + container.edgeInsets.right,
+                           cgPathBox.size.height + container.edgeInsets.top + container.edgeInsets.bottom);
+    cgPath = [UIBezierPath bezierPathWithRect:cgPathBox].CGPath;
     LWTextLayout* layout = [[self alloc] init];
     layout.container = container;
     layout.text = mutableAtrributedText;
@@ -181,7 +191,109 @@
     return layout;
 }
 
+- (void)dealloc {
+    if (self.ctFrame) {
+        CFRelease(self.ctFrame);
+    }
+    if (self.ctFrameSetter) {
+        CFRelease(self.ctFrameSetter);
+    }
+}
 
+#pragma mark - Draw
+- (void)drawIncontext:(CGContextRef)context
+                 size:(CGSize)size
+                point:(CGPoint)point
+        containerView:(UIView *)containerView
+       containerLayer:(CALayer *)containerLayer {
+    [self _drawTextInContext:context textLayout:self size:size point:point];
+    [self _drawAttachmentsIncontext:context textLayou:self size:size point:point containerView:containerView containerLayer:containerLayer];
+}
+
+- (void)_drawTextInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
+
+    CGContextAddPath(context,textLayout.cgPath);
+    CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
+    CGContextFillPath(context);
+
+    CGContextAddRect(context, textLayout.textBoundingRect);
+    CGContextSetFillColorWithColor(context, [UIColor greenColor].CGColor);
+    CGContextFillPath(context);
+
+    CGContextSaveGState(context);
+    CGContextTranslateCTM(context, point.x, point.y);
+    CGContextTranslateCTM(context, 0, size.height);
+    CGContextScaleCTM(context, 1, -1);
+
+    NSArray* lines = textLayout.linesArray;
+    for (NSInteger i = 0; i < lines.count; i ++ ) {
+        LWTextLine* line = lines[i];
+        CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+        CGContextSetTextPosition(context, line.lineOrigin.x ,size.height - line.lineOrigin.y);
+        CFArrayRef runs = CTLineGetGlyphRuns(line.CTLine);
+        for (NSUInteger j = 0; j < CFArrayGetCount(runs);j ++) {
+            CTRunRef run = CFArrayGetValueAtIndex(runs, j);
+            CTRunDraw(run, context, CFRangeMake(0, 0));
+        }
+    }
+    CGContextRestoreGState(context);
+}
+
+- (void)_drawAttachmentsIncontext:(CGContextRef)context
+                        textLayou:(LWTextLayout *)textLayout
+                             size:(CGSize)size
+                            point:(CGPoint)point
+                    containerView:(UIView *)containerView
+                   containerLayer:(CALayer *)containerLayer {
+
+    for (NSUInteger i = 0; i < textLayout.attachments.count; i++) {
+        LWTextAttachment* attachment = textLayout.attachments[i];
+        if (!attachment.content) {
+            continue;
+        }
+        UIImage* image = nil;
+        UIView* view = nil;
+        CALayer* layer = nil;
+        if ([attachment.content isKindOfClass:[UIImage class]]) {
+            image = attachment.content;
+        } else if ([attachment.content isKindOfClass:[UIView class]]) {
+            view = attachment.content;
+        } else if ([attachment.content isKindOfClass:[CALayer class]]) {
+            layer = attachment.content;
+        }
+        if ((!image && !view && !layer) || (!image && !view && !layer) ||
+            (image && !context) || (view && !containerView)
+            || (layer && !containerLayer)) {
+            continue;
+        }
+        CGSize asize = image ? image.size : view ? view.frame.size : layer.frame.size;
+        CGRect rect = ((NSValue *)textLayout.attachmentRects[i]).CGRectValue;
+        rect = UIEdgeInsetsInsetRect(rect,attachment.contentEdgeInsets);
+        rect = LWCGRectFitWithContentMode(rect, asize, attachment.contentMode);
+        rect = CGRectPixelRound(rect);
+        rect = CGRectStandardize(rect);
+        rect.origin.x += point.x;
+        rect.origin.y += point.y;
+        if (image) {
+            CGImageRef ref = image.CGImage;
+            if (ref) {
+                CGContextSaveGState(context);
+                CGContextTranslateCTM(context, 0,CGRectGetMaxY(rect) + CGRectGetMinY(rect));
+                CGContextScaleCTM(context, 1, -1);
+                CGContextDrawImage(context, rect, ref);
+                CGContextRestoreGState(context);
+            }
+        } else if (view) {
+            view.frame = rect;
+            [containerView addSubview:view];
+        } else if (layer) {
+            layer.frame = rect;
+            [containerLayer addSublayer:layer];
+        }
+    }
+}
+
+#pragma mark - Private
 /**
  *  获取LWTextHightlight
  *
@@ -264,109 +376,6 @@
 
 + (BOOL)_isPosition:(NSInteger)position inRange:(CFRange)range {
     return (position >= range.location && position < range.location + range.length);
-}
-
-
-- (void)dealloc {
-    CFRelease(self.ctFrame);
-    CFRelease(self.ctFrameSetter);
-    CFRelease(self.cgPath);
-}
-
-
-#pragma mark - Draw
-- (void)drawIncontext:(CGContextRef)context
-                 size:(CGSize)size
-                point:(CGPoint)point
-        containerView:(UIView *)containerView
-       containerLayer:(CALayer *)containerLayer {
-    [self drawTextInContext:context textLayout:self size:size point:point];
-    [self drawAttachmentsIncontext:context textLayou:self size:size point:point containerView:containerView containerLayer:containerLayer];
-}
-
-- (void)drawTextInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
-    
-    //    CGContextAddPath(context,textLayout.cgPath);
-    //    CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
-    //    CGContextFillPath(context);
-    //
-    //    CGContextAddRect(context, textLayout.textBoundingRect);
-    //    CGContextSetFillColorWithColor(context, [UIColor greenColor].CGColor);
-    //    CGContextFillPath(context);
-    
-    CGContextSaveGState(context);
-    CGContextTranslateCTM(context, point.x, point.y);
-    CGContextTranslateCTM(context, 0, size.height);
-    CGContextScaleCTM(context, 1, -1);
-    
-    
-    NSArray* lines = textLayout.linesArray;
-    for (NSInteger i = 0; i < lines.count; i ++ ) {
-        LWTextLine* line = lines[i];
-        CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-        CGContextSetTextPosition(context, line.lineOrigin.x ,size.height - line.lineOrigin.y);
-        CFArrayRef runs = CTLineGetGlyphRuns(line.CTLine);
-        for (NSUInteger j = 0; j < CFArrayGetCount(runs);j ++) {
-            CTRunRef run = CFArrayGetValueAtIndex(runs, j);
-            CTRunDraw(run, context, CFRangeMake(0, 0));
-        }
-    }
-    CGContextRestoreGState(context);
-}
-
-
-- (void)drawAttachmentsIncontext:(CGContextRef)context
-                       textLayou:(LWTextLayout *)textLayout
-                            size:(CGSize)size
-                           point:(CGPoint)point
-                   containerView:(UIView *)containerView
-                  containerLayer:(CALayer *)containerLayer {
-    
-    for (NSUInteger i = 0; i < textLayout.attachments.count; i++) {
-        LWTextAttachment* attachment = textLayout.attachments[i];
-        if (!attachment.content) {
-            continue;
-        }
-        UIImage* image = nil;
-        UIView* view = nil;
-        CALayer* layer = nil;
-        if ([attachment.content isKindOfClass:[UIImage class]]) {
-            image = attachment.content;
-        } else if ([attachment.content isKindOfClass:[UIView class]]) {
-            view = attachment.content;
-        } else if ([attachment.content isKindOfClass:[CALayer class]]) {
-            layer = attachment.content;
-        }
-        if ((!image && !view && !layer) || (!image && !view && !layer) ||
-            (image && !context) || (view && !containerView)
-            || (layer && !containerLayer)) {
-            continue;
-        }
-        CGSize asize = image ? image.size : view ? view.frame.size : layer.frame.size;
-        CGRect rect = ((NSValue *)textLayout.attachmentRects[i]).CGRectValue;
-        rect = UIEdgeInsetsInsetRect(rect,attachment.contentEdgeInsets);
-        rect = LWCGRectFitWithContentMode(rect, asize, attachment.contentMode);
-        rect = CGRectPixelRound(rect);
-        rect = CGRectStandardize(rect);
-        rect.origin.x += point.x;
-        rect.origin.y += point.y;
-        if (image) {
-            CGImageRef ref = image.CGImage;
-            if (ref) {
-                CGContextSaveGState(context);
-                CGContextTranslateCTM(context, 0,CGRectGetMaxY(rect) + CGRectGetMinY(rect));
-                CGContextScaleCTM(context, 1, -1);
-                CGContextDrawImage(context, rect, ref);
-                CGContextRestoreGState(context);
-            }
-        } else if (view) {
-            view.frame = rect;
-            [containerView addSubview:view];
-        } else if (layer) {
-            layer.frame = rect;
-            [containerLayer addSublayer:layer];
-        }
-    }
 }
 
 static inline CGRect CGRectPixelRound(CGRect rect) {

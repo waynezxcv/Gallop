@@ -28,23 +28,18 @@
 @interface NSMutableAttributedString(Gallop)
 
 - (void)setTextColor:(UIColor *)textColor range:(NSRange)range;
-
+- (void)settextBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range;
 - (void)setBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range;
-
 - (void)setFont:(UIFont *)font range:(NSRange)range;
-
-- (void)setLineSpacing:(CGFloat)lineSpacing range:(NSRange)range;
-
 - (void)setCharacterSpacing:(unichar)characterSpacing range:(NSRange)range;
-
+- (void)setUnderlineStyle:(NSUnderlineStyle)underlineStyle underlineColor:(UIColor *)underlineColor range:(NSRange)range;
+#pragma mark - Paragraph
+- (void)setLineSpacing:(CGFloat)lineSpacing range:(NSRange)range;
 - (void)setTextAlignment:(NSTextAlignment)textAlignment range:(NSRange)range;
-
-- (void)setUnderlineStyle:(NSUnderlineStyle)underlineStyle range:(NSRange)range;
-
 - (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode range:(NSRange)range;
 
+#pragma mark - Link & Attachment
 - (void)addLinkWithData:(id)data range:(NSRange)range linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor;
-
 + (NSMutableAttributedString *)lw_textAttachmentStringWithContent:(id)content
                                                       contentMode:(UIViewContentMode)contentMode
                                                            ascent:(CGFloat)ascent
