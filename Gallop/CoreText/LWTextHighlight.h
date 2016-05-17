@@ -28,8 +28,9 @@
 #define LWTextLinkAttributedName @"LWTextLinkAttributedName"
 #define LWTextBackgroundColorAttributedName @"LWTextBackgroundColorAttributedName"
 
-
 typedef void(^LWHighlightAction)(UIView* containerView, NSAttributedString* text, NSRange range, CGRect rect);
+
+//*** Text高亮（点击链接时） ***//
 
 @interface LWTextHighlight : NSObject <NSCopying>
 
@@ -44,6 +45,8 @@ typedef void(^LWHighlightAction)(UIView* containerView, NSAttributedString* text
 
 @end
 
+
+//*** Text背景颜色（用来代替NSBackgroundColor） ***//
 
 @interface LWTextBackgroundColor : NSObject  <NSCopying>
 

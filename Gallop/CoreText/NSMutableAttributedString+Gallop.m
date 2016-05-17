@@ -30,6 +30,8 @@
 
 @implementation NSMutableAttributedString(Gallop)
 
+
+#pragma mark -
 - (void)setTextColor:(UIColor *)textColor range:(NSRange)range {
     [self setAttribute:NSFontAttributeName value:textColor range:range];
 }
@@ -58,16 +60,45 @@
     [self setAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:(underlineStyle)] range:range];
 }
 
+#pragma mark - ParagraphStyle
 - (void)setLineSpacing:(CGFloat)lineSpacing range:(NSRange)range {
-
+    [self enumerateAttribute:NSParagraphStyleAttributeName
+                     inRange:range
+                     options:kNilOptions
+                  usingBlock: ^(NSParagraphStyle* value, NSRange subRange, BOOL *stop) {
+                      NSMutableParagraphStyle* style = value.mutableCopy;
+                      [style setLineSpacing:lineSpacing];
+                      [self setParagraphStyle:style range:subRange];
+                  }];
 }
 
 - (void)setTextAlignment:(NSTextAlignment)textAlignment range:(NSRange)range {
+    [self enumerateAttribute:NSParagraphStyleAttributeName
+                     inRange:range
+                     options:kNilOptions
+                  usingBlock: ^(NSParagraphStyle* value, NSRange subRange, BOOL *stop) {
+                      NSMutableParagraphStyle* style = value.mutableCopy;
+                      [style setAlignment:textAlignment];
+                      [self setParagraphStyle:style range:subRange];
+                  }];
 }
 
 - (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode range:(NSRange)range {
-
+    [self enumerateAttribute:NSParagraphStyleAttributeName
+                     inRange:range
+                     options:kNilOptions
+                  usingBlock: ^(NSParagraphStyle* value, NSRange subRange, BOOL *stop) {
+                      NSMutableParagraphStyle* style = value.mutableCopy;
+                      [style setLineBreakMode:lineBreakMode];
+                      [self setParagraphStyle:style range:subRange];
+                  }];
 }
+
+- (void)setParagraphStyle:(NSParagraphStyle *)paragraphStyle range:(NSRange)range {
+    [self setAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:range];
+}
+
+#pragma mark - Link & Attachment
 
 - (void)addLinkWithData:(id)data range:(NSRange)range linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor {
     LWTextHighlight* highlight = [[LWTextHighlight alloc] init];
@@ -87,7 +118,6 @@
     unichar objectReplacementChar = 0xFFFC;
     NSString* contentString = [NSString stringWithCharacters:&objectReplacementChar length:1];
     NSMutableAttributedString* space = [[NSMutableAttributedString alloc] initWithString:contentString];
-
     LWTextAttachment* attachment = [[LWTextAttachment alloc] init];
     attachment.content = content;
     attachment.contentMode = contentMode;
@@ -104,6 +134,8 @@
     }
     return space;
 }
+
+#pragma mark -
 
 - (void)setAttribute:(NSString *)name value:(id)value range:(NSRange)range {
     if (!name || [NSNull isEqual:name]) return;

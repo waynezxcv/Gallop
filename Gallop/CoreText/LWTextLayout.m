@@ -231,11 +231,11 @@
                 point:(CGPoint)point
         containerView:(UIView *)containerView
        containerLayer:(CALayer *)containerLayer {
+
     [self _drawTextBackgroundColorInContext:context textLayout:self size:size point:point];
     [self _drawTextInContext:context textLayout:self size:size point:point];
     [self _drawAttachmentsIncontext:context textLayou:self size:size point:point containerView:containerView containerLayer:containerLayer];
 }
-
 
 - (void)_drawTextBackgroundColorInContext:(CGContextRef)context  textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
     for (LWTextBackgroundColor* background in textLayout.backgroundColors) {
