@@ -28,9 +28,7 @@
 
 @interface UIView(AsyncDisplay)
 
-
 - (void)lw_asyncDisplay:(LWAsyncDisplayBlock)displayBlock complete:(LWAsyncDisplayCompleteBlock)completeBlock;
-
 - (void)lw_addDisplayTransactionsWithasyncDisplay:(LWAsyncDisplayBlock)displayBlock complete:(LWAsyncDisplayCompleteBlock)completeBlock;
 
 @end
