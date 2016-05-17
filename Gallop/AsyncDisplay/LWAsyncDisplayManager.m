@@ -59,6 +59,7 @@
                                     backgroundColor:(UIColor *)backgroundColor
                                        asyncDisplay:(LWAsyncDisplayBlock)display
                                          completion:(LWAsyncDisplayCompleteBlock)completion {
+
     LWAsyncDisplayOperation* operation = [[LWAsyncDisplayOperation alloc]
                                           initWithDisplaySize:size
                                           opaque:opaque

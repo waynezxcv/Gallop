@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,12 +28,11 @@
 @interface NSMutableAttributedString(Gallop)
 
 - (void)setTextColor:(UIColor *)textColor range:(NSRange)range;
-- (void)settextBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range;
-- (void)setBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range;
+- (void)setTextBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range;
 - (void)setFont:(UIFont *)font range:(NSRange)range;
 - (void)setCharacterSpacing:(unichar)characterSpacing range:(NSRange)range;
 - (void)setUnderlineStyle:(NSUnderlineStyle)underlineStyle underlineColor:(UIColor *)underlineColor range:(NSRange)range;
-#pragma mark - Paragraph
+#pragma mark - ParagraphStyle
 - (void)setLineSpacing:(CGFloat)lineSpacing range:(NSRange)range;
 - (void)setTextAlignment:(NSTextAlignment)textAlignment range:(NSRange)range;
 - (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode range:(NSRange)range;

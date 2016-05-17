@@ -34,12 +34,11 @@
     [self setAttribute:NSFontAttributeName value:textColor range:range];
 }
 
-- (void)settextBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range {
-
-}
-
-- (void)setBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range {
-    [self setAttribute:NSBackgroundColorAttributeName value:backgroundColor range:range];
+- (void)setTextBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range {
+    LWTextBackgroundColor* textBackground = [[LWTextBackgroundColor alloc] init];
+    textBackground.backgroundColor = backgroundColor;
+    textBackground.range = range;
+    [self setAttribute:LWTextBackgroundColorAttributedName  value:textBackground range:range];
 }
 
 - (void)setFont:(UIFont *)font range:(NSRange)range {

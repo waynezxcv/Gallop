@@ -45,6 +45,9 @@
 @property (nonatomic,strong) NSMutableArray<NSValue *>* attachmentRects;
 @property (nonatomic,strong) NSMutableSet<id>* attachmentContentsSet;
 @property (nonatomic,strong) NSMutableArray<LWTextHighlight *>* textHighlights;
+@property (nonatomic,strong) NSMutableArray<LWTextBackgroundColor *>* backgroundColors;
+
+
 
 @end
 
@@ -86,8 +89,10 @@
     //******* textBoundingRect、textBoundingSize ********//
     CGRect textBoundingRect = CGRectZero;
     CGSize textBoundingSize = CGSizeZero;
-    NSMutableArray* highlights = [[NSMutableArray alloc] init];
     NSUInteger lineCurrentIndex = 0;
+
+    NSMutableArray* highlights = [[NSMutableArray alloc] init];
+    NSMutableArray* backgroundColors = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < lineCount; i++) {
         CTLineRef ctLine = CFArrayGetValueAtIndex(ctLines, i);
         CFArrayRef ctRuns = CTLineGetGlyphRuns(ctLine);
@@ -95,7 +100,7 @@
         if (!ctRuns || runCount == 0){
             continue;
         }
-        //****  Highlight(Link) ********//
+        //****  Highlight(Link)********//
         {
             for (NSUInteger i = 0; i < runCount; i ++) {
                 CTRunRef run = CFArrayGetValueAtIndex(ctRuns, i);
@@ -111,6 +116,25 @@
                 NSArray* highlightPositions = [self _highlightPositionsWithCtFrame:ctFrame range:highlight.range];
                 highlight.positions = highlightPositions;
                 [highlights addObject:highlight];
+                break;
+            }
+        }
+        //****  BackgroundColor ********//
+        {
+            for (NSUInteger i = 0; i < runCount; i ++) {
+                CTRunRef run = CFArrayGetValueAtIndex(ctRuns, i);
+                CFIndex glyphCount = CTRunGetGlyphCount(run);
+                if (glyphCount == 0) {
+                    continue;
+                }
+                NSDictionary* attributes = (id)CTRunGetAttributes(run);
+                LWTextBackgroundColor* color = [attributes objectForKey:LWTextBackgroundColorAttributedName];
+                if (!color) {
+                    continue;
+                }
+                NSArray* backgroundsPositions = [self _highlightPositionsWithCtFrame:ctFrame range:color.range];
+                color.positions = backgroundsPositions;
+                [backgroundColors addObject:color];
                 break;
             }
         }
@@ -167,6 +191,7 @@
     layout.textBoundingRect = textBoundingRect;
     layout.textBoundingSize = textBoundingSize;
     layout.textHighlights = [[NSMutableArray alloc] initWithArray:highlights];
+    layout.backgroundColors = [[NSMutableArray alloc] initWithArray:backgroundColors];
     //******* attachments ********//
     layout.attachments = [[NSMutableArray alloc] init];
     layout.attachmentRanges = [[NSMutableArray alloc] init];
@@ -206,25 +231,29 @@
                 point:(CGPoint)point
         containerView:(UIView *)containerView
        containerLayer:(CALayer *)containerLayer {
+    [self _drawTextBackgroundColorInContext:context textLayout:self size:size point:point];
     [self _drawTextInContext:context textLayout:self size:size point:point];
     [self _drawAttachmentsIncontext:context textLayou:self size:size point:point containerView:containerView containerLayer:containerLayer];
 }
 
+
+- (void)_drawTextBackgroundColorInContext:(CGContextRef)context  textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
+    for (LWTextBackgroundColor* background in textLayout.backgroundColors) {
+        for (NSValue* value in background.positions) {
+            CGRect rect = [value CGRectValue];
+            CGRect adjustRect = CGRectMake(point.x + rect.origin.x, point.y + rect.origin.y, rect.size.width, rect.size.height);
+            UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect cornerRadius:2.0f];
+            [background.backgroundColor setFill];
+            [beizerPath fill];
+        }
+    }
+}
+
 - (void)_drawTextInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
-
-    CGContextAddPath(context,textLayout.cgPath);
-    CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
-    CGContextFillPath(context);
-
-    CGContextAddRect(context, textLayout.textBoundingRect);
-    CGContextSetFillColorWithColor(context, [UIColor greenColor].CGColor);
-    CGContextFillPath(context);
-
     CGContextSaveGState(context);
     CGContextTranslateCTM(context, point.x, point.y);
     CGContextTranslateCTM(context, 0, size.height);
     CGContextScaleCTM(context, 1, -1);
-
     NSArray* lines = textLayout.linesArray;
     for (NSInteger i = 0; i < lines.count; i ++ ) {
         LWTextLine* line = lines[i];
@@ -292,6 +321,7 @@
         }
     }
 }
+
 
 #pragma mark - Private
 /**

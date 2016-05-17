@@ -46,9 +46,9 @@
 
 
 /***  构造方法  ***/
-+ (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout;
-+ (LWTextStorage *)LW_textStrageWithText:(NSAttributedString *)text frame:(CGRect)frame;
 - (id)initWithFrame:(CGRect)frame;
++ (LWTextStorage *)LW_textStrageWithText:(NSAttributedString *)text frame:(CGRect)frame;
++ (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout frame:(CGRect)frame;
 
 /*** 绘制 ***/
 - (void)lw_drawInContext:(CGContextRef)context;

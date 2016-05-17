@@ -50,6 +50,8 @@
 @property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRects;
 @property (nonatomic,strong,readonly) NSMutableSet<id>* attachmentContentsSet;
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextHighlight *>* textHighlights;
+@property (nonatomic,strong,readonly) NSMutableArray<LWTextBackgroundColor *>* backgroundColors;
+
 
 /**
  *  构造方法
@@ -61,6 +63,8 @@
  */
 + (LWTextLayout *)lw_layoutWithContainer:(LWTextContainer *)container text:(NSAttributedString *)text;
 
+
+//****  绘制   ****//
 - (void)drawIncontext:(CGContextRef)context
                  size:(CGSize)size
                 point:(CGPoint)point

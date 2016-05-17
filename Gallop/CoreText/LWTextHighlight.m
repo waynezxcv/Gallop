@@ -32,8 +32,8 @@
     if (self) {
         self.content = nil;
         self.range = NSMakeRange(0, 0);
-        self.linkColor = nil;
-        self.hightlightColor = nil;
+        self.linkColor = [UIColor clearColor];
+        self.hightlightColor = [UIColor clearColor];
         self.positions = @[];
         self.userInfo = @{};
         self.tapAction = nil;
@@ -56,3 +56,28 @@
 }
 
 @end
+
+
+@implementation LWTextBackgroundColor
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.backgroundColor = [UIColor clearColor];
+        self.range = NSMakeRange(0, 0);
+        self.userInfo = @{};
+    }
+    return self;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextBackgroundColor* backgroundColor = [[[self class] allocWithZone:zone] init];
+    backgroundColor.range = self.range;
+    backgroundColor.backgroundColor = [self.backgroundColor copy];
+    backgroundColor.userInfo = [self.userInfo copy];
+    return backgroundColor;
+}
+
+
+@end
+

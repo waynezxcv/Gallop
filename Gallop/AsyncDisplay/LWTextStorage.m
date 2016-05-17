@@ -34,14 +34,68 @@
 
 @implementation LWTextStorage
 
-+ (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout {
-
++ (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout frame:(CGRect)frame {
+    LWTextStorage* textStorage = [[LWTextStorage alloc] initWithFrame:frame];
+    textStorage.textLayout = textLayout;
+    return textStorage;
 }
-+ (LWTextStorage *)LW_textStrageWithText:(NSAttributedString *)text frame:(CGRect)frame {
 
++ (LWTextStorage *)LW_textStrageWithText:(NSAttributedString *)text frame:(CGRect)frame {
+    LWTextStorage* textStorage = [[LWTextStorage alloc] initWithFrame:frame];
+    textStorage.attributedText = [text mutableCopy];
+    textStorage.textLayout = [textStorage _creatTextLayout];
+    return textStorage;
 }
 
 - (id)initWithFrame:(CGRect)frame {
+    self = [super init];
+    if (self) {
+        self.frame = frame;
+        self.text = nil;
+        self.attributedText = nil;
+        self.textColor = [UIColor blackColor];
+        self.font = [UIFont systemFontOfSize:14.0f];
+        self.textAlignment = NSTextAlignmentLeft;
+        self.lineBreakMode = NSLineBreakByWordWrapping;
+        self.linespace = 2.0f;
+        self.characterSpacing = 1.0f;
+        self.underlineStyle = NSUnderlineStyleNone;
+        self.widthToFit = YES;
+    }
+    return self;
+}
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.text = nil;
+        self.attributedText = nil;
+        self.textColor = [UIColor blackColor];
+        self.font = [UIFont systemFontOfSize:14.0f];
+        self.textAlignment = NSTextAlignmentLeft;
+        self.lineBreakMode = NSLineBreakByWordWrapping;
+        self.frame = CGRectZero;
+        self.linespace = 2.0f;
+        self.characterSpacing = 1.0f;
+        self.underlineStyle = NSUnderlineStyleNone;
+        self.widthToFit = YES;
+    }
+    return self;
+}
+
+
+- (void)setText:(NSString *)text {
 
 }
+
+- (LWTextLayout *)_creatTextLayout {
+    if (!self.attributedText) {
+        return nil;
+    }
+    LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:self.frame.size];
+    LWTextLayout* textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:self.attributedText];
+    return textLayout;
+}
+
+
 @end

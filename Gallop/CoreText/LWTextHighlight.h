@@ -26,6 +26,8 @@
 #import <UIKit/UIKit.h>
 
 #define LWTextLinkAttributedName @"LWTextLinkAttributedName"
+#define LWTextBackgroundColorAttributedName @"LWTextBackgroundColorAttributedName"
+
 
 typedef void(^LWHighlightAction)(UIView* containerView, NSAttributedString* text, NSRange range, CGRect rect);
 
@@ -39,5 +41,15 @@ typedef void(^LWHighlightAction)(UIView* containerView, NSAttributedString* text
 @property (nonatomic,strong) NSDictionary* userInfo;//自定义的一些信息
 @property (nonatomic,copy) LWHighlightAction tapAction;
 @property (nonatomic,copy) LWHighlightAction longpressAction;
+
+@end
+
+
+@interface LWTextBackgroundColor : NSObject  <NSCopying>
+
+@property (nonatomic,assign) NSRange range;//在字符串的range
+@property (nonatomic,strong) UIColor* backgroundColor;
+@property (nonatomic,copy) NSArray<NSValue *>* positions;//位置数组
+@property (nonatomic,strong) NSDictionary* userInfo;//自定义的一些信息
 
 @end

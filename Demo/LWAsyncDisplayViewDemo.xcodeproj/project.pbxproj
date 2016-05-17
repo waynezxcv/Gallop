@@ -49,6 +49,7 @@
 		B0A523001CEA1B6600DC2D15 /* LWStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A522FF1CEA1B6600DC2D15 /* LWStorage.m */; };
 		B0A523041CEA1BD800DC2D15 /* LWLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A523031CEA1BD800DC2D15 /* LWLayout.m */; };
 		B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */; };
+		B0C7191D1CEB5ACA00B2A8D9 /* pic.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = B0C7191C1CEB5ACA00B2A8D9 /* pic.jpeg */; };
 		B0D9EB3C1CB0F435009FDCCF /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB181CB0F435009FDCCF /* MKAnnotationView+WebCache.m */; };
 		B0D9EB3D1CB0F435009FDCCF /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB1A1CB0F435009FDCCF /* NSData+ImageContentType.m */; };
 		B0D9EB3F1CB0F435009FDCCF /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB1E1CB0F435009FDCCF /* SDImageCache.m */; };
@@ -153,6 +154,7 @@
 		B0A523031CEA1BD800DC2D15 /* LWLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWLayout.m; path = ../Gallop/AsyncDisplay/LWLayout.m; sourceTree = "<group>"; };
 		B0C503EA1CAE4FC300B6D3FB /* LWAlchemyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyManager.h; path = ../LWAlchemy/LWAlchemyManager.h; sourceTree = "<group>"; };
 		B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyManager.m; path = ../LWAlchemy/LWAlchemyManager.m; sourceTree = "<group>"; };
+		B0C7191C1CEB5ACA00B2A8D9 /* pic.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pic.jpeg; sourceTree = "<group>"; };
 		B0D9EB171CB0F435009FDCCF /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MKAnnotationView+WebCache.h"; path = "../SDWebImage/MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		B0D9EB181CB0F435009FDCCF /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "MKAnnotationView+WebCache.m"; path = "../SDWebImage/MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		B0D9EB191CB0F435009FDCCF /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+ImageContentType.h"; path = "../SDWebImage/NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 		011DFA1D1C987CD6000410D7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B0C7191C1CEB5ACA00B2A8D9 /* pic.jpeg */,
 				01F51A171CA1B7A400463571 /* CoreData.framework */,
 				01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */,
 				011DFA291C987CD6000410D7 /* Assets.xcassets */,
@@ -480,6 +483,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0C7191D1CEB5ACA00B2A8D9 /* pic.jpeg in Resources */,
 				011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
