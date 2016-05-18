@@ -63,12 +63,15 @@
  */
 + (LWTextLayout *)lw_layoutWithContainer:(LWTextContainer *)container text:(NSAttributedString *)text;
 
-
-//****  绘制   ****//
+//****  绘制  ****//
 - (void)drawIncontext:(CGContextRef)context
                  size:(CGSize)size
                 point:(CGPoint)point
         containerView:(UIView *)containerView
        containerLayer:(CALayer *)containerLayer;
+
+
+//****  将Attachment移除  ****//
+- (void)removeAttachmentFromSuperViewOrLayer;
 
 @end

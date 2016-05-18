@@ -24,30 +24,39 @@
 #import "LWStorage.h"
 #import "LWTextLayout.h"
 
+
+
+/***  附件的对齐方式  ***/
+
+typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
+    LWTextAttachAlignmentTop,//attachment的底部与baseline对齐
+    LWTextAttachAlignmentCenter,//attachment居中显示
+    LWTextAttachAlignmentBottom,//attachment的顶部与baseline对齐
+};
+
 @interface LWTextStorage : LWStorage
 
 @property (nonatomic,strong,readonly) LWTextLayout* textLayout;
+
 @property (nonatomic,copy) NSString* text;
 @property (nonatomic,strong) NSMutableAttributedString* attributedText;
 @property (nonatomic,strong) UIColor* textColor;
 @property (nonatomic,strong) UIColor* textBackgroundColor;
 @property (nonatomic,strong) UIFont* font;
-@property (nonatomic,assign) CGFloat linespace;
+@property (nonatomic,assign) CGFloat linespacing;
 @property (nonatomic,assign) unichar characterSpacing;
-@property (nonatomic,assign) NSInteger numberOfLines;
 @property (nonatomic,assign) NSTextAlignment textAlignment;
 @property (nonatomic,assign) NSUnderlineStyle underlineStyle;
 @property (nonatomic,assign) NSLineBreakMode lineBreakMode;
-@property (nonatomic,assign) CTFrameRef CTFrame;
+
 @property (nonatomic,assign,readonly) NSInteger webImageCount;
 @property (nonatomic,strong) NSMutableArray* webAttachs;
-@property (nonatomic,assign,getter=isWidthToFit) BOOL widthToFit;
-@property (nonatomic,strong) NSMutableArray* hightlights;
+
 
 
 /***  构造方法  ***/
 - (id)initWithFrame:(CGRect)frame;
-+ (LWTextStorage *)LW_textStrageWithText:(NSAttributedString *)text frame:(CGRect)frame;
++ (LWTextStorage *)lw_textStrageWithText:(NSAttributedString *)text frame:(CGRect)frame;
 + (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout frame:(CGRect)frame;
 
 /*** 绘制 ***/
@@ -55,16 +64,29 @@
 
 /***  为指定位置的文本添加链接  ***/
 - (void)lw_addLinkWithData:(id)data
-                   inRange:(NSRange)range
+                     range:(NSRange)range
                  linkColor:(UIColor *)linkColor
-            highLightColor:(UIColor *)highLightColor
-            UnderLineStyle:(NSUnderlineStyle)underlineStyle;
+            highLightColor:(UIColor *)highLightColor;
+
 
 /***  用本地图片替换掉指定位置的文字  ***/
-- (void)lw_replaceTextWithImage:(UIImage *)image imageSize:(CGSize)size inRange:(NSRange)range;
+- (void)lw_replaceTextWithImage:(UIImage *)image
+                    contentMode:(UIViewContentMode)contentMode
+                      imageSize:(CGSize)size
+                      alignment:(LWTextAttachAlignment)attachAlignment
+                          range:(NSRange)range;
 
 /***  用网络图片替换掉指定位置的文字  ***/
-- (void)lw_replaceTextWithImageURL:(NSURL *)URL imageSize:(CGSize)size inRange:(NSRange)range;
+- (void)lw_replaceTextWithImageURL:(NSURL *)URL
+                       contentMode:(UIViewContentMode)contentMode
+                         imageSize:(CGSize)size
+                         alignment:(LWTextAttachAlignment)attachAlignment
+                             range:(NSRange)range;
 
+/***  用UIView替换掉指定位置的文字  ***/
+- (void)lw_replaceTextWithView:(UIView *)view
+                     imageSize:(CGSize)size
+                     alignment:(LWTextAttachAlignment)attachAlignment
+                         range:(NSRange)range;
 
 @end

@@ -225,7 +225,7 @@
     }
 }
 
-#pragma mark - Draw
+#pragma mark - Draw & Remove
 - (void)drawIncontext:(CGContextRef)context
                  size:(CGSize)size
                 point:(CGPoint)point
@@ -322,6 +322,10 @@
     }
 }
 
+
+- (void)removeAttachmentFromSuperViewOrLayer {
+    
+}
 
 #pragma mark - Private
 /**

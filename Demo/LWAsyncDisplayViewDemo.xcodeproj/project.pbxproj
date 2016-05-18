@@ -358,20 +358,20 @@
 		B079C2841CD8C58F003B15D3 /* CoreText */ = {
 			isa = PBXGroup;
 			children = (
+				01D14EB71CDCF8A00028714A /* LWTextLine.h */,
+				01D14EB81CDCF8A00028714A /* LWTextLine.m */,
+				016BDA751CDA6A6B000D1ACF /* LWTextRunDelegate.h */,
+				016BDA761CDA6A6B000D1ACF /* LWTextRunDelegate.m */,
+				01D14EB51CDCF8A00028714A /* LWTextLayout.h */,
+				01D14EB61CDCF8A00028714A /* LWTextLayout.m */,
+				014871801CDBC12500CE43C4 /* LWTextContainer.h */,
+				014871811CDBC12500CE43C4 /* LWTextContainer.m */,
 				01D14F051CDD43990028714A /* LWTextAttachment.h */,
 				01D14F061CDD43990028714A /* LWTextAttachment.m */,
 				0180A4521CE25BF600DB2EB1 /* LWTextHighlight.h */,
 				0180A4531CE25BF600DB2EB1 /* LWTextHighlight.m */,
 				01D14F011CDD42ED0028714A /* NSMutableAttributedString+Gallop.h */,
 				01D14F021CDD42ED0028714A /* NSMutableAttributedString+Gallop.m */,
-				01D14EB51CDCF8A00028714A /* LWTextLayout.h */,
-				01D14EB61CDCF8A00028714A /* LWTextLayout.m */,
-				014871801CDBC12500CE43C4 /* LWTextContainer.h */,
-				014871811CDBC12500CE43C4 /* LWTextContainer.m */,
-				01D14EB71CDCF8A00028714A /* LWTextLine.h */,
-				01D14EB81CDCF8A00028714A /* LWTextLine.m */,
-				016BDA751CDA6A6B000D1ACF /* LWTextRunDelegate.h */,
-				016BDA761CDA6A6B000D1ACF /* LWTextRunDelegate.m */,
 			);
 			name = CoreText;
 			sourceTree = "<group>";
@@ -379,17 +379,22 @@
 		B085B3421CB68CF500087739 /* AsyncDisplay */ = {
 			isa = PBXGroup;
 			children = (
-				B0A523011CEA1B9000DC2D15 /* Storage */,
 				B0A523021CEA1BD800DC2D15 /* LWLayout.h */,
 				B0A523031CEA1BD800DC2D15 /* LWLayout.m */,
+				B0A522FE1CEA1B6600DC2D15 /* LWStorage.h */,
+				B0A522FF1CEA1B6600DC2D15 /* LWStorage.m */,
+				B0A522F51CEA1ABB00DC2D15 /* LWTextStorage.h */,
+				B0A522F61CEA1ABB00DC2D15 /* LWTextStorage.m */,
+				B0A522F81CEA1AD200DC2D15 /* LWImageStorage.h */,
+				B0A522F91CEA1AD200DC2D15 /* LWImageStorage.m */,
 				B0A522E81CEA18B000DC2D15 /* LWAsyncDisplayView.h */,
 				B0A522E91CEA18B000DC2D15 /* LWAsyncDisplayView.m */,
+				01D14EC11CDCF8F90028714A /* UIView+AsyncDisplay.h */,
+				01D14EC21CDCF8F90028714A /* UIView+AsyncDisplay.m */,
 				01D14EBB1CDCF8F90028714A /* LWAsyncDisplayManager.h */,
 				01D14EBC1CDCF8F90028714A /* LWAsyncDisplayManager.m */,
 				01D14EBD1CDCF8F90028714A /* LWAsyncDisplayOperation.h */,
 				01D14EBE1CDCF8F90028714A /* LWAsyncDisplayOperation.m */,
-				01D14EC11CDCF8F90028714A /* UIView+AsyncDisplay.h */,
-				01D14EC21CDCF8F90028714A /* UIView+AsyncDisplay.m */,
 			);
 			name = AsyncDisplay;
 			sourceTree = "<group>";
@@ -425,19 +430,6 @@
 			);
 			name = Vendors;
 			path = ..;
-			sourceTree = "<group>";
-		};
-		B0A523011CEA1B9000DC2D15 /* Storage */ = {
-			isa = PBXGroup;
-			children = (
-				B0A522FE1CEA1B6600DC2D15 /* LWStorage.h */,
-				B0A522FF1CEA1B6600DC2D15 /* LWStorage.m */,
-				B0A522F51CEA1ABB00DC2D15 /* LWTextStorage.h */,
-				B0A522F61CEA1ABB00DC2D15 /* LWTextStorage.m */,
-				B0A522F81CEA1AD200DC2D15 /* LWImageStorage.h */,
-				B0A522F91CEA1AD200DC2D15 /* LWImageStorage.m */,
-			);
-			name = Storage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

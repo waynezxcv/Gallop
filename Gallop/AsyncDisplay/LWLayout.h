@@ -27,15 +27,19 @@
 #import "LWStorage.h"
 #import "LWTextStorage.h"
 #import "LWImageStorage.h"
+
+
+
 @interface LWLayout : NSObject
 
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextStorage *>* textStorages;
 @property (nonatomic,strong,readonly) NSMutableArray<LWImageStorage *>* imageStorages;
 @property (nonatomic,strong,readonly) NSMutableArray<LWStorage *>* totalStorages;
 
+
+
 - (void)addStorage:(LWStorage *)storage;
 - (void)addStorages:(NSArray <LWStorage *> *)storages;
-
 - (void)removeStorage:(LWStorage *)storage;
 - (void)removeStorages:(NSArray <LWStorage *> *)storages;
 
