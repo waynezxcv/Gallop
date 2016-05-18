@@ -29,8 +29,8 @@
 /***  附件的对齐方式  ***/
 
 typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
-    LWTextAttachAlignmentTop,//attachment的底部与baseline对齐
     LWTextAttachAlignmentCenter,//attachment居中显示
+    LWTextAttachAlignmentTop,//attachment的底部与baseline对齐
     LWTextAttachAlignmentBottom,//attachment的顶部与baseline对齐
 };
 
@@ -39,7 +39,6 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 @property (nonatomic,strong,readonly) LWTextLayout* textLayout;
 
 @property (nonatomic,copy) NSString* text;
-@property (nonatomic,strong) NSMutableAttributedString* attributedText;
 @property (nonatomic,strong) UIColor* textColor;
 @property (nonatomic,strong) UIColor* textBackgroundColor;
 @property (nonatomic,strong) UIFont* font;
@@ -47,17 +46,18 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 @property (nonatomic,assign) unichar characterSpacing;
 @property (nonatomic,assign) NSTextAlignment textAlignment;
 @property (nonatomic,assign) NSUnderlineStyle underlineStyle;
+@property (nonatomic,strong) UIColor* underlineColor;
 @property (nonatomic,assign) NSLineBreakMode lineBreakMode;
 
 @property (nonatomic,assign,readonly) NSInteger webImageCount;
 @property (nonatomic,strong) NSMutableArray* webAttachs;
 
 
-
 /***  构造方法  ***/
 - (id)initWithFrame:(CGRect)frame;
-+ (LWTextStorage *)lw_textStrageWithText:(NSAttributedString *)text frame:(CGRect)frame;
++ (LWTextStorage *)lw_textStrageWithText:(NSAttributedString *)attributedText frame:(CGRect)frame;
 + (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout frame:(CGRect)frame;
+
 
 /*** 绘制 ***/
 - (void)lw_drawInContext:(CGContextRef)context;
@@ -85,7 +85,8 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 
 /***  用UIView替换掉指定位置的文字  ***/
 - (void)lw_replaceTextWithView:(UIView *)view
-                     imageSize:(CGSize)size
+                   contentMode:(UIViewContentMode)contentMode
+                          size:(CGSize)size
                      alignment:(LWTextAttachAlignment)attachAlignment
                          range:(NSRange)range;
 

@@ -63,6 +63,8 @@
  */
 + (LWTextLayout *)lw_layoutWithContainer:(LWTextContainer *)container text:(NSAttributedString *)text;
 
+
+
 //****  绘制  ****//
 - (void)drawIncontext:(CGContextRef)context
                  size:(CGSize)size

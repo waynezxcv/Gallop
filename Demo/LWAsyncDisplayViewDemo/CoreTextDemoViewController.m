@@ -23,32 +23,11 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.asyncDisplayView];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        LWLayout* layout = [[LWLayout alloc] init];
         NSMutableParagraphStyle* p = [[NSMutableParagraphStyle alloc] init];
         [p setLineSpacing:2.0f];
         NSDictionary* attris = @{NSForegroundColorAttributeName:[UIColor blackColor],NSFontAttributeName:[UIFont systemFontOfSize:18],NSParagraphStyleAttributeName:p};
-        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:@"Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文混排显示" attributes:attris];
-        LWTextStorage* storage = [LWTextStorage lw_textStrageWithText:attributedString frame:CGRectMake(10.0f, 10.0f, self.view.bounds.size.width - 30.0f, 300.0f)];
-
-        NSMutableAttributedString* attributedString1 = [[NSMutableAttributedString alloc] initWithString:@"第二行文字,Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文混排显示" attributes:attris];
-        NSMutableAttributedString* attachmentString1 = [NSMutableAttributedString lw_textAttachmentStringWithContent:[UIImage imageNamed:@"pic.jpeg"]
-                                                                                                         contentMode:UIViewContentModeScaleAspectFill
-                                                                                                              ascent:30
-                                                                                                             descent:10
-                                                                                                               width:40];
-        NSMutableAttributedString* attributedString2 = [[NSMutableAttributedString alloc] initWithString:@"Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文混排显示" attributes:attris];
-        [attributedString1 appendAttributedString:attachmentString1];
-        [attributedString1 appendAttributedString:attributedString2];
-        NSMutableAttributedString* attachmentString2 = [NSMutableAttributedString lw_textAttachmentStringWithContent:[UIImage imageNamed:@"pic.jpeg"]
-                                                                                                         contentMode:UIViewContentModeScaleAspectFill
-                                                                                                              ascent:60
-                                                                                                             descent:0
-                                                                                                               width:60];
-        [attributedString1 appendAttributedString:attachmentString2];
-        [attributedString1 setTextBackgroundColor:[UIColor redColor] range:NSMakeRange(0, attributedString1.length)];
-        LWTextStorage* storage1 = [LWTextStorage lw_textStrageWithText:attributedString1 frame:CGRectMake(10.0f, 100.0f, self.view.bounds.size.width - 100.0f, 600.0f)];
-
-        NSMutableAttributedString* attributedString3 = [[NSMutableAttributedString alloc] initWithString:@"Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文混排显示" attributes:attris];
-
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:@"Gallop --- " attributes:attris];
         NSMutableAttributedString* emoji1 = [NSMutableAttributedString lw_textAttachmentStringWithContent:[UIImage imageNamed:@"001.png"]
                                                                                               contentMode:UIViewContentModeScaleAspectFill
                                                                                                    ascent:0.0f
@@ -74,27 +53,39 @@
                                                                                                    ascent:12.0f
                                                                                                   descent:0
                                                                                                     width:12.0f];
-
-
-        [attributedString3 appendAttributedString:emoji1];
-        [attributedString3 appendAttributedString:emoji2];
-        [attributedString3 appendAttributedString:emoji3];
-        [attributedString3 appendAttributedString:emoji4];
-        [attributedString3 appendAttributedString:emoji5];
-
-        [attributedString3 setTextBackgroundColor:[UIColor greenColor] range:NSMakeRange(0, attributedString3.length)];
-        [attributedString3 setLineSpacing:2.0f range:NSMakeRange(0, attributedString3.length)];
-
-        NSMutableAttributedString* attributedString4 = [[NSMutableAttributedString alloc] initWithString:@"Gallop---" attributes:attris];
-        [attributedString4 setTextAlignment:NSTextAlignmentRight range:NSMakeRange(0, attributedString4.length)];
-
-        LWTextStorage* storage2 = [LWTextStorage lw_textStrageWithText:attributedString3 frame:CGRectMake(50.0f,300.0f, self.view.bounds.size.width - 100.0f, CGFLOAT_MAX)];
-        LWTextStorage* storage3 = [LWTextStorage lw_textStrageWithText:attributedString4 frame:CGRectMake(10, 400.0f, self.view.bounds.size.width - 20.0f, 30.0f)];
-        LWLayout* layout = [[LWLayout alloc] init];
+        [attributedString appendAttributedString:emoji1];
+        [attributedString appendAttributedString:emoji2];
+        [attributedString appendAttributedString:emoji3];
+        [attributedString appendAttributedString:emoji4];
+        [attributedString appendAttributedString:emoji5];
+        [attributedString setTextColor:[UIColor redColor] range:NSMakeRange(0, attributedString.length)];
+        [attributedString setTextBackgroundColor:[UIColor yellowColor] range:NSMakeRange(0, attributedString.length)];
+        [attributedString setTextAlignment:NSTextAlignmentRight range:NSMakeRange(0, attributedString.length)];
+        LWTextStorage* storage = [LWTextStorage lw_textStrageWithText:attributedString frame:CGRectMake(10.0f, 100.0f, self.view.bounds.size.width - 30.0f, 300.0f)];
         [layout addStorage:storage];
+
+        LWTextStorage* storage1 = [[LWTextStorage alloc] initWithFrame:CGRectMake(10, 50.0f, self.view.bounds.size.width - 20.0f, CGFLOAT_MAX)];
+        storage1.textColor = [UIColor greenColor];
+        storage1.textBackgroundColor = [UIColor redColor];
+        storage1.textAlignment = NSTextAlignmentRight;
+        storage1.text = @"我想要写一个牛逼的框架。";
+
+        [storage1 lw_replaceTextWithView:[[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60.0f, 30.0f)]
+                             contentMode:UIViewContentModeScaleAspectFill
+                                    size:CGSizeMake(60.0f, 30.0f)
+                               alignment:LWTextAttachAlignmentTop
+                                   range:NSMakeRange(1,0)];
+
+
+        [storage1 lw_replaceTextWithImage:[UIImage imageNamed:@"005.png"]
+                              contentMode:UIViewContentModeScaleAspectFill
+                                imageSize:CGSizeMake(60, 60)
+                                alignment:LWTextAttachAlignmentCenter
+                                    range:NSMakeRange(4, 0)];
+
+
+
         [layout addStorage:storage1];
-        [layout addStorage:storage2];
-        [layout addStorage:storage3];
         dispatch_sync(dispatch_get_main_queue(), ^{
             self.asyncDisplayView.layout = layout;
         });
@@ -102,9 +93,11 @@
 }
 
 
+
+
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    self.asyncDisplayView.frame = CGRectMake(0.0f, 100.0f, self.view.bounds.size.width , 500.0f);
+    self.asyncDisplayView.frame = CGRectMake(0, 64.0f, self.view.bounds.size.width, self.view.bounds.size.height - 64.0f);
 }
 
 

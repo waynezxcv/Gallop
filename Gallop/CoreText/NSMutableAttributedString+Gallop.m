@@ -33,7 +33,7 @@
 
 #pragma mark -
 - (void)setTextColor:(UIColor *)textColor range:(NSRange)range {
-    [self setAttribute:NSFontAttributeName value:textColor range:range];
+    [self setAttribute:NSForegroundColorAttributeName value:textColor range:range];
 }
 
 - (void)setTextBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range {

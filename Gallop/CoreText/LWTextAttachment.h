@@ -41,7 +41,7 @@
 /**
  *  构造方法
  *
- *  @param object 可以是UIImage对象、UIImageView对象、CALayer对象。
+ *  @param object 可以是UIImage对象、UIView对象、CALayer对象。
  *  如果是UIImage对象，会使用CoreGraphics方法来绘制
  *
  *  @return LWTextAttachment实例对象
