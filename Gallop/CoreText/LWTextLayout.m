@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -89,7 +89,7 @@
     CGRect textBoundingRect = CGRectZero;
     CGSize textBoundingSize = CGSizeZero;
     NSUInteger lineCurrentIndex = 0;
-
+    
     NSMutableArray* highlights = [[NSMutableArray alloc] init];
     NSMutableArray* backgroundColors = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < lineCount; i++) {
@@ -115,7 +115,7 @@
                 NSArray* highlightPositions = [self _highlightPositionsWithCtFrame:ctFrame range:highlight.range];
                 highlight.positions = highlightPositions;
                 [highlights addObject:highlight];
-                break;
+                continue;
             }
         }
         //****  BackgroundColor ********//
@@ -134,7 +134,7 @@
                 NSArray* backgroundsPositions = [self _highlightPositionsWithCtFrame:ctFrame range:color.range];
                 color.positions = backgroundsPositions;
                 [backgroundColors addObject:color];
-                break;
+                continue;
             }
         }
         CGPoint ctLineOrigin = lineOrigins[i];
@@ -232,12 +232,13 @@
        containerLayer:(CALayer *)containerLayer {
     [self removeAttachmentFromSuperViewOrLayer];
     [self _drawTextBackgroundColorInContext:context textLayout:self size:size point:point];
+    [self _drawDebugInContext:context textLayout:self size:size point:point];
     [self _drawTextInContext:context textLayout:self size:size point:point];
     [self _drawAttachmentsIncontext:context textLayou:self size:size point:point containerView:containerView containerLayer:containerLayer];
 }
 
 - (void)_drawTextBackgroundColorInContext:(CGContextRef)context  textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
-    for (LWTextBackgroundColor* background in textLayout.backgroundColors) {
+    [textLayout.backgroundColors enumerateObjectsUsingBlock:^(LWTextBackgroundColor * _Nonnull background, NSUInteger idx, BOOL * _Nonnull stop) {
         for (NSValue* value in background.positions) {
             CGRect rect = [value CGRectValue];
             CGRect adjustRect = CGRectMake(point.x + rect.origin.x, point.y + rect.origin.y, rect.size.width, rect.size.height);
@@ -245,35 +246,44 @@
             [background.backgroundColor setFill];
             [beizerPath fill];
         }
-    }
+    }];
 }
 
-- (void)_drawTextInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
+- (void)_drawDebugInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
     if (self.isNeedDebugDraw) {
         CGContextAddRect(context, CGRectOffset(textLayout.cgPathBox, point.x, point.y));
         CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
         CGContextFillPath(context);
-
         CGContextAddRect(context, CGRectOffset(textLayout.textBoundingRect,point.x,point.y));
         CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
         CGContextFillPath(context);
-
-        for (NSInteger i = 0; i < textLayout.linesArray.count; i ++) {
-            LWTextLine* line = [textLayout.linesArray objectAtIndex:i];
+        [textLayout.linesArray enumerateObjectsUsingBlock:^(LWTextLine * _Nonnull line, NSUInteger idx, BOOL * _Nonnull stop) {
             CGContextMoveToPoint(context,line.lineOrigin.x + point.x,(line.lineOrigin.y + point.y));
             CGContextAddLineToPoint(context, line.lineOrigin.x + point.x + line.lineWidth,(line.lineOrigin.y + point.y));
             CGContextSetLineWidth(context, 1.0f);
             CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
             CGContextStrokePath(context);
-        }
+        }];
+        [textLayout.textHighlights enumerateObjectsUsingBlock:^(LWTextHighlight * _Nonnull highlight, NSUInteger idx, BOOL * _Nonnull stop) {
+            for (NSValue* rectValue in highlight.positions) {
+                CGRect rect = [rectValue CGRectValue];
+                CGRect adjustRect = CGRectOffset(rect, point.x, point.y);
+                UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect
+                                                                      cornerRadius:2.0f];
+                [highlight.hightlightColor setFill];
+                [beizerPath fill];
+            }
+        }];
     }
+}
+
+- (void)_drawTextInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
     CGContextSaveGState(context);
     CGContextTranslateCTM(context, point.x, point.y);
     CGContextTranslateCTM(context, 0, size.height);
     CGContextScaleCTM(context, 1, -1);
     NSArray* lines = textLayout.linesArray;
-    for (NSInteger i = 0; i < lines.count; i ++ ) {
-        LWTextLine* line = lines[i];
+    [lines enumerateObjectsUsingBlock:^(LWTextLine*  _Nonnull line, NSUInteger idx, BOOL * _Nonnull stop) {
         CGContextSetTextMatrix(context, CGAffineTransformIdentity);
         CGContextSetTextPosition(context, line.lineOrigin.x ,size.height - line.lineOrigin.y);
         CFArrayRef runs = CTLineGetGlyphRuns(line.CTLine);
@@ -281,7 +291,7 @@
             CTRunRef run = CFArrayGetValueAtIndex(runs, j);
             CTRunDraw(run, context, CFRangeMake(0, 0));
         }
-    }
+    }];
     CGContextRestoreGState(context);
 }
 

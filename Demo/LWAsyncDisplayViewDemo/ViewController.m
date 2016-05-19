@@ -26,6 +26,7 @@
 #import "CellLayout.h"
 #import "CommentView.h"
 #import "CommentModel.h"
+#import "LWAlertView.h"
 
 @interface ViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
 
@@ -66,7 +67,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidAppearNotifications:)
                                                  name:UIKeyboardWillShowNotification object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidHidenNotifications:)
                                                  name:UIKeyboardWillHideNotification object:nil];
@@ -77,7 +78,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidHideNotification
                                                   object:nil];
@@ -136,10 +137,9 @@ const CGFloat kRefreshBoundary = 170.0f;
         self.postComment.to = commentModel.to;
         self.postComment.index = commentModel.index;
     } else {
-        UIViewController* vc = [[UIViewController alloc] init];
-        vc.view.backgroundColor = [UIColor whiteColor];
-        vc.title = data;
-        [self.navigationController pushViewController:vc animated:YES];
+        if ([data isKindOfClass:[NSString class]]) {
+            [LWAlertView shoWithMessage:data];
+        }
     }
 }
 
@@ -388,7 +388,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"哈哈哈哈"},
                                            @{@"from":@"SIZE潮流生活",
                                              @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接"}]},
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接#Waynezxcv#.Hello，world"}]},
                         @{@"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
                           @"content":@"出国留学的儿子为思念自己的家人们寄来一个用自己照片做成的人形立牌",
