@@ -25,32 +25,38 @@
     [self.view addSubview:self.asyncDisplayView];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         LWLayout* layout = [[LWLayout alloc] init];
-        LWTextStorage* storage1 = [[LWTextStorage alloc] init];
-        storage1.text = @"Organization plans now include unlimited private repositories—pay per user and get as many repositories as your team needs. Upgrade today or learn more about our pricing updates.";
-        storage1.frame = CGRectMake(10, 100.0f, self.view.bounds.size.width - 20.0f, CGFLOAT_MAX);
-        storage1.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
-        storage1.textColor = [UIColor grayColor];
+        LWTextStorage* textStorage = [[LWTextStorage alloc] init];
+        textStorage.text = @"Easy to use yet capable of so much, iOS 9 was engineered to work hand in hand with the advanced technologies built into iPhone.";
+        textStorage.frame = CGRectMake(10, 50.0f, self.view.bounds.size.width - 20.0f, CGFLOAT_MAX);
+        textStorage.font = [UIFont systemFontOfSize:18.0f];
+        textStorage.textColor = [UIColor blackColor];
+        [textStorage lw_replaceTextWithView:[[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60.0f, 30.0f)]
+                                contentMode:UIViewContentModeScaleAspectFill
+                                       size:CGSizeMake(60.0f, 30.0f)
+                                  alignment:LWTextAttachAlignmentTop
+                                      range:NSMakeRange(1,0)];
 
-        [storage1 lw_replaceTextWithView:[[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60.0f, 30.0f)]
-                             contentMode:UIViewContentModeScaleAspectFill
-                                    size:CGSizeMake(60.0f, 30.0f)
-                               alignment:LWTextAttachAlignmentTop
-                                   range:NSMakeRange(1,0)];
+        [textStorage lw_replaceTextWithImage:[UIImage imageNamed:@"005.png"]
+                                 contentMode:UIViewContentModeScaleAspectFill
+                                   imageSize:CGSizeMake(12, 12)
+                                   alignment:LWTextAttachAlignmentTop
+                                       range:NSMakeRange(5, 1)];
 
-        [storage1 lw_replaceTextWithImage:[UIImage imageNamed:@"005.png"]
-                              contentMode:UIViewContentModeScaleAspectFill
-                                imageSize:CGSizeMake(12, 12)
-                                alignment:LWTextAttachAlignmentTop
-                                    range:NSMakeRange(5, 1)];
+        [textStorage lw_addLinkWithData:@"touch link"
+                                  range:NSMakeRange(12, 25)
+                              linkColor:[UIColor blueColor]
+                         highLightColor:RGB(0, 0, 0, 0.35f)];
 
-        [storage1 lw_addLinkWithData:@"touch link"
-                               range:NSMakeRange(14, 25)
-                           linkColor:[UIColor blueColor]
-                      highLightColor:RGB(0, 0, 0, 0.35f)];
-        [layout addStorage:storage1];
+        [textStorage lw_addLinkWithData:@"iPhone."
+                                  range:NSMakeRange(textStorage.text.length - 7,8)
+                              linkColor:[UIColor greenColor]
+                         highLightColor:RGB(0, 0, 0, 0.35f)];
+        [layout addStorage:textStorage];
+
+
         LWImageStorage* imamgeStorage = [[LWImageStorage alloc] init];
         imamgeStorage.image = [UIImage imageNamed:@"pic.jpeg"];
-        imamgeStorage.frame = CGRectMake(20.0f, 250.0f, 80, 80);
+        imamgeStorage.frame = CGRectMake(textStorage.left, textStorage.bottom + 20.0f, 80, 80);
         imamgeStorage.cornerRadius = 40.0f;
         imamgeStorage.type = LWImageStorageLocalImage;
         [layout addStorage:imamgeStorage];

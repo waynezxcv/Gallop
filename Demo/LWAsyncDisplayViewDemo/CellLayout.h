@@ -14,8 +14,6 @@
 
 
 
-
-
 #import "LWLayout.h"
 #import "StatusModel.h"
 
@@ -31,8 +29,11 @@
 @property (nonatomic,copy) NSArray* imagePostionArray;
 @property (nonatomic,strong) StatusModel* statusModel;
 
-//- (id)initWithContainer:(LWStorageContainer *)container
-//            statusModel:(StatusModel *)statusModel
-//                  index:(NSInteger)index
-//          dateFormatter:(NSDateFormatter *)dateFormatter;
+
+- (id)initWithStatusModel:(StatusModel *)stautsModel
+                    index:(NSInteger)index
+            dateFormatter:(NSDateFormatter *)dateFormatter;
+
+
+
 @end

@@ -48,7 +48,6 @@
 @property (nonatomic,strong) NSMutableArray<LWTextBackgroundColor *>* backgroundColors;
 
 
-
 @end
 
 
@@ -62,8 +61,8 @@
     }
     NSMutableAttributedString* mutableAtrributedText = text.mutableCopy;
     //******* cgPath、cgPathBox *****//
-    CGPathRef cgPath = container.path.CGPath;//UIKit坐标系
-    CGRect cgPathBox = CGPathGetPathBoundingBox(cgPath);//UIKit坐标系
+    CGPathRef cgPath = container.path.CGPath;
+    CGRect cgPathBox = CGPathGetPathBoundingBox(cgPath);
     //******* ctframeSetter、ctFrame *****//
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFTypeRef)mutableAtrributedText);
     CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,CFRangeMake(0,text.length),NULL,CGSizeMake(cgPathBox.size.width, cgPathBox.size.height),NULL);
@@ -138,12 +137,11 @@
                 break;
             }
         }
-        CGPoint ctLineOrigin = lineOrigins[i];//CoreText坐标系
-        CGPoint position;//UIKit坐标系
+        CGPoint ctLineOrigin = lineOrigins[i];
+        CGPoint position;
         position.x = cgPathBox.origin.x + ctLineOrigin.x;
         position.y = cgPathBox.size.height + cgPathBox.origin.y - ctLineOrigin.y;
         LWTextLine* line = [LWTextLine lw_textLineWithCTlineRef:ctLine lineOrigin:position];
-        [lines addObject:line];
         CGRect rect = line.frame;
         BOOL newRow = YES;
         if (position.x != lastPosition.x) {
@@ -180,6 +178,7 @@
                            cgPathBox.size.height + container.edgeInsets.top + container.edgeInsets.bottom);
     cgPath = [UIBezierPath bezierPathWithRect:cgPathBox].CGPath;
     LWTextLayout* layout = [[self alloc] init];
+    layout.needDebugDraw = NO;
     layout.container = container;
     layout.text = mutableAtrributedText;
     layout.cgPath = cgPath;
@@ -231,6 +230,7 @@
                 point:(CGPoint)point
         containerView:(UIView *)containerView
        containerLayer:(CALayer *)containerLayer {
+    [self removeAttachmentFromSuperViewOrLayer];
     [self _drawTextBackgroundColorInContext:context textLayout:self size:size point:point];
     [self _drawTextInContext:context textLayout:self size:size point:point];
     [self _drawAttachmentsIncontext:context textLayou:self size:size point:point containerView:containerView containerLayer:containerLayer];
@@ -249,6 +249,24 @@
 }
 
 - (void)_drawTextInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
+    if (self.isNeedDebugDraw) {
+        CGContextAddRect(context, CGRectOffset(textLayout.cgPathBox, point.x, point.y));
+        CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
+        CGContextFillPath(context);
+
+        CGContextAddRect(context, CGRectOffset(textLayout.textBoundingRect,point.x,point.y));
+        CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
+        CGContextFillPath(context);
+
+        for (NSInteger i = 0; i < textLayout.linesArray.count; i ++) {
+            LWTextLine* line = [textLayout.linesArray objectAtIndex:i];
+            CGContextMoveToPoint(context,line.lineOrigin.x + point.x,(line.lineOrigin.y + point.y));
+            CGContextAddLineToPoint(context, line.lineOrigin.x + point.x + line.lineWidth,(line.lineOrigin.y + point.y));
+            CGContextSetLineWidth(context, 1.0f);
+            CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
+            CGContextStrokePath(context);
+        }
+    }
     CGContextSaveGState(context);
     CGContextTranslateCTM(context, point.x, point.y);
     CGContextTranslateCTM(context, 0, size.height);
@@ -273,7 +291,6 @@
                             point:(CGPoint)point
                     containerView:(UIView *)containerView
                    containerLayer:(CALayer *)containerLayer {
-
     for (NSUInteger i = 0; i < textLayout.attachments.count; i++) {
         LWTextAttachment* attachment = textLayout.attachments[i];
         if (!attachment.content) {
@@ -298,7 +315,6 @@
         CGRect rect = ((NSValue *)textLayout.attachmentRects[i]).CGRectValue;
         rect = UIEdgeInsetsInsetRect(rect,attachment.contentEdgeInsets);
         rect = LWCGRectFitWithContentMode(rect, asize, attachment.contentMode);
-        rect = CGRectPixelRound(rect);
         rect = CGRectStandardize(rect);
         rect.origin.x += point.x;
         rect.origin.y += point.y;
@@ -312,18 +328,33 @@
                 CGContextRestoreGState(context);
             }
         } else if (view) {
-            view.frame = rect;
-            [containerView addSubview:view];
+            dispatch_main_sync_safe(^{
+                view.frame = rect;
+                [containerView addSubview:view];
+            });
         } else if (layer) {
-            layer.frame = rect;
-            [containerLayer addSublayer:layer];
+            dispatch_main_sync_safe(^{
+                layer.frame = rect;
+                [containerLayer addSublayer:layer];
+            });
         }
     }
 }
 
-
 - (void)removeAttachmentFromSuperViewOrLayer {
-    
+    for (LWTextAttachment* attachment in self.attachments) {
+        if ([attachment.content isKindOfClass:[UIView class]]) {
+            dispatch_main_sync_safe(^{
+                UIView* view = attachment.content;
+                [view removeFromSuperview];
+            });
+        } else if ([attachment.content isKindOfClass:[CALayer class]]) {
+            dispatch_main_sync_safe(^{
+                CALayer* layer = attachment.content;
+                [layer removeFromSuperlayer];
+            });
+        }
+    }
 }
 
 #pragma mark - Private
@@ -409,20 +440,6 @@
 
 + (BOOL)_isPosition:(NSInteger)position inRange:(CFRange)range {
     return (position >= range.location && position < range.location + range.length);
-}
-
-static inline CGRect CGRectPixelRound(CGRect rect) {
-    CGPoint origin = CGPointPixelRound(rect.origin);
-    CGPoint corner = CGPointPixelRound(CGPointMake(rect.origin.x + rect.size.width,
-                                                   rect.origin.y + rect.size.height));
-    return CGRectMake(origin.x, origin.y, corner.x - origin.x, corner.y - origin.y);
-}
-
-
-static inline CGPoint CGPointPixelRound(CGPoint point) {
-    CGFloat scale = [UIScreen mainScreen].scale;
-    return CGPointMake(round(point.x * scale) / scale,
-                       round(point.y * scale) / scale);
 }
 
 static CGRect LWCGRectFitWithContentMode(CGRect rect, CGSize size, UIViewContentMode mode) {

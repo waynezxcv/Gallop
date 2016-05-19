@@ -22,48 +22,44 @@
  THE SOFTWARE.
  */
 
-#import "LWStorage.h"
 
-@implementation LWStorage
+#import <Foundation/Foundation.h>
+#import "LWTextStorage.h"
 
-- (CGFloat)left {
-    return self.frame.origin.x;
-}
-
-- (CGFloat)right {
-    return  self.frame.origin.x + self.width;
-}
-
-- (CGFloat)top {
-    return self.frame.origin.y;
-}
-
-- (CGFloat)bottom {
-    return self.frame.origin.y + self.height;
-}
-
-- (CGFloat)height {
-    return self.frame.size.height;
-}
-
-- (CGFloat)width {
-    return self.frame.size.width;
-}
+@interface LWTextParser : NSObject
 
 
-- (void)setCenter:(CGPoint)center {
-    CGRect frame = self.frame;
-    frame.origin.x = center.x - frame.size.width * 0.5f;
-    frame.origin.y = center.y - frame.size.height * 0.5f;
-    self.frame = frame;
-}
-
-- (CGPoint)center {
-    return CGPointMake(self.frame.origin.x + self.frame.size.width * 0.5f,
-                       self.frame.origin.y + self.frame.size.height * 0.5f);
-}
+/**
+ *  解析表情替代为相应的图片
+ *  格式：text：@“hello,world~![微笑]”  ----> @"hello，world~！（[UIImage imageNamed：@“[微笑]”]）"
+ *
+ */
++ (void)parseEmojiWithTextStorage:(LWTextStorage *)textStorage;
 
 
+/**
+ *  解析HTTP(s):// 并添加链接
+ *
+ */
++ (void)parseHttpURLWithTextStorage:(LWTextStorage *)textStorage
+                          linkColor:(UIColor *)linkColor
+                     highlightColor:(UIColor *)higlightColor;
+
+/**
+ *  解析 @用户 并添加链接
+ *
+ */
+
++ (void)parseAccountWithTextStorage:(LWTextStorage *)textStorage
+                          linkColor:(UIColor *)linkColor
+                     highlightColor:(UIColor *)higlightColor;
 
 
+/**
+ *  解析 #主题# 并添加链接
+ *
+ */
++ (void)parseTopicWithLWTextStorage:(LWTextStorage *)textStorage
+                          linkColor:(UIColor *)linkColor
+                     highlightColor:(UIColor *)higlightColor;
 @end

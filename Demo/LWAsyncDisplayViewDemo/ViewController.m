@@ -99,29 +99,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     self.navigationItem.title = @"朋友圈";
 }
 
-/****************************************************************************/
-/**
- *  在这里生成LWAsyncDisplayView的模型。
- */
-/****************************************************************************/
-
-//- (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel index:(NSInteger)index {
-//    //生成Storage容器
-////    LWStorageContainer* container = [[LWStorageContainer alloc] init];
-////    //生成Layout
-////    CellLayout* layout = [[CellLayout alloc] initWithContainer:container
-////                                                   statusModel:statusModel
-////                                                         index:index
-////                                                 dateFormatter:self.dateFormatter];
-//    return layout;
-//}
-
-/****************************************************************************/
-
-
 #pragma mark - Actions
-
-
 /**
  *  点击图片
  *
@@ -187,7 +165,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [newCommentLists addObject:newComment];
     StatusModel* statusModel = layout.statusModel;
     statusModel.commentList = newCommentLists;
-//    layout = [self layoutWithStatusModel:statusModel index:model.index];
+    layout = [self layoutWithStatusModel:statusModel index:model.index];
     [self.dataSource replaceObjectAtIndex:model.index withObject:layout];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.index inSection:0]]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -227,7 +205,6 @@ const CGFloat kRefreshBoundary = 170.0f;
 - (void)keyboardDidHidenNotifications:(NSNotification *)notifications {
     self.commentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f);
 }
-
 
 #pragma mark - UITableViewDataSource
 
@@ -294,8 +271,8 @@ const CGFloat kRefreshBoundary = 170.0f;
             [fakes addObjectsFromArray:self.fakeDatasource];
             for (NSInteger i = 0; i < fakes.count; i ++) {
                 StatusModel* statusModel = [StatusModel modelWithJSON:fakes[i]];
-//                LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
-//                [self.dataSource addObject:layout];
+                LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
+                [self.dataSource addObject:layout];
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -303,6 +280,22 @@ const CGFloat kRefreshBoundary = 170.0f;
         });
     });
 }
+
+
+/****************************************************************************/
+/**
+ *  在这里生成LWAsyncDisplayView的模型。
+ */
+/****************************************************************************/
+
+- (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel index:(NSInteger)index {
+    //生成Layout
+    CellLayout* layout = [[CellLayout alloc] initWithStatusModel:statusModel index:index dateFormatter:self.dateFormatter];
+    return layout;
+}
+
+/****************************************************************************/
+
 
 
 #pragma mark - Getter
@@ -395,7 +388,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"哈哈哈哈"},
                                            @{@"from":@"SIZE潮流生活",
                                              @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接#Gallop#"}]},
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接"}]},
                         @{@"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
                           @"content":@"出国留学的儿子为思念自己的家人们寄来一个用自己照片做成的人形立牌",

@@ -16,8 +16,8 @@
 
 
 #import <UIKit/UIKit.h>
-#import "LWAsyncDisplayView.h"
 #import "CellLayout.h"
+#import "Gallop.h"
 
 
 @class TableViewCell;
@@ -31,7 +31,6 @@
 
 - (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
               atIndexPath:(NSIndexPath *)indexPath;
-
 
 @end
 

@@ -37,10 +37,11 @@
 @property (nonatomic,strong,readonly) NSMutableArray<LWStorage *>* totalStorages;
 
 
-
 - (void)addStorage:(LWStorage *)storage;
 - (void)addStorages:(NSArray <LWStorage *> *)storages;
 - (void)removeStorage:(LWStorage *)storage;
 - (void)removeStorages:(NSArray <LWStorage *> *)storages;
+
+- (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin;
 
 @end

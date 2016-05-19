@@ -51,7 +51,7 @@
 @property (nonatomic,strong,readonly) NSMutableSet<id>* attachmentContentsSet;
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextHighlight *>* textHighlights;
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextBackgroundColor *>* backgroundColors;
-
+@property (nonatomic,assign,getter = isNeedDebugDraw) BOOL needDebugDraw;
 
 /**
  *  构造方法

@@ -1,14 +1,31 @@
-/********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
-/***************  https://github.com/waynezxcv/Gallop 持续更新 ***************************/
-/******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
+/*
+ https://github.com/waynezxcv/Gallop
 
+ Copyright (c) 2016 waynezxcv <liuweiself@126.com>
 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
 
 
 #import "LWTextParser.h"
 
-#define URLRegular @""
+#define URLRegular @"^(f|ht){1}(tp|tps):\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?"
 #define EmojiRegular @"\\[[a-zA-Z0-9\\u4e00-\\u9fa5]+\\]"
 #define AccountRegular @"@[\u4e00-\u9fa5a-zA-Z0-9_-]{2,30}"
 #define TopicRegular @"#[^#]+#"
@@ -72,9 +89,11 @@ static inline NSRegularExpression* TopicRegularExpression() {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         if (textStorage.text.length >= range.location + range.length) {
-//            [textStorage replaceTextWithImage:[UIImage imageNamed:content]
-//                                    imageSize:CGSizeMake(14, 14)
-//                                      inRange:range];
+            [textStorage lw_replaceTextWithImage:[UIImage imageNamed:content]
+                                     contentMode:UIViewContentModeScaleAspectFill
+                                       imageSize:CGSizeMake(14, 14)
+                                       alignment:LWTextAttachAlignmentTop
+                                           range:range];
         }
     }
 }
@@ -82,8 +101,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
 
 + (void)parseHttpURLWithTextStorage:(LWTextStorage *)textStorage
                           linkColor:(UIColor *)linkColor
-                     highlightColor:(UIColor *)higlightColor
-                     underlineStyle:(NSUnderlineStyle)underlineStyle {
+                     highlightColor:(UIColor *)higlightColor {
     NSString* text = textStorage.text;
     NSArray* resultArray = [URLRegularExpression() matchesInString:text
                                                            options:0
@@ -91,19 +109,14 @@ static inline NSRegularExpression* TopicRegularExpression() {
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-//        [textStorage addLinkWithData:content
-//                             inRange:range
-//                           linkColor:linkColor
-//                      highLightColor:higlightColor
-//                      UnderLineStyle:NSUnderlineStyleSingle];
+        [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
     }
 }
 
 
 + (void)parseAccountWithTextStorage:(LWTextStorage *)textStorage
                           linkColor:(UIColor *)linkColor
-                     highlightColor:(UIColor *)higlightColor
-                     underlineStyle:(NSUnderlineStyle)underlineStyle {
+                     highlightColor:(UIColor *)higlightColor {
 
     NSString* text = textStorage.text;
     NSArray* resultArray = [AccountRegularExpression() matchesInString:text
@@ -112,19 +125,14 @@ static inline NSRegularExpression* TopicRegularExpression() {
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-//        [textStorage addLinkWithData:content
-//                             inRange:range
-//                           linkColor:linkColor
-//                      highLightColor:higlightColor
-//                      UnderLineStyle:underline];
+        [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
     }
 }
 
 
 + (void)parseTopicWithLWTextStorage:(LWTextStorage *)textStorage
                           linkColor:(UIColor *)linkColor
-                     highlightColor:(UIColor *)higlightColor
-                     underlineStyle:(NSUnderlineStyle)underlineStyle {
+                     highlightColor:(UIColor *)higlightColor {
 
     NSString* text = textStorage.text;
     NSArray* resultArray = [TopicRegularExpression() matchesInString:text
@@ -133,11 +141,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
     for(NSTextCheckingResult* match in resultArray) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-//        [textStorage addLinkWithData:content
-//                             inRange:range
-//                           linkColor:linkColor
-//                      highLightColor:higlightColor
-//                      UnderLineStyle:underlineStyle];
+        [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
     }
 }
 

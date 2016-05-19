@@ -53,8 +53,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     BOOL _displayed;
 }
 
-
-
 #pragma mark - Init
 
 - (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)count {
@@ -268,6 +266,18 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 }
 
 - (void)_drawStoragesInContext:(CGContextRef)context {
+    for (LWImageStorage* imageStorage in _imageStorages) {
+        if (imageStorage.type == LWImageStorageLocalImage) {
+            [imageStorage.image drawInRect:imageStorage.frame];
+        }
+    }
+    for (LWTextStorage* textStorage in _textStorages) {
+        [textStorage.textLayout drawIncontext:context
+                                         size:textStorage.textLayout.textBoundingSize
+                                        point:textStorage.frame.origin
+                                containerView:self
+                               containerLayer:self.layer];
+    }
     if (_showingHighlight && _highlight) {
         for (NSValue* rectValue in _highlight.positions) {
             CGRect rect = [rectValue CGRectValue];
@@ -281,20 +291,10 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
             [beizerPath fill];
         }
     }
-    for (LWTextStorage* textStorage in _textStorages) {
-        [textStorage.textLayout drawIncontext:context
-                                         size:textStorage.textLayout.textBoundingSize
-                                        point:textStorage.frame.origin
-                                containerView:self
-                               containerLayer:self.layer];
-    }
-    for (LWImageStorage* imageStorage in _imageStorages) {
-        if (imageStorage.type == LWImageStorageLocalImage) {
-            [imageStorage.image drawInRect:imageStorage.frame];
-        }
+    if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:)]) {
+        [self.delegate extraAsyncDisplayIncontext:context size:self.bounds.size];
     }
 }
-
 
 #pragma mark - Touch
 
@@ -389,6 +389,7 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self _removeHightlight];
             });
+            break;
         }
     }
     if (!found) {

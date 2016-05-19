@@ -29,6 +29,7 @@
 
 @property (nonatomic,strong) LWTextLayout* textLayout;
 @property (nonatomic,strong) NSMutableAttributedString* attributedText;
+@property (nonatomic,assign) CGPoint position;
 
 @end
 
@@ -56,6 +57,7 @@
     self = [super init];
     if (self) {
         self.frame = frame;
+        self.position = CGPointZero;
         self.text = nil;
         self.attributedText = nil;
         self.textColor = [UIColor blackColor];
@@ -74,6 +76,7 @@
     self = [super init];
     if (self) {
         self.frame = CGRectZero;
+        self.position = CGPointZero;
         self.text = nil;
         self.attributedText = nil;
         self.textColor = [UIColor blackColor];
@@ -272,6 +275,7 @@
 
 - (void)setFrame:(CGRect)frame {
     _frame = frame;
+    _position = _frame.origin;
     [self _creatTextLayout];
 }
 
@@ -282,5 +286,44 @@
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:self.frame.size];
     self.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:self.attributedText];
 }
+
+
+#pragma mark - Getter
+- (CGFloat)left {
+    return self.textLayout.cgPathBox.origin.x + self.position.x;
+}
+
+- (CGFloat)right {
+    return  self.textLayout.cgPathBox.origin.x + self.position.x + self.width;
+}
+
+- (CGFloat)top {
+    return self.textLayout.cgPathBox.origin.y + self.position.y;
+}
+
+- (CGFloat)bottom {
+    return self.textLayout.cgPathBox.origin.y + self.position.y + self.height;
+}
+
+- (CGFloat)height {
+    return self.textLayout.cgPathBox.size.height;
+}
+
+- (CGFloat)width {
+    return self.textLayout.cgPathBox.size.width;
+}
+
+- (void)setCenter:(CGPoint)center {
+    CGRect frame = self.frame;
+    frame.origin.x = center.x - frame.size.width * 0.5f;
+    frame.origin.y = center.y - frame.size.height * 0.5f;
+    self.frame = frame;
+}
+
+- (CGPoint)center {
+    return CGPointMake(self.textLayout.cgPathBox.origin.x  + + self.position.x + self.textLayout.cgPathBox.size.width * 0.5f,
+                       self.textLayout.cgPathBox.origin.y + + self.position.y + self.textLayout.cgPathBox.size.height * 0.5f);
+}
+
 
 @end

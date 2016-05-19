@@ -89,7 +89,7 @@
 }
 
 #pragma mark - Setter
-//** 设置CTLine，并计算出其他相关属性的值 **//
+
 - (void)setCTLine:(CTLineRef)CTLine {
     if (_CTLine != CTLine) {
         if (_CTLine) {
@@ -100,15 +100,12 @@
             CGFloat ascent;
             CGFloat descent;
             CGFloat leading;
-            //** 计算行距，行宽，上部距离和下部距离 **//
             self.lineWidth = CTLineGetTypographicBounds(_CTLine, &ascent, &descent, &leading);
             self.ascent = ascent;
             self.descent = descent;
             self.leading = leading;
-            //** 计算CTLine在String的range **//
             CFRange range = CTLineGetStringRange(_CTLine);
             self.range = NSMakeRange(range.location, range.length);
-            //** 遍历这个CTLine中的CTRun 计算第一个字符的位置 **//
             if (CTLineGetGlyphCount(_CTLine) > 0) {
                 CFArrayRef runs = CTLineGetGlyphRuns(_CTLine);
                 CTRunRef run = CFArrayGetValueAtIndex(runs, 0);
@@ -130,7 +127,7 @@
 }
 
 #pragma mark - Calculates
-//** 根据现有属性值，计算bounds,attachments相关属性的值 **//
+
 - (void)_calculatesTheBounds {
     self.frame = CGRectMake(self.lineOrigin.x + self.firstGlyphPosition,
                             self.lineOrigin.y - self.ascent,
@@ -147,7 +144,6 @@
     [self.attachments removeAllObjects];
     [self.attachmentRanges removeAllObjects];
     [self.attachmentRects removeAllObjects];
-    //遍历这个Line中的Run
     for (NSUInteger i = 0; i < runCount; i ++) {
         CTRunRef run = CFArrayGetValueAtIndex(runs, i);
         CFIndex glyphCount = CTRunGetGlyphCount(run);

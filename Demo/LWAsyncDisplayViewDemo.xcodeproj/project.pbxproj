@@ -42,6 +42,8 @@
 		01D14F071CDD43990028714A /* LWTextAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14F061CDD43990028714A /* LWTextAttachment.m */; };
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
+		B074BB541CEE0CF9003464B4 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B074BB531CEE0CF9003464B4 /* comment@2x.png */; };
+		B074BB571CEE151A003464B4 /* LWTextParser.m in Sources */ = {isa = PBXBuildFile; fileRef = B074BB561CEE151A003464B4 /* LWTextParser.m */; };
 		B0A522E51CEA189000DC2D15 /* GallopUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A522E41CEA189000DC2D15 /* GallopUtils.m */; };
 		B0A522EB1CEA18B000DC2D15 /* LWAsyncDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A522E91CEA18B000DC2D15 /* LWAsyncDisplayView.m */; };
 		B0A522F71CEA1ABB00DC2D15 /* LWTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A522F61CEA1ABB00DC2D15 /* LWTextStorage.m */; };
@@ -54,7 +56,6 @@
 		B0ACEC031CEDC9A50019074F /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBF11CEDC9A50019074F /* CellLayout.m */; };
 		B0ACEC041CEDC9A50019074F /* CommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBF31CEDC9A50019074F /* CommentModel.m */; };
 		B0ACEC051CEDC9A50019074F /* CommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBF51CEDC9A50019074F /* CommentView.m */; };
-		B0ACEC061CEDC9A50019074F /* LWTextParser.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBF71CEDC9A50019074F /* LWTextParser.m */; };
 		B0ACEC071CEDC9A50019074F /* Menu.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBF91CEDC9A50019074F /* Menu.m */; };
 		B0ACEC081CEDC9A50019074F /* StatusModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBFB1CEDC9A50019074F /* StatusModel.m */; };
 		B0ACEC091CEDC9A50019074F /* TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBFD1CEDC9A50019074F /* TableViewCell.m */; };
@@ -153,14 +154,17 @@
 		01D14EEB1CDCF9D40028714A /* NSObject+SwizzleMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+SwizzleMethod.m"; path = "../Gallop/Utils/NSObject+SwizzleMethod.m"; sourceTree = "<group>"; };
 		01D14EF21CDCFA780028714A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		01D14EF31CDCFA780028714A /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
-		01D14EF51CDCFADE0028714A /* CoreTextDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextDemoViewController.h; sourceTree = "<group>"; };
-		01D14EF61CDCFADE0028714A /* CoreTextDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextDemoViewController.m; sourceTree = "<group>"; };
+		01D14EF51CDCFADE0028714A /* CoreTextDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreTextDemoViewController.h; path = LWAsyncDisplayViewDemo/CoreTextDemoViewController.h; sourceTree = "<group>"; };
+		01D14EF61CDCFADE0028714A /* CoreTextDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreTextDemoViewController.m; path = LWAsyncDisplayViewDemo/CoreTextDemoViewController.m; sourceTree = "<group>"; };
 		01D14F011CDD42ED0028714A /* NSMutableAttributedString+Gallop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableAttributedString+Gallop.h"; path = "../Gallop/CoreText/NSMutableAttributedString+Gallop.h"; sourceTree = "<group>"; };
 		01D14F021CDD42ED0028714A /* NSMutableAttributedString+Gallop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSMutableAttributedString+Gallop.m"; path = "../Gallop/CoreText/NSMutableAttributedString+Gallop.m"; sourceTree = "<group>"; };
 		01D14F051CDD43990028714A /* LWTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextAttachment.h; path = ../Gallop/CoreText/LWTextAttachment.h; sourceTree = "<group>"; };
 		01D14F061CDD43990028714A /* LWTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextAttachment.m; path = ../Gallop/CoreText/LWTextAttachment.m; sourceTree = "<group>"; };
 		01F51A0D1CA1B1CE00463571 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		B074BB531CEE0CF9003464B4 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
+		B074BB551CEE151A003464B4 /* LWTextParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextParser.h; path = ../Gallop/Utils/LWTextParser.h; sourceTree = "<group>"; };
+		B074BB561CEE151A003464B4 /* LWTextParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextParser.m; path = ../Gallop/Utils/LWTextParser.m; sourceTree = "<group>"; };
 		B0A522E31CEA189000DC2D15 /* GallopUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GallopUtils.h; path = ../Gallop/Utils/GallopUtils.h; sourceTree = "<group>"; };
 		B0A522E41CEA189000DC2D15 /* GallopUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GallopUtils.m; path = ../Gallop/Utils/GallopUtils.m; sourceTree = "<group>"; };
 		B0A522E81CEA18B000DC2D15 /* LWAsyncDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAsyncDisplayView.h; path = ../Gallop/AsyncDisplay/LWAsyncDisplayView.h; sourceTree = "<group>"; };
@@ -185,8 +189,6 @@
 		B0ACEBF31CEDC9A50019074F /* CommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentModel.m; sourceTree = "<group>"; };
 		B0ACEBF41CEDC9A50019074F /* CommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentView.h; sourceTree = "<group>"; };
 		B0ACEBF51CEDC9A50019074F /* CommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentView.m; sourceTree = "<group>"; };
-		B0ACEBF61CEDC9A50019074F /* LWTextParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWTextParser.h; sourceTree = "<group>"; };
-		B0ACEBF71CEDC9A50019074F /* LWTextParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWTextParser.m; sourceTree = "<group>"; };
 		B0ACEBF81CEDC9A50019074F /* Menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Menu.h; sourceTree = "<group>"; };
 		B0ACEBF91CEDC9A50019074F /* Menu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Menu.m; sourceTree = "<group>"; };
 		B0ACEBFA1CEDC9A50019074F /* StatusModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusModel.h; sourceTree = "<group>"; };
@@ -282,8 +284,7 @@
 				011DFA211C987CD6000410D7 /* AppDelegate.m */,
 				01D14EF21CDCFA780028714A /* RootViewController.h */,
 				01D14EF31CDCFA780028714A /* RootViewController.m */,
-				01D14EF51CDCFADE0028714A /* CoreTextDemoViewController.h */,
-				01D14EF61CDCFADE0028714A /* CoreTextDemoViewController.m */,
+				B0ACEC171CEDCE070019074F /* CoreTextDemo */,
 				B0ACEBED1CEDC9530019074F /* WechatMomentsDemo */,
 				011DFA1D1C987CD6000410D7 /* Supporting Files */,
 			);
@@ -444,6 +445,8 @@
 			children = (
 				B0A522E31CEA189000DC2D15 /* GallopUtils.h */,
 				B0A522E41CEA189000DC2D15 /* GallopUtils.m */,
+				B074BB551CEE151A003464B4 /* LWTextParser.h */,
+				B074BB561CEE151A003464B4 /* LWTextParser.m */,
 				01D14EDF1CDCF9D40028714A /* CALayer+GallopAddtions.h */,
 				01D14EE01CDCF9D40028714A /* CALayer+GallopAddtions.m */,
 				01D14EE11CDCF9D40028714A /* CALayer+WebCache.h */,
@@ -489,8 +492,6 @@
 			children = (
 				B0ACEC001CEDC9A50019074F /* ViewController.h */,
 				B0ACEC011CEDC9A50019074F /* ViewController.m */,
-				B0ACEBF61CEDC9A50019074F /* LWTextParser.h */,
-				B0ACEBF71CEDC9A50019074F /* LWTextParser.m */,
 				B0ACEC0D1CEDCC530019074F /* Models */,
 				B0ACEC0C1CEDCC240019074F /* Views */,
 			);
@@ -530,6 +531,7 @@
 		B0ACEC0E1CEDCD4B0019074F /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				B074BB531CEE0CF9003464B4 /* comment@2x.png */,
 				B0ACEC0F1CEDCD780019074F /* [心].png */,
 				B0ACEC101CEDCD780019074F /* [face].png */,
 				B0ACEC111CEDCD780019074F /* [menu].png */,
@@ -542,6 +544,16 @@
 				B0C7191C1CEB5ACA00B2A8D9 /* pic.jpeg */,
 			);
 			name = Resource;
+			sourceTree = "<group>";
+		};
+		B0ACEC171CEDCE070019074F /* CoreTextDemo */ = {
+			isa = PBXGroup;
+			children = (
+				01D14EF51CDCFADE0028714A /* CoreTextDemoViewController.h */,
+				01D14EF61CDCFADE0028714A /* CoreTextDemoViewController.m */,
+			);
+			name = CoreTextDemo;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -612,6 +624,7 @@
 				B0C7191D1CEB5ACA00B2A8D9 /* pic.jpeg in Resources */,
 				011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */,
 				B0C719271CEB653100B2A8D9 /* 005.png in Resources */,
+				B074BB541CEE0CF9003464B4 /* comment@2x.png in Resources */,
 				B0ACEC161CEDCD780019074F /* loading.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -662,7 +675,6 @@
 				01D14EEC1CDCF9D40028714A /* CALayer+GallopAddtions.m in Sources */,
 				B0ACEC031CEDC9A50019074F /* CellLayout.m in Sources */,
 				016BDA791CDA6A6B000D1ACF /* LWTextRunDelegate.m in Sources */,
-				B0ACEC061CEDC9A50019074F /* LWTextParser.m in Sources */,
 				01D14F071CDD43990028714A /* LWTextAttachment.m in Sources */,
 				01AE7F521CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m in Sources */,
 				B0D9EB451CB0F436009FDCCF /* SDWebImagePrefetcher.m in Sources */,
@@ -670,6 +682,7 @@
 				011DFA551C9880D2000410D7 /* LWActionSheetTableViewCell.m in Sources */,
 				B0A523041CEA1BD800DC2D15 /* LWLayout.m in Sources */,
 				011DFA1F1C987CD6000410D7 /* main.m in Sources */,
+				B074BB571CEE151A003464B4 /* LWTextParser.m in Sources */,
 				01D14EB91CDCF8A00028714A /* LWTextLayout.m in Sources */,
 				011DFA591C9880D2000410D7 /* LWImageBrowserCell.m in Sources */,
 				B0D9EB411CB0F435009FDCCF /* SDWebImageDecoder.m in Sources */,

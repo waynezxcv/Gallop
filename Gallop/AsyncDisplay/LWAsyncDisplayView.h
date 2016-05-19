@@ -32,6 +32,7 @@
 @protocol LWAsyncDisplayViewDelegate <NSObject>
 
 @optional
+
 /***  点击链接 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data;
 
@@ -44,8 +45,6 @@
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size;
 
 @end
-
-
 
 @interface LWAsyncDisplayView : UIView
 

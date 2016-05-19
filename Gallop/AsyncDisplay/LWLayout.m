@@ -87,6 +87,13 @@
     }
 }
 
+- (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin {
+    CGFloat suggestHeight = 0.0f;
+    for (LWTextStorage* storage in self.totalStorages) {
+        suggestHeight = suggestHeight > storage.bottom ? suggestHeight :storage.bottom;
+    }
+    return suggestHeight + bottomMargin;
+}
 
 #pragma mark - Getter
 - (NSMutableArray *)textStorages {

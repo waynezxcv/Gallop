@@ -44,6 +44,7 @@
     return self;
 }
 
+
 + (id)lw_textContainerWithSize:(CGSize)size {
     LWTextContainer* textContainer = [[LWTextContainer alloc] init];
     UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, size.width, size.height)];
