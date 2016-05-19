@@ -1,10 +1,10 @@
-//
-//  CoreTextDemoViewController.m
-//  LWAsyncDisplayViewDemo
-//
-//  Created by 刘微 on 16/5/7.
-//  Copyright © 2016年 WayneInc. All rights reserved.
-//
+/********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
+/***************  https://github.com/waynezxcv/Gallop 持续更新 ***************************/
+/******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
+
+
+
+
 
 #import "CoreTextDemoViewController.h"
 #import "Gallop.h"
@@ -24,7 +24,6 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.asyncDisplayView];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-
         LWLayout* layout = [[LWLayout alloc] init];
         LWTextStorage* storage1 = [[LWTextStorage alloc] init];
         storage1.text = @"Organization plans now include unlimited private repositories—pay per user and get as many repositories as your team needs. Upgrade today or learn more about our pricing updates.";

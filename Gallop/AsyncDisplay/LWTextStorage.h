@@ -68,7 +68,6 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
                  linkColor:(UIColor *)linkColor
             highLightColor:(UIColor *)highLightColor;
 
-
 /***  用本地图片替换掉指定位置的文字  ***/
 - (void)lw_replaceTextWithImage:(UIImage *)image
                     contentMode:(UIViewContentMode)contentMode

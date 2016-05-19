@@ -1,13 +1,16 @@
-//
-//  RootViewController.m
-//  LWAsyncDisplayViewDemo
-//
-//  Created by 刘微 on 16/5/7.
-//  Copyright © 2016年 WayneInc. All rights reserved.
-//
+/********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
+/***************  https://github.com/waynezxcv/Gallop 持续更新 ***************************/
+/******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
+
+
+
 
 #import "RootViewController.h"
+#import "ViewController.h"
 #import "CoreTextDemoViewController.h"
+
+
+
 
 @interface RootViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -55,7 +58,8 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (indexPath.row == 1) {
-
+        ViewController* vc = [[ViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
