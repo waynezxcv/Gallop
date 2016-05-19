@@ -35,8 +35,6 @@
                                             object:contents] commit];
 }
 
-
-
 - (void)lw_setImage:(UIImage *)image
       containerSize:(CGSize)size
        cornerRadius:(CGFloat)cornerRadius

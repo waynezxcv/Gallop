@@ -48,8 +48,13 @@
                                range:NSMakeRange(14, 25)
                            linkColor:[UIColor blueColor]
                       highLightColor:RGB(0, 0, 0, 0.35f)];
-
         [layout addStorage:storage1];
+        LWImageStorage* imamgeStorage = [[LWImageStorage alloc] init];
+        imamgeStorage.image = [UIImage imageNamed:@"pic.jpeg"];
+        imamgeStorage.frame = CGRectMake(20.0f, 250.0f, 80, 80);
+        imamgeStorage.cornerRadius = 40.0f;
+        imamgeStorage.type = LWImageStorageLocalImage;
+        [layout addStorage:imamgeStorage];
         dispatch_sync(dispatch_get_main_queue(), ^{
             self.asyncDisplayView.layout = layout;
         });

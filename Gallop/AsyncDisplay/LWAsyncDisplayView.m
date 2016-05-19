@@ -167,7 +167,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     _textStorages = self.layout.textStorages;
     _displayed = NO;
 
-
     [self _auotoUpdateImgeContainersIfNeed];
     [self _setImageStorages];
     [self _setNeedDisplay];
