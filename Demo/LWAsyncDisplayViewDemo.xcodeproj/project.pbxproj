@@ -48,6 +48,8 @@
 		B0A522FA1CEA1AD200DC2D15 /* LWImageStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A522F91CEA1AD200DC2D15 /* LWImageStorage.m */; };
 		B0A523001CEA1B6600DC2D15 /* LWStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A522FF1CEA1B6600DC2D15 /* LWStorage.m */; };
 		B0A523041CEA1BD800DC2D15 /* LWLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A523031CEA1BD800DC2D15 /* LWLayout.m */; };
+		B0ACEBEA1CEDB1760019074F /* LWAlertContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBE71CEDB1760019074F /* LWAlertContentView.m */; };
+		B0ACEBEB1CEDB1760019074F /* LWAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBE91CEDB1760019074F /* LWAlertView.m */; };
 		B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */; };
 		B0C7191D1CEB5ACA00B2A8D9 /* pic.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = B0C7191C1CEB5ACA00B2A8D9 /* pic.jpeg */; };
 		B0C7191F1CEB64FB00B2A8D9 /* 001.png in Resources */ = {isa = PBXBuildFile; fileRef = B0C7191E1CEB64FB00B2A8D9 /* 001.png */; };
@@ -157,6 +159,10 @@
 		B0A522FF1CEA1B6600DC2D15 /* LWStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWStorage.m; path = ../Gallop/AsyncDisplay/LWStorage.m; sourceTree = "<group>"; };
 		B0A523021CEA1BD800DC2D15 /* LWLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWLayout.h; path = ../Gallop/AsyncDisplay/LWLayout.h; sourceTree = "<group>"; };
 		B0A523031CEA1BD800DC2D15 /* LWLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWLayout.m; path = ../Gallop/AsyncDisplay/LWLayout.m; sourceTree = "<group>"; };
+		B0ACEBE61CEDB1760019074F /* LWAlertContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlertContentView.h; path = ../LWAlertView/LWAlertContentView.h; sourceTree = "<group>"; };
+		B0ACEBE71CEDB1760019074F /* LWAlertContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlertContentView.m; path = ../LWAlertView/LWAlertContentView.m; sourceTree = "<group>"; };
+		B0ACEBE81CEDB1760019074F /* LWAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlertView.h; path = ../LWAlertView/LWAlertView.h; sourceTree = "<group>"; };
+		B0ACEBE91CEDB1760019074F /* LWAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlertView.m; path = ../LWAlertView/LWAlertView.m; sourceTree = "<group>"; };
 		B0C503EA1CAE4FC300B6D3FB /* LWAlchemyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyManager.h; path = ../LWAlchemy/LWAlchemyManager.h; sourceTree = "<group>"; };
 		B0C503EB1CAE4FC300B6D3FB /* LWAlchemyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyManager.m; path = ../LWAlchemy/LWAlchemyManager.m; sourceTree = "<group>"; };
 		B0C7191C1CEB5ACA00B2A8D9 /* pic.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pic.jpeg; sourceTree = "<group>"; };
@@ -424,12 +430,24 @@
 		B085B3441CB69C7B00087739 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				B0ACEBE51CEDB1320019074F /* LWAlertView */,
 				011DFA681C9881AE000410D7 /* SDWebImage */,
 				011DFA361C987DFC000410D7 /* LWAlchemy */,
 				011DFA351C987DF8000410D7 /* LWImageBrowser */,
 			);
 			name = Vendors;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		B0ACEBE51CEDB1320019074F /* LWAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				B0ACEBE61CEDB1760019074F /* LWAlertContentView.h */,
+				B0ACEBE71CEDB1760019074F /* LWAlertContentView.m */,
+				B0ACEBE81CEDB1760019074F /* LWAlertView.h */,
+				B0ACEBE91CEDB1760019074F /* LWAlertView.m */,
+			);
+			name = LWAlertView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -520,6 +538,7 @@
 				B0A522F71CEA1ABB00DC2D15 /* LWTextStorage.m in Sources */,
 				01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */,
 				01D14EED1CDCF9D40028714A /* CALayer+WebCache.m in Sources */,
+				B0ACEBEA1CEDB1760019074F /* LWAlertContentView.m in Sources */,
 				B0D9EB4C1CB0F436009FDCCF /* UIView+WebCacheOperation.m in Sources */,
 				B0A523001CEA1B6600DC2D15 /* LWStorage.m in Sources */,
 				B0D9EB3C1CB0F435009FDCCF /* MKAnnotationView+WebCache.m in Sources */,
@@ -552,6 +571,7 @@
 				B0D9EB411CB0F435009FDCCF /* SDWebImageDecoder.m in Sources */,
 				01D14EEE1CDCF9D40028714A /* CALayer+WebCacheOperation.m in Sources */,
 				01D14F041CDD42ED0028714A /* NSMutableAttributedString+Gallop.m in Sources */,
+				B0ACEBEB1CEDB1760019074F /* LWAlertView.m in Sources */,
 				B0D9EB4A1CB0F436009FDCCF /* UIImageView+HighlightedWebCache.m in Sources */,
 				011DFA561C9880D2000410D7 /* LWActionSheetView.m in Sources */,
 				B0D9EB461CB0F436009FDCCF /* UIButton+WebCache.m in Sources */,

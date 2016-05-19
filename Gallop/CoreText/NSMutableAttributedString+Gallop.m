@@ -138,9 +138,14 @@
 #pragma mark -
 
 - (void)setAttribute:(NSString *)name value:(id)value range:(NSRange)range {
-    if (!name || [NSNull isEqual:name]) return;
-    if (value && ![NSNull isEqual:value]) [self addAttribute:name value:value range:range];
-    else [self removeAttribute:name range:range];
+    if (!name || [NSNull isEqual:name]){
+        return;
+    }
+    if (value && ![NSNull isEqual:value]) {
+        [self addAttribute:name value:value range:range];
+    }else {
+        [self removeAttribute:name range:range];
+    }
 }
 
 - (void)removeAttributesInRange:(NSRange)range {

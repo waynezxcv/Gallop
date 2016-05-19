@@ -36,8 +36,6 @@
         self.hightlightColor = [UIColor clearColor];
         self.positions = @[];
         self.userInfo = @{};
-        self.tapAction = nil;
-        self.longpressAction = nil;
     }
     return self;
 }
@@ -50,8 +48,6 @@
     highlight.hightlightColor = [self.hightlightColor copy];
     highlight.positions = [self.positions copy];
     highlight.userInfo = [self.userInfo copy];
-    highlight.tapAction = [self.tapAction copy];
-    highlight.longpressAction = [self.longpressAction copy];
     return highlight;
 }
 

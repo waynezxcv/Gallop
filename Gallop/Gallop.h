@@ -29,6 +29,7 @@
 #import "LWAsyncDisplayView.h"
 #import "NSMutableAttributedString+Gallop.h"
 #import "LWTextLayout.h"
+#import "LWDefine.h"
 
 
 #endif /* Gallop_h */

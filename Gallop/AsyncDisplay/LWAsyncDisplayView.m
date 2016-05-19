@@ -46,11 +46,14 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     NSArray* _textStorages;
     NSArray* _imageStorages;
     LWTextHighlight* _highlight;
+    CGPoint _highlightAdjustPoint;
     BOOL _showingHighlight;
     BOOL _cleanedImageContainer;
     BOOL _setedImageContents;
     BOOL _displayed;
 }
+
+
 
 #pragma mark - Init
 
@@ -128,7 +131,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 #pragma mark - Private
 
 - (void)_cleanup {
-
     for (LWTextStorage* textStorage in _textStorages) {
         [textStorage.textLayout removeAttachmentFromSuperViewOrLayer];
     }
@@ -138,24 +140,18 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
             //            [container cleanup];
         }
     }
-
     LWLayout* layout = _layout;
     _layout = nil;
-
     LWTextHighlight* highlight = _highlight;
     _highlight = nil;
-
     NSArray* textStroages = _textStorages;
     _textStorages = nil;
-
     NSArray* imageStorages = _imageStorages;
     _imageStorages = nil;
-
     _showingHighlight = NO;
     _cleanedImageContainer = YES;
     _setedImageContents = NO;
     _displayed = NO;
-
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [textStroages count];
         [layout class];
@@ -274,15 +270,18 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 
 - (void)_drawStoragesInContext:(CGContextRef)context {
     if (_showingHighlight && _highlight) {
-        for (NSString* rectString in _highlight.positions) {
-            CGRect rect = CGRectFromString(rectString);
-            UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:rect
+        for (NSValue* rectValue in _highlight.positions) {
+            CGRect rect = [rectValue CGRectValue];
+            CGRect adjustRect = CGRectMake(rect.origin.x + _highlightAdjustPoint.x,
+                                           rect.origin.y + _highlightAdjustPoint.y,
+                                           rect.size.width,
+                                           rect.size.height);
+            UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect
                                                                   cornerRadius:2.0f];
             [_highlight.hightlightColor setFill];
             [beizerPath fill];
         }
     }
-
     for (LWTextStorage* textStorage in _textStorages) {
         [textStorage.textLayout drawIncontext:context
                                          size:textStorage.textLayout.textBoundingSize
@@ -300,6 +299,25 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 
 #pragma mark - Touch
 
+- (LWTextHighlight *)_isNeedShowHighlight:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
+    if ([textStorage isKindOfClass:[LWTextStorage class]]) {
+        CGPoint adjustPosition = textStorage.frame.origin;
+        for (LWTextHighlight* aHighlight in textStorage.textLayout.textHighlights) {
+            for (NSValue* value in aHighlight.positions) {
+                CGRect rect = [value CGRectValue];
+                CGRect adjustRect = CGRectMake(rect.origin.x + adjustPosition.x,
+                                               rect.origin.y + adjustPosition.y,
+                                               rect.size.width,
+                                               rect.size.height);
+                if (CGRectContainsPoint(adjustRect, touchPoint)) {
+                    return aHighlight;
+                }
+            }
+        }
+    }
+    return nil;
+}
+
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     BOOL found = NO;
     UITouch* touch = [touches anyObject];
@@ -309,14 +327,9 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
             continue;
         }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
-            CTFrameRef textFrame = textStorage.textLayout.ctFrame;
-            if (textFrame == NULL) {
-                continue;
-            }
-            LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage
-                                                          touchPoint:touchPoint];
+            LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
             if (hightlight) {
-                [self _showHighlight:hightlight];
+                [self _showHighlight:hightlight adjustPoint:textStorage.frame.origin];
                 found = YES;
             }
         }
@@ -328,7 +341,6 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     BOOL found = NO;
-
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWTextStorage* textStorage in _textStorages) {
@@ -336,14 +348,9 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
             continue;
         }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
-            CTFrameRef textFrame = textStorage.textLayout.ctFrame;
-            if (textFrame == NULL) {
-                continue;
-            }
-            LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage
-                                                          touchPoint:touchPoint];
+            LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
             if (hightlight) {
-                [self _showHighlight:hightlight];
+                [self _showHighlight:hightlight adjustPoint:textStorage.frame.origin];
                 found = YES;
             } else {
                 [self _hideHightlight];
@@ -359,16 +366,15 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     __block BOOL found = NO;
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
-
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (imageStorage == nil) {
             continue;
         }
         if (CGRectContainsPoint(imageStorage.frame, touchPoint)) {
-            //            if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:touch:)]) {
-            //                found = YES;
-            //                [self.delegate lwAsyncDisplayView:self didCilickedImageStorage:imageStorage touch:touch];
-            //            }
+            if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:touch:)]) {
+                found = YES;
+                [self.delegate lwAsyncDisplayView:self didCilickedImageStorage:imageStorage touch:touch];
+            }
         }
     }
     for (LWTextStorage* textStorage in _textStorages) {
@@ -376,12 +382,12 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
             continue;
         }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
-            CTFrameRef textFrame = textStorage.textLayout.ctFrame;
-            if (textFrame == NULL) {
-                continue;
+            if (_highlight) {
+                if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedLinkWithfData:)]) {
+                    [self.delegate lwAsyncDisplayView:self didCilickedLinkWithfData:_highlight.content];
+                }
             }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                found = [self _handleLinkTouchIfNeed:textStorage touchPoint:touchPoint];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self _removeHightlight];
             });
         }
@@ -395,82 +401,10 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     [super touchesCancelled:touches withEvent:event];
 }
 
-
-- (LWTextHighlight *)_isNeedShowHighlight:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
-    __block LWTextHighlight* highlight;
-    [self _foundLinkWithTextStroage:textStorage touchPoint:touchPoint
-                         completion:^(LWTextStorage *foundTextStorage, id linkAttributes) {
-                             for (LWTextHighlight* foundHighlight in foundTextStorage.textLayout.textHighlights) {
-                                 if ([foundHighlight.content isEqual:linkAttributes]) {
-                                     highlight = foundHighlight;
-                                 }
-                             }
-                         }];
-    return highlight;
-}
-
-
-- (BOOL)_handleLinkTouchIfNeed:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
-    __block BOOL found = NO;
-    __weak typeof(self) weakSelf = self;
-    [self _foundLinkWithTextStroage:textStorage touchPoint:touchPoint
-                         completion:^(LWTextStorage *foundTextStorage, id linkAttributes) {
-                             __strong typeof(weakSelf) strongSelf = weakSelf;
-                             //                             if ([strongSelf.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedLinkWithfData:)] &&
-                             //                                 [strongSelf.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
-                             //                                 [strongSelf.delegate lwAsyncDisplayView:strongSelf didCilickedLinkWithfData:linkAttributes];
-                             //                                 found = YES;
-                             //                             }
-                         }];
-    return found;
-}
-
-- (void)_foundLinkWithTextStroage:(LWTextStorage *)textStorage
-                       touchPoint:(CGPoint) touchPoint
-                       completion:(foundLinkCompleteBlock)completion {
-    CTFrameRef textFrame = textStorage.textLayout.ctFrame;
-    CFArrayRef lines = CTFrameGetLines(textFrame);
-    CGPoint origins[CFArrayGetCount(lines)];
-    CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), origins);
-    CGPathRef path = CTFrameGetPath(textFrame);
-    CGRect boundsRect = CGPathGetBoundingBox(path);
-    CGAffineTransform transform = CGAffineTransformIdentity;
-    transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
-    transform = CGAffineTransformScale(transform, 1.f, -1.f);
-    for (int i= 0; i < CFArrayGetCount(lines); i++) {
-        CGPoint linePoint = origins[i];
-        CTLineRef line = CFArrayGetValueAtIndex(lines, i);
-        CGRect flippedRect = [self _getLineBounds:line point:linePoint];
-        CGRect rect = CGRectApplyAffineTransform(flippedRect, transform);
-        CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
-                                       rect.origin.y + boundsRect.origin.y,
-                                       rect.size.width,
-                                       rect.size.height);
-        if (CGRectContainsPoint(adjustRect, touchPoint)) {
-            CGPoint relativePoint = CGPointMake(touchPoint.x - CGRectGetMinX(adjustRect),
-                                                touchPoint.y - CGRectGetMinY(adjustRect));
-            CFIndex index = CTLineGetStringIndexForPosition(line, relativePoint);
-            CTRunRef touchedRun;
-            NSArray* runObjArray = (NSArray *)CTLineGetGlyphRuns(line);
-            for (NSInteger i = 0; i < runObjArray.count; i ++) {
-                CTRunRef runObj = (__bridge CTRunRef)[runObjArray objectAtIndex:i];
-                CFRange range = CTRunGetStringRange((CTRunRef)runObj);
-                if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
-                    touchedRun = runObj;
-                    NSDictionary* runAttribues = (NSDictionary *)CTRunGetAttributes(touchedRun);
-                    if ([runAttribues objectForKey:LWTextLinkAttributedName]) {
-                        completion(textStorage,[runAttribues objectForKey:LWTextLinkAttributedName]);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-}
-
-- (void)_showHighlight:(LWTextHighlight *)highlight {
+- (void)_showHighlight:(LWTextHighlight *)highlight adjustPoint:(CGPoint)adjustPoint {
     _showingHighlight = YES;
     _highlight = highlight;
+    _highlightAdjustPoint = adjustPoint;
     [self setNeedRedDraw];
 }
 
@@ -485,16 +419,9 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
 - (void)_removeHightlight {
     [self _hideHightlight];
     _highlight = nil;
+    _highlightAdjustPoint = CGPointZero;
 }
 
-- (CGRect)_getLineBounds:(CTLineRef)line point:(CGPoint)point {
-    CGFloat ascent = 0.0f;
-    CGFloat descent = 0.0f;
-    CGFloat leading = 0.0f;
-    CGFloat width = (CGFloat)CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-    CGFloat height = ascent + descent;
-    return CGRectMake(point.x, point.y - descent, width, height);
-}
 
 #pragma mark - Getter
 

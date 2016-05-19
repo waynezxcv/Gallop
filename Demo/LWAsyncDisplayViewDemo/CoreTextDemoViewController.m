@@ -8,8 +8,9 @@
 
 #import "CoreTextDemoViewController.h"
 #import "Gallop.h"
+#import "LWAlertView.h"
 
-@interface CoreTextDemoViewController ()
+@interface CoreTextDemoViewController ()<LWAsyncDisplayViewDelegate>
 
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
 
@@ -23,52 +24,13 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.asyncDisplayView];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        LWLayout* layout = [[LWLayout alloc] init];
-        NSMutableParagraphStyle* p = [[NSMutableParagraphStyle alloc] init];
-        [p setLineSpacing:2.0f];
-        NSDictionary* attris = @{NSForegroundColorAttributeName:[UIColor blackColor],NSFontAttributeName:[UIFont systemFontOfSize:18],NSParagraphStyleAttributeName:p};
-        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:@"Gallop --- " attributes:attris];
-        NSMutableAttributedString* emoji1 = [NSMutableAttributedString lw_textAttachmentStringWithContent:[UIImage imageNamed:@"001.png"]
-                                                                                              contentMode:UIViewContentModeScaleAspectFill
-                                                                                                   ascent:0.0f
-                                                                                                  descent:12
-                                                                                                    width:12.0f];
-        NSMutableAttributedString* emoji2 = [NSMutableAttributedString lw_textAttachmentStringWithContent:[UIImage imageNamed:@"002.png"]
-                                                                                              contentMode:UIViewContentModeScaleAspectFill
-                                                                                                   ascent:12.0f
-                                                                                                  descent:0
-                                                                                                    width:12.0f];
-        NSMutableAttributedString* emoji3 = [NSMutableAttributedString lw_textAttachmentStringWithContent:[UIImage imageNamed:@"003.png"]
-                                                                                              contentMode:UIViewContentModeScaleAspectFill
-                                                                                                   ascent:12.0f
-                                                                                                  descent:0
-                                                                                                    width:12.0f];
-        NSMutableAttributedString* emoji4 = [NSMutableAttributedString lw_textAttachmentStringWithContent:[UIImage imageNamed:@"004.png"]
-                                                                                              contentMode:UIViewContentModeScaleAspectFill
-                                                                                                   ascent:12.0f
-                                                                                                  descent:0
-                                                                                                    width:12.0f];
-        NSMutableAttributedString* emoji5 = [NSMutableAttributedString lw_textAttachmentStringWithContent:[UIImage imageNamed:@"005.png"]
-                                                                                              contentMode:UIViewContentModeScaleAspectFill
-                                                                                                   ascent:12.0f
-                                                                                                  descent:0
-                                                                                                    width:12.0f];
-        [attributedString appendAttributedString:emoji1];
-        [attributedString appendAttributedString:emoji2];
-        [attributedString appendAttributedString:emoji3];
-        [attributedString appendAttributedString:emoji4];
-        [attributedString appendAttributedString:emoji5];
-        [attributedString setTextColor:[UIColor redColor] range:NSMakeRange(0, attributedString.length)];
-        [attributedString setTextBackgroundColor:[UIColor yellowColor] range:NSMakeRange(0, attributedString.length)];
-        [attributedString setTextAlignment:NSTextAlignmentRight range:NSMakeRange(0, attributedString.length)];
-        LWTextStorage* storage = [LWTextStorage lw_textStrageWithText:attributedString frame:CGRectMake(10.0f, 100.0f, self.view.bounds.size.width - 30.0f, 300.0f)];
-        [layout addStorage:storage];
 
-        LWTextStorage* storage1 = [[LWTextStorage alloc] initWithFrame:CGRectMake(10, 50.0f, self.view.bounds.size.width - 20.0f, CGFLOAT_MAX)];
-        storage1.textColor = [UIColor greenColor];
-        storage1.textBackgroundColor = [UIColor redColor];
-        storage1.textAlignment = NSTextAlignmentRight;
-        storage1.text = @"我想要写一个牛逼的框架。";
+        LWLayout* layout = [[LWLayout alloc] init];
+        LWTextStorage* storage1 = [[LWTextStorage alloc] init];
+        storage1.text = @"Organization plans now include unlimited private repositories—pay per user and get as many repositories as your team needs. Upgrade today or learn more about our pricing updates.";
+        storage1.frame = CGRectMake(10, 100.0f, self.view.bounds.size.width - 20.0f, CGFLOAT_MAX);
+        storage1.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
+        storage1.textColor = [UIColor grayColor];
 
         [storage1 lw_replaceTextWithView:[[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60.0f, 30.0f)]
                              contentMode:UIViewContentModeScaleAspectFill
@@ -76,14 +38,16 @@
                                alignment:LWTextAttachAlignmentTop
                                    range:NSMakeRange(1,0)];
 
-
         [storage1 lw_replaceTextWithImage:[UIImage imageNamed:@"005.png"]
                               contentMode:UIViewContentModeScaleAspectFill
-                                imageSize:CGSizeMake(60, 60)
-                                alignment:LWTextAttachAlignmentCenter
-                                    range:NSMakeRange(4, 0)];
+                                imageSize:CGSizeMake(12, 12)
+                                alignment:LWTextAttachAlignmentTop
+                                    range:NSMakeRange(5, 1)];
 
-
+        [storage1 lw_addLinkWithData:@"touch link"
+                               range:NSMakeRange(14, 25)
+                           linkColor:[UIColor blueColor]
+                      highLightColor:RGB(0, 0, 0, 0.35f)];
 
         [layout addStorage:storage1];
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -92,22 +56,25 @@
     });
 }
 
-
-
-
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     self.asyncDisplayView.frame = CGRectMake(0, 64.0f, self.view.bounds.size.width, self.view.bounds.size.height - 64.0f);
+    self.asyncDisplayView.delegate = self;
 }
-
 
 - (LWAsyncDisplayView *)asyncDisplayView {
     if (_asyncDisplayView) {
         return _asyncDisplayView;
     }
     _asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero];
-    _asyncDisplayView.backgroundColor = [UIColor lightGrayColor];
+    _asyncDisplayView.backgroundColor = [UIColor whiteColor];
     return _asyncDisplayView;
+}
+
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data {
+    if ([data isKindOfClass:[NSString class]]) {
+        [LWAlertView shoWithMessage:data];
+    }
 }
 
 @end

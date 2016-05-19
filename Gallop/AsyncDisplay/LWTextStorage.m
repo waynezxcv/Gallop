@@ -25,9 +25,6 @@
 #import "LWTextStorage.h"
 #import "NSMutableAttributedString+Gallop.h"
 
-
-
-
 @interface LWTextStorage ()
 
 @property (nonatomic,strong) LWTextLayout* textLayout;
@@ -35,10 +32,9 @@
 
 @end
 
-#pragma mark - Init
-
 @implementation LWTextStorage
 
+@synthesize frame = _frame;
 
 #pragma mark - Init
 
@@ -48,12 +44,13 @@
     return textStorage;
 }
 
-+ (LWTextStorage *)lw_textStrageWithText:(NSAttributedString *)text frame:(CGRect)frame {
++ (LWTextStorage *)lw_textStrageWithText:(NSAttributedString *)attributedText frame:(CGRect)frame {
     LWTextStorage* textStorage = [[LWTextStorage alloc] initWithFrame:frame];
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:frame.size];
-    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:text];
+    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:attributedText];
     return textStorage;
 }
+
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super init];
@@ -62,12 +59,13 @@
         self.text = nil;
         self.attributedText = nil;
         self.textColor = [UIColor blackColor];
+        self.textBackgroundColor = [UIColor clearColor];
         self.font = [UIFont systemFontOfSize:14.0f];
         self.textAlignment = NSTextAlignmentLeft;
         self.lineBreakMode = NSLineBreakByWordWrapping;
+        self.underlineStyle = NSUnderlineStyleNone;
         self.linespacing = 2.0f;
         self.characterSpacing = 1.0f;
-        self.underlineStyle = NSUnderlineStyleNone;
     }
     return self;
 }
@@ -75,20 +73,20 @@
 - (id)init {
     self = [super init];
     if (self) {
+        self.frame = CGRectZero;
         self.text = nil;
         self.attributedText = nil;
         self.textColor = [UIColor blackColor];
+        self.textBackgroundColor = [UIColor clearColor];
         self.font = [UIFont systemFontOfSize:14.0f];
         self.textAlignment = NSTextAlignmentLeft;
         self.lineBreakMode = NSLineBreakByWordWrapping;
-        self.frame = CGRectZero;
+        self.underlineStyle = NSUnderlineStyleNone;
         self.linespacing = 2.0f;
         self.characterSpacing = 1.0f;
-        self.underlineStyle = NSUnderlineStyleNone;
     }
     return self;
 }
-
 
 #pragma mark - Methods
 /***  为指定位置的文本添加链接  ***/
@@ -189,6 +187,15 @@
     }
     _text = [text copy];
     _attributedText = [[NSMutableAttributedString alloc] initWithString:_text attributes:nil];
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [_attributedText setTextColor:self.textColor range:range];
+    [_attributedText setTextBackgroundColor:self.textBackgroundColor range:range];
+    [_attributedText setFont:self.font range:range];
+    [_attributedText setCharacterSpacing:self.characterSpacing range:range];
+    [_attributedText setUnderlineStyle:self.underlineStyle underlineColor:self.underlineColor range:range];
+    [_attributedText setTextAlignment:self.textAlignment range:range];
+    [_attributedText setLineSpacing:self.linespacing range:range];
+    [_attributedText setLineBreakMode:self.lineBreakMode range:range];
     [self _creatTextLayout];
 }
 
@@ -196,14 +203,17 @@
     if (_textColor != textColor) {
         _textColor = textColor;
     }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setTextColor:self.textColor range:range];
     [self _creatTextLayout];
-
 }
 
 - (void)setTextBackgroundColor:(UIColor *)textBackgroundColor {
     if (_textBackgroundColor != textBackgroundColor) {
         _textBackgroundColor = textBackgroundColor;
     }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setTextBackgroundColor:self.textBackgroundColor range:range];
     [self _creatTextLayout];
 
 }
@@ -212,14 +222,17 @@
     if (_font != font) {
         _font = font;
     }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setFont:self.font range:range];
     [self _creatTextLayout];
-
 }
 
 - (void)setCharacterSpacing:(unichar)characterSpacing {
     if (_characterSpacing != characterSpacing) {
         _characterSpacing = characterSpacing;
     }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setCharacterSpacing:self.characterSpacing range:range];
     [self _creatTextLayout];
 }
 
@@ -227,19 +240,24 @@
     if (_underlineStyle != underlineStyle) {
         _underlineStyle = underlineStyle;
     }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setUnderlineStyle:self.underlineStyle underlineColor:self.underlineColor range:range];
     [self _creatTextLayout];
 }
 
 - (void)setTextAlignment:(NSTextAlignment)textAlignment {
     _textAlignment = textAlignment;
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setTextAlignment:self.textAlignment range:range];
     [self _creatTextLayout];
-
 }
 
 - (void)setLinespacing:(CGFloat)linespacing {
     if (_linespacing != linespacing) {
         _linespacing = linespacing;
     }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setLineSpacing:self.linespacing range:range];
     [self _creatTextLayout];
 }
 
@@ -247,6 +265,13 @@
     if (_lineBreakMode != lineBreakMode) {
         _lineBreakMode = lineBreakMode;
     }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setLineBreakMode:self.lineBreakMode range:range];
+    [self _creatTextLayout];
+}
+
+- (void)setFrame:(CGRect)frame {
+    _frame = frame;
     [self _creatTextLayout];
 }
 
@@ -254,18 +279,8 @@
     if (!self.attributedText) {
         return;
     }
-    NSRange range = NSMakeRange(0, self.attributedText.length);
-    [self.attributedText setTextAlignment:self.textAlignment range:range];
-    [self.attributedText setTextColor:self.textColor range:range];
-    [self.attributedText setTextBackgroundColor:self.textBackgroundColor range:range];
-    [self.attributedText setFont:self.font range:range];
-    [self.attributedText setLineSpacing:self.linespacing range:range];
-    [self.attributedText setLineBreakMode:self.lineBreakMode range:range];
-    [self.attributedText setCharacterSpacing:self.characterSpacing range:range];
-    [self.attributedText setUnderlineStyle:self.underlineStyle underlineColor:self.underlineColor range:range];
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:self.frame.size];
     self.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:self.attributedText];
 }
-
 
 @end

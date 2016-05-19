@@ -49,7 +49,7 @@ static CGFloat LWTextWidthCallback(void *ref) {
 #pragma mark - Getter
 - (CTRunDelegateRef)CTRunDelegate {
     CTRunDelegateCallbacks callbacks;
-    memset(&callbacks, 0, sizeof(CTRunDelegateCallbacks));
+    memset(&callbacks,0,sizeof(CTRunDelegateCallbacks));
     callbacks.version = kCTRunDelegateVersion1;
     callbacks.dealloc = LWTextDeallocCallback;
     callbacks.getAscent = LWTextAscentCallback;
