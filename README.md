@@ -102,21 +102,13 @@ menuStorage.image = [UIImage imageNamed:@"menu"];
 ```objc
 imageStorage.frame = CGRectMake(10,10,20,20);
 ```
-6.生成模型容器LWStorageContainer
-```objc
-LWStorageContainer* container = [[LWStorageContainer alloc] init];
-```
-7.将模型添加到容器中
-```objc
-[container addStorage:nameTextStorage];//文本模型
-[container addStorage:avatarStorage];//图片模型
-[container addStorages:commentTextStorages];//从数组中添加
-```
-8.用模型容器LWStorageContainer生成布局模型
+6.生成布局模型
 ```objc
 LWLayout* layout = [[LWLayout alloc] initWithContainer:container];
+[layout addStorage:nameTextStorage];
+[layout addStorage:avatarStorage];
 ```
-9.创建LWAsyncDisplayView
+7.创建LWAsyncDisplayView
 ```objc
 /**
  *  初始化并设置最大ImageContainer的数量。如果用"initWithFrame"方法创建，则自动管理ImageContainers
@@ -126,7 +118,7 @@ LWLayout* layout = [[LWLayout alloc] initWithContainer:container];
  */
 LWAsyncDisplayView* asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero maxImageStorageCount:10];
 ```
-10.将LWLayout实例赋值给创建LWAsyncDisplayView对象
+8.将LWLayout实例赋值给创建LWAsyncDisplayView对象
 ```objc
 asyncDisplayView.layout = layout;
 ```
