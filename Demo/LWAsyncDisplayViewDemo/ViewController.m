@@ -99,29 +99,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     self.navigationItem.title = @"朋友圈";
 }
 
-/****************************************************************************/
-/**
- *  在这里生成LWAsyncDisplayView的模型。
- */
-/****************************************************************************/
-
-- (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel index:(NSInteger)index {
-    //生成Storage容器
-    LWStorageContainer* container = [[LWStorageContainer alloc] init];
-    //生成Layout
-    CellLayout* layout = [[CellLayout alloc] initWithContainer:container
-                                                   statusModel:statusModel
-                                                         index:index
-                                                 dateFormatter:self.dateFormatter];
-    return layout;
-}
-
-/****************************************************************************/
-
-
 #pragma mark - Actions
-
-
 /**
  *  点击图片
  *
@@ -228,7 +206,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     self.commentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f);
 }
 
-
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -305,6 +282,22 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 
+/****************************************************************************/
+/**
+ *  在这里生成LWAsyncDisplayView的模型。
+ */
+/****************************************************************************/
+
+- (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel index:(NSInteger)index {
+    //生成Layout
+    CellLayout* layout = [[CellLayout alloc] initWithStatusModel:statusModel index:index dateFormatter:self.dateFormatter];
+    return layout;
+}
+
+/****************************************************************************/
+
+
+
 #pragma mark - Getter
 
 
@@ -379,7 +372,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
     _fakeDatasource = @[@{@"name":@"SIZE潮流生活",
                           @"avatar":@"http://tp2.sinaimg.cn/1829483361/50/5753078359/1",
-                          @"content":@"近日[心]，adidas Originals为经典鞋款Stan Smith打造Primeknit版本，并带来全新的“OG”系列。简约的鞋身采用白色透气Primeknit针织材质制作，再将Stan Smith代表性的绿、红、深蓝三个元年色调融入到鞋舌和后跟点缀，最后搭载上米白色大底来保留其复古风味。据悉该鞋款将在今月登陆全球各大adidas Originals指定店舖。",
+                          @"content":@"近日[心][心][心][心][心][心][face]，adidas Originals为经典鞋款Stan Smith打造Primeknit版本，并带来全新的“OG”系列。简约的鞋身采用白色透气Primeknit针织材质制作，再将Stan Smith代表性的绿、红、深蓝三个元年色调融入到鞋舌和后跟点缀，最后搭载上米白色大底来保留其复古风味。据悉该鞋款将在今月登陆全球各大adidas Originals指定店舖。",
                           @"date":@"1459668442",
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hgxij20lo0egwgc.jpg",
                                     @"http://ww3.sinaimg.cn/mw690/6d0bb361gw1f2jim2hsg6j20lo0egwg2.jpg",
@@ -395,7 +388,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"哈哈哈哈"},
                                            @{@"from":@"SIZE潮流生活",
                                              @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接#Gallop#"}]},
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接"}]},
                         @{@"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
                           @"content":@"出国留学的儿子为思念自己的家人们寄来一个用自己照片做成的人形立牌",

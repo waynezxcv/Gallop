@@ -1,13 +1,13 @@
-//
-//  AppDelegate.m
-//  LWAsyncDisplayViewDemo
-//
-//  Created by 刘微 on 16/3/16.
-//  Copyright © 2016年 WayneInc. All rights reserved.
-//
+/********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
+/***************  https://github.com/waynezxcv/Gallop 持续更新 ***************************/
+/******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
+
+
+
+
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "RootViewController.h"
 
 @interface AppDelegate ()
 
@@ -19,8 +19,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.rootViewController = [[UINavigationController alloc]
-                                      initWithRootViewController:[[ViewController alloc] init]];
+    RootViewController* rootVC = [[RootViewController alloc] init];
+    UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:rootVC];
+    self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
     return YES;
 }
