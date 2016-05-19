@@ -21,10 +21,81 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
+
+
+#import <UIKit/UIKit.h>
 #import "LWStorage.h"
+
+
+typedef NS_ENUM(NSUInteger, LWImageStorageType) {
+    LWImageStorageWebImage = 0,
+    LWImageStorageLocalImage = 1,
+};
 
 @interface LWImageStorage : LWStorage
 
+/**
+ *  图片类型
+ */
+@property (nonatomic,assign) LWImageStorageType type;
+
+/**
+ *  图片URL（LWImageStorageWebImage）
+ */
+@property (nonatomic,strong) NSURL* URL;
+
+/**
+ *  图片UIImage （LWImageStorageLocalImage）
+ */
+@property (nonatomic,strong) UIImage* image;
+/**
+ *  内容模式
+ */
+@property (nonatomic,copy) NSString* contentMode;
+
+/**
+ *
+ */
+@property (nonatomic,assign) BOOL masksToBounds;
+
+/**
+ *  占位图
+ */
+@property (nonatomic,strong) UIImage* placeholder;
+
+/**
+ *  加载完成是否渐隐出现
+ */
+@property (nonatomic,assign,getter=isFadeShow) BOOL fadeShow;
+
+/**
+ *  圆角半径
+ */
+@property (nonatomic,assign) CGFloat cornerRadius;
+/**
+ *  圆角背景颜色
+ */
+@property (nonatomic,strong) UIColor* cornerBackgroundColor;
+
+@property (nonatomic,strong) UIColor* cornerBorderColor;
+@property (nonatomic,assign) CGFloat cornerBorderWidth;
+
+- (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
 
 
 @end
+
+
+@interface LWImageContainer : CALayer
+
+@property (nonatomic,copy) NSString* containerIdentifier;
+
+- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage;
+- (void)layoutImageStorage:(LWImageStorage *)imageStorage;
+- (void)cleanup;
+- (void)delayLayoutImageStorage:(LWImageStorage *)imageStorage;
+- (void)delayCleanup;
+
+
+@end
+

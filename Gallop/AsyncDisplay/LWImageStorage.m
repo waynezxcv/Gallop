@@ -23,7 +23,118 @@
  */
 
 #import "LWImageStorage.h"
+#import "CALayer+WebCache.h"
+#import "CALayer+GallopAddtions.h"
+#import "LWRunLoopTransactions.h"
+
+
 
 @implementation LWImageStorage
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.type = LWImageStorageWebImage;
+        self.image = nil;
+        self.URL = nil;
+        self.frame = CGRectZero;
+        self.contentMode = kCAGravityResizeAspect;
+        self.masksToBounds = YES;
+        self.placeholder = nil;
+        self.fadeShow = NO;
+        self.cornerRadius = 0.0f;
+        self.cornerBackgroundColor = [UIColor whiteColor];
+        self.cornerBorderWidth = 0.0f;
+        self.cornerBorderColor = [UIColor whiteColor];
+    }
+    return self;
+}
+
+
+- (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight {
+    self.image = [self.image stretchableImageWithLeftCapWidth:leftCapWidth topCapHeight:topCapHeight];
+}
+
+@end
+
+@implementation LWImageContainer
+
+- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
+    if (imageStorage.type == LWImageStorageWebImage) {
+        if (imageStorage.image) {
+            if (imageStorage.cornerRadius == 0) {
+                [self setContents:(__bridge id _Nullable)imageStorage.image.CGImage];
+            }
+            else {
+                [self lw_setImage:imageStorage.image
+                    containerSize:imageStorage.frame.size
+                     cornerRadius:imageStorage.cornerRadius
+            cornerBackgroundColor:imageStorage.cornerBackgroundColor
+                cornerBorderColor:imageStorage.cornerBorderColor
+                      borderWidth:imageStorage.cornerBorderWidth];
+            }
+        } else {
+            [self sd_setImageWithURL:imageStorage.URL
+                    placeholderImage:imageStorage.placeholder
+                             options:0
+                       containerSize:imageStorage.frame.size
+                        cornerRadius:imageStorage.cornerRadius
+               cornerBackgroundColor:imageStorage.cornerBackgroundColor
+                   cornerBorderColor:imageStorage.cornerBorderColor
+                         borderWidth:imageStorage.cornerBorderWidth
+                           completed:^(UIImage *image, NSError *error,
+                                       SDImageCacheType cacheType,
+                                       NSURL *imageURL) {
+                               if (imageStorage.fadeShow) {
+                                   CATransition* transition = [CATransition animation];
+                                   transition.duration = 0.2;
+                                   transition.timingFunction = [CAMediaTimingFunction
+                                                                functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                                   transition.type = kCATransitionFade;
+                                   [self addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
+                               }
+                           }];
+        }
+    } else {
+        if (imageStorage.cornerRadius == 0) {
+            [self setContents:(__bridge id _Nullable)imageStorage.image.CGImage];
+        }
+        else {
+            [self lw_setImage:imageStorage.image
+                containerSize:imageStorage.frame.size
+                 cornerRadius:imageStorage.cornerRadius
+        cornerBackgroundColor:imageStorage.cornerBackgroundColor
+            cornerBorderColor:imageStorage.cornerBorderColor borderWidth:imageStorage.cornerBorderWidth];
+        }
+    }
+}
+
+- (void)delayLayoutImageStorage:(LWImageStorage *)imageStorage {
+    [[LWRunLoopTransactions transactionsWithTarget:self
+                                          selector:@selector(layoutImageStorage:)
+                                            object:imageStorage] commit];}
+
+- (void)delayCleanup {
+    [[LWRunLoopTransactions transactionsWithTarget:self
+                                          selector:@selector(cleanup)
+                                            object:nil] commit];
+}
+
+- (void)layoutImageStorage:(LWImageStorage *)imageStorage {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    self.frame = imageStorage.frame;
+    [CATransaction commit];
+    self.contentsGravity = imageStorage.contentMode;
+    self.masksToBounds = imageStorage.masksToBounds;
+}
+
+
+- (void)cleanup {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    self.frame = CGRectZero;
+    [CATransaction commit];
+}
 
 @end

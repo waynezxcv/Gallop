@@ -273,9 +273,9 @@
 			isa = PBXGroup;
 			children = (
 				015FC0E31CDFA48800B4DF82 /* Gallop.h */,
-				B079C2841CD8C58F003B15D3 /* CoreText */,
 				B085B3421CB68CF500087739 /* AsyncDisplay */,
 				B085B3431CB68D1000087739 /* Utils */,
+				B079C2841CD8C58F003B15D3 /* CoreText */,
 			);
 			name = Gallop;
 			sourceTree = "<group>";

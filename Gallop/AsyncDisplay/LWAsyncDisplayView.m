@@ -64,9 +64,9 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
         self.autoReuseImageContainer = NO;
         self.maxImageStorageCount = count;
         for (NSInteger i = 0; i < self.maxImageStorageCount; i ++) {
-            //            LWImageContainer* container = [LWImageContainer layer];
-            //            [self.layer addSublayer:container];
-            //            [self.imageContainers addObject:container];
+            LWImageContainer* container = [LWImageContainer layer];
+            [self.layer addSublayer:container];
+            [self.imageContainers addObject:container];
         }
     }
     return self;
@@ -136,8 +136,8 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     }
     if (!_cleanedImageContainer) {
         for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
-            //            LWImageContainer* container = self.imageContainers[i];
-            //            [container cleanup];
+            LWImageContainer* container = self.imageContainers[i];
+            [container cleanup];
         }
     }
     LWLayout* layout = _layout;
@@ -184,11 +184,11 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     if (!_setedImageContents) {
         for (NSInteger i = 0 ; i < _imageStorages.count; i ++) {
             LWImageStorage* imageStorage = _imageStorages[i];
-            //            LWImageContainer* container = self.imageContainers[i];
-            //            if (imageStorage.type == LWImageStorageWebImage) {
-            //                [container delayLayoutImageStorage:imageStorage];
-            //                [container setContentWithImageStorage:imageStorage];
-            //            }
+            LWImageContainer* container = self.imageContainers[i];
+            if (imageStorage.type == LWImageStorageWebImage) {
+                [container delayLayoutImageStorage:imageStorage];
+                [container setContentWithImageStorage:imageStorage];
+            }
         }
         _setedImageContents = YES;
         _cleanedImageContainer = NO;
@@ -200,11 +200,11 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
         for (NSInteger i = 0; i < _imageStorages.count; i ++) {
             LWImageStorage* imageStorage = _imageStorages[i];
             if (self.imageContainers.count > i) {
-                //                LWImageContainer* container = self.imageContainers[i];
-                //                if (imageStorage.type == LWImageStorageWebImage) {
-                //                    [container delayLayoutImageStorage:imageStorage];
-                //                    [container setContentWithImageStorage:imageStorage];
-                //                }
+                LWImageContainer* container = self.imageContainers[i];
+                if (imageStorage.type == LWImageStorageWebImage) {
+                    [container delayLayoutImageStorage:imageStorage];
+                    [container setContentWithImageStorage:imageStorage];
+                }
             }
         }
         _setedImageContents = YES;
@@ -218,16 +218,16 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
         if (delta < 0) {
             for (NSInteger i = 0; i < _imageStorages.count; i ++) {
                 if (i < ABS(delta)) {
-                    //                    LWImageContainer* container = [LWImageContainer layer];
-                    //                    [self.layer addSublayer:container];
-                    //                    [self.imageContainers addObject:container];
+                    LWImageContainer* container = [LWImageContainer layer];
+                    [self.layer addSublayer:container];
+                    [self.imageContainers addObject:container];
                 }
             }
         } else if (delta > 0 ) {
             for (NSInteger i = 0; i < self.imageContainers.count; i ++ ) {
                 if (i >= _imageStorages.count) {
-                    //                    LWImageContainer* container = self.imageContainers[i];
-                    //                    [container cleanup];
+                    LWImageContainer* container = self.imageContainers[i];
+                    [container cleanup];
                 }
             }
         }
@@ -290,9 +290,9 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
                                containerLayer:self.layer];
     }
     for (LWImageStorage* imageStorage in _imageStorages) {
-        //        if (imageStorage.type == LWImageStorageLocalImage) {
-        //            [imageStorage.image drawInRect:imageStorage.frame];
-        //        }
+        if (imageStorage.type == LWImageStorageLocalImage) {
+            [imageStorage.image drawInRect:imageStorage.frame];
+        }
     }
 }
 
