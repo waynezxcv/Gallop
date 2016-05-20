@@ -47,7 +47,6 @@ static char loadOperationKey;
 }
 
 - (void)sd_cancelImageLoadOperationWithKey:(NSString *)key {
-    // Cancel in progress downloader from queue
     NSMutableDictionary *operationDictionary = [self operationDictionary];
     id operations = [operationDictionary objectForKey:key];
     if (operations) {

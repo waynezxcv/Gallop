@@ -25,10 +25,10 @@
 
 #import "LWTextParser.h"
 
-#define URLRegular @"^(f|ht){1}(tp|tps):\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?"
 #define EmojiRegular @"\\[[a-zA-Z0-9\\u4e00-\\u9fa5]+\\]"
 #define AccountRegular @"@[\u4e00-\u9fa5a-zA-Z0-9_-]{2,30}"
 #define TopicRegular @"#[^#]+#"
+#define URLRegular @"^(f|ht){1}(tp|tps):\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?"
 
 static inline NSRegularExpression* EmojiRegularExpression() {
     static NSRegularExpression* _EmojiRegularExpression = nil;
@@ -84,8 +84,9 @@ static inline NSRegularExpression* TopicRegularExpression() {
     NSArray* resultArray = [EmojiRegularExpression() matchesInString:text
                                                              options:0
                                                                range:NSMakeRange(0,text.length)];
-    for (NSInteger i = resultArray.count - 1; i >= 0; i --) {
-        NSTextCheckingResult* match = [resultArray objectAtIndex:i];
+
+    [resultArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSTextCheckingResult* match = [resultArray objectAtIndex:idx];
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         if (textStorage.text.length >= range.location + range.length) {
@@ -95,7 +96,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
                                        alignment:LWTextAttachAlignmentTop
                                            range:range];
         }
-    }
+    }];
 }
 
 
@@ -106,11 +107,11 @@ static inline NSRegularExpression* TopicRegularExpression() {
     NSArray* resultArray = [URLRegularExpression() matchesInString:text
                                                            options:0
                                                              range:NSMakeRange(0,text.length)];
-    for(NSTextCheckingResult* match in resultArray) {
+    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match, NSUInteger idx, BOOL * _Nonnull stop) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
-    }
+    }];
 }
 
 
@@ -122,11 +123,11 @@ static inline NSRegularExpression* TopicRegularExpression() {
     NSArray* resultArray = [AccountRegularExpression() matchesInString:text
                                                                options:0
                                                                  range:NSMakeRange(0,text.length)];
-    for(NSTextCheckingResult* match in resultArray) {
+    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match, NSUInteger idx, BOOL * _Nonnull stop) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
-    }
+    }];
 }
 
 
@@ -138,11 +139,11 @@ static inline NSRegularExpression* TopicRegularExpression() {
     NSArray* resultArray = [TopicRegularExpression() matchesInString:text
                                                              options:0
                                                                range:NSMakeRange(0,text.length)];
-    for(NSTextCheckingResult* match in resultArray) {
+    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match, NSUInteger idx, BOOL * _Nonnull stop) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
-    }
+    }];
 }
 
 @end

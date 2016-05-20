@@ -31,7 +31,7 @@
         textStorage.font = [UIFont systemFontOfSize:18.0f];
         textStorage.textColor = [UIColor blackColor];
 
-        [textStorage setTextBackgroundColor:[UIColor yellowColor]];
+
         [textStorage lw_replaceTextWithView:[[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60.0f, 30.0f)]
                                 contentMode:UIViewContentModeScaleAspectFill
                                        size:CGSizeMake(60.0f, 30.0f)
@@ -44,8 +44,18 @@
                                    alignment:LWTextAttachAlignmentTop
                                        range:NSMakeRange(5, 1)];
 
-        [textStorage lw_addLinkWithData:@"touch link"
-                                  range:NSMakeRange(12, 25)
+        [textStorage lw_addLinkWithData:@"Easy"
+                                  range:NSMakeRange(0, 5)
+                              linkColor:[UIColor blueColor]
+                         highLightColor:RGB(0, 0, 0, 0.35f)];
+
+        [textStorage lw_addLinkWithData:@"use"
+                                  range:NSMakeRange(9, 3)
+                              linkColor:[UIColor greenColor]
+                         highLightColor:RGB(0, 0, 0, 0.35f)];
+
+        [textStorage lw_addLinkWithData:@"capable"
+                                  range:NSMakeRange(17, 7)
                               linkColor:[UIColor blueColor]
                          highLightColor:RGB(0, 0, 0, 0.35f)];
 
@@ -53,9 +63,8 @@
                                   range:NSMakeRange(textStorage.text.length - 7,8)
                               linkColor:[UIColor greenColor]
                          highLightColor:RGB(0, 0, 0, 0.35f)];
+
         [layout addStorage:textStorage];
-
-
         LWImageStorage* imamgeStorage = [[LWImageStorage alloc] init];
         imamgeStorage.image = [UIImage imageNamed:@"pic.jpeg"];
         imamgeStorage.frame = CGRectMake(textStorage.left, textStorage.bottom + 20.0f, 80, 80);

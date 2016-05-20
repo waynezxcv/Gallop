@@ -110,27 +110,3 @@
 
 @end
 
-
-@implementation LWTextBorder
-
-- (id)init {
-    self = [super init];
-    if (self) {
-        self.range = NSMakeRange(0, 0);
-        self.borderColor = [UIColor clearColor];
-        self.borderWidth = 0.0f;
-        self.path = nil;
-    }
-    return self;
-}
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWTextBorder* textBorder = [[[self class] allocWithZone:zone] init];
-    textBorder.range = self.range;
-    textBorder.borderWidth = self.borderWidth;
-    textBorder.borderColor = [self.borderColor copy];
-    textBorder.path = [self.path copy];
-    return textBorder;
-}
-
-@end

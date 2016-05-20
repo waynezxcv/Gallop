@@ -27,7 +27,6 @@
 
 #define LWTextAttachmentAttributeName @"LWTextAttachmentKey"
 #define LWTextLinkAttributedName @"LWTextLinkAttributedName"
-#define LWTextBorderAttributedName @"LWTextBorderAttributedName"
 #define LWTextBackgroundColorAttributedName @"LWTextBackgroundColorAttributedName"
 
 //*** Text附件 ***//
@@ -77,18 +76,6 @@
 @property (nonatomic,strong) UIColor* backgroundColor;
 @property (nonatomic,copy) NSArray<NSValue *>* positions;//位置数组
 @property (nonatomic,strong) NSDictionary* userInfo;//自定义的一些信息
-
-@end
-
-
-//*** Text边缘颜色 ***//
-
-@interface LWTextBorder : NSObject <NSCopying>
-
-@property (nonatomic,assign) NSRange range;
-@property (nonatomic,strong) UIColor* borderColor;
-@property (nonatomic,assign) CGFloat borderWidth;
-@property (nonatomic,strong) UIBezierPath* path;
 
 @end
 

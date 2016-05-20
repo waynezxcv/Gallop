@@ -40,7 +40,6 @@
 @property (nonatomic,strong) NSArray<LWTextLine *>* linesArray;
 @property (nonatomic,assign) CGRect textBoundingRect;
 @property (nonatomic,assign) CGSize textBoundingSize;
-@property (nonatomic,strong) LWTextBorder* textBorder;
 @property (nonatomic,strong) NSMutableArray<LWTextAttachment *>* attachments;
 @property (nonatomic,strong) NSMutableArray<NSValue *>* attachmentRanges;
 @property (nonatomic,strong) NSMutableArray<NSValue *>* attachmentRects;
@@ -170,7 +169,6 @@
     layout.needDebugDraw = NO;
     layout.needTextBackgroundColorDraw = NO;
     layout.needAttachmentDraw = NO;
-    layout.needBorderDraw = NO;
     layout.container = container;
     layout.text = mutableAtrributedText;
     layout.cgPath = cgPath;
@@ -203,51 +201,10 @@
                 }
             }
         }
-        CTLineRef ctLine = line.CTLine;
-        CFArrayRef ctRuns = CTLineGetGlyphRuns(ctLine);
-        CFIndex runCount = CFArrayGetCount(ctRuns);
-        if (!ctRuns || runCount == 0){
-            continue;
-        }
-        for (NSUInteger i = 0; i < runCount; i ++) {
-            CTRunRef run = CFArrayGetValueAtIndex(ctRuns, i);
-            CFIndex glyphCount = CTRunGetGlyphCount(run);
-            if (glyphCount == 0) {
-                continue;
-            }
-            NSDictionary* attributes = (id)CTRunGetAttributes(run);
-            LWTextBorder* border = [attributes objectForKey:LWTextBorderAttributedName];
-            if (border) {
-                layout.needBorderDraw = YES;
-                CGMutablePathRef paths = CGPathCreateMutable();
-                CTFontRef runFont = CFDictionaryGetValue(CTRunGetAttributes(run), kCTFontAttributeName);
-                for (CFIndex runGlyphIndex = 0; runGlyphIndex < CTRunGetGlyphCount(run); runGlyphIndex++) {
-                    CFRange thisGlyphRange = CFRangeMake(runGlyphIndex, 1);
-                    CGGlyph glyph;
-                    CGPoint position;
-                    CTRunGetGlyphs(run, thisGlyphRange, &glyph);
-                    CTRunGetPositions(run, thisGlyphRange, &position);
-                    CGPathRef path = CTFontCreatePathForGlyph(runFont, glyph, NULL);
-                    position = CGPointMake(position.x, position.y + line.lineOrigin.y);
-                    CGAffineTransform transform = CGAffineTransformMakeTranslation(position.x, position.y);
-                    CGPathAddPath(paths,&transform,path);
-                    CGPathRelease(path);
-                    continue;
-                }
-                UIBezierPath* bezierPath = [UIBezierPath bezierPath];
-                [bezierPath moveToPoint:CGPointZero];
-                [bezierPath appendPath:[UIBezierPath bezierPathWithCGPath:paths]];
-                CFRelease(paths);
-                border.path = bezierPath;
-                layout.textBorder = border;
-            }
-        }
     }
     if (layout.attachments.count > 0) {
         layout.needAttachmentDraw = YES;
     }
-
-
     if (lineOrigins){
         free(lineOrigins);
     }
@@ -275,9 +232,6 @@
     }
     if (self.isNeedDebugDraw) {
         [self _drawDebugInContext:context textLayout:self size:size point:point];
-    }
-    if (self.isNeedBorderDraw) {
-        [self _drawTextBorderInContext:context textLayout:self size:size point:point];
     }
     [self _drawTextInContext:context textLayout:self size:size point:point];
     if (self.isNeedAttachmentDraw) {
@@ -321,14 +275,6 @@
             [beizerPath fill];
         }
     }];
-}
-
-- (void)_drawTextBorderInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
-    LWTextBorder* textBorder = textLayout.textBorder;
-    CGContextAddPath(context, textBorder.path.CGPath);
-    CGContextSetStrokeColorWithColor(context, textBorder.borderColor.CGColor);
-    CGContextSetLineWidth(context, textBorder.borderWidth);
-    CGContextStrokePath(context);
 }
 
 - (void)_drawTextInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
