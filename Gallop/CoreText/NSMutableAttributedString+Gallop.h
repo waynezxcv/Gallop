@@ -29,6 +29,7 @@
 
 - (void)setTextColor:(UIColor *)textColor range:(NSRange)range;
 - (void)setTextBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range;
+- (void)setTextBorderColor:(UIColor *)borderColor borderWidth:(CGFloat)borderWidth range:(NSRange)range;
 - (void)setFont:(UIFont *)font range:(NSRange)range;
 - (void)setCharacterSpacing:(unichar)characterSpacing range:(NSRange)range;
 - (void)setUnderlineStyle:(NSUnderlineStyle)underlineStyle underlineColor:(UIColor *)underlineColor range:(NSRange)range;

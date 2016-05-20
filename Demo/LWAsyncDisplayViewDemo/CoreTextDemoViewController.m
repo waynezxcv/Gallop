@@ -30,6 +30,8 @@
         textStorage.frame = CGRectMake(10, 50.0f, self.view.bounds.size.width - 20.0f, CGFLOAT_MAX);
         textStorage.font = [UIFont systemFontOfSize:18.0f];
         textStorage.textColor = [UIColor blackColor];
+
+        [textStorage setTextBackgroundColor:[UIColor yellowColor]];
         [textStorage lw_replaceTextWithView:[[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60.0f, 30.0f)]
                                 contentMode:UIViewContentModeScaleAspectFill
                                        size:CGSizeMake(60.0f, 30.0f)

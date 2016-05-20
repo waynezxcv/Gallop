@@ -27,7 +27,6 @@
 #import <CoreText/CoreText.h>
 #import "LWTextContainer.h"
 #import "LWTextAttachment.h"
-#import "LWTextHighlight.h"
 
 @class LWTextLine;
 
@@ -51,7 +50,11 @@
 @property (nonatomic,strong,readonly) NSMutableSet<id>* attachmentContentsSet;
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextHighlight *>* textHighlights;
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextBackgroundColor *>* backgroundColors;
+@property (nonatomic,strong,readonly) LWTextBorder* textBorder;
 @property (nonatomic,assign,getter = isNeedDebugDraw) BOOL needDebugDraw;
+@property (nonatomic,assign,getter = isNeedBorderDraw) BOOL needBorderDraw;
+@property (nonatomic,assign,getter = isNeedAttachmentDraw) BOOL needAttachmentDraw;
+@property (nonatomic,assign,getter = isNeedTextBackgroundColorDraw) BOOL needTextBackgroundColorDraw;
 
 /**
  *  构造方法

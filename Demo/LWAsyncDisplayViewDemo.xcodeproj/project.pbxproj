@@ -21,7 +21,6 @@
 		011DFA5D1C9880D2000410D7 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 011DFA541C9880D2000410D7 /* UIImage+ImageEffects.m */; };
 		014871821CDBC12500CE43C4 /* LWTextContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 014871811CDBC12500CE43C4 /* LWTextContainer.m */; };
 		016BDA791CDA6A6B000D1ACF /* LWTextRunDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 016BDA761CDA6A6B000D1ACF /* LWTextRunDelegate.m */; };
-		0180A4541CE25BF600DB2EB1 /* LWTextHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 0180A4531CE25BF600DB2EB1 /* LWTextHighlight.m */; };
 		01AE7F521CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4C1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m */; };
 		01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4E1CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m */; };
 		01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */; };
@@ -120,8 +119,6 @@
 		015FC0E31CDFA48800B4DF82 /* Gallop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Gallop.h; path = ../Gallop/Gallop.h; sourceTree = "<group>"; };
 		016BDA751CDA6A6B000D1ACF /* LWTextRunDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextRunDelegate.h; path = ../Gallop/CoreText/LWTextRunDelegate.h; sourceTree = "<group>"; };
 		016BDA761CDA6A6B000D1ACF /* LWTextRunDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextRunDelegate.m; path = ../Gallop/CoreText/LWTextRunDelegate.m; sourceTree = "<group>"; };
-		0180A4521CE25BF600DB2EB1 /* LWTextHighlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextHighlight.h; path = ../Gallop/CoreText/LWTextHighlight.h; sourceTree = "<group>"; };
-		0180A4531CE25BF600DB2EB1 /* LWTextHighlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextHighlight.m; path = ../Gallop/CoreText/LWTextHighlight.m; sourceTree = "<group>"; };
 		01AE7F481CA1AEAF00E9F862 /* LWAlchemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemy.h; path = ../LWAlchemy/LWAlchemy.h; sourceTree = "<group>"; };
 		01AE7F4B1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyPropertyInfo.h; path = ../LWAlchemy/LWAlchemyPropertyInfo.h; sourceTree = "<group>"; };
 		01AE7F4C1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyPropertyInfo.m; path = ../LWAlchemy/LWAlchemyPropertyInfo.m; sourceTree = "<group>"; };
@@ -409,8 +406,6 @@
 				014871811CDBC12500CE43C4 /* LWTextContainer.m */,
 				01D14F051CDD43990028714A /* LWTextAttachment.h */,
 				01D14F061CDD43990028714A /* LWTextAttachment.m */,
-				0180A4521CE25BF600DB2EB1 /* LWTextHighlight.h */,
-				0180A4531CE25BF600DB2EB1 /* LWTextHighlight.m */,
 				01D14F011CDD42ED0028714A /* NSMutableAttributedString+Gallop.h */,
 				01D14F021CDD42ED0028714A /* NSMutableAttributedString+Gallop.m */,
 			);
@@ -665,7 +660,6 @@
 				01D14EC41CDCF8F90028714A /* LWAsyncDisplayOperation.m in Sources */,
 				01D14EBA1CDCF8A00028714A /* LWTextLine.m in Sources */,
 				B0D9EB491CB0F436009FDCCF /* UIImage+WebP.m in Sources */,
-				0180A4541CE25BF600DB2EB1 /* LWTextHighlight.m in Sources */,
 				01D14EF01CDCF9D40028714A /* LWRunLoopTransactions.m in Sources */,
 				B0ACEC091CEDC9A50019074F /* TableViewCell.m in Sources */,
 				B0D9EB441CB0F435009FDCCF /* SDWebImageManager.m in Sources */,

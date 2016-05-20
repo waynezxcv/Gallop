@@ -48,6 +48,8 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 @property (nonatomic,assign) NSUnderlineStyle underlineStyle;
 @property (nonatomic,strong) UIColor* underlineColor;
 @property (nonatomic,assign) NSLineBreakMode lineBreakMode;
+@property (nonatomic,strong) UIColor* borderColor;
+@property (nonatomic,assign) CGFloat borderWidth;
 
 @property (nonatomic,assign,readonly) NSInteger webImageCount;
 @property (nonatomic,strong) NSMutableArray* webAttachs;

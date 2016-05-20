@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -40,6 +40,7 @@
 @property (nonatomic,strong) NSArray<LWTextLine *>* linesArray;
 @property (nonatomic,assign) CGRect textBoundingRect;
 @property (nonatomic,assign) CGSize textBoundingSize;
+@property (nonatomic,strong) LWTextBorder* textBorder;
 @property (nonatomic,strong) NSMutableArray<LWTextAttachment *>* attachments;
 @property (nonatomic,strong) NSMutableArray<NSValue *>* attachmentRanges;
 @property (nonatomic,strong) NSMutableArray<NSValue *>* attachmentRects;
@@ -89,7 +90,7 @@
     CGRect textBoundingRect = CGRectZero;
     CGSize textBoundingSize = CGSizeZero;
     NSUInteger lineCurrentIndex = 0;
-    
+
     NSMutableArray* highlights = [[NSMutableArray alloc] init];
     NSMutableArray* backgroundColors = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < lineCount; i++) {
@@ -99,44 +100,32 @@
         if (!ctRuns || runCount == 0){
             continue;
         }
-        //****  Highlight(Link)********//
-        {
-            for (NSUInteger i = 0; i < runCount; i ++) {
-                CTRunRef run = CFArrayGetValueAtIndex(ctRuns, i);
-                CFIndex glyphCount = CTRunGetGlyphCount(run);
-                if (glyphCount == 0) {
-                    continue;
-                }
-                NSDictionary* attributes = (id)CTRunGetAttributes(run);
-                LWTextHighlight* highlight = [attributes objectForKey:LWTextLinkAttributedName];
-                if (!highlight) {
-                    continue;
-                }
+
+        for (NSUInteger i = 0; i < runCount; i ++) {
+            CTRunRef run = CFArrayGetValueAtIndex(ctRuns, i);
+            CFIndex glyphCount = CTRunGetGlyphCount(run);
+            if (glyphCount == 0) {
+                continue;
+            }
+            NSDictionary* attributes = (id)CTRunGetAttributes(run);
+            LWTextHighlight* highlight = [attributes objectForKey:LWTextLinkAttributedName];
+            if (highlight) {
                 NSArray* highlightPositions = [self _highlightPositionsWithCtFrame:ctFrame range:highlight.range];
                 highlight.positions = highlightPositions;
-                [highlights addObject:highlight];
-                continue;
+                if (![highlights containsObject:highlight]) {
+                    [highlights addObject:highlight];
+                }
             }
-        }
-        //****  BackgroundColor ********//
-        {
-            for (NSUInteger i = 0; i < runCount; i ++) {
-                CTRunRef run = CFArrayGetValueAtIndex(ctRuns, i);
-                CFIndex glyphCount = CTRunGetGlyphCount(run);
-                if (glyphCount == 0) {
-                    continue;
-                }
-                NSDictionary* attributes = (id)CTRunGetAttributes(run);
-                LWTextBackgroundColor* color = [attributes objectForKey:LWTextBackgroundColorAttributedName];
-                if (!color) {
-                    continue;
-                }
+            LWTextBackgroundColor* color = [attributes objectForKey:LWTextBackgroundColorAttributedName];
+            if (color) {
                 NSArray* backgroundsPositions = [self _highlightPositionsWithCtFrame:ctFrame range:color.range];
                 color.positions = backgroundsPositions;
-                [backgroundColors addObject:color];
-                continue;
+                if (![backgroundColors containsObject:color]) {
+                    [backgroundColors addObject:color];
+                }
             }
         }
+
         CGPoint ctLineOrigin = lineOrigins[i];
         CGPoint position;
         position.x = cgPathBox.origin.x + ctLineOrigin.x;
@@ -179,6 +168,9 @@
     cgPath = [UIBezierPath bezierPathWithRect:cgPathBox].CGPath;
     LWTextLayout* layout = [[self alloc] init];
     layout.needDebugDraw = NO;
+    layout.needTextBackgroundColorDraw = NO;
+    layout.needAttachmentDraw = NO;
+    layout.needBorderDraw = NO;
     layout.container = container;
     layout.text = mutableAtrributedText;
     layout.cgPath = cgPath;
@@ -191,6 +183,9 @@
     layout.textBoundingSize = textBoundingSize;
     layout.textHighlights = [[NSMutableArray alloc] initWithArray:highlights];
     layout.backgroundColors = [[NSMutableArray alloc] initWithArray:backgroundColors];
+    if (layout.backgroundColors.count > 0) {
+        layout.needTextBackgroundColorDraw = YES;
+    }
     //******* attachments ********//
     layout.attachments = [[NSMutableArray alloc] init];
     layout.attachmentRanges = [[NSMutableArray alloc] init];
@@ -208,7 +203,51 @@
                 }
             }
         }
+        CTLineRef ctLine = line.CTLine;
+        CFArrayRef ctRuns = CTLineGetGlyphRuns(ctLine);
+        CFIndex runCount = CFArrayGetCount(ctRuns);
+        if (!ctRuns || runCount == 0){
+            continue;
+        }
+        for (NSUInteger i = 0; i < runCount; i ++) {
+            CTRunRef run = CFArrayGetValueAtIndex(ctRuns, i);
+            CFIndex glyphCount = CTRunGetGlyphCount(run);
+            if (glyphCount == 0) {
+                continue;
+            }
+            NSDictionary* attributes = (id)CTRunGetAttributes(run);
+            LWTextBorder* border = [attributes objectForKey:LWTextBorderAttributedName];
+            if (border) {
+                layout.needBorderDraw = YES;
+                CGMutablePathRef paths = CGPathCreateMutable();
+                CTFontRef runFont = CFDictionaryGetValue(CTRunGetAttributes(run), kCTFontAttributeName);
+                for (CFIndex runGlyphIndex = 0; runGlyphIndex < CTRunGetGlyphCount(run); runGlyphIndex++) {
+                    CFRange thisGlyphRange = CFRangeMake(runGlyphIndex, 1);
+                    CGGlyph glyph;
+                    CGPoint position;
+                    CTRunGetGlyphs(run, thisGlyphRange, &glyph);
+                    CTRunGetPositions(run, thisGlyphRange, &position);
+                    CGPathRef path = CTFontCreatePathForGlyph(runFont, glyph, NULL);
+                    position = CGPointMake(position.x, position.y + line.lineOrigin.y);
+                    CGAffineTransform transform = CGAffineTransformMakeTranslation(position.x, position.y);
+                    CGPathAddPath(paths,&transform,path);
+                    CGPathRelease(path);
+                    continue;
+                }
+                UIBezierPath* bezierPath = [UIBezierPath bezierPath];
+                [bezierPath moveToPoint:CGPointZero];
+                [bezierPath appendPath:[UIBezierPath bezierPathWithCGPath:paths]];
+                CFRelease(paths);
+                border.path = bezierPath;
+                layout.textBorder = border;
+            }
+        }
     }
+    if (layout.attachments.count > 0) {
+        layout.needAttachmentDraw = YES;
+    }
+
+
     if (lineOrigins){
         free(lineOrigins);
     }
@@ -231,10 +270,19 @@
         containerView:(UIView *)containerView
        containerLayer:(CALayer *)containerLayer {
     [self removeAttachmentFromSuperViewOrLayer];
-    [self _drawTextBackgroundColorInContext:context textLayout:self size:size point:point];
-    [self _drawDebugInContext:context textLayout:self size:size point:point];
+    if (self.isNeedTextBackgroundColorDraw) {
+        [self _drawTextBackgroundColorInContext:context textLayout:self size:size point:point];
+    }
+    if (self.isNeedDebugDraw) {
+        [self _drawDebugInContext:context textLayout:self size:size point:point];
+    }
+    if (self.isNeedBorderDraw) {
+        [self _drawTextBorderInContext:context textLayout:self size:size point:point];
+    }
     [self _drawTextInContext:context textLayout:self size:size point:point];
-    [self _drawAttachmentsIncontext:context textLayou:self size:size point:point containerView:containerView containerLayer:containerLayer];
+    if (self.isNeedAttachmentDraw) {
+        [self _drawAttachmentsIncontext:context textLayou:self size:size point:point containerView:containerView containerLayer:containerLayer];
+    }
 }
 
 - (void)_drawTextBackgroundColorInContext:(CGContextRef)context  textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
@@ -250,31 +298,37 @@
 }
 
 - (void)_drawDebugInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
-    if (self.isNeedDebugDraw) {
-        CGContextAddRect(context, CGRectOffset(textLayout.cgPathBox, point.x, point.y));
-        CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
-        CGContextFillPath(context);
-        CGContextAddRect(context, CGRectOffset(textLayout.textBoundingRect,point.x,point.y));
-        CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
-        CGContextFillPath(context);
-        [textLayout.linesArray enumerateObjectsUsingBlock:^(LWTextLine * _Nonnull line, NSUInteger idx, BOOL * _Nonnull stop) {
-            CGContextMoveToPoint(context,line.lineOrigin.x + point.x,(line.lineOrigin.y + point.y));
-            CGContextAddLineToPoint(context, line.lineOrigin.x + point.x + line.lineWidth,(line.lineOrigin.y + point.y));
-            CGContextSetLineWidth(context, 1.0f);
-            CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
-            CGContextStrokePath(context);
-        }];
-        [textLayout.textHighlights enumerateObjectsUsingBlock:^(LWTextHighlight * _Nonnull highlight, NSUInteger idx, BOOL * _Nonnull stop) {
-            for (NSValue* rectValue in highlight.positions) {
-                CGRect rect = [rectValue CGRectValue];
-                CGRect adjustRect = CGRectOffset(rect, point.x, point.y);
-                UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect
-                                                                      cornerRadius:2.0f];
-                [highlight.hightlightColor setFill];
-                [beizerPath fill];
-            }
-        }];
-    }
+    CGContextAddRect(context, CGRectOffset(textLayout.cgPathBox, point.x, point.y));
+    CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
+    CGContextFillPath(context);
+    CGContextAddRect(context, CGRectOffset(textLayout.textBoundingRect,point.x,point.y));
+    CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
+    CGContextFillPath(context);
+    [textLayout.linesArray enumerateObjectsUsingBlock:^(LWTextLine * _Nonnull line, NSUInteger idx, BOOL * _Nonnull stop) {
+        CGContextMoveToPoint(context,line.lineOrigin.x + point.x,(line.lineOrigin.y + point.y));
+        CGContextAddLineToPoint(context, line.lineOrigin.x + point.x + line.lineWidth,(line.lineOrigin.y + point.y));
+        CGContextSetLineWidth(context, 1.0f);
+        CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
+        CGContextStrokePath(context);
+    }];
+    [textLayout.textHighlights enumerateObjectsUsingBlock:^(LWTextHighlight * _Nonnull highlight, NSUInteger idx, BOOL * _Nonnull stop) {
+        for (NSValue* rectValue in highlight.positions) {
+            CGRect rect = [rectValue CGRectValue];
+            CGRect adjustRect = CGRectOffset(rect, point.x, point.y);
+            UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect
+                                                                  cornerRadius:2.0f];
+            [highlight.hightlightColor setFill];
+            [beizerPath fill];
+        }
+    }];
+}
+
+- (void)_drawTextBorderInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
+    LWTextBorder* textBorder = textLayout.textBorder;
+    CGContextAddPath(context, textBorder.path.CGPath);
+    CGContextSetStrokeColorWithColor(context, textBorder.borderColor.CGColor);
+    CGContextSetLineWidth(context, textBorder.borderWidth);
+    CGContextStrokePath(context);
 }
 
 - (void)_drawTextInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {

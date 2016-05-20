@@ -68,6 +68,8 @@
         self.underlineStyle = NSUnderlineStyleNone;
         self.linespacing = 2.0f;
         self.characterSpacing = 1.0f;
+        self.borderColor = [UIColor clearColor];
+        self.borderWidth = 1.0f;
     }
     return self;
 }
@@ -87,6 +89,8 @@
         self.underlineStyle = NSUnderlineStyleNone;
         self.linespacing = 2.0f;
         self.characterSpacing = 1.0f;
+        self.borderColor = [UIColor clearColor];
+        self.borderWidth = 1.0f;
     }
     return self;
 }
@@ -218,7 +222,22 @@
     NSRange range = NSMakeRange(0, self.attributedText.length);
     [self.attributedText setTextBackgroundColor:self.textBackgroundColor range:range];
     [self _creatTextLayout];
+}
 
+- (void)setBorderColor:(UIColor *)borderColor {
+    if (_borderColor != borderColor) {
+        _borderColor = borderColor;
+    }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setTextBorderColor:self.borderColor borderWidth:self.borderWidth range:range];
+    [self _creatTextLayout];
+}
+
+- (void)setBorderWidth:(CGFloat)borderWidth {
+    _borderWidth = borderWidth;
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setTextBorderColor:self.borderColor borderWidth:self.borderWidth range:range];
+    [self _creatTextLayout];
 }
 
 - (void)setFont:(UIFont *)font {

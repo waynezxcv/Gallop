@@ -25,7 +25,6 @@
 
 #import "NSMutableAttributedString+Gallop.h"
 #import "LWTextAttachment.h"
-#import "LWTextHighlight.h"
 #import "LWTextRunDelegate.h"
 
 @implementation NSMutableAttributedString(Gallop)
@@ -41,6 +40,14 @@
     textBackground.backgroundColor = backgroundColor;
     textBackground.range = range;
     [self setAttribute:LWTextBackgroundColorAttributedName  value:textBackground range:range];
+}
+
+- (void)setTextBorderColor:(UIColor *)borderColor borderWidth:(CGFloat)borderWidth range:(NSRange)range {
+    LWTextBorder* textBorder = [[LWTextBorder alloc] init];
+    textBorder.borderColor = borderColor;
+    textBorder.borderWidth = borderWidth;
+    textBorder.range = range;
+    [self setAttribute:LWTextBorderAttributedName value:textBorder range:range];
 }
 
 - (void)setFont:(UIFont *)font range:(NSRange)range {
