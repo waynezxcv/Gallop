@@ -32,7 +32,6 @@
 @property (nonatomic, strong) id object1;
 @property (nonatomic, strong) id object2;
 
-
 @end
 
 
@@ -56,18 +55,28 @@ static void RunLoopObserverCallBack(CFRunLoopObserverRef observer,
     }];
 }
 
-static void RunLoopTransactionsSetup() {
+static void RegisterRunLoopTransactions() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         transactionSet = [[NSMutableSet alloc] init];
-        CFRunLoopRef runloop = CFRunLoopGetMain();
-        CFRunLoopObserverRef observer;
-        observer = CFRunLoopObserverCreate(CFAllocatorGetDefault(),
-                                           kCFRunLoopBeforeWaiting | kCFRunLoopExit,
-                                           true,
-                                           0xFFFFFF,
-                                           RunLoopObserverCallBack, NULL);
-        CFRunLoopAddObserver(runloop, observer, kCFRunLoopCommonModes);
+        static CFRunLoopObserverRef observer;
+        CFRunLoopRef runLoop = CFRunLoopGetCurrent();
+        CFOptionFlags activities = (kCFRunLoopBeforeWaiting |
+                                    kCFRunLoopExit);
+        CFRunLoopObserverContext context = {
+            0,           // version
+            (__bridge void *)transactionSet,  // info
+            &CFRetain,   // retain
+            &CFRelease,  // release
+            NULL         // copyDescription
+        };
+        observer = CFRunLoopObserverCreate(NULL,        // allocator
+                                           activities,  // activities
+                                           YES,         // repeats
+                                           INT_MAX,     // order after CA transaction commits
+                                           RunLoopObserverCallBack,  // callback
+                                           &context);   // context
+        CFRunLoopAddObserver(runLoop, observer, kCFRunLoopCommonModes);
         CFRelease(observer);
     });
 }
@@ -107,7 +116,7 @@ static void RunLoopTransactionsSetup() {
     if (!_target || !_selector) {
         return;
     }
-    RunLoopTransactionsSetup();
+    RegisterRunLoopTransactions();
     [transactionSet addObject:self];
 }
 

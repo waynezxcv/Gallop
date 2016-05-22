@@ -22,11 +22,13 @@
  THE SOFTWARE.
  */
 
+
+
 #import "LWImageStorage.h"
 #import "CALayer+WebCache.h"
 #import "CALayer+GallopAddtions.h"
 #import "LWRunLoopTransactions.h"
-
+#import "UIImageView+WebCache.h"
 
 
 @implementation LWImageStorage
@@ -50,91 +52,42 @@
     return self;
 }
 
-
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight {
     self.image = [self.image stretchableImageWithLeftCapWidth:leftCapWidth topCapHeight:topCapHeight];
 }
+
 
 @end
 
 @implementation LWImageContainer
 
-- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
-    if (imageStorage.type == LWImageStorageWebImage) {
-        if (imageStorage.image) {
-            if (imageStorage.cornerRadius == 0) {
-                [self setContents:(__bridge id _Nullable)imageStorage.image.CGImage];
-            }
-            else {
-                [self lw_setImage:imageStorage.image
-                    containerSize:imageStorage.frame.size
-                     cornerRadius:imageStorage.cornerRadius
-            cornerBackgroundColor:imageStorage.cornerBackgroundColor
-                cornerBorderColor:imageStorage.cornerBorderColor
-                      borderWidth:imageStorage.cornerBorderWidth];
-            }
-        } else {
-            [self sd_setImageWithURL:imageStorage.URL
-                    placeholderImage:imageStorage.placeholder
-                             options:0
-                       containerSize:imageStorage.frame.size
-                        cornerRadius:imageStorage.cornerRadius
-               cornerBackgroundColor:imageStorage.cornerBackgroundColor
-                   cornerBorderColor:imageStorage.cornerBorderColor
-                         borderWidth:imageStorage.cornerBorderWidth
-                           completed:^(UIImage *image, NSError *error,
-                                       SDImageCacheType cacheType,
-                                       NSURL *imageURL) {
-                               if (imageStorage.fadeShow) {
-                                   CATransition* transition = [CATransition animation];
-                                   transition.duration = 0.2;
-                                   transition.timingFunction = [CAMediaTimingFunction
-                                                                functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-                                   transition.type = kCATransitionFade;
-                                   [self addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
-                               }
-                           }];
-        }
-    } else {
-        if (imageStorage.cornerRadius == 0) {
-            [self setContents:(__bridge id _Nullable)imageStorage.image.CGImage];
-        }
-        else {
-            [self lw_setImage:imageStorage.image
-                containerSize:imageStorage.frame.size
-                 cornerRadius:imageStorage.cornerRadius
-        cornerBackgroundColor:imageStorage.cornerBackgroundColor
-            cornerBorderColor:imageStorage.cornerBorderColor borderWidth:imageStorage.cornerBorderWidth];
-        }
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.clipsToBounds = YES;
+        self.contentMode = UIViewContentModeScaleAspectFill;
     }
+    return self;
 }
 
-- (void)delayLayoutImageStorage:(LWImageStorage *)imageStorage {
-    [[LWRunLoopTransactions transactionsWithTarget:self
-                                          selector:@selector(layoutImageStorage:)
-                                            object:imageStorage] commit];}
-
-- (void)delayCleanup {
-    [[LWRunLoopTransactions transactionsWithTarget:self
-                                          selector:@selector(cleanup)
-                                            object:nil] commit];
+- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
+    __weak typeof(self) weakSelf = self;
+    [self sd_setImageWithURL:imageStorage.URL
+                   completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                       if (image) {
+                           [weakSelf layoutWithStorage:imageStorage];
+                       }
+                   }];
 }
 
-- (void)layoutImageStorage:(LWImageStorage *)imageStorage {
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
+
+- (void)layoutWithStorage:(LWImageStorage *)imageStorage {
     self.frame = imageStorage.frame;
-    [CATransaction commit];
-    self.contentsGravity = imageStorage.contentMode;
-    self.masksToBounds = imageStorage.masksToBounds;
+    self.hidden = NO;
 }
-
 
 - (void)cleanup {
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    self.frame = CGRectZero;
-    [CATransaction commit];
+    self.hidden = YES;
 }
 
 @end

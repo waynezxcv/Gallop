@@ -29,13 +29,13 @@
 
 @property (nonatomic,strong) LWTextLayout* textLayout;
 @property (nonatomic,strong) NSMutableAttributedString* attributedText;
-@property (nonatomic,assign) CGPoint position;
 
 @end
 
 @implementation LWTextStorage
 
 @synthesize frame = _frame;
+@synthesize position = _position;
 
 #pragma mark - Init
 

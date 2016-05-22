@@ -24,24 +24,23 @@
 
 #import <UIKit/UIKit.h>
 
-#define dispatch_main_sync_safe(block)\
-if ([NSThread isMainThread]) {\
-block();\
-} else {\
-dispatch_sync(dispatch_get_main_queue(), block);\
-}
-
-#define dispatch_main_async_safe(block)\
-if ([NSThread isMainThread]) {\
-block();\
-} else {\
-dispatch_async(dispatch_get_main_queue(), block);\
-}
-
-
-
 @interface GallopUtils : NSObject
 
 + (CGFloat)contentsScale;
+
+@end
+
+
+@interface LWFlag : NSObject
+
+- (int32_t)value;
+- (int32_t)increment;
+
+@end
+
+
+@interface NSObject(SwizzleMethod)
+
++ (void)swizzleMethod:(SEL)origSel withMethod:(SEL)aftSel;
 
 @end

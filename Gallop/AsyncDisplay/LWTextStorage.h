@@ -23,7 +23,7 @@
  */
 #import "LWStorage.h"
 #import "LWTextLayout.h"
-
+#import "LWAsyncDisplayLayer.h"
 
 
 /***  附件的对齐方式  ***/

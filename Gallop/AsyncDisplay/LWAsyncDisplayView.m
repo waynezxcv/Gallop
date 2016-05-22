@@ -22,21 +22,18 @@
  THE SOFTWARE.
  */
 
-
 #import "LWAsyncDisplayView.h"
+#import "LWAsyncDisplayLayer.h"
 #import "GallopUtils.h"
-#import "CALayer+WebCache.h"
+#import "LWRunLoopTransactions.h"
 #import "CALayer+GallopAddtions.h"
-#import "NSObject+SwizzleMethod.h"
 
-
-typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAttributes);
 
 
 @interface LWAsyncDisplayView ()
 
+
 @property (nonatomic,strong) NSMutableArray* imageContainers;
-@property (nonatomic,assign) BOOL autoReuseImageContainer;
 @property (nonatomic,assign) NSInteger maxImageStorageCount;
 
 @end
@@ -48,32 +45,28 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     LWTextHighlight* _highlight;
     CGPoint _highlightAdjustPoint;
     BOOL _showingHighlight;
-    BOOL _cleanedImageContainer;
-    BOOL _setedImageContents;
-    BOOL _displayed;
 }
 
-#pragma mark - Init
+#pragma mark - LifeCycle
 
 - (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)count {
     self = [super initWithFrame:frame];
     if (self) {
         [self setup];
-        self.autoReuseImageContainer = NO;
         self.maxImageStorageCount = count;
         for (NSInteger i = 0; i < self.maxImageStorageCount; i ++) {
-            LWImageContainer* container = [LWImageContainer layer];
-            [self.layer addSublayer:container];
+            LWImageContainer* container = [[LWImageContainer alloc] initWithFrame:CGRectZero];
+            [self addSubview:container];
             [self.imageContainers addObject:container];
         }
     }
     return self;
 }
 
-
 - (id)init {
     self = [super init];
     if (self) {
+        self.maxImageStorageCount = 0;
         [self setup];
     }
     return self;
@@ -91,184 +84,61 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     self.layer.opaque = YES;
     self.layer.contentsScale = [GallopUtils contentsScale];
     _showingHighlight = NO;
-    _cleanedImageContainer = YES;
-    _setedImageContents = NO;
-    _displayed = NO;
-}
-
-- (void)setLayout:(LWLayout *)layout {
-    if (_layout == layout || [_layout isEqual:layout]) {
-        return;
-    }
-    [self _cleanup];
-    _layout = layout;
-    [self _updateLayout];
-
-}
-
-- (void)setFrame:(CGRect)frame {
-    CGSize oldSize = self.bounds.size;
-    CGSize newSize = frame.size;
-    if (!CGSizeEqualToSize(oldSize, newSize) &&
-        !CGSizeEqualToSize(newSize,CGSizeZero)) {
-        [super setFrame:frame];
-        [self _setNeedDisplay];
-    }
-}
-
-- (void)setBounds:(CGRect)bounds {
-    CGSize oldSize = self.bounds.size;
-    CGSize newSize = bounds.size;
-    if (!CGSizeEqualToSize(oldSize, newSize) &&
-        !CGSizeEqualToSize(newSize,CGSizeZero)) {
-        [super setBounds:bounds];
-        [self _setNeedDisplay];
-    }
+    self.displaysAsynchronously = YES;
 }
 
 #pragma mark - Private
-
-- (void)_cleanup {
-    for (LWTextStorage* textStorage in _textStorages) {
-        [textStorage.textLayout removeAttachmentFromSuperViewOrLayer];
-    }
-    if (!_cleanedImageContainer) {
-        for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
-            LWImageContainer* container = self.imageContainers[i];
-            [container cleanup];
-        }
-    }
-    LWLayout* layout = _layout;
-    _layout = nil;
-    LWTextHighlight* highlight = _highlight;
-    _highlight = nil;
-    NSArray* textStroages = _textStorages;
-    _textStorages = nil;
-    NSArray* imageStorages = _imageStorages;
-    _imageStorages = nil;
-    _showingHighlight = NO;
-    _cleanedImageContainer = YES;
-    _setedImageContents = NO;
-    _displayed = NO;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        [textStroages count];
-        [layout class];
-        [highlight class];
-        [imageStorages count];
-    });
-}
-
-- (void)_updateLayout {
-    _imageStorages = self.layout.imageStorages;
-    _setedImageContents = NO;
-
-    _textStorages = self.layout.textStorages;
-    _displayed = NO;
-
-    [self _auotoUpdateImgeContainersIfNeed];
-    [self _setImageStorages];
-    [self _setNeedDisplay];
-}
-
-- (void)_auotoUpdateImgeContainersIfNeed {
-    if (self.autoReuseImageContainer == YES) {
-        [self _autoReuseImageContainers];
-        [self _autoSetImageStorages];
-    }
-}
-
-- (void)_autoSetImageStorages {
-    if (!_setedImageContents) {
-        for (NSInteger i = 0 ; i < _imageStorages.count; i ++) {
-            LWImageStorage* imageStorage = _imageStorages[i];
-            LWImageContainer* container = self.imageContainers[i];
-            if (imageStorage.type == LWImageStorageWebImage) {
-                [container delayLayoutImageStorage:imageStorage];
-                [container setContentWithImageStorage:imageStorage];
-            }
-        }
-        _setedImageContents = YES;
-        _cleanedImageContainer = NO;
+- (void)_cleanupImageContainers {
+    for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
+        LWImageContainer* container = self.imageContainers[i];
+        [container cleanup];
     }
 }
 
 - (void)_setImageStorages {
-    if (!self.autoReuseImageContainer && !_setedImageContents) {
-        for (NSInteger i = 0; i < _imageStorages.count; i ++) {
-            LWImageStorage* imageStorage = _imageStorages[i];
-            if (self.imageContainers.count > i) {
-                LWImageContainer* container = self.imageContainers[i];
-                if (imageStorage.type == LWImageStorageWebImage) {
-                    [container delayLayoutImageStorage:imageStorage];
-                    [container setContentWithImageStorage:imageStorage];
-                }
-            }
-        }
-        _setedImageContents = YES;
-        _cleanedImageContainer = NO;
-    }
-}
-
-- (void)_autoReuseImageContainers {
-    if (self.isNeedRestImageContainers) {
-        NSInteger delta = self.imageContainers.count - _imageStorages.count;
-        if (delta < 0) {
-            for (NSInteger i = 0; i < _imageStorages.count; i ++) {
-                if (i < ABS(delta)) {
-                    LWImageContainer* container = [LWImageContainer layer];
-                    [self.layer addSublayer:container];
-                    [self.imageContainers addObject:container];
-                }
-            }
-        } else if (delta > 0 ) {
-            for (NSInteger i = 0; i < self.imageContainers.count; i ++ ) {
-                if (i >= _imageStorages.count) {
-                    LWImageContainer* container = self.imageContainers[i];
-                    [container cleanup];
-                }
+    for (NSInteger i = 0; i < _imageStorages.count; i ++) {
+        LWImageStorage* imageStorage = _imageStorages[i];
+        if (self.imageContainers.count > i) {
+            LWImageContainer* container = self.imageContainers[i];
+            if (imageStorage.type == LWImageStorageWebImage) {
+                [container setContentWithImageStorage:imageStorage];
             }
         }
     }
-}
-
-- (BOOL)isNeedRestImageContainers {
-    if (self.imageContainers.count == _imageStorages.count) {
-        return NO;
-    }
-    return YES;
 }
 
 #pragma mark - Display
-- (void)_setNeedDisplay {
-    if (!_displayed) {
-        [self _commitDisplay];
-    }
-}
 
-- (void)_commitDisplay {
-    [self lw_addDisplayTransactionsWithasyncDisplay:^(CGContextRef context, CGSize size) {
-        [self _drawStoragesInContext:context];
-    } complete:^(id displayContent, BOOL isFinished) {
-        if (isFinished) {
-            _displayed = YES;
+- (LWAsyncDisplayTransaction *)asyncDisplayTransaction {
+    LWAsyncDisplayTransaction* transaction = [[LWAsyncDisplayTransaction alloc] init];
+    transaction.willDisplayBlock = ^(CALayer *layer) {
+        [layer removeAnimationForKey:@"contents"];
+        for (LWTextStorage* textStorage in _textStorages) {
+            [textStorage.textLayout removeAttachmentFromSuperViewOrLayer];
         }
-    }];
-}
-
-- (void)setNeedRedDraw {
-    [self lw_asyncDisplay:^(CGContextRef context, CGSize size) {
-        [self _drawStoragesInContext:context];
-    } complete:^(id displayContent, BOOL isFinished) {
-        if (isFinished) {
-            _displayed = YES;
+    };
+    transaction.displayBlock = ^(CGContextRef context, CGSize size, LWAsyncDisplayIsCanclledBlock isCancelledBlock) {
+        [self _drawStoragesInContext:context inCancelled:isCancelledBlock];
+    };
+    transaction.didDisplayBlock = ^(CALayer *layer, BOOL finished) {
+        [layer removeAnimationForKey:@"contents"];
+        if (!finished) {
+            for (LWTextStorage* textStorage in _textStorages) {
+                [textStorage.textLayout removeAttachmentFromSuperViewOrLayer];
+            }
+            [self _cleanupImageContainers];
         }
-    }];
+    };
+    return transaction;
 }
 
-- (void)_drawStoragesInContext:(CGContextRef)context {
+- (void)_drawStoragesInContext:(CGContextRef)context inCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelledBlock {
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (imageStorage.type == LWImageStorageLocalImage) {
             [imageStorage.image drawInRect:imageStorage.frame];
+            if (isCancelledBlock()) {
+                return;
+            }
         }
     }
     for (LWTextStorage* textStorage in _textStorages) {
@@ -276,10 +146,14 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
                                          size:textStorage.textLayout.textBoundingSize
                                         point:textStorage.frame.origin
                                 containerView:self
-                               containerLayer:self.layer];
+                               containerLayer:self.layer
+                                  isCancelled:isCancelledBlock];
     }
     if (_showingHighlight && _highlight) {
         for (NSValue* rectValue in _highlight.positions) {
+            if (isCancelledBlock()) {
+                return;
+            }
             CGRect rect = [rectValue CGRectValue];
             CGRect adjustRect = CGRectMake(rect.origin.x + _highlightAdjustPoint.x,
                                            rect.origin.y + _highlightAdjustPoint.y,
@@ -291,10 +165,14 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
             [beizerPath fill];
         }
     }
-    if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:)]) {
-        [self.delegate extraAsyncDisplayIncontext:context size:self.bounds.size];
+    if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:isCancelled:)]) {
+        if (isCancelledBlock()) {
+            return;
+        }
+        [self.delegate extraAsyncDisplayIncontext:context size:self.bounds.size isCancelled:isCancelledBlock];
     }
 }
+
 
 #pragma mark - Touch
 
@@ -405,7 +283,7 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     _showingHighlight = YES;
     _highlight = highlight;
     _highlightAdjustPoint = adjustPoint;
-    [self setNeedRedDraw];
+    [(LWAsyncDisplayLayer *)self.layer displayImmediately];
 }
 
 - (void)_hideHightlight {
@@ -413,7 +291,7 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
         return;
     }
     _showingHighlight = NO;
-    [self setNeedRedDraw];
+    [(LWAsyncDisplayLayer *)self.layer displayImmediately];
 }
 
 - (void)_removeHightlight {
@@ -422,8 +300,11 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     _highlightAdjustPoint = CGPointZero;
 }
 
-
 #pragma mark - Getter
+
++ (Class)layerClass {
+    return [LWAsyncDisplayLayer class];
+}
 
 - (NSMutableArray *)imageContainers {
     if (_imageContainers) {
@@ -433,5 +314,23 @@ typedef void(^foundLinkCompleteBlock)(LWTextStorage* foundTextStorage,id linkAtt
     return _imageContainers;
 }
 
+#pragma mark - Setter
+
+- (void)setDisplaysAsynchronously:(BOOL)displaysAsynchronously {
+    _displaysAsynchronously = displaysAsynchronously;
+    [(LWAsyncDisplayLayer *)self.layer setDisplaysAsynchronously:_displaysAsynchronously];
+}
+
+- (void)setLayout:(LWLayout *)layout {
+    [self _cleanupImageContainers];
+    if (_layout == layout) {
+        return;
+    }
+    _layout = layout;
+    _imageStorages = _layout.imageStorages;
+    _textStorages = _layout.textStorages;
+    [self.layer setNeedsDisplay];
+    [self _setImageStorages];
+}
 
 @end

@@ -225,23 +225,54 @@
                  size:(CGSize)size
                 point:(CGPoint)point
         containerView:(UIView *)containerView
-       containerLayer:(CALayer *)containerLayer {
-    [self removeAttachmentFromSuperViewOrLayer];
+       containerLayer:(CALayer *)containerLayer
+          isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld {
     if (self.isNeedTextBackgroundColorDraw) {
-        [self _drawTextBackgroundColorInContext:context textLayout:self size:size point:point];
+        [self _drawTextBackgroundColorInContext:context
+                                     textLayout:self
+                                           size:size
+                                          point:point
+                                    isCancelled:isCancelld];
     }
+
     if (self.isNeedDebugDraw) {
-        [self _drawDebugInContext:context textLayout:self size:size point:point];
+        [self _drawDebugInContext:context
+                       textLayout:self
+                             size:size
+                            point:point
+                      isCancelled:isCancelld];
     }
-    [self _drawTextInContext:context textLayout:self size:size point:point];
+
+    [self _drawTextInContext:context
+                  textLayout:self
+                        size:size
+                       point:point
+                 isCancelled:isCancelld];
+
     if (self.isNeedAttachmentDraw) {
-        [self _drawAttachmentsIncontext:context textLayou:self size:size point:point containerView:containerView containerLayer:containerLayer];
+        [self _drawAttachmentsIncontext:context
+                              textLayou:self
+                                   size:size
+                                  point:point
+                          containerView:containerView
+                         containerLayer:containerLayer
+                            isCancelled:isCancelld];
     }
 }
 
-- (void)_drawTextBackgroundColorInContext:(CGContextRef)context  textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
+- (void)_drawTextBackgroundColorInContext:(CGContextRef)context
+                               textLayout:(LWTextLayout *)textLayout
+                                     size:(CGSize)size point:(CGPoint)point
+                              isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld  {
+
     [textLayout.backgroundColors enumerateObjectsUsingBlock:^(LWTextBackgroundColor * _Nonnull background, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (isCancelld()) {
+            return ;
+        }
         for (NSValue* value in background.positions) {
+            if (isCancelld()) {
+                break;
+            }
             CGRect rect = [value CGRectValue];
             CGRect adjustRect = CGRectMake(point.x + rect.origin.x, point.y + rect.origin.y, rect.size.width, rect.size.height);
             UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect cornerRadius:2.0f];
@@ -251,7 +282,11 @@
     }];
 }
 
-- (void)_drawDebugInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
+- (void)_drawDebugInContext:(CGContextRef) context
+                 textLayout:(LWTextLayout *)textLayout
+                       size:(CGSize)size
+                      point:(CGPoint)point
+                isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld  {
     CGContextAddRect(context, CGRectOffset(textLayout.cgPathBox, point.x, point.y));
     CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
     CGContextFillPath(context);
@@ -259,6 +294,9 @@
     CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
     CGContextFillPath(context);
     [textLayout.linesArray enumerateObjectsUsingBlock:^(LWTextLine * _Nonnull line, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (isCancelld()) {
+            return ;
+        }
         CGContextMoveToPoint(context,line.lineOrigin.x + point.x,(line.lineOrigin.y + point.y));
         CGContextAddLineToPoint(context, line.lineOrigin.x + point.x + line.lineWidth,(line.lineOrigin.y + point.y));
         CGContextSetLineWidth(context, 1.0f);
@@ -266,7 +304,13 @@
         CGContextStrokePath(context);
     }];
     [textLayout.textHighlights enumerateObjectsUsingBlock:^(LWTextHighlight * _Nonnull highlight, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (isCancelld()) {
+            return ;
+        }
         for (NSValue* rectValue in highlight.positions) {
+            if (isCancelld()) {
+                break;
+            }
             CGRect rect = [rectValue CGRectValue];
             CGRect adjustRect = CGRectOffset(rect, point.x, point.y);
             UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect
@@ -277,17 +321,27 @@
     }];
 }
 
-- (void)_drawTextInContext:(CGContextRef) context textLayout:(LWTextLayout *)textLayout size:(CGSize)size point:(CGPoint)point {
+- (void)_drawTextInContext:(CGContextRef)context
+                textLayout:(LWTextLayout *)textLayout
+                      size:(CGSize)size
+                     point:(CGPoint)point
+               isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld {
     CGContextSaveGState(context);
     CGContextTranslateCTM(context, point.x, point.y);
     CGContextTranslateCTM(context, 0, size.height);
     CGContextScaleCTM(context, 1, -1);
     NSArray* lines = textLayout.linesArray;
     [lines enumerateObjectsUsingBlock:^(LWTextLine*  _Nonnull line, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (isCancelld()) {
+            return ;
+        }
         CGContextSetTextMatrix(context, CGAffineTransformIdentity);
         CGContextSetTextPosition(context, line.lineOrigin.x ,size.height - line.lineOrigin.y);
         CFArrayRef runs = CTLineGetGlyphRuns(line.CTLine);
         for (NSUInteger j = 0; j < CFArrayGetCount(runs);j ++) {
+            if (isCancelld()) {
+                break;
+            }
             CTRunRef run = CFArrayGetValueAtIndex(runs, j);
             CTRunDraw(run, context, CFRangeMake(0, 0));
         }
@@ -300,8 +354,12 @@
                              size:(CGSize)size
                             point:(CGPoint)point
                     containerView:(UIView *)containerView
-                   containerLayer:(CALayer *)containerLayer {
+                   containerLayer:(CALayer *)containerLayer
+                      isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld {
     for (NSUInteger i = 0; i < textLayout.attachments.count; i++) {
+        if (isCancelld()) {
+            break;
+        }
         LWTextAttachment* attachment = textLayout.attachments[i];
         if (!attachment.content) {
             continue;

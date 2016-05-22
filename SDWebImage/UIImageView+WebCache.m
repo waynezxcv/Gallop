@@ -69,11 +69,11 @@ static char TAG_ACTIVITY_SHOW;
                     return;
                 }
                 else if (image) {
-                    wself.image = image;
+                    [wself delaySetImage:image];
                     [wself setNeedsLayout];
                 } else {
                     if ((options & SDWebImageDelayPlaceholder)) {
-                        wself.image = placeholder;
+                        [wself delaySetImage:placeholder];
                         [wself setNeedsLayout];
                     }
                 }

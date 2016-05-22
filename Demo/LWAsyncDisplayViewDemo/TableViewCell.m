@@ -39,7 +39,7 @@
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
         [self.contentView addSubview:self.menu];
-        
+
     }
     return self;
 }
@@ -60,7 +60,7 @@
                 [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.cellLayout atIndex:i];
             }
         }
-        
+
     }
     //点击菜单按钮
     if (CGRectContainsPoint(CGRectMake(self.cellLayout.menuPosition.origin.x - 10,
@@ -118,13 +118,15 @@
                                  34);
 }
 
-- (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size {
-    //绘制分割线
-    CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
-    CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
-    CGContextSetLineWidth(context, 0.3f);
-    CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
-    CGContextStrokePath(context);
+- (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
+    if (!isCancelled()) {
+        //绘制分割线
+        CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
+        CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
+        CGContextSetLineWidth(context, 0.3f);
+        CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
+        CGContextStrokePath(context);
+    }
 }
 
 - (void)_drawImage:(UIImage *)image rect:(CGRect)rect context:(CGContextRef)context {

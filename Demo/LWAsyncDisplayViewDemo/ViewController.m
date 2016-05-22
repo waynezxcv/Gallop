@@ -67,7 +67,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidAppearNotifications:)
                                                  name:UIKeyboardWillShowNotification object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidHidenNotifications:)
                                                  name:UIKeyboardWillHideNotification object:nil];
@@ -78,7 +78,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidHideNotification
                                                   object:nil];
@@ -424,12 +424,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                           @"date":@"1459668442",
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/60718250jw1f2jg46smtmj20go0go77r.jpg"],
                           @"statusID":@"4"},
-                        @{@"name":@"优酷",
-                          @"avatar":@"http://tp2.sinaimg.cn/1642904381/50/5749093752/1",
-                          @"content":@"1000杯拿铁，幻化成一生挚爱。两个人，不远万里来相遇、相识、相知，直至相守，小小拿铁却是大大的世界。 L如何用 1000 杯拿铁表达爱",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww1.sinaimg.cn/mw690/61ecbb3dgw1f2jfeqmwskg208w04wwvj.gif"],
-                          @"statusID":@"5"},
                         @{@"name":@"Kindle中国",
                           @"avatar":@"http://tp1.sinaimg.cn/3262223112/50/5684307907/1",
                           @"content":@"#只限今日#《简单的逻辑学》作者D.Q.麦克伦尼在书中提出了28种非逻辑思维形式，抛却了逻辑学一贯的刻板理论，转而以轻松的笔触带领我们畅游这个精彩无比的逻辑世界；《蝴蝶梦》我错了，我曾以为付出自己就是爱你。全球公认20世纪伟大的爱情经典，大陆独家合法授权。",

@@ -29,7 +29,6 @@
 #import "LWImageStorage.h"
 
 
-
 @interface LWLayout : NSObject
 
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextStorage *>* textStorages;
@@ -41,7 +40,10 @@
 - (void)addStorages:(NSArray <LWStorage *> *)storages;
 - (void)removeStorage:(LWStorage *)storage;
 - (void)removeStorages:(NSArray <LWStorage *> *)storages;
-
 - (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin;
+
+
+- (void)setNeedsDisplay;
+- (void)setNeedsLayout;
 
 @end

@@ -25,11 +25,10 @@
 #ifndef Gallop_h
 #define Gallop_h
 
-
 #import "LWAsyncDisplayView.h"
-#import "NSMutableAttributedString+Gallop.h"
 #import "LWTextLayout.h"
 #import "LWDefine.h"
+#import "NSMutableAttributedString+Gallop.h"
 
 
 #endif /* Gallop_h */

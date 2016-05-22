@@ -27,6 +27,7 @@
 #import <CoreText/CoreText.h>
 #import "LWTextContainer.h"
 #import "LWTextAttachment.h"
+#import "LWDefine.h"
 
 @class LWTextLine;
 
@@ -71,7 +72,8 @@
                  size:(CGSize)size
                 point:(CGPoint)point
         containerView:(UIView *)containerView
-       containerLayer:(CALayer *)containerLayer;
+       containerLayer:(CALayer *)containerLayer
+          isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld;
 
 
 //****  将Attachment移除  ****//

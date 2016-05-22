@@ -23,7 +23,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "UIView+AsyncDisplay.h"
+#import "LWAsyncDisplayLayer.h"
 #import "LWLayout.h"
 
 
@@ -35,21 +35,21 @@
 
 /***  点击链接 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data;
-
 /***  点击LWImageStorage回调 ***/
-- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
-   didCilickedImageStorage:(LWImageStorage *)imageStorage
-                     touch:(UITouch *)touch;
-
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedImageStorage:(LWImageStorage *)imageStorage touch:(UITouch *)touch;
 /***  额外的绘制任务在这里实现 ***/
-- (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size;
+- (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled;
 
 @end
 
-@interface LWAsyncDisplayView : UIView
+
+
+
+@interface LWAsyncDisplayView : UIView <LWAsyncDisplayLayerDelegate>
 
 @property (nonatomic,weak) id <LWAsyncDisplayViewDelegate> delegate;
 @property (nonatomic,strong) LWLayout* layout;//布局模型
+@property (nonatomic,assign) BOOL displaysAsynchronously;
 
 /**
  *  初始化并设置最大ImageContainer的数量。如果用"initWithFrame"方法创建，则自动管理ImageContainers

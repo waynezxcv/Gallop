@@ -22,12 +22,39 @@
  THE SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
 
-@interface LWFlag : NSObject
 
-@property (atomic,assign,readonly) int32_t value;
+#import <UIKit/UIKit.h>
+#import "LWDefine.h"
 
-- (int32_t)increase;
+@class LWFlag;
+@protocol LWAsyncDisplayLayerDelegate;
+
+//** LWAsyncDisplayLayer **//
+@interface LWAsyncDisplayLayer : CALayer
+
+@property (nonatomic,assign) BOOL displaysAsynchronously;
+@property (nonatomic,strong,readonly) LWFlag* displayFlag;
+
+- (void)displayImmediately;
+- (void)cancelAsyncDisplay;
 
 @end
+
+@interface LWAsyncDisplayTransaction : NSObject
+
+@property (nonatomic,copy) LWAsyncDisplayWillDisplayBlock willDisplayBlock;
+@property (nonatomic,copy) LWAsyncDisplayBlock displayBlock;
+@property (nonatomic,copy) LWAsyncDisplayDidDisplayBlock didDisplayBlock;
+
+@end
+
+
+@protocol LWAsyncDisplayLayerDelegate <NSObject>
+
+- (LWAsyncDisplayTransaction *)asyncDisplayTransaction;
+
+@end
+
+
+

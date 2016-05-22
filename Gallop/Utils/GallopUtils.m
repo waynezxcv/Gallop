@@ -21,7 +21,12 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
+
+
+
 #import "GallopUtils.h"
+#import <libkern/OSAtomic.h>
+#import "objc/runtime.h"
 
 @implementation GallopUtils
 
@@ -35,3 +40,34 @@
 }
 
 @end
+
+
+@implementation LWFlag {
+    int32_t _value;
+}
+
+- (int32_t)value {
+    return _value;
+}
+
+- (int32_t)increment {
+    return OSAtomicIncrement32(&_value);
+}
+
+@end
+
+
+@implementation NSObject(SwizzleMethod)
+
++ (void)swizzleMethod:(SEL)origSel withMethod:(SEL)aftSel {
+    Method originMethod = class_getInstanceMethod(self, origSel);
+    Method newMethod = class_getInstanceMethod(self, aftSel);
+    if(originMethod && newMethod) {
+        method_exchangeImplementations(originMethod, newMethod);
+    }
+}
+
+
+@end
+
+
