@@ -63,10 +63,10 @@
 
     }
     //点击菜单按钮
-    if (CGRectContainsPoint(CGRectMake(self.cellLayout.menuPosition.origin.x - 10,
-                                       self.cellLayout.menuPosition.origin.y - 10,
-                                       self.cellLayout.menuPosition.size.width + 20,
-                                       self.cellLayout.menuPosition.size.height + 20), point)) {
+    if (CGRectContainsPoint(CGRectMake(self.cellLayout.menuPosition.origin.x - 20,
+                                       self.cellLayout.menuPosition.origin.y - 20,
+                                       self.cellLayout.menuPosition.size.width + 40,
+                                       self.cellLayout.menuPosition.size.height + 40), point)) {
         [self.menu clickedMenu];
     }
 }
@@ -143,7 +143,7 @@
 
 - (LWAsyncDisplayView *)asyncDisplayView {
     if (!_asyncDisplayView) {
-        _asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero maxImageStorageCount:10];
+        _asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero maxImageStorageCount:12];
         _asyncDisplayView.delegate = self;
     }
     return _asyncDisplayView;

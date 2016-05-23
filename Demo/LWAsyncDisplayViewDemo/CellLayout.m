@@ -63,7 +63,7 @@
         NSMutableArray* imagePositionArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
         NSInteger row = 0;
         NSInteger column = 0;
-        for (NSInteger i = 0; i < statusModel.imgs.count; i ++) {
+        for (NSInteger i = 0; i < imageCount; i ++) {
             CGRect imageRect = CGRectMake(60.0f + (column * 85.0f),
                                           60.0f + contentTextStorage.height + (row * 85.0f),
                                           80.0f,
@@ -84,8 +84,6 @@
                 row = row + 1;
             }
         }
-        CGFloat imagesHeight = 0.0f;
-        row < 3 ? (imagesHeight = (row + 1) * 85.0f):(imagesHeight = row  * 85.0f);
         //获取最后一张图片的模型
         LWImageStorage* lastImageStorage = (LWImageStorage *)[imageStorageArray lastObject];
         //生成时间的模型 dateTextStorage
@@ -93,15 +91,20 @@
         dateTextStorage.text = [dateFormatter stringFromDate:statusModel.date];
         dateTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:13.0f];
         dateTextStorage.textColor = [UIColor grayColor];
-        dateTextStorage.frame = CGRectMake(60.0f, lastImageStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
         
         //生成菜单图片的模型 dateTextStorage
-        CGRect menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,20.0f + imagesHeight + contentTextStorage.bottom,20.0f,15.0f);
         LWImageStorage* menuStorage = [[LWImageStorage alloc] init];
-        menuStorage.frame = menuPosition;
         menuStorage.contents = [UIImage imageNamed:@"[menu]"];
-        
-        //comment
+        CGRect menuPosition;
+        if (lastImageStorage) {
+            menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,10.0f + lastImageStorage.bottom,20.0f,15.0f);
+            dateTextStorage.frame = CGRectMake(60.0f, lastImageStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
+            
+        } else {
+            menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,10.0f + contentTextStorage.bottom,20.0f,15.0f);
+            dateTextStorage.frame = CGRectMake(60.0f, contentTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
+        }
+        menuStorage.frame = menuPosition;
         //生成评论背景Storage
         LWImageStorage* commentBgStorage = [[LWImageStorage alloc] init];
         NSArray* commentTextStorages = @[];

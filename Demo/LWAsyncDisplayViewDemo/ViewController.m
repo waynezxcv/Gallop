@@ -269,6 +269,7 @@ const CGFloat kRefreshBoundary = 170.0f;
             [fakes addObjectsFromArray:self.fakeDatasource];
             [fakes addObjectsFromArray:self.fakeDatasource];
             [fakes addObjectsFromArray:self.fakeDatasource];
+            [fakes addObjectsFromArray:self.fakeDatasource];
             for (NSInteger i = 0; i < fakes.count; i ++) {
                 StatusModel* statusModel = [StatusModel modelWithJSON:fakes[i]];
                 LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
@@ -399,8 +400,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww4.sinaimg.cn/mw690/8245bf01jw1f2jhh3ttm6j20jg0el76g.jpg",
                                     @"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh43riaj20jg0pxado.jpg",
                                     @"http://ww2.sinaimg.cn/mw690/8245bf01jw1f2jhh4mutgj20jg0ly0xt.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh4vc7pj20jg0px41m.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/8245bf01jw1f2jhh2mgkgj20jg0pxn2z.jpg"],
+                                    @"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh4vc7pj20jg0px41m.jpg",],
                           @"statusID":@"2",
                           @"commentList":@[@{@"from":@"waynezxcv",
                                              @"to":@"妖妖小精",
@@ -415,8 +415,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww1.sinaimg.cn/mw690/005xpHs3gw1f2jg15amskj30b40f1408.jpg",
                                     @"http://ww3.sinaimg.cn/mw690/005xpHs3gw1f2jg16f8vnj30b40g4q4q.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/005xpHs3gw1f2jg178dxdj30am0gowgv.jpg",
-                                    @"http://ww2.sinaimg.cn/mw690/005xpHs3gw1f2jg17c5urj30b40ghjto.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/005xpHs3gw1f2jg18p02pj30b40fdmz4.jpg"],
+                                    @"http://ww2.sinaimg.cn/mw690/005xpHs3gw1f2jg17c5urj30b40ghjto.jpg"],
                           @"statusID":@"3"},
                         @{@"name":@"头条新闻",
                           @"avatar":@"http://tp1.sinaimg.cn/1618051664/50/5735009977/0",
