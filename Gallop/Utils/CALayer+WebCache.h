@@ -176,4 +176,23 @@
 
 
 
+/**
+ *  设置Image并设置圆角半径，同时避免离屏渲染
+ *
+ */
+- (void)lw_setImage:(UIImage *)image
+      containerSize:(CGSize)size
+       cornerRadius:(CGFloat)cornerRadius
+cornerBackgroundColor:(UIColor *)color
+  cornerBorderColor:(UIColor *)borderColor
+        borderWidth:(CGFloat)borderWidth;
+
+
+/**
+ *  在主线程RunLoop空闲时执行setContents
+ *
+ */
+- (void)lw_delaySetContents:(id)contents;
+
+
 @end

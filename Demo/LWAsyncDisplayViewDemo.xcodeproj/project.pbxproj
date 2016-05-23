@@ -26,9 +26,6 @@
 		01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */; };
 		01D14EB91CDCF8A00028714A /* LWTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EB61CDCF8A00028714A /* LWTextLayout.m */; };
 		01D14EBA1CDCF8A00028714A /* LWTextLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EB81CDCF8A00028714A /* LWTextLine.m */; };
-		01D14EEC1CDCF9D40028714A /* CALayer+GallopAddtions.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EE01CDCF9D40028714A /* CALayer+GallopAddtions.m */; };
-		01D14EED1CDCF9D40028714A /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EE21CDCF9D40028714A /* CALayer+WebCache.m */; };
-		01D14EEE1CDCF9D40028714A /* CALayer+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EE41CDCF9D40028714A /* CALayer+WebCacheOperation.m */; };
 		01D14EF01CDCF9D40028714A /* LWRunLoopTransactions.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EE91CDCF9D40028714A /* LWRunLoopTransactions.m */; };
 		01D14EF41CDCFA780028714A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EF31CDCFA780028714A /* RootViewController.m */; };
 		01D14EF71CDCFADE0028714A /* CoreTextDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EF61CDCFADE0028714A /* CoreTextDemoViewController.m */; };
@@ -83,7 +80,9 @@
 		B0D9EB4A1CB0F436009FDCCF /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB351CB0F435009FDCCF /* UIImageView+HighlightedWebCache.m */; };
 		B0D9EB4B1CB0F436009FDCCF /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB371CB0F435009FDCCF /* UIImageView+WebCache.m */; };
 		B0D9EB4C1CB0F436009FDCCF /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB391CB0F435009FDCCF /* UIView+WebCacheOperation.m */; };
-		B0F767891CF2B3FC00050EAE /* UIImageView+GallopAddtions.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F767881CF2B3FC00050EAE /* UIImageView+GallopAddtions.m */; };
+		B0F7678C1CF2BF0300050EAE /* UIImageView+GallopAddtions.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F7678B1CF2BF0300050EAE /* UIImageView+GallopAddtions.m */; };
+		B0F767941CF2BF4C00050EAE /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F767901CF2BF4C00050EAE /* CALayer+WebCache.m */; };
+		B0F767951CF2BF4C00050EAE /* CALayer+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F767921CF2BF4C00050EAE /* CALayer+WebCacheOperation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -127,12 +126,6 @@
 		01D14EB61CDCF8A00028714A /* LWTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextLayout.m; path = ../Gallop/CoreText/LWTextLayout.m; sourceTree = "<group>"; };
 		01D14EB71CDCF8A00028714A /* LWTextLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextLine.h; path = ../Gallop/CoreText/LWTextLine.h; sourceTree = "<group>"; };
 		01D14EB81CDCF8A00028714A /* LWTextLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextLine.m; path = ../Gallop/CoreText/LWTextLine.m; sourceTree = "<group>"; };
-		01D14EDF1CDCF9D40028714A /* CALayer+GallopAddtions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+GallopAddtions.h"; path = "../Gallop/Utils/CALayer+GallopAddtions.h"; sourceTree = "<group>"; };
-		01D14EE01CDCF9D40028714A /* CALayer+GallopAddtions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+GallopAddtions.m"; path = "../Gallop/Utils/CALayer+GallopAddtions.m"; sourceTree = "<group>"; };
-		01D14EE11CDCF9D40028714A /* CALayer+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+WebCache.h"; path = "../Gallop/Utils/CALayer+WebCache.h"; sourceTree = "<group>"; };
-		01D14EE21CDCF9D40028714A /* CALayer+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+WebCache.m"; path = "../Gallop/Utils/CALayer+WebCache.m"; sourceTree = "<group>"; };
-		01D14EE31CDCF9D40028714A /* CALayer+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+WebCacheOperation.h"; path = "../Gallop/Utils/CALayer+WebCacheOperation.h"; sourceTree = "<group>"; };
-		01D14EE41CDCF9D40028714A /* CALayer+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+WebCacheOperation.m"; path = "../Gallop/Utils/CALayer+WebCacheOperation.m"; sourceTree = "<group>"; };
 		01D14EE51CDCF9D40028714A /* LWDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWDefine.h; path = ../Gallop/Utils/LWDefine.h; sourceTree = "<group>"; };
 		01D14EE81CDCF9D40028714A /* LWRunLoopTransactions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWRunLoopTransactions.h; path = ../Gallop/Utils/LWRunLoopTransactions.h; sourceTree = "<group>"; };
 		01D14EE91CDCF9D40028714A /* LWRunLoopTransactions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWRunLoopTransactions.m; path = ../Gallop/Utils/LWRunLoopTransactions.m; sourceTree = "<group>"; };
@@ -230,8 +223,12 @@
 		B0D9EB371CB0F435009FDCCF /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+WebCache.m"; path = "../SDWebImage/UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		B0D9EB381CB0F435009FDCCF /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCacheOperation.h"; path = "../SDWebImage/UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		B0D9EB391CB0F435009FDCCF /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCacheOperation.m"; path = "../SDWebImage/UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
-		B0F767871CF2B3FC00050EAE /* UIImageView+GallopAddtions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+GallopAddtions.h"; sourceTree = "<group>"; };
-		B0F767881CF2B3FC00050EAE /* UIImageView+GallopAddtions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+GallopAddtions.m"; sourceTree = "<group>"; };
+		B0F7678A1CF2BF0300050EAE /* UIImageView+GallopAddtions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+GallopAddtions.h"; path = "../Gallop/Utils/UIImageView+GallopAddtions.h"; sourceTree = "<group>"; };
+		B0F7678B1CF2BF0300050EAE /* UIImageView+GallopAddtions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+GallopAddtions.m"; path = "../Gallop/Utils/UIImageView+GallopAddtions.m"; sourceTree = "<group>"; };
+		B0F7678F1CF2BF4C00050EAE /* CALayer+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+WebCache.h"; path = "../Gallop/Utils/CALayer+WebCache.h"; sourceTree = "<group>"; };
+		B0F767901CF2BF4C00050EAE /* CALayer+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+WebCache.m"; path = "../Gallop/Utils/CALayer+WebCache.m"; sourceTree = "<group>"; };
+		B0F767911CF2BF4C00050EAE /* CALayer+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+WebCacheOperation.h"; path = "../Gallop/Utils/CALayer+WebCacheOperation.h"; sourceTree = "<group>"; };
+		B0F767921CF2BF4C00050EAE /* CALayer+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+WebCacheOperation.m"; path = "../Gallop/Utils/CALayer+WebCacheOperation.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -432,14 +429,12 @@
 				B074BB561CEE151A003464B4 /* LWTextParser.m */,
 				01D14EE81CDCF9D40028714A /* LWRunLoopTransactions.h */,
 				01D14EE91CDCF9D40028714A /* LWRunLoopTransactions.m */,
-				01D14EE11CDCF9D40028714A /* CALayer+WebCache.h */,
-				01D14EE21CDCF9D40028714A /* CALayer+WebCache.m */,
-				01D14EDF1CDCF9D40028714A /* CALayer+GallopAddtions.h */,
-				01D14EE01CDCF9D40028714A /* CALayer+GallopAddtions.m */,
-				B0F767871CF2B3FC00050EAE /* UIImageView+GallopAddtions.h */,
-				B0F767881CF2B3FC00050EAE /* UIImageView+GallopAddtions.m */,
-				01D14EE31CDCF9D40028714A /* CALayer+WebCacheOperation.h */,
-				01D14EE41CDCF9D40028714A /* CALayer+WebCacheOperation.m */,
+				B0F7678A1CF2BF0300050EAE /* UIImageView+GallopAddtions.h */,
+				B0F7678B1CF2BF0300050EAE /* UIImageView+GallopAddtions.m */,
+				B0F7678F1CF2BF4C00050EAE /* CALayer+WebCache.h */,
+				B0F767901CF2BF4C00050EAE /* CALayer+WebCache.m */,
+				B0F767911CF2BF4C00050EAE /* CALayer+WebCacheOperation.h */,
+				B0F767921CF2BF4C00050EAE /* CALayer+WebCacheOperation.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -621,21 +616,21 @@
 				B0D9EB471CB0F436009FDCCF /* UIImage+GIF.m in Sources */,
 				01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */,
 				B0D9EB431CB0F435009FDCCF /* SDWebImageDownloaderOperation.m in Sources */,
+				B0F767951CF2BF4C00050EAE /* CALayer+WebCacheOperation.m in Sources */,
 				B0A522FA1CEA1AD200DC2D15 /* LWImageStorage.m in Sources */,
 				B0A522EB1CEA18B000DC2D15 /* LWAsyncDisplayView.m in Sources */,
 				011DFA5C1C9880D2000410D7 /* LWImageItem.m in Sources */,
 				B0ACEC051CEDC9A50019074F /* CommentView.m in Sources */,
+				B0F7678C1CF2BF0300050EAE /* UIImageView+GallopAddtions.m in Sources */,
 				01D14EF71CDCFADE0028714A /* CoreTextDemoViewController.m in Sources */,
 				01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */,
 				B0A522F71CEA1ABB00DC2D15 /* LWTextStorage.m in Sources */,
 				01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */,
-				01D14EED1CDCF9D40028714A /* CALayer+WebCache.m in Sources */,
 				B0ACEBEA1CEDB1760019074F /* LWAlertContentView.m in Sources */,
 				B0D9EB4C1CB0F436009FDCCF /* UIView+WebCacheOperation.m in Sources */,
 				B0A523001CEA1B6600DC2D15 /* LWStorage.m in Sources */,
 				B0D9EB3C1CB0F435009FDCCF /* MKAnnotationView+WebCache.m in Sources */,
 				B054E1121CF0F15000E6FC53 /* LWAsyncDisplayLayer.m in Sources */,
-				B0F767891CF2B3FC00050EAE /* UIImageView+GallopAddtions.m in Sources */,
 				014871821CDBC12500CE43C4 /* LWTextContainer.m in Sources */,
 				B0A522E51CEA189000DC2D15 /* GallopUtils.m in Sources */,
 				B0D9EB3D1CB0F435009FDCCF /* NSData+ImageContentType.m in Sources */,
@@ -650,7 +645,6 @@
 				B0D9EB441CB0F435009FDCCF /* SDWebImageManager.m in Sources */,
 				B0ACEC0B1CEDC9A50019074F /* ViewController.m in Sources */,
 				B0D9EB3F1CB0F435009FDCCF /* SDImageCache.m in Sources */,
-				01D14EEC1CDCF9D40028714A /* CALayer+GallopAddtions.m in Sources */,
 				B0ACEC031CEDC9A50019074F /* CellLayout.m in Sources */,
 				016BDA791CDA6A6B000D1ACF /* LWTextRunDelegate.m in Sources */,
 				01D14F071CDD43990028714A /* LWTextAttachment.m in Sources */,
@@ -664,7 +658,6 @@
 				01D14EB91CDCF8A00028714A /* LWTextLayout.m in Sources */,
 				011DFA591C9880D2000410D7 /* LWImageBrowserCell.m in Sources */,
 				B0D9EB411CB0F435009FDCCF /* SDWebImageDecoder.m in Sources */,
-				01D14EEE1CDCF9D40028714A /* CALayer+WebCacheOperation.m in Sources */,
 				01D14F041CDD42ED0028714A /* NSMutableAttributedString+Gallop.m in Sources */,
 				B0ACEBEB1CEDB1760019074F /* LWAlertView.m in Sources */,
 				B0ACEC0A1CEDC9A50019074F /* TableViewHeader.m in Sources */,
@@ -675,6 +668,7 @@
 				B0D9EB4B1CB0F436009FDCCF /* UIImageView+WebCache.m in Sources */,
 				B0D9EB421CB0F435009FDCCF /* SDWebImageDownloader.m in Sources */,
 				B0ACEC021CEDC9A50019074F /* AutoFitSizeTextView.m in Sources */,
+				B0F767941CF2BF4C00050EAE /* CALayer+WebCache.m in Sources */,
 				B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */,
 				B0ACEC081CEDC9A50019074F /* StatusModel.m in Sources */,
 				01D14EF41CDCFA780028714A /* RootViewController.m in Sources */,

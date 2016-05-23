@@ -27,7 +27,7 @@
 
 #import "CALayer+WebCache.h"
 #import "CALayer+WebCacheOperation.h"
-#import "CALayer+GallopAddtions.h"
+#import "LWRunLoopTransactions.h"
 #import "objc/runtime.h"
 
 
@@ -150,6 +150,8 @@ static char imageURLKey;
             }
         });
     }
+
+
 }
 
 #pragma mark -
@@ -218,5 +220,44 @@ static char imageURLKey;
 - (void)sd_cancelCurrentImageLoad {
     [self sd_cancelImageLoadOperationWithKey:@"CALayerImageLoad"];
 }
+
+
+- (void)lw_delaySetContents:(id)contents {
+    [[LWRunLoopTransactions transactionsWithTarget:self
+                                          selector:@selector(setContents:)
+                                            object:contents] commit];
+}
+
+- (void)lw_setImage:(UIImage *)image
+      containerSize:(CGSize)size
+       cornerRadius:(CGFloat)cornerRadius
+cornerBackgroundColor:(UIColor *)color
+  cornerBorderColor:(UIColor *)borderColor
+        borderWidth:(CGFloat)borderWidth {
+    CGFloat scale = [UIScreen mainScreen].scale;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIGraphicsBeginImageContextWithOptions(size, YES, scale);
+        if (nil == UIGraphicsGetCurrentContext()) {
+            return;
+        }
+        UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height)
+                                                              cornerRadius:cornerRadius];
+        UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, size.width, size.height)];
+        [color setFill];
+        [backgroundRect fill];
+        [cornerPath addClip];
+        [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+        [borderColor setStroke];
+        [cornerPath stroke];
+        [cornerPath setLineWidth:borderWidth];
+        id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
+        UIGraphicsEndImageContext();
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setContents:processedImageRef];
+        });
+    });
+}
+
+
 
 @end

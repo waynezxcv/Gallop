@@ -21,19 +21,17 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
+
+
 #import <UIKit/UIKit.h>
-
-@interface CALayer(GallopAddtions)
-
-- (void)lw_setImage:(UIImage *)image
-      containerSize:(CGSize)size
-       cornerRadius:(CGFloat)cornerRadius
-cornerBackgroundColor:(UIColor *)color
-  cornerBorderColor:(UIColor *)borderColor
-         borderWidth:(CGFloat)borderWidth;
+#import "SDWebImageCompat.h"
+#import "SDWebImageManager.h"
+#import "LWImageStorage.h"
 
 
+@interface UIImageView(GallopAddtions)
 
-- (void)lw_delaySetContents:(id)contents;
+- (void)lw_setImageWithURL:(NSURL *)URL completed:(SDWebImageCompletionBlock)completedBlock;
+- (void)lw_setImageWithImageStorage:(LWImageStorage *)imageStorage completed:(SDWebImageCompletionBlock)completedBlock;
 
 @end

@@ -26,7 +26,7 @@
 #import "LWTextLayout.h"
 #import "LWTextLine.h"
 #import "GallopUtils.h"
-#import "UIImageView+WebCache.h"
+#import "UIImageView+GallopAddtions.h"
 
 
 @interface LWTextLayout ()
@@ -411,11 +411,12 @@
             dispatch_main_sync_safe(^{
                 view.frame = rect;
                 [containerView addSubview:view];
-                NSLog(@"addView");
                 if ([view isKindOfClass:[UIImageView class]]) {
                     if (attachment.userInfo) {
                         if (attachment.userInfo[@"URL"]) {
-                            [(UIImageView *)view sd_setImageWithURL:attachment.userInfo[@"URL"]];
+                            [(UIImageView *)view lw_setImageWithURL:attachment.userInfo[@"URL"]
+                                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                                          }];
                         }
                     }
                 }

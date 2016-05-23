@@ -24,10 +24,9 @@
 
 
 #import "LWImageStorage.h"
-#import "CALayer+WebCache.h"
-#import "UIImageView+WebCache.h"
-#import "CALayer+GallopAddtions.h"
 #import "LWRunLoopTransactions.h"
+#import "UIImageView+GallopAddtions.h"
+
 
 @implementation LWImageStorage
 
@@ -99,12 +98,11 @@
     }
     if ([imageStorage.contents isKindOfClass:[NSURL class]]) {
         __weak typeof(self) weakSelf = self;
-        [self sd_setImageWithURL:(NSURL *)imageStorage.contents
-                       completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                           if (image) {
-                               [weakSelf layoutWithStorage:imageStorage];
-                           }
-                       }];
+        [self lw_setImageWithImageStorage:imageStorage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            if (image) {
+                [weakSelf layoutWithStorage:imageStorage];
+            }
+        }];
     }
 }
 

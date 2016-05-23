@@ -23,7 +23,6 @@
  */
 
 #import "LWAsyncDisplayLayer.h"
-#import "CALayer+GallopAddtions.h"
 #import "GallopUtils.h"
 #import "LWDefine.h"
 
