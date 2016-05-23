@@ -317,10 +317,10 @@
 }
 
 - (void)setLayout:(LWLayout *)layout {
-    [self _cleanupImageContainers];
     if (_layout == layout) {
         return;
     }
+    [self _cleanupImageContainers];
     _layout = layout;
     _imageStorages = _layout.imageStorages;
     _textStorages = _layout.textStorages;

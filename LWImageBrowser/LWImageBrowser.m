@@ -363,7 +363,6 @@ LWActionSheetViewDelegate>
 - (void)lwActionSheet:(LWActionSheetView *)actionSheet didSelectedButtonWithIndex:(NSInteger)index {
     NSLog(@"%ld",index);
 
-
 }
 
 @end
