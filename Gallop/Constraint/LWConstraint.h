@@ -40,9 +40,7 @@ typedef LWConstraint* (^MarginToStorage)(LWStorage* storage, CGFloat value);
 
 
 
-/**
- *  自动布局时的约束模型
- */
+/***  自动布局时的约束模型 ***/
 
 @interface LWConstraint : NSObject
 

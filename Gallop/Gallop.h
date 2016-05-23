@@ -29,6 +29,8 @@
 #import "LWTextLayout.h"
 #import "LWDefine.h"
 #import "NSMutableAttributedString+Gallop.h"
+#import "LWConstraintManager.h"
+#import "LWStorage+Constraint.h"
 
 
 #endif /* Gallop_h */

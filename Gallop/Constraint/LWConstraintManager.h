@@ -29,9 +29,7 @@
 
 
 
-/**
- *  约束管理
- */
+/***  约束管理 ***/
 @interface LWConstraintManager : NSObject
 
 
@@ -45,8 +43,6 @@
  *  设置Constraint。并设置Cotainer（装载这个LWStorage的LWAsyncDisplayView的Size，这个Size默认宽度为屏幕宽度，高度动态计算，初始化值为CGFLOAT_MAX）
  */
 + (void)lw_makeConstraint:(LWConstraint* )constraint containerSize:(CGSize)size;
-
-
 
 
 @end
