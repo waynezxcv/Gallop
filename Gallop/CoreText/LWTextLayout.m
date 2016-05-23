@@ -27,6 +27,7 @@
 #import "LWTextLine.h"
 #import "GallopUtils.h"
 #import "UIImageView+GallopAddtions.h"
+#import <objc/runtime.h>
 
 
 @interface LWTextLayout ()
@@ -69,7 +70,12 @@
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFTypeRef)mutableAtrributedText);
     CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,CFRangeMake(0,text.length),NULL,CGSizeMake(cgPathBox.size.width, cgPathBox.size.height),NULL);
     if (layout.sizeToFit) {
-        cgPathBox = CGRectMake(cgPathBox.origin.x, cgPathBox.origin.y,suggestSize.width,suggestSize.height);
+        cgPathBox = CGRectMake(cgPathBox.origin.x, cgPathBox.origin.y,cgPathBox.size.width,suggestSize.height);
+        CGMutablePathRef path = CGPathCreateMutable();
+        CGPathAddRect(path, NULL, cgPathBox);
+        cgPath = CGPathCreateMutableCopy(path);
+        CFRelease(path);
+    } else {
         CGMutablePathRef path = CGPathCreateMutable();
         CGPathAddRect(path, NULL, cgPathBox);
         cgPath = CGPathCreateMutableCopy(path);
@@ -93,7 +99,6 @@
     CGRect textBoundingRect = CGRectZero;
     CGSize textBoundingSize = CGSizeZero;
     NSUInteger lineCurrentIndex = 0;
-
     NSMutableArray* highlights = [[NSMutableArray alloc] init];
     NSMutableArray* backgroundColors = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < lineCount; i++) {
@@ -637,5 +642,35 @@ static CGRect LWCGRectFitWithContentMode(CGRect rect, CGSize size, UIViewContent
 - (id)mutableCopyWithZone:(NSZone *)zone {
     return [self copyWithZone:zone];
 }
+
+#pragma mark - NSCoding
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    unsigned int count = 0;
+    Ivar* vars = class_copyIvarList([self class], &count);
+    for (int i = 0; i < count; i ++) {
+        Ivar var = vars[i];
+        const char* varName = ivar_getName(var);
+        NSString* key = [NSString stringWithUTF8String:varName];
+        id value = [self valueForKey:key];
+        [aCoder encodeObject:value forKey:key];
+    }
+}
+
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        unsigned int count = 0;
+        Ivar* vars = class_copyIvarList([self class], &count);
+        for (int i = 0; i < count; i ++) {
+            Ivar var = vars[i];
+            const char* varName = ivar_getName(var);
+            NSString* key = [NSString stringWithUTF8String:varName];
+            id value = [aDecoder decodeObjectForKey:key];
+            [self setValue:value forKey:key];
+        }
+    }
+    return self;
+}
+
 
 @end

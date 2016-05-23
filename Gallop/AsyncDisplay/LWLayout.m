@@ -24,6 +24,7 @@
 
 
 #import "LWLayout.h"
+#import <objc/runtime.h>
 
 @interface LWLayout ()
 
@@ -34,6 +35,63 @@
 @end
 
 @implementation LWLayout
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    unsigned int count = 0;
+    Ivar* vars = class_copyIvarList([self class], &count);
+    for (int i = 0; i < count; i ++) {
+        Ivar var = vars[i];
+        const char* varName = ivar_getName(var);
+        NSString* key = [NSString stringWithUTF8String:varName];
+        id value = [self valueForKey:key];
+        [aCoder encodeObject:value forKey:key];
+    }
+}
+
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        unsigned int count = 0;
+        Ivar* vars = class_copyIvarList([self class], &count);
+        for (int i = 0; i < count; i ++) {
+            Ivar var = vars[i];
+            const char* varName = ivar_getName(var);
+            NSString* key = [NSString stringWithUTF8String:varName];
+            id value = [aDecoder decodeObjectForKey:key];
+            [self setValue:value forKey:key];
+        }
+    }
+    return self;
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    id object = [[[self class] allocWithZone:zone] init];
+    unsigned int count = 0;
+    Ivar* vars = class_copyIvarList([self class], &count);
+    for (int i = 0; i < count; i ++) {
+        Ivar var = vars[i];
+        const char* varName = ivar_getName(var);
+        NSString* key = [NSString stringWithUTF8String:varName];
+        id value = [self valueForKey:key];
+        if ([value respondsToSelector:@selector(copy)] && [value conformsToProtocol:@protocol(NSCopying)]) {
+            [object setValue:[value copy] forKey:key];
+        }
+        else {
+            [object setValue:value forKey:key];
+        }
+    }
+    return object;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+#pragma mark - Methods
 
 - (void)addStorage:(LWStorage *)storage {
     if ([storage isMemberOfClass:[LWTextStorage class]]) {
@@ -125,20 +183,6 @@
     }
     _totalStorages = [[NSMutableArray alloc] init];
     return _totalStorages;
-}
-
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWLayout* laytout = [[[self class] allocWithZone:zone] init];
-    laytout.textStorages = [self.textStorages mutableCopy];
-    laytout.imageStorages = [self.imageStorages mutableCopy];
-    laytout.totalStorages = [self.totalStorages mutableCopy];
-    return laytout;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
 }
 
 @end

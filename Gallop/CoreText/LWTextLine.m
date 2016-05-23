@@ -24,6 +24,7 @@
 
 #import "LWTextLine.h"
 #import "LWTextAttachment.h"
+#import <objc/runtime.h>
 
 @interface LWTextLine ()
 
@@ -222,6 +223,36 @@
 - (CGFloat)right {
     return CGRectGetMaxX(self.frame);
 }
+
+#pragma mark - NSCoding
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    unsigned int count = 0;
+    Ivar* vars = class_copyIvarList([self class], &count);
+    for (int i = 0; i < count; i ++) {
+        Ivar var = vars[i];
+        const char* varName = ivar_getName(var);
+        NSString* key = [NSString stringWithUTF8String:varName];
+        id value = [self valueForKey:key];
+        [aCoder encodeObject:value forKey:key];
+    }
+}
+
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        unsigned int count = 0;
+        Ivar* vars = class_copyIvarList([self class], &count);
+        for (int i = 0; i < count; i ++) {
+            Ivar var = vars[i];
+            const char* varName = ivar_getName(var);
+            NSString* key = [NSString stringWithUTF8String:varName];
+            id value = [aDecoder decodeObjectForKey:key];
+            [self setValue:value forKey:key];
+        }
+    }
+    return self;
+}
+
 
 #pragma mark - NSCoping
 

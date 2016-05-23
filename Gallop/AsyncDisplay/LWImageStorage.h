@@ -28,7 +28,7 @@
 #import "LWDefine.h"
 
 /***  Image模型  ***/
-@interface LWImageStorage : LWStorage <NSCopying>
+@interface LWImageStorage : LWStorage <NSCopying,NSCoding>
 
 @property (nonatomic,strong) id contents;//内容（UIImage or NSURL）
 @property (nonatomic,strong) UIImage* placeholder;//占位图

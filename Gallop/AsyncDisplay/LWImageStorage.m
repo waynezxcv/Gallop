@@ -26,7 +26,7 @@
 #import "LWImageStorage.h"
 #import "LWRunLoopTransactions.h"
 #import "UIImageView+GallopAddtions.h"
-
+#import <objc/runtime.h>
 
 @implementation LWImageStorage
 
@@ -84,8 +84,36 @@
     return [self copyWithZone:zone];
 }
 
-@end
+#pragma mark - NSCoding
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    unsigned int count = 0;
+    Ivar* vars = class_copyIvarList([self class], &count);
+    for (int i = 0; i < count; i ++) {
+        Ivar var = vars[i];
+        const char* varName = ivar_getName(var);
+        NSString* key = [NSString stringWithUTF8String:varName];
+        id value = [self valueForKey:key];
+        [aCoder encodeObject:value forKey:key];
+    }
+}
 
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        unsigned int count = 0;
+        Ivar* vars = class_copyIvarList([self class], &count);
+        for (int i = 0; i < count; i ++) {
+            Ivar var = vars[i];
+            const char* varName = ivar_getName(var);
+            NSString* key = [NSString stringWithUTF8String:varName];
+            id value = [aDecoder decodeObjectForKey:key];
+            [self setValue:value forKey:key];
+        }
+    }
+    return self;
+}
+
+@end
 
 @implementation UIImageView (LWImageStorage)
 
@@ -96,16 +124,23 @@
     if (imageStorage.placeholder) {
         self.image = imageStorage.placeholder;
     }
+    __weak typeof(self) weakSelf = self;
     if ([imageStorage.contents isKindOfClass:[NSURL class]]) {
-        __weak typeof(self) weakSelf = self;
         [self lw_setImageWithImageStorage:imageStorage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (image) {
                 [weakSelf layoutWithStorage:imageStorage];
+                if (imageStorage.fadeShow) {
+                    [weakSelf.layer removeAnimationForKey:@"LWImageFadeShowAnimationKey"];
+                    CATransition* transition = [CATransition animation];
+                    transition.duration = 0.15;
+                    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+                    transition.type = kCATransitionFade;
+                    [weakSelf.layer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
+                }
             }
         }];
     }
 }
-
 
 - (void)layoutWithStorage:(LWImageStorage *)imageStorage {
     self.frame = imageStorage.frame;

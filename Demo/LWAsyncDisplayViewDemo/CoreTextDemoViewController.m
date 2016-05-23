@@ -32,7 +32,6 @@
         textStorage.font = [UIFont systemFontOfSize:18.0f];
         textStorage.textColor = [UIColor blackColor];
 
-
         [textStorage lw_replaceTextWithView:[[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60.0f, 30.0f)]
                                 contentMode:UIViewContentModeScaleAspectFill
                                        size:CGSizeMake(60.0f, 30.0f)
@@ -73,7 +72,7 @@
         [layout addStorage:imamgeStorage];
 
         LWTextStorage* webImageTextStorage = [[LWTextStorage alloc] init];
-        webImageTextStorage.frame = CGRectMake(20.0f, imamgeStorage.bottom + 10.0f, SCREEN_WIDTH - 40.0f, 400);
+        webImageTextStorage.frame = CGRectMake(20.0f, imamgeStorage.bottom + 10.0f,SCREEN_WIDTH - 40.0f, 400);
         webImageTextStorage.textBackgroundColor = [UIColor orangeColor];
         webImageTextStorage.text = @"Easy to use yet capable of so much, iOS 9 was engineered to work hand in hand with the advanced technologies built into iPhone.";
         webImageTextStorage.font = [UIFont systemFontOfSize:18.0f];
@@ -83,8 +82,13 @@
                                               imageSize:CGSizeMake(60, 60)
                                               alignment:LWTextAttachAlignmentTop
                                                   range:NSMakeRange(webImageTextStorage.text.length - 7, 0)];
-        [layout addStorage:webImageTextStorage];
+        webImageTextStorage.linespacing = 10.0f;
+        webImageTextStorage.characterSpacing = 5.0f;
+        webImageTextStorage.underlineStyle = NSUnderlineStyleSingle;
+        webImageTextStorage.textColor = [UIColor whiteColor];
 
+
+        [layout addStorage:webImageTextStorage];
         dispatch_sync(dispatch_get_main_queue(), ^{
             self.asyncDisplayView.layout = layout;
         });

@@ -28,7 +28,7 @@
 
 //*** LWTextStorage和LWImageStorage的父类  ***//
 
-@interface LWStorage : NSObject<NSCopying,NSMutableCopying>
+@interface LWStorage : NSObject<NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,assign) BOOL clipsToBounds;
 @property (nonatomic,getter = isOpaque) BOOL opaque;

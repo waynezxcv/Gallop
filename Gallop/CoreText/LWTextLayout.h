@@ -33,7 +33,7 @@
 
 
 
-@interface LWTextLayout : NSObject<NSCopying,NSMutableCopying>
+@interface LWTextLayout : NSObject<NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,strong,readonly) LWTextContainer* container;
 @property (nonatomic,strong,readonly) NSAttributedString* text;

@@ -65,9 +65,16 @@
                      inRange:range
                      options:kNilOptions
                   usingBlock: ^(NSParagraphStyle* value, NSRange subRange, BOOL *stop) {
-                      NSMutableParagraphStyle* style = value.mutableCopy;
-                      [style setLineSpacing:lineSpacing];
-                      [self setParagraphStyle:style range:subRange];
+                      if (value) {
+                          NSMutableParagraphStyle* style = value.mutableCopy;
+                          [style setLineSpacing:lineSpacing];
+                          [self setParagraphStyle:style range:subRange];
+                      }
+                      else {
+                          NSMutableParagraphStyle* style = [[NSMutableParagraphStyle alloc] init];
+                          [style setLineSpacing:lineSpacing];
+                          [self setParagraphStyle:style range:subRange];
+                      }
                   }];
 }
 
@@ -76,9 +83,16 @@
                      inRange:range
                      options:kNilOptions
                   usingBlock: ^(NSParagraphStyle* value, NSRange subRange, BOOL *stop) {
-                      NSMutableParagraphStyle* style = value.mutableCopy;
-                      [style setAlignment:textAlignment];
-                      [self setParagraphStyle:style range:subRange];
+                      if (value) {
+                          NSMutableParagraphStyle* style = value.mutableCopy;
+                          [style setAlignment:textAlignment];
+                          [self setParagraphStyle:style range:subRange];
+                      }
+                      else {
+                          NSMutableParagraphStyle* style = [[NSMutableParagraphStyle alloc] init];
+                          [style setAlignment:textAlignment];
+                          [self setParagraphStyle:style range:subRange];
+                      }
                   }];
 }
 
@@ -87,9 +101,16 @@
                      inRange:range
                      options:kNilOptions
                   usingBlock: ^(NSParagraphStyle* value, NSRange subRange, BOOL *stop) {
-                      NSMutableParagraphStyle* style = value.mutableCopy;
-                      [style setLineBreakMode:lineBreakMode];
-                      [self setParagraphStyle:style range:subRange];
+                      if (value) {
+                          NSMutableParagraphStyle* style = value.mutableCopy;
+                          [style setLineBreakMode:lineBreakMode];
+                          [self setParagraphStyle:style range:subRange];
+                      }
+                      else {
+                          NSMutableParagraphStyle* style = [[NSMutableParagraphStyle alloc] init];
+                          [style setLineBreakMode:lineBreakMode];
+                          [self setParagraphStyle:style range:subRange];
+                      }
                   }];
 }
 

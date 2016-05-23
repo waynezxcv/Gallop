@@ -31,7 +31,7 @@
 
 //*** Text附件 ***//
 
-@interface LWTextAttachment : NSObject<NSCopying>
+@interface LWTextAttachment : NSObject<NSCopying,NSCoding>
 
 @property (nonatomic,strong) id content;
 @property (nonatomic,assign) NSRange range;//在string中的range
