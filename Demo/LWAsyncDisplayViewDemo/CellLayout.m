@@ -28,8 +28,7 @@
         /*******而不是在渲染的时候才进行计算*******************************************/
         //头像模型 avatarImageStorage
         LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
-        avatarStorage.type = LWImageStorageWebImage;
-        avatarStorage.URL = statusModel.avatar;
+        avatarStorage.contents = statusModel.avatar;
         avatarStorage.cornerRadius = 20.0f;
         avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
         avatarStorage.fadeShow = YES;
@@ -74,8 +73,7 @@
             LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
             imageStorage.frame = imageRect;
             NSString* URLString = [statusModel.imgs objectAtIndex:i];
-            imageStorage.URL = [NSURL URLWithString:URLString];
-            imageStorage.type = LWImageStorageWebImage;
+            imageStorage.contents = [NSURL URLWithString:URLString];
             imageStorage.fadeShow = YES;
             imageStorage.clipsToBounds = YES;
             [imageStorageArray addObject:imageStorage];
@@ -100,9 +98,8 @@
         //生成菜单图片的模型 dateTextStorage
         CGRect menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,20.0f + imagesHeight + contentTextStorage.bottom,20.0f,15.0f);
         LWImageStorage* menuStorage = [[LWImageStorage alloc] init];
-        menuStorage.type = LWImageStorageLocalImage;
         menuStorage.frame = menuPosition;
-        menuStorage.image = [UIImage imageNamed:@"[menu]"];
+        menuStorage.contents = [UIImage imageNamed:@"[menu]"];
         
         //comment
         //生成评论背景Storage
@@ -177,9 +174,8 @@
             //如果有评论，设置评论背景Storage
             commentTextStorages = tmp;
             commentBgPosition = CGRectMake(60.0f,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, offsetY + 15.0f);
-            commentBgStorage.type = LWImageStorageLocalImage;
             commentBgStorage.frame = commentBgPosition;
-            commentBgStorage.image = [UIImage imageNamed:@"comment"];
+            commentBgStorage.contents = [UIImage imageNamed:@"comment"];
             [commentBgStorage stretchableImageWithLeftCapWidth:40 topCapHeight:15];
         }
         /**************************将要在同一个LWAsyncDisplayView上显示的Storage要全部放入同一个LWLayout中***************************************/

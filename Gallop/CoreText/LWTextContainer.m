@@ -74,4 +74,19 @@
     return width;
 }
 
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextContainer* textConainer = [[[self class] allocWithZone:zone] init];
+    textConainer.size = self.size;
+    textConainer.path = [self.path copy];
+    textConainer.edgeInsets = self.edgeInsets;
+    return textConainer;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
 @end

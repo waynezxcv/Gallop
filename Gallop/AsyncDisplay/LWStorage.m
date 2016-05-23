@@ -31,7 +31,6 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.contents = nil;
         self.clipsToBounds = YES;
         self.opaque = YES;
         self.hidden = NO;
@@ -105,7 +104,6 @@
 
 - (id)copyWithZone:(NSZone *)zone {
     LWStorage* storage = [[[self class] allocWithZone:zone] init];
-    storage.contents = [self.contents copy];
     storage.clipsToBounds = self.clipsToBounds;
     storage.opaque = self.opaque;
     storage.hidden = self.hidden;

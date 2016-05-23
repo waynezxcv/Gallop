@@ -25,31 +25,26 @@
 
 #import <UIKit/UIKit.h>
 #import "LWStorage.h"
-
-
-typedef NS_ENUM(NSUInteger, LWImageStorageType) {
-    LWImageStorageWebImage = 0,
-    LWImageStorageLocalImage = 1,
-};
-
+#import "LWDefine.h"
 
 /***  Image模型  ***/
+@interface LWImageStorage : LWStorage <NSCopying>
 
-@interface LWImageStorage : LWStorage<NSCopying>
-
-@property (nonatomic,assign) LWImageStorageType type;//图片类型
-@property (nonatomic,strong) NSURL* URL;//图片URL
-@property (nonatomic,strong) UIImage* image;//UIImage （LWImageStorageLocalImage）
+@property (nonatomic,strong) id contents;//内容（UIImage or NSURL）
 @property (nonatomic,strong) UIImage* placeholder;//占位图
 @property (nonatomic,assign,getter=isFadeShow) BOOL fadeShow;//加载完成是否渐隐出现
 @property (nonatomic,assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
+
+
+/*** 绘制 ***/
+- (void)lw_drawInContext:(CGContextRef)context isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld;
+;
 
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
 
 @end
 
-
-@interface LWImageContainer : UIImageView
+@interface UIImageView (LWImageStorage)
 
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage;
 - (void)cleanup;

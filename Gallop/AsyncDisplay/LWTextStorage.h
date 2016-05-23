@@ -57,9 +57,6 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 + (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout frame:(CGRect)frame;
 
 
-/*** 绘制 ***/
-- (void)lw_drawInContext:(CGContextRef)context;
-
 /***  为指定位置的文本添加链接  ***/
 - (void)lw_addLinkWithData:(id)data
                      range:(NSRange)range

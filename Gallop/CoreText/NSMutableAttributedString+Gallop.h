@@ -45,6 +45,13 @@
                                                           descent:(CGFloat)descent
                                                             width:(CGFloat)width;
 
++ (NSMutableAttributedString *)lw_textAttachmentStringWithContent:(id)content
+                                                         userInfo:(NSDictionary *)userInfo
+                                                      contentMode:(UIViewContentMode)contentMode
+                                                           ascent:(CGFloat)ascent
+                                                          descent:(CGFloat)descent
+                                                            width:(CGFloat)width;
+
 
 
 @end

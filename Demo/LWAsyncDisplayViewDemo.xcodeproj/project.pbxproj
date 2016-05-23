@@ -83,6 +83,7 @@
 		B0D9EB4A1CB0F436009FDCCF /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB351CB0F435009FDCCF /* UIImageView+HighlightedWebCache.m */; };
 		B0D9EB4B1CB0F436009FDCCF /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB371CB0F435009FDCCF /* UIImageView+WebCache.m */; };
 		B0D9EB4C1CB0F436009FDCCF /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D9EB391CB0F435009FDCCF /* UIView+WebCacheOperation.m */; };
+		B0F767891CF2B3FC00050EAE /* UIImageView+GallopAddtions.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F767881CF2B3FC00050EAE /* UIImageView+GallopAddtions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -229,6 +230,8 @@
 		B0D9EB371CB0F435009FDCCF /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+WebCache.m"; path = "../SDWebImage/UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		B0D9EB381CB0F435009FDCCF /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCacheOperation.h"; path = "../SDWebImage/UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		B0D9EB391CB0F435009FDCCF /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCacheOperation.m"; path = "../SDWebImage/UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
+		B0F767871CF2B3FC00050EAE /* UIImageView+GallopAddtions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+GallopAddtions.h"; sourceTree = "<group>"; };
+		B0F767881CF2B3FC00050EAE /* UIImageView+GallopAddtions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+GallopAddtions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -433,6 +436,8 @@
 				01D14EE21CDCF9D40028714A /* CALayer+WebCache.m */,
 				01D14EDF1CDCF9D40028714A /* CALayer+GallopAddtions.h */,
 				01D14EE01CDCF9D40028714A /* CALayer+GallopAddtions.m */,
+				B0F767871CF2B3FC00050EAE /* UIImageView+GallopAddtions.h */,
+				B0F767881CF2B3FC00050EAE /* UIImageView+GallopAddtions.m */,
 				01D14EE31CDCF9D40028714A /* CALayer+WebCacheOperation.h */,
 				01D14EE41CDCF9D40028714A /* CALayer+WebCacheOperation.m */,
 			);
@@ -630,6 +635,7 @@
 				B0A523001CEA1B6600DC2D15 /* LWStorage.m in Sources */,
 				B0D9EB3C1CB0F435009FDCCF /* MKAnnotationView+WebCache.m in Sources */,
 				B054E1121CF0F15000E6FC53 /* LWAsyncDisplayLayer.m in Sources */,
+				B0F767891CF2B3FC00050EAE /* UIImageView+GallopAddtions.m in Sources */,
 				014871821CDBC12500CE43C4 /* LWTextContainer.m in Sources */,
 				B0A522E51CEA189000DC2D15 /* GallopUtils.m in Sources */,
 				B0D9EB3D1CB0F435009FDCCF /* NSData+ImageContentType.m in Sources */,

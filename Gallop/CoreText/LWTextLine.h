@@ -29,7 +29,8 @@
 
 //** 对CTLineRef的封装 **//
 
-@interface LWTextLine : NSObject
+@interface LWTextLine : NSObject<NSCopying,NSMutableCopying>
+
 @property (nonatomic,assign,readonly) CTLineRef CTLine; //CoreText中的CTlineRef
 @property (nonatomic,assign,readonly) NSRange range; //在string中的range
 @property (nonatomic,assign,readonly) CGRect frame; //加上ascent和descent之后的frame,UIKit坐标系

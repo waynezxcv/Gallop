@@ -27,7 +27,7 @@
 
 //*** Text容器 ***//
 
-@interface LWTextContainer : NSObject
+@interface LWTextContainer : NSObject<NSCopying,NSMutableCopying>
 
 @property (nonatomic,assign,readonly) CGSize size;
 @property (nonatomic,strong,readonly) UIBezierPath* path;

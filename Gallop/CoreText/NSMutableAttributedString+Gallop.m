@@ -134,6 +134,33 @@
     return space;
 }
 
++ (NSMutableAttributedString *)lw_textAttachmentStringWithContent:(id)content
+                                                         userInfo:(NSDictionary *)userInfo
+                                                      contentMode:(UIViewContentMode)contentMode
+                                                           ascent:(CGFloat)ascent
+                                                          descent:(CGFloat)descent
+                                                            width:(CGFloat)width {
+    unichar objectReplacementChar = 0xFFFC;
+    NSString* contentString = [NSString stringWithCharacters:&objectReplacementChar length:1];
+    NSMutableAttributedString* space = [[NSMutableAttributedString alloc] initWithString:contentString];
+    LWTextAttachment* attachment = [[LWTextAttachment alloc] init];
+    attachment.content = content;
+    attachment.contentMode = contentMode;
+    attachment.userInfo = userInfo;
+    [space addAttribute:LWTextAttachmentAttributeName value:attachment range:NSMakeRange(0, space.length)];
+    LWTextRunDelegate* delegate = [[LWTextRunDelegate alloc] init];
+    delegate.width = width;
+    delegate.ascent = ascent;
+    delegate.descent = descent;
+    CTRunDelegateRef delegateRef = delegate.CTRunDelegate;
+    CFAttributedStringSetAttribute((CFMutableAttributedStringRef)space, CFRangeMake(0, space.length),
+                                   kCTRunDelegateAttributeName, delegateRef);
+    if (delegate) {
+        CFRelease(delegateRef);
+    }
+    return space;
+}
+
 #pragma mark -
 
 - (void)setAttribute:(NSString *)name value:(id)value range:(NSRange)range {

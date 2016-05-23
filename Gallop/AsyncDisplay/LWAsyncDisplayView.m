@@ -46,6 +46,7 @@
     BOOL _showingHighlight;
 }
 
+
 #pragma mark - LifeCycle
 
 - (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)count {
@@ -54,7 +55,7 @@
         [self setup];
         self.maxImageStorageCount = count;
         for (NSInteger i = 0; i < self.maxImageStorageCount; i ++) {
-            LWImageContainer* container = [[LWImageContainer alloc] initWithFrame:CGRectZero];
+            UIImageView* container = [[UIImageView alloc] initWithFrame:CGRectZero];
             [self addSubview:container];
             [self.imageContainers addObject:container];
         }
@@ -89,7 +90,7 @@
 #pragma mark - Private
 - (void)_cleanupImageContainers {
     for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
-        LWImageContainer* container = self.imageContainers[i];
+        UIImageView* container = self.imageContainers[i];
         [container cleanup];
     }
 }
@@ -98,10 +99,8 @@
     for (NSInteger i = 0; i < _imageStorages.count; i ++) {
         LWImageStorage* imageStorage = _imageStorages[i];
         if (self.imageContainers.count > i) {
-            LWImageContainer* container = self.imageContainers[i];
-            if (imageStorage.type == LWImageStorageWebImage) {
-                [container setContentWithImageStorage:imageStorage];
-            }
+            UIImageView* container = self.imageContainers[i];
+            [container setContentWithImageStorage:imageStorage];
         }
     }
 }
@@ -133,12 +132,10 @@
 
 - (void)_drawStoragesInContext:(CGContextRef)context inCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelledBlock {
     for (LWImageStorage* imageStorage in _imageStorages) {
-        if (imageStorage.type == LWImageStorageLocalImage) {
-            [imageStorage.image drawInRect:imageStorage.frame];
-            if (isCancelledBlock()) {
-                return;
-            }
+        if (isCancelledBlock()) {
+            return;
         }
+        [imageStorage lw_drawInContext:context isCancelled:isCancelledBlock];
     }
     for (LWTextStorage* textStorage in _textStorages) {
         [textStorage.textLayout drawIncontext:context

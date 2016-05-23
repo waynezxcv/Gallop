@@ -150,8 +150,6 @@ static char imageURLKey;
             }
         });
     }
-
-
 }
 
 #pragma mark -

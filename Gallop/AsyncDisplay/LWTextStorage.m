@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -133,7 +133,39 @@
                          imageSize:(CGSize)size
                          alignment:(LWTextAttachAlignment)attachAlignment
                              range:(NSRange)range {
-    
+    if (!self.attributedText) {
+        return;
+    }
+    CGFloat ascent,descent = 0.0f;
+    switch (attachAlignment) {
+        case LWTextAttachAlignmentTop: {
+            ascent = size.height;
+            descent = 0.0f;
+        }
+            break;
+        case LWTextAttachAlignmentCenter:{
+            ascent = size.height/2;
+            descent = size.height/2;
+        }
+            break;
+        case LWTextAttachAlignmentBottom:{
+            ascent = 0.0f;
+            descent = size.height;
+        }
+            break;
+    }
+    NSDictionary* userInfo;
+    if (URL) {
+        userInfo = @{@"URL":URL};
+    }
+    NSMutableAttributedString* attachString = [NSMutableAttributedString lw_textAttachmentStringWithContent:[[UIImageView alloc]
+                                                                                                             initWithFrame:CGRectMake(0, 0, size.width, size.height)]                                                                                                   userInfo:userInfo
+                                                                                                contentMode:contentMode
+                                                                                                     ascent:ascent
+                                                                                                    descent:descent
+                                                                                                      width:size.width];
+    [self.attributedText replaceCharactersInRange:range withAttributedString:attachString];
+    [self _creatTextLayout];
 }
 
 /***  用UIView替换掉指定位置的文字  ***/
@@ -170,10 +202,6 @@
                                                                                                       width:size.width];
     [self.attributedText replaceCharactersInRange:range withAttributedString:attachString];
     [self _creatTextLayout];
-}
-
-- (void)lw_drawInContext:(CGContextRef)context {
-    
 }
 
 #pragma mark - Setter
@@ -320,7 +348,7 @@
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
-    LWTextStorage* textStorage = [[[super class] allocWithZone:zone] init];
+    LWTextStorage* textStorage = [super copyWithZone:zone];
     textStorage.text = [self.text copy];
     textStorage.attributedText = [self.attributedText mutableCopy];
     textStorage.textColor = [self.textColor copy];
@@ -332,6 +360,9 @@
     textStorage.underlineStyle = self.underlineStyle;
     textStorage.linespacing = self.linespacing;
     textStorage.characterSpacing = self.characterSpacing;
+    textStorage.frame = self.frame;
+    LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:textStorage.frame.size];
+    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:textStorage.attributedText];
     return textStorage;
 }
 

@@ -30,7 +30,6 @@
 
 @interface LWStorage : NSObject<NSCopying,NSMutableCopying>
 
-@property (nonatomic,strong,nullable) id contents;
 @property (nonatomic,assign) BOOL clipsToBounds;
 @property (nonatomic,getter = isOpaque) BOOL opaque;
 @property (nonatomic,getter = isHidden) BOOL hidden;

@@ -26,6 +26,7 @@
 #import "LWTextLayout.h"
 #import "LWTextLine.h"
 #import "GallopUtils.h"
+#import "UIImageView+WebCache.h"
 
 
 @interface LWTextLayout ()
@@ -254,7 +255,6 @@
                             point:point
                       isCancelled:isCancelld];
     }
-
     [self _drawTextInContext:context
                   textLayout:self
                         size:size
@@ -411,6 +411,14 @@
             dispatch_main_sync_safe(^{
                 view.frame = rect;
                 [containerView addSubview:view];
+                NSLog(@"addView");
+                if ([view isKindOfClass:[UIImageView class]]) {
+                    if (attachment.userInfo) {
+                        if (attachment.userInfo[@"URL"]) {
+                            [(UIImageView *)view sd_setImageWithURL:attachment.userInfo[@"URL"]];
+                        }
+                    }
+                }
             });
         } else if (layer) {
             dispatch_main_sync_safe(^{
@@ -600,6 +608,33 @@ static CGRect LWCGRectFitWithContentMode(CGRect rect, CGSize size, UIViewContent
         }
     }
     return rect;
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextLayout* textLayout = [[[self class] allocWithZone:zone] init];
+    textLayout.container = [self.container copy];
+    textLayout.text = [self.text copy];
+    textLayout.cgPathBox = self.cgPathBox;
+    textLayout.cgPath = self.cgPath;
+    textLayout.ctFrame = self.ctFrame;
+    textLayout.ctFrameSetter = self.ctFrameSetter;
+    textLayout.suggestSize = self.suggestSize;
+    textLayout.linesArray = [self.linesArray copy];
+    textLayout.textBoundingRect = self.textBoundingRect;
+    textLayout.textBoundingSize = self.textBoundingSize;
+    textLayout.attachments = [self.attachments mutableCopy];
+    textLayout.attachmentRanges = [self.attachmentRanges mutableCopy];
+    textLayout.attachmentRects = [self.attachmentRects mutableCopy];
+    textLayout.attachmentContentsSet = [self.attachmentContentsSet mutableCopy];
+    textLayout.textHighlights = [self.textHighlights mutableCopy];
+    textLayout.backgroundColors = [self.backgroundColors mutableCopy];
+    return textLayout;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
 }
 
 @end

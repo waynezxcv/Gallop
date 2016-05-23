@@ -223,4 +223,36 @@
     return CGRectGetMaxX(self.frame);
 }
 
+#pragma mark - NSCoping
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextLine* textLine = [[[self class] allocWithZone:zone] init];
+    textLine.CTLine = self.CTLine;
+    textLine.range = self.range;
+    textLine.frame = self.frame;
+    textLine.size = self.size;
+    textLine.width = self.width;
+    textLine.height = self.height;
+    textLine.top = self.top;
+    textLine.bottom = self.bottom;
+    textLine.left = self.left;
+    textLine.right = self.right;
+    textLine.lineOrigin = self.lineOrigin;
+    textLine.ascent = self.ascent;
+    textLine.descent = self.descent;
+    textLine.leading = self.leading;
+    textLine.lineWidth = self.lineWidth;
+    textLine.trailingWhitespaceWidth = self.trailingWhitespaceWidth;
+    textLine.index = self.index;
+    textLine.row  = self.row;
+    textLine.attachments = [self.attachments mutableCopy];
+    textLine.attachmentRanges = [self.attachmentRanges mutableCopy];
+    textLine.attachmentRects = [self.attachmentRects mutableCopy];
+    return textLine;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
 @end
