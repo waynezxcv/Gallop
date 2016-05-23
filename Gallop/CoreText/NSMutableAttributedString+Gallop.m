@@ -39,7 +39,7 @@
     LWTextBackgroundColor* textBackground = [[LWTextBackgroundColor alloc] init];
     textBackground.backgroundColor = backgroundColor;
     textBackground.range = range;
-    [self setAttribute:LWTextBackgroundColorAttributedName  value:textBackground range:range];
+    [self setAttribute:LWTextBackgroundColorAttributedName value:textBackground range:range];
 }
 
 - (void)setFont:(UIFont *)font range:(NSRange)range {

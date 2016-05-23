@@ -27,14 +27,16 @@
 
 
 /***  附件的对齐方式  ***/
-
 typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
     LWTextAttachAlignmentCenter,//attachment居中显示
     LWTextAttachAlignmentTop,//attachment的底部与baseline对齐
     LWTextAttachAlignmentBottom,//attachment的顶部与baseline对齐
 };
 
-@interface LWTextStorage : LWStorage
+
+/***  Text模型  ***/
+
+@interface LWTextStorage : LWStorage<NSCopying,NSMutableCopying>
 
 @property (nonatomic,strong,readonly) LWTextLayout* textLayout;
 
@@ -48,10 +50,6 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 @property (nonatomic,assign) NSUnderlineStyle underlineStyle;
 @property (nonatomic,strong) UIColor* underlineColor;
 @property (nonatomic,assign) NSLineBreakMode lineBreakMode;
-
-@property (nonatomic,assign,readonly) NSInteger webImageCount;
-@property (nonatomic,strong) NSMutableArray* webAttachs;
-
 
 /***  构造方法  ***/
 - (id)initWithFrame:(CGRect)frame;

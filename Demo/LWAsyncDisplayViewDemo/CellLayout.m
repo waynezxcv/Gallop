@@ -33,7 +33,7 @@
         avatarStorage.cornerRadius = 20.0f;
         avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
         avatarStorage.fadeShow = YES;
-        avatarStorage.masksToBounds = NO;
+        avatarStorage.clipsToBounds = NO;
         avatarStorage.frame = CGRectMake(10, 20, 40, 40);
         
         //名字模型 nameTextStorage
@@ -77,9 +77,7 @@
             imageStorage.URL = [NSURL URLWithString:URLString];
             imageStorage.type = LWImageStorageWebImage;
             imageStorage.fadeShow = YES;
-            imageStorage.masksToBounds = YES;
-            imageStorage.contentMode = kCAGravityResizeAspectFill;
-            
+            imageStorage.clipsToBounds = YES;
             [imageStorageArray addObject:imageStorage];
             
             column = column + 1;

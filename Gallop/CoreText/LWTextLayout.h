@@ -37,13 +37,14 @@
 
 @property (nonatomic,strong,readonly) LWTextContainer* container;
 @property (nonatomic,strong,readonly) NSAttributedString* text;
-@property (nonatomic,assign,readonly) CGRect cgPathBox;
-@property (nonatomic,assign,readonly) CGPathRef cgPath;
 @property (nonatomic,assign,readonly) CTFrameRef ctFrame;
 @property (nonatomic,assign,readonly) CTFramesetterRef ctFrameSetter;
+@property (nonatomic,assign,readonly) CGRect cgPathBox;
+@property (nonatomic,assign,readonly) CGPathRef cgPath;
 @property (nonatomic,assign,readonly) CGSize suggestSize;
 @property (nonatomic,assign,readonly) CGRect textBoundingRect;
 @property (nonatomic,assign,readonly) CGSize textBoundingSize;
+@property (nonatomic,assign) BOOL sizeToFit;
 @property (nonatomic,strong,readonly) NSArray<LWTextLine *>* linesArray;
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextAttachment *>* attachments;
 @property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRanges;

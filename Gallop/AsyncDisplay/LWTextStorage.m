@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -52,22 +52,11 @@
     return textStorage;
 }
 
-
 - (id)initWithFrame:(CGRect)frame {
     self = [super init];
     if (self) {
+        [self setup];
         self.frame = frame;
-        self.position = CGPointZero;
-        self.text = nil;
-        self.attributedText = nil;
-        self.textColor = [UIColor blackColor];
-        self.textBackgroundColor = [UIColor clearColor];
-        self.font = [UIFont systemFontOfSize:14.0f];
-        self.textAlignment = NSTextAlignmentLeft;
-        self.lineBreakMode = NSLineBreakByWordWrapping;
-        self.underlineStyle = NSUnderlineStyleNone;
-        self.linespacing = 2.0f;
-        self.characterSpacing = 1.0f;
     }
     return self;
 }
@@ -75,20 +64,24 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.frame = CGRectZero;
-        self.position = CGPointZero;
-        self.text = nil;
-        self.attributedText = nil;
-        self.textColor = [UIColor blackColor];
-        self.textBackgroundColor = [UIColor clearColor];
-        self.font = [UIFont systemFontOfSize:14.0f];
-        self.textAlignment = NSTextAlignmentLeft;
-        self.lineBreakMode = NSLineBreakByWordWrapping;
-        self.underlineStyle = NSUnderlineStyleNone;
-        self.linespacing = 2.0f;
-        self.characterSpacing = 1.0f;
+        [self setup];
     }
     return self;
+}
+
+- (void)setup {
+    self.frame = CGRectZero;
+    self.position = CGPointZero;
+    self.text = nil;
+    self.attributedText = nil;
+    self.textColor = [UIColor blackColor];
+    self.textBackgroundColor = [UIColor clearColor];
+    self.font = [UIFont systemFontOfSize:14.0f];
+    self.textAlignment = NSTextAlignmentLeft;
+    self.lineBreakMode = NSLineBreakByWordWrapping;
+    self.underlineStyle = NSUnderlineStyleNone;
+    self.linespacing = 2.0f;
+    self.characterSpacing = 1.0f;
 }
 
 #pragma mark - Methods
@@ -140,7 +133,7 @@
                          imageSize:(CGSize)size
                          alignment:(LWTextAttachAlignment)attachAlignment
                              range:(NSRange)range {
-
+    
 }
 
 /***  用UIView替换掉指定位置的文字  ***/
@@ -180,7 +173,7 @@
 }
 
 - (void)lw_drawInContext:(CGContextRef)context {
-
+    
 }
 
 #pragma mark - Setter
@@ -324,5 +317,26 @@
                        self.textLayout.cgPathBox.origin.y + + self.position.y + self.textLayout.cgPathBox.size.height * 0.5f);
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextStorage* textStorage = [[[super class] allocWithZone:zone] init];
+    textStorage.text = [self.text copy];
+    textStorage.attributedText = [self.attributedText mutableCopy];
+    textStorage.textColor = [self.textColor copy];
+    textStorage.textBackgroundColor = [self.textBackgroundColor copy];
+    textStorage.font = [self.font copy];
+    textStorage.textAlignment = self.textAlignment;
+    textStorage.lineBreakMode = self.lineBreakMode;
+    textStorage.underlineColor = [self.underlineColor copy];
+    textStorage.underlineStyle = self.underlineStyle;
+    textStorage.linespacing = self.linespacing;
+    textStorage.characterSpacing = self.characterSpacing;
+    return textStorage;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
 
 @end

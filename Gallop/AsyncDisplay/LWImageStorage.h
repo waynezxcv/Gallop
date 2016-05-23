@@ -32,24 +32,21 @@ typedef NS_ENUM(NSUInteger, LWImageStorageType) {
     LWImageStorageLocalImage = 1,
 };
 
-@interface LWImageStorage : LWStorage
+
+/***  Image模型  ***/
+
+@interface LWImageStorage : LWStorage<NSCopying>
 
 @property (nonatomic,assign) LWImageStorageType type;//图片类型
 @property (nonatomic,strong) NSURL* URL;//图片URL
 @property (nonatomic,strong) UIImage* image;//UIImage （LWImageStorageLocalImage）
 @property (nonatomic,strong) UIImage* placeholder;//占位图
-@property (nonatomic,copy) NSString* contentMode;
-@property (nonatomic,assign) BOOL masksToBounds;
 @property (nonatomic,assign,getter=isFadeShow) BOOL fadeShow;//加载完成是否渐隐出现
-@property (nonatomic,assign) CGFloat cornerRadius;// 圆角半径
-@property (nonatomic,strong) UIColor* cornerBackgroundColor;//圆角背景颜色
-@property (nonatomic,strong) UIColor* cornerBorderColor;
-@property (nonatomic,assign) CGFloat cornerBorderWidth;
+@property (nonatomic,assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
 
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
+
 @end
-
-
 
 
 @interface LWImageContainer : UIImageView

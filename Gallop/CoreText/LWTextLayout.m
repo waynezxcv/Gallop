@@ -59,6 +59,7 @@
     if (!text || !container) {
         return nil;
     }
+    LWTextLayout* layout = [[self alloc] init];
     NSMutableAttributedString* mutableAtrributedText = text.mutableCopy;
     //******* cgPath、cgPathBox *****//
     CGPathRef cgPath = container.path.CGPath;
@@ -66,11 +67,13 @@
     //******* ctframeSetter、ctFrame *****//
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFTypeRef)mutableAtrributedText);
     CGSize suggestSize = CTFramesetterSuggestFrameSizeWithConstraints(ctFrameSetter,CFRangeMake(0,text.length),NULL,CGSizeMake(cgPathBox.size.width, cgPathBox.size.height),NULL);
-    cgPathBox = CGRectMake(cgPathBox.origin.x, cgPathBox.origin.y,cgPathBox.size.width,suggestSize.height);
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, cgPathBox);
-    cgPath = CGPathCreateMutableCopy(path);
-    CFRelease(path);
+    if (layout.sizeToFit) {
+        cgPathBox = CGRectMake(cgPathBox.origin.x, cgPathBox.origin.y,suggestSize.width,suggestSize.height);
+        CGMutablePathRef path = CGPathCreateMutable();
+        CGPathAddRect(path, NULL, cgPathBox);
+        cgPath = CGPathCreateMutableCopy(path);
+        CFRelease(path);
+    }
     CTFrameRef ctFrame = CTFramesetterCreateFrame(ctFrameSetter,CFRangeMake(0, mutableAtrributedText.length),cgPath,NULL);
     //******* LWTextLine *****//
     NSInteger rowIndex = -1;
@@ -124,7 +127,6 @@
                 }
             }
         }
-
         CGPoint ctLineOrigin = lineOrigins[i];
         CGPoint position;
         position.x = cgPathBox.origin.x + ctLineOrigin.x;
@@ -165,8 +167,6 @@
                            cgPathBox.size.width + container.edgeInsets.left + container.edgeInsets.right,
                            cgPathBox.size.height + container.edgeInsets.top + container.edgeInsets.bottom);
     cgPath = [UIBezierPath bezierPathWithRect:cgPathBox].CGPath;
-    LWTextLayout* layout = [[self alloc] init];
-    layout.needDebugDraw = NO;
     layout.needTextBackgroundColorDraw = NO;
     layout.needAttachmentDraw = NO;
     layout.container = container;
@@ -179,16 +179,12 @@
     layout.linesArray = lines;
     layout.textBoundingRect = textBoundingRect;
     layout.textBoundingSize = textBoundingSize;
-    layout.textHighlights = [[NSMutableArray alloc] initWithArray:highlights];
-    layout.backgroundColors = [[NSMutableArray alloc] initWithArray:backgroundColors];
+    [layout.textHighlights addObjectsFromArray:highlights];
+    [layout.backgroundColors addObjectsFromArray:backgroundColors];
     if (layout.backgroundColors.count > 0) {
         layout.needTextBackgroundColorDraw = YES;
     }
     //******* attachments ********//
-    layout.attachments = [[NSMutableArray alloc] init];
-    layout.attachmentRanges = [[NSMutableArray alloc] init];
-    layout.attachmentRects = [[NSMutableArray alloc] init];
-    layout.attachmentContentsSet = [[NSMutableSet alloc] init];
     for (NSUInteger i = 0; i < layout.linesArray.count; i ++) {
         LWTextLine* line = lines[i];
         if (line.attachments.count > 0) {
@@ -209,6 +205,22 @@
         free(lineOrigins);
     }
     return layout;
+}
+
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.sizeToFit = YES;
+        self.needDebugDraw = NO;
+        self.attachments = [[NSMutableArray alloc] init];
+        self.attachmentRanges = [[NSMutableArray alloc] init];
+        self.attachmentRects = [[NSMutableArray alloc] init];
+        self.attachmentContentsSet = [[NSMutableSet alloc] init];
+        self.textHighlights = [[NSMutableArray alloc] init];
+        self.backgroundColors = [[NSMutableArray alloc] init];
+    }
+    return self;
 }
 
 - (void)dealloc {
