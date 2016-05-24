@@ -47,6 +47,8 @@
 
 #pragma mark - Actions
 
+
+/***  点击图片  ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                      touch:(UITouch *)touch{
@@ -63,19 +65,16 @@
 
     }
     //点击菜单按钮
-    if (CGRectContainsPoint(CGRectMake(self.cellLayout.menuPosition.origin.x - 20,
-                                       self.cellLayout.menuPosition.origin.y - 20,
-                                       self.cellLayout.menuPosition.size.width + 40,
-                                       self.cellLayout.menuPosition.size.height + 40), point)) {
+    if (CGRectContainsPoint(CGRectMake(self.cellLayout.menuPosition.origin.x,
+                                       self.cellLayout.menuPosition.origin.y ,
+                                       self.cellLayout.menuPosition.size.width ,
+                                       self.cellLayout.menuPosition.size.height), point)) {
         [self.menu clickedMenu];
     }
 }
 
 
-/**
- *  点击链接回调
- *
- */
+/***  点击文本链接 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data {
     if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLinkWithData:)] &&
         [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
@@ -84,10 +83,7 @@
 }
 
 
-/**
- *  点击评论
- *
- */
+/***  点击评论 ***/
 - (void)didClickedCommentButton {
     if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedCommentWithCellLayout:atIndexPath:)]) {
         [self.delegate tableViewCell:self didClickedCommentWithCellLayout:self.cellLayout atIndexPath:self.indexPath];
@@ -95,6 +91,14 @@
     }
 }
 
+//** 点赞 **//
+- (void)didclickedLikeButton:(LikeButton *)likeButton {
+    __weak typeof(self) weakSelf = self;
+    [likeButton setLike:YES animated:YES completion:^(BOOL isSelectd) {
+        [weakSelf.menu menuHide];
+
+    }];
+}
 
 #pragma mark - Draw and setup
 
@@ -156,6 +160,8 @@
     _menu = [[Menu alloc] initWithFrame:CGRectZero];
     [_menu.commentButton addTarget:self action:@selector(didClickedCommentButton)
                   forControlEvents:UIControlEventTouchUpInside];
+    [_menu.likeButton addTarget:self action:@selector(didclickedLikeButton:)
+               forControlEvents:UIControlEventTouchUpInside];
     return _menu;
 }
 

@@ -10,23 +10,14 @@
 
 
 
-
-
-
-
-
 #import <UIKit/UIKit.h>
-#import "LikeButton.h"
 
 
-@interface Menu : UIView
+typedef void(^likeActionBlock)(BOOL isSelectd);
 
-@property (nonatomic,strong) LikeButton* likeButton;
-@property (nonatomic,strong) UIButton* commentButton;
 
-- (void)clickedMenu;
+@interface LikeButton : UIButton
 
-- (void)menuShow;
-- (void)menuHide;
+- (void)setLike:(BOOL)isLike animated:(BOOL)animated completion:(likeActionBlock)completion;
 
 @end

@@ -27,6 +27,13 @@
 		01AE7F521CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4C1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m */; };
 		01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4E1CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m */; };
 		01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */; };
+		01AFD9811CF4D11700BF46D0 /* c@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01AFD97B1CF4D11700BF46D0 /* c@2x.png */; };
+		01AFD9821CF4D11700BF46D0 /* c@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01AFD97C1CF4D11700BF46D0 /* c@3x.png */; };
+		01AFD9831CF4D11700BF46D0 /* Like@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01AFD97D1CF4D11700BF46D0 /* Like@2x.png */; };
+		01AFD9841CF4D11700BF46D0 /* Like@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01AFD97E1CF4D11700BF46D0 /* Like@3x.png */; };
+		01AFD9851CF4D11700BF46D0 /* likewhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01AFD97F1CF4D11700BF46D0 /* likewhite@2x.png */; };
+		01AFD9861CF4D11700BF46D0 /* likewhite@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01AFD9801CF4D11700BF46D0 /* likewhite@3x.png */; };
+		01AFD9891CF4D32700BF46D0 /* LikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AFD9881CF4D32700BF46D0 /* LikeButton.m */; };
 		01D14EB91CDCF8A00028714A /* LWTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EB61CDCF8A00028714A /* LWTextLayout.m */; };
 		01D14EBA1CDCF8A00028714A /* LWTextLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EB81CDCF8A00028714A /* LWTextLine.m */; };
 		01D14EF01CDCF9D40028714A /* LWRunLoopTransactions.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EE91CDCF9D40028714A /* LWRunLoopTransactions.m */; };
@@ -130,6 +137,14 @@
 		01AE7F4E1CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyValueTransformer.m; path = ../LWAlchemy/LWAlchemyValueTransformer.m; sourceTree = "<group>"; };
 		01AE7F4F1CA1AEAF00E9F862 /* NSObject+LWAlchemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+LWAlchemy.h"; path = "../LWAlchemy/NSObject+LWAlchemy.h"; sourceTree = "<group>"; };
 		01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+LWAlchemy.m"; path = "../LWAlchemy/NSObject+LWAlchemy.m"; sourceTree = "<group>"; };
+		01AFD97B1CF4D11700BF46D0 /* c@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "c@2x.png"; sourceTree = "<group>"; };
+		01AFD97C1CF4D11700BF46D0 /* c@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "c@3x.png"; sourceTree = "<group>"; };
+		01AFD97D1CF4D11700BF46D0 /* Like@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Like@2x.png"; sourceTree = "<group>"; };
+		01AFD97E1CF4D11700BF46D0 /* Like@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Like@3x.png"; sourceTree = "<group>"; };
+		01AFD97F1CF4D11700BF46D0 /* likewhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "likewhite@2x.png"; sourceTree = "<group>"; };
+		01AFD9801CF4D11700BF46D0 /* likewhite@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "likewhite@3x.png"; sourceTree = "<group>"; };
+		01AFD9871CF4D32700BF46D0 /* LikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeButton.h; sourceTree = "<group>"; };
+		01AFD9881CF4D32700BF46D0 /* LikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeButton.m; sourceTree = "<group>"; };
 		01D14EB51CDCF8A00028714A /* LWTextLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextLayout.h; path = ../Gallop/CoreText/LWTextLayout.h; sourceTree = "<group>"; };
 		01D14EB61CDCF8A00028714A /* LWTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextLayout.m; path = ../Gallop/CoreText/LWTextLayout.m; sourceTree = "<group>"; };
 		01D14EB71CDCF8A00028714A /* LWTextLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextLine.h; path = ../Gallop/CoreText/LWTextLine.h; sourceTree = "<group>"; };
@@ -488,6 +503,8 @@
 			children = (
 				B0ACEBF81CEDC9A50019074F /* Menu.h */,
 				B0ACEBF91CEDC9A50019074F /* Menu.m */,
+				01AFD9871CF4D32700BF46D0 /* LikeButton.h */,
+				01AFD9881CF4D32700BF46D0 /* LikeButton.m */,
 				B0ACEBF41CEDC9A50019074F /* CommentView.h */,
 				B0ACEBF51CEDC9A50019074F /* CommentView.m */,
 				B0ACEBFC1CEDC9A50019074F /* TableViewCell.h */,
@@ -516,6 +533,12 @@
 		B0ACEC0E1CEDCD4B0019074F /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				01AFD97B1CF4D11700BF46D0 /* c@2x.png */,
+				01AFD97C1CF4D11700BF46D0 /* c@3x.png */,
+				01AFD97D1CF4D11700BF46D0 /* Like@2x.png */,
+				01AFD97E1CF4D11700BF46D0 /* Like@3x.png */,
+				01AFD97F1CF4D11700BF46D0 /* likewhite@2x.png */,
+				01AFD9801CF4D11700BF46D0 /* likewhite@3x.png */,
 				B074BB531CEE0CF9003464B4 /* comment@2x.png */,
 				B0ACEC0F1CEDCD780019074F /* [心].png */,
 				B0ACEC101CEDCD780019074F /* [face].png */,
@@ -599,17 +622,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01AFD9831CF4D11700BF46D0 /* Like@2x.png in Resources */,
+				01AFD9821CF4D11700BF46D0 /* c@3x.png in Resources */,
 				B0ACEC151CEDCD780019074F /* [menu].png in Resources */,
 				B0C719251CEB652600B2A8D9 /* 004.png in Resources */,
+				01AFD9861CF4D11700BF46D0 /* likewhite@3x.png in Resources */,
+				01AFD9811CF4D11700BF46D0 /* c@2x.png in Resources */,
 				B0ACEC141CEDCD780019074F /* [face].png in Resources */,
 				B0C719211CEB650B00B2A8D9 /* 002.png in Resources */,
 				B0ACEC131CEDCD780019074F /* [心].png in Resources */,
 				B0C7191F1CEB64FB00B2A8D9 /* 001.png in Resources */,
 				B0C719231CEB651800B2A8D9 /* 003.png in Resources */,
 				B0C7191D1CEB5ACA00B2A8D9 /* pic.jpeg in Resources */,
+				01AFD9851CF4D11700BF46D0 /* likewhite@2x.png in Resources */,
 				011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */,
 				B0C719271CEB653100B2A8D9 /* 005.png in Resources */,
 				B074BB541CEE0CF9003464B4 /* comment@2x.png in Resources */,
+				01AFD9841CF4D11700BF46D0 /* Like@3x.png in Resources */,
 				B0ACEC161CEDCD780019074F /* loading.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -641,6 +670,7 @@
 				B0A523001CEA1B6600DC2D15 /* LWStorage.m in Sources */,
 				B0D9EB3C1CB0F435009FDCCF /* MKAnnotationView+WebCache.m in Sources */,
 				B054E1121CF0F15000E6FC53 /* LWAsyncDisplayLayer.m in Sources */,
+				01AFD9891CF4D32700BF46D0 /* LikeButton.m in Sources */,
 				014871821CDBC12500CE43C4 /* LWTextContainer.m in Sources */,
 				B0A522E51CEA189000DC2D15 /* GallopUtils.m in Sources */,
 				B0D9EB3D1CB0F435009FDCCF /* NSData+ImageContentType.m in Sources */,

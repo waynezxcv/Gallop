@@ -13,15 +13,13 @@
 
 
 
-
-
-
 #import "Menu.h"
 #import "LWDefine.h"
 
 @interface Menu ()
 
 @property (nonatomic,assign) BOOL show;
+@property (nonatomic,assign) BOOL isShowing;
 
 @end
 
@@ -32,6 +30,7 @@
     if (self) {
         self.clipsToBounds = YES;
         self.show = NO;
+        self.isShowing = NO;
         self.backgroundColor = [UIColor clearColor];
         [self addSubview:self.likeButton];
         [self addSubview:self.commentButton];
@@ -42,8 +41,8 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     [self setNeedsDisplay];
-    self.likeButton.frame = CGRectMake(0, 0, 60, self.bounds.size.height);
-    self.commentButton.frame = CGRectMake(60, 0, 60, self.bounds.size.height);
+    self.likeButton.frame = CGRectMake(0, 0, 80, self.bounds.size.height);
+    self.commentButton.frame = CGRectMake(80, 0, 80, self.bounds.size.height);
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -60,14 +59,17 @@
 }
 
 - (void)clickedMenu {
-    if (self.show) {
-        [self menuHide];
+    if (!self.isShowing) {
+        self.isShowing = YES;
+        if (self.show) {
+            [self menuHide];
+        }
+        else {
+            [self menuShow];
+        }
     }
-    else {
-        [self menuShow];
-    }
-    
 }
+
 
 - (void)menuShow {
     [UIView animateWithDuration:0.2f
@@ -75,12 +77,13 @@
          usingSpringWithDamping:0.7
           initialSpringVelocity:0.0f
                         options:0 animations:^{
-                            self.frame = CGRectMake(self.frame.origin.x - 120.0f,
+                            self.frame = CGRectMake(self.frame.origin.x - 160,
                                                     self.frame.origin.y,
-                                                    120.0f,
+                                                    160,
                                                     34.0f);
                         } completion:^(BOOL finished) {
                             self.show = YES;
+                            self.isShowing = NO;
                         }];
     
 }
@@ -88,26 +91,29 @@
 - (void)menuHide {
     [UIView animateWithDuration:0.3f
                           delay:0.0f
-         usingSpringWithDamping:0.7
+         usingSpringWithDamping:0.7f
           initialSpringVelocity:0.0f
                         options:0 animations:^{
-                            self.frame = CGRectMake(self.frame.origin.x + 120.0f,
+                            self.frame = CGRectMake(self.frame.origin.x + 160,
                                                     self.frame.origin.y,
-                                                    0.0f,
+                                                    0.5f,
                                                     34.0f);
                         } completion:^(BOOL finished) {
+                            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 0.0f, 34.0f);
                             self.show = NO;
+                            self.isShowing = NO;
                         }];
 }
 
-- (UIButton *)likeButton {
+- (LikeButton *)likeButton {
     if (_likeButton) {
         return _likeButton;
     }
-    _likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _likeButton = [LikeButton buttonWithType:UIButtonTypeCustom];
     [_likeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_likeButton setTitle:@"赞" forState:UIControlStateNormal];
-    [_likeButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [_likeButton setTitle:@"  赞" forState:UIControlStateNormal];
+    [_likeButton setImage:[UIImage imageNamed:@"likewhite.png"] forState:UIControlStateNormal];
+    [_likeButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     return _likeButton;
 }
 
@@ -118,8 +124,9 @@
     
     _commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_commentButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_commentButton setTitle:@"评论" forState:UIControlStateNormal];
-    [_commentButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [_commentButton setTitle:@" 评论" forState:UIControlStateNormal];
+    [_commentButton setImage:[UIImage imageNamed:@"c.png"] forState:UIControlStateNormal];
+    [_commentButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     return _commentButton;
 }
 @end
