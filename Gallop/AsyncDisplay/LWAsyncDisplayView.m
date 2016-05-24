@@ -54,7 +54,10 @@
         [self setup];
         self.maxImageStorageCount = count;
         for (NSInteger i = 0; i < self.maxImageStorageCount; i ++) {
-            UIImageView* container = [[UIImageView alloc] initWithFrame:CGRectZero];
+            UIView* container = [[UIView alloc] initWithFrame:CGRectZero];
+            container.hidden = YES;
+            container.backgroundColor = RGB(240, 240, 240, 1);
+            container.clipsToBounds = YES;
             [self addSubview:container];
             [self.imageContainers addObject:container];
         }
@@ -87,19 +90,17 @@
 }
 
 #pragma mark - Private
-- (void)_cleanupImageContainers {
-    for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
-        UIImageView* container = self.imageContainers[i];
-        [container cleanup];
-    }
-}
-
 - (void)_setImageStorages {
-    for (NSInteger i = 0; i < _imageStorages.count; i ++) {
-        LWImageStorage* imageStorage = _imageStorages[i];
-        if (self.imageContainers.count > i) {
-            UIImageView* container = self.imageContainers[i];
-            [container setContentWithImageStorage:imageStorage];
+    for (NSInteger i = 0; i < self.maxImageStorageCount; i ++) {
+        if (i >= _imageStorages.count) {
+            UIView* container = self.imageContainers[i];
+            container.hidden = YES;
+        } else {
+            LWImageStorage* imageStorage = _imageStorages[i];
+            if ([imageStorage.contents isKindOfClass:[NSURL class]]) {
+                UIView* container = self.imageContainers[i];
+                [container setContentWithImageStorage:imageStorage];
+            }
         }
     }
 }
@@ -109,7 +110,7 @@
 - (LWAsyncDisplayTransaction *)asyncDisplayTransaction {
     LWAsyncDisplayTransaction* transaction = [[LWAsyncDisplayTransaction alloc] init];
     transaction.willDisplayBlock = ^(CALayer *layer) {
-        [layer removeAnimationForKey:@"contents"];
+        [layer removeAnimationForKey:@"fadeshowAnimation"];
         for (LWTextStorage* textStorage in _textStorages) {
             [textStorage.textLayout removeAttachmentFromSuperViewOrLayer];
         }
@@ -118,12 +119,11 @@
         [self _drawStoragesInContext:context inCancelled:isCancelledBlock];
     };
     transaction.didDisplayBlock = ^(CALayer *layer, BOOL finished) {
-        [layer removeAnimationForKey:@"contents"];
+        [layer removeAnimationForKey:@"fadeshowAnimation"];
         if (!finished) {
             for (LWTextStorage* textStorage in _textStorages) {
                 [textStorage.textLayout removeAttachmentFromSuperViewOrLayer];
             }
-            [self _cleanupImageContainers];
         }
     };
     return transaction;
@@ -320,12 +320,11 @@
     if (_layout == layout) {
         return;
     }
-    [self _cleanupImageContainers];
     _layout = layout;
     _imageStorages = _layout.imageStorages;
     _textStorages = _layout.textStorages;
-    [self.layer setNeedsDisplay];
     [self _setImageStorages];
+    [self.layer setNeedsDisplay];
 }
 
 @end

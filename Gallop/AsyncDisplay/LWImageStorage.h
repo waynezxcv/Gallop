@@ -44,9 +44,10 @@
 
 @end
 
-@interface UIImageView (LWImageStorage)
+@interface UIView (LWImageStorage)
 
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage;
+- (void)layoutWithStorage:(LWImageStorage *)imageStorage;
 - (void)cleanup;
 
 @end

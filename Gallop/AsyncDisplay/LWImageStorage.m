@@ -25,8 +25,12 @@
 
 #import "LWImageStorage.h"
 #import "LWRunLoopTransactions.h"
-#import "UIImageView+GallopAddtions.h"
+#import "CALayer+WebCache.h"
 #import <objc/runtime.h>
+#import "GallopUtils.h"
+
+
+
 
 @implementation LWImageStorage
 
@@ -115,31 +119,67 @@
 
 @end
 
-@implementation UIImageView (LWImageStorage)
+@implementation UIView (LWImageStorage)
 
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
-    self.clipsToBounds = imageStorage.clipsToBounds;
-    self.contentMode = imageStorage.contentMode;
-    self.userInteractionEnabled = imageStorage.userInteractionEnabled;
-    if (imageStorage.placeholder) {
-        self.image = imageStorage.placeholder;
-    }
+    [self layoutWithStorage:imageStorage];
+    [self.layer removeAnimationForKey:@"fadeshowAnimation"];
     __weak typeof(self) weakSelf = self;
-    if ([imageStorage.contents isKindOfClass:[NSURL class]]) {
-        [self lw_setImageWithImageStorage:imageStorage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            if (image) {
-                [weakSelf layoutWithStorage:imageStorage];
-                if (imageStorage.fadeShow) {
-                    [weakSelf.layer removeAnimationForKey:@"LWImageFadeShowAnimationKey"];
-                    CATransition* transition = [CATransition animation];
-                    transition.duration = 0.15;
-                    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-                    transition.type = kCATransitionFade;
-                    [weakSelf.layer addAnimation:transition forKey:@"LWImageFadeShowAnimationKey"];
-                }
-            }
-        }];
-    }
+    [self.layer sd_setImageWithURL:(NSURL *)imageStorage.contents
+                  placeholderImage:imageStorage.placeholder
+                           options:SDWebImageAvoidAutoSetImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                               __strong typeof(weakSelf) strongSelf = weakSelf;
+                               if (image) {
+                                   int width = imageStorage.frame.size.width;
+                                   int height = imageStorage.frame.size.height;
+                                   CGFloat scale = (height / width) / (strongSelf.bounds.size.height / strongSelf.bounds.size.width);
+                                   if (scale < 0.99 || isnan(scale)) {
+                                       strongSelf.contentMode = UIViewContentModeScaleAspectFill;
+                                       strongSelf.layer.contentsRect = CGRectMake(0, 0, 1, 1);
+                                   } else {
+                                       strongSelf.contentMode = UIViewContentModeScaleAspectFill;
+                                       strongSelf.layer.contentsRect = CGRectMake(0, 0, 1, (float)width / height);
+                                   }
+                                   if (imageStorage.cornerRadius != 0) {
+                                       CGFloat scale = [GallopUtils contentsScale];
+                                       CGSize size = imageStorage.frame.size;
+                                       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                                           UIGraphicsBeginImageContextWithOptions(size,YES,scale);
+                                           if (nil == UIGraphicsGetCurrentContext()) {
+                                               return;
+                                           }
+                                           UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height)
+                                                                                                 cornerRadius:imageStorage.cornerRadius];
+                                           UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, size.width, size.height)];
+                                           if (imageStorage.cornerBackgroundColor) {
+                                               [imageStorage.cornerBackgroundColor setFill];
+                                           }
+                                           [backgroundRect fill];
+                                           [cornerPath addClip];
+                                           [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+                                           if (imageStorage.cornerBorderColor) {
+                                               [imageStorage.cornerBorderColor setStroke];
+                                           }
+                                           [cornerPath stroke];
+                                           [cornerPath setLineWidth:imageStorage.cornerBorderWidth];
+                                           id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
+                                           UIGraphicsEndImageContext();
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               strongSelf.layer.contents = processedImageRef;
+                                           });
+                                       });
+                                   } else {
+                                       strongSelf.layer.contents = (__bridge id _Nullable)(image.CGImage);
+                                   }
+                                   if (imageStorage.fadeShow) {
+                                       CATransition* transition = [CATransition animation];
+                                       transition.duration = 0.15;
+                                       transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+                                       transition.type = kCATransitionFade;
+                                       [strongSelf.layer addAnimation:transition forKey:@"fadeshowAnimation"];
+                                   }
+                               }
+                           }];
 }
 
 - (void)layoutWithStorage:(LWImageStorage *)imageStorage {
@@ -148,7 +188,7 @@
 }
 
 - (void)cleanup {
-    self.image = nil;
+    self.layer.contents = nil;
     self.hidden = YES;
 }
 
