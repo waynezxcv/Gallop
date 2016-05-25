@@ -391,7 +391,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"to":@"waynezxcv",
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接#Waynezxcv#.Hello，world"}],
                           @"isLike":@(YES),
-                          @"likeList":@[@"waynezxcv"]
+                          @"likeList":@[@"waynezxcv","G-Dragon"]
                           
                           },
                         @{@"name":@"妖妖小精",
