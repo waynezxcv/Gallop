@@ -58,11 +58,12 @@
 
 #pragma mark - Init
 
-+ (LWTextLayout *)lw_layoutWithContainer:(LWTextContainer *)container text:(NSAttributedString *)text {
++ (LWTextLayout *)lw_layoutWithContainer:(LWTextContainer *)container text:(NSAttributedString *)text sizeToFit:(BOOL)sizeToFit {
     if (!text || !container) {
         return nil;
     }
     LWTextLayout* layout = [[self alloc] init];
+    layout.sizeToFit = sizeToFit;
     NSMutableAttributedString* mutableAtrributedText = text.mutableCopy;
     //******* cgPath、cgPathBox *****//
     CGPathRef cgPath = container.path.CGPath;

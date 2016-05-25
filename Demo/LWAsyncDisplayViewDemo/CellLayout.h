@@ -29,6 +29,7 @@
 @property (nonatomic,assign) CGRect commentBgPosition;
 @property (nonatomic,copy) NSArray* imagePostionArray;
 @property (nonatomic,strong) StatusModel* statusModel;
+@property (nonatomic,assign) CGRect websiteRect;
 
 - (id)initWithStatusModel:(StatusModel *)stautsModel
                     index:(NSInteger)index

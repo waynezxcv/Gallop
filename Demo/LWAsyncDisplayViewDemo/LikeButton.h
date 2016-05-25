@@ -18,6 +18,6 @@ typedef void(^likeActionBlock)(BOOL isSelectd);
 
 @interface LikeButton : UIButton
 
-- (void)setLike:(BOOL)isLike animated:(BOOL)animated completion:(likeActionBlock)completion;
+- (void)likeButtonAnimationCompletion:(likeActionBlock)completion;
 
 @end

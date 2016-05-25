@@ -49,7 +49,7 @@
 + (LWTextStorage *)lw_textStrageWithText:(NSAttributedString *)attributedText frame:(CGRect)frame {
     LWTextStorage* textStorage = [[LWTextStorage alloc] initWithFrame:frame];
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:frame.size];
-    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:attributedText];
+    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:attributedText sizeToFit:YES];
     return textStorage;
 }
 
@@ -71,6 +71,7 @@
 }
 
 - (void)setup {
+    self.sizeToFit = YES;
     self.frame = CGRectZero;
     self.position = CGPointZero;
     self.text = nil;
@@ -234,6 +235,11 @@ LWSERIALIZE_COPY_WITH_ZONE()
     [self _creatTextLayout];
 }
 
+- (void)setSizeToFit:(BOOL)sizeToFit {
+    _sizeToFit = sizeToFit;
+    [self _creatTextLayout];
+}
+
 - (void)setTextColor:(UIColor *)textColor {
     if (_textColor != textColor) {
         _textColor = textColor;
@@ -315,7 +321,7 @@ LWSERIALIZE_COPY_WITH_ZONE()
         return;
     }
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:self.frame.size];
-    self.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:self.attributedText];
+    self.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:self.attributedText sizeToFit:self.sizeToFit];
 }
 
 

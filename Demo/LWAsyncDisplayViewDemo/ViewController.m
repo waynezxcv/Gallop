@@ -101,10 +101,63 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 #pragma mark - Actions
-/**
- *  点击图片
- *
- */
+/***  点赞 ***/
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike atIndexPath:(NSIndexPath *)indexPath {
+    CellLayout* layout = [self.dataSource objectAtIndex:indexPath.row];
+    if (isLike) {
+        NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
+        [newLikeList addObject:@"waynezxcv的粉丝"];
+        StatusModel* statusModel = layout.statusModel;
+        statusModel.likeList = newLikeList;
+        statusModel.isLike = YES;
+        layout = [self layoutWithStatusModel:statusModel index:indexPath.row];
+        [self.dataSource replaceObjectAtIndex:indexPath.row withObject:layout];
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    else {
+        NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
+        [newLikeList removeObject:@"waynezxcv的粉丝"];
+        StatusModel* statusModel = layout.statusModel;
+        statusModel.likeList = newLikeList;
+        statusModel.isLike = NO;
+        layout = [self layoutWithStatusModel:statusModel index:indexPath.row];
+        [self.dataSource replaceObjectAtIndex:indexPath.row withObject:layout];
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    }
+}
+
+
+/***  点击评论 ***/
+- (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
+          atIndexPath:(NSIndexPath *)indexPath {
+    self.commentView.placeHolder = @"评论";
+    [self.commentView.textView becomeFirstResponder];
+    self.postComment.from = @"Waynezxcv的粉丝";
+    self.postComment.to = @"";
+    self.postComment.index = indexPath.row;
+}
+
+/***  发表评论 ***/
+- (void)postCommentWithCommentModel:(CommentModel *)model {
+    CellLayout* layout = [self.dataSource objectAtIndex:model.index];
+    NSMutableArray* newCommentLists = [[NSMutableArray alloc] initWithArray:layout.statusModel.commentList];
+    NSDictionary* newComment = @{@"from":model.from,
+                                 @"to":model.to,
+                                 @"content":model.content};
+    [newCommentLists addObject:newComment];
+    StatusModel* statusModel = layout.statusModel;
+    statusModel.commentList = newCommentLists;
+    layout = [self layoutWithStatusModel:statusModel index:model.index];
+    [self.dataSource replaceObjectAtIndex:model.index withObject:layout];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.index inSection:0]]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+
+/***  点击图片 ***/
 - (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index {
     NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:layout.imagePostionArray.count];
     for (NSInteger i = 0; i < layout.imagePostionArray.count; i ++) {
@@ -124,10 +177,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [imageBrowser show];
 }
 
-/**
- *  点击链接
- *
- */
+/***  点击链接 ***/
 - (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
     if ([data isKindOfClass:[CommentModel class]]) {
         CommentModel* commentModel = (CommentModel *)data;
@@ -141,34 +191,6 @@ const CGFloat kRefreshBoundary = 170.0f;
             [LWAlertView shoWithMessage:data];
         }
     }
-}
-
-- (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
-          atIndexPath:(NSIndexPath *)indexPath {
-    self.commentView.placeHolder = @"评论";
-    [self.commentView.textView becomeFirstResponder];
-    self.postComment.from = @"Waynezxcv的粉丝";
-    self.postComment.to = @"";
-    self.postComment.index = indexPath.row;
-}
-
-/**
- *  发表评论
- *
- */
-- (void)postCommentWithCommentModel:(CommentModel *)model {
-    CellLayout* layout = [self.dataSource objectAtIndex:model.index];
-    NSMutableArray* newCommentLists = [[NSMutableArray alloc] initWithArray:layout.statusModel.commentList];
-    NSDictionary* newComment = @{@"from":model.from,
-                                 @"to":model.to,
-                                 @"content":model.content};
-    [newCommentLists addObject:newComment];
-    StatusModel* statusModel = layout.statusModel;
-    statusModel.commentList = newCommentLists;
-    layout = [self layoutWithStatusModel:statusModel index:model.index];
-    [self.dataSource replaceObjectAtIndex:model.index withObject:layout];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.index inSection:0]]
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (void)refreshComplete {
@@ -187,10 +209,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     [self.commentView endEditing:YES];
 }
 
-/**
- *  键盘出现
- *
- */
 - (void)keyboardDidAppearNotifications:(NSNotification *)notifications {
     NSDictionary *userInfo = [notifications userInfo];
     CGSize keyboardSize = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
@@ -198,10 +216,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     self.commentView.frame = CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f - keyboardHeight, SCREEN_WIDTH, 44.0f);
 }
 
-/**
- *  键盘隐藏
- *
- */
 - (void)keyboardDidHidenNotifications:(NSNotification *)notifications {
     self.commentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f);
 }
@@ -301,7 +315,6 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 #pragma mark - Getter
 
-
 - (CommentView *)commentView {
     if (_commentView) {
         return _commentView;
@@ -371,7 +384,8 @@ const CGFloat kRefreshBoundary = 170.0f;
     if (_fakeDatasource) {
         return _fakeDatasource;
     }
-    _fakeDatasource = @[@{@"name":@"SIZE潮流生活",
+    _fakeDatasource = @[@{@"type":@"image",
+                          @"name":@"SIZE潮流生活",
                           @"avatar":@"http://tp2.sinaimg.cn/1829483361/50/5753078359/1",
                           @"content":@"近日[心][心][心][心][心][心][face]，adidas Originals为经典鞋款Stan Smith打造Primeknit版本，并带来全新的“OG”系列。简约的鞋身采用白色透气Primeknit针织材质制作，再将Stan Smith代表性的绿、红、深蓝三个元年色调融入到鞋舌和后跟点缀，最后搭载上米白色大底来保留其复古风味。据悉该鞋款将在今月登陆全球各大adidas Originals指定店舖。",
                           @"date":@"1459668442",
@@ -389,10 +403,33 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"哈哈哈哈"},
                                            @{@"from":@"SIZE潮流生活",
                                              @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接#Waynezxcv#.Hello，world"}],
-                          @"isLike":@(YES),
-                          @"likeList":@[@"waynezxcv",@"G-Dragon"]},
-                        @{@"name":@"妖妖小精",
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                          @"isLike":@(NO),
+                          @"likeList":@[@"waynezxcv",@"伊布拉希莫维奇",@"权志龙",@"郜林",@"扎克伯格"]},
+
+                        @{@"type":@"website",
+                          @"name":@"Ronaldo",
+                          @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
+                          @"content":@"Easy to use yet capable of so much, iOS 9 was engineered to work hand in hand with the advanced technologies built into iPhone.",
+                          @"date":@"1459668442",
+                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hgxij20lo0egwgc.jpg"],
+                          @"detail":@"LWAlchemy,A fast and lightweight ORM framework for Cocoa and Cocoa Touch.",
+                          @"statusID":@"1",
+                          @"commentList":@[@{@"from":@"SIZE潮流生活",
+                                             @"to":@"",
+                                             @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
+                                           @{@"from":@"waynezxcv",
+                                             @"to":@"SIZE潮流生活",
+                                             @"content":@"哈哈哈哈"},
+                                           @{@"from":@"SIZE潮流生活",
+                                             @"to":@"waynezxcv",
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                          @"isLike":@(NO),
+                          @"likeList":@[@"waynezxcv"]},
+
+
+                        @{@"type":@"image",
+                          @"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
                           @"content":@"出国留学的儿子为思念自己的家人们寄来一个用自己照片做成的人形立牌",
                           @"date":@"1459668442",
@@ -406,8 +443,12 @@ const CGFloat kRefreshBoundary = 170.0f;
                           @"statusID":@"2",
                           @"commentList":@[@{@"from":@"waynezxcv",
                                              @"to":@"妖妖小精",
-                                             @"content":@"[心]"}]},
-                        @{@"name":@"Instagram热门",
+                                             @"content":@"[心]"}],
+                          @"isLike":@(NO),
+                          @"likeList":@[]},
+
+                        @{@"type":@"image",
+                          @"name":@"Instagram热门",
                           @"avatar":@"http://tp4.sinaimg.cn/5074408479/50/5706839595/0",
                           @"content":@"Austin Butler & Vanessa Hudgens  想试试看扑到一个一米八几的人怀里是有多舒服[心]",
                           @"date":@"1459668442",
@@ -418,27 +459,49 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww3.sinaimg.cn/mw690/005xpHs3gw1f2jg16f8vnj30b40g4q4q.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/005xpHs3gw1f2jg178dxdj30am0gowgv.jpg",
                                     @"http://ww2.sinaimg.cn/mw690/005xpHs3gw1f2jg17c5urj30b40ghjto.jpg"],
-                          @"statusID":@"3"},
-                        @{@"name":@"头条新闻",
+                          @"statusID":@"3",
+                          @"isLike":@(NO),
+                          @"likeList":@[]},
+
+
+                        @{@"type":@"image",
+                          @"name":@"头条新闻",
                           @"avatar":@"http://tp1.sinaimg.cn/1618051664/50/5735009977/0",
                           @"content":@"#万象# 【熊孩子！4名小学生铁轨上设障碍物逼停火车】4名小学生打赌，1人认为火车会将石头碾成粉末，其余3人不信，认为只会碾碎，于是他们将道碴摆放在铁轨上。火车司机发现前方不远处的铁轨上，摆放了影响行车安全的障碍物，于是紧急采取制动，列车中途停车13分钟。O4名学生铁轨上设障碍物逼停火车#waynezxcv# nice",
                           @"date":@"1459668442",
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/60718250jw1f2jg46smtmj20go0go77r.jpg"],
-                          @"statusID":@"4"},
-                        @{@"name":@"Kindle中国",
+                          @"statusID":@"4",
+                          @"isLike":@(NO),
+                          @"likeList":@[]},
+
+
+                        @{@"type":@"image",
+                          @"name":@"Kindle中国",
                           @"avatar":@"http://tp1.sinaimg.cn/3262223112/50/5684307907/1",
                           @"content":@"#只限今日#《简单的逻辑学》作者D.Q.麦克伦尼在书中提出了28种非逻辑思维形式，抛却了逻辑学一贯的刻板理论，转而以轻松的笔触带领我们畅游这个精彩无比的逻辑世界；《蝴蝶梦》我错了，我曾以为付出自己就是爱你。全球公认20世纪伟大的爱情经典，大陆独家合法授权。",
                           @"date":@"",
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/c2719308gw1f2hav54htyj20dj0l00uk.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/c2719308gw1f2hav47jn7j20dj0j341h.jpg"],
-                          @"statusID":@"6"},
-                        @{@"name":@"G-SHOCK",
+                          @"statusID":@"6",
+                          @"isLike":@(NO),
+                          @"likeList":@[]},
+
+
+
+                        @{@"type":@"image",
+                          @"name":@"G-SHOCK",
                           @"avatar":@"http://tp3.sinaimg.cn/1595142730/50/5691224157/1",
                           @"content":@"就算平时没有时间，周末也要带着G-SHOCK到户外走走，感受大自然的满满正能量！",
                           @"date":@"1459668442",
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/5f13f24ajw1f2hc1r6j47j20dc0dc0t4.jpg"],
-                          @"statusID":@"7"},
-                        @{@"name":@"型格志style",
+                          @"statusID":@"7",
+                          @"isLike":@(NO),
+                          @"likeList":@[]},
+
+
+
+                        @{@"type":@"image",
+                          @"name":@"型格志style",
                           @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
                           @"content":@"春天卫衣的正确打开方式~",
                           @"date":@"1459668442",
@@ -451,14 +514,25 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jelwmsoej30fx0fywfq.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jem32ccrj30xm0sdwjt.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jelyhutwj30fz0fxwfr.jpg",],
-                          @"statusID":@"8"},
-                        @{@"name":@"数字尾巴",
+                          @"statusID":@"8",
+                          @"isLike":@(NO),
+                          @"likeList":@[]},
+
+
+
+                        @{@"type":@"image",
+                          @"name":@"数字尾巴",
                           @"avatar":@"http://tp1.sinaimg.cn/1726544024/50/5630520790/1",
                           @"content":@"外媒 AndroidAuthority 日前曝光诺基亚首款回归作品 NOKIA A1 的渲染图，手机的外形很 N 记，边框控制的不错。这是一款纯正的 Android 机型，传闻手机将采用 5.5 英寸 1080P 屏幕，搭载骁龙 652，Android 6.0 系统，并使用了诺基亚自家的 Z 启动器，不过具体发表的时间还是未知。尾巴们你会期待吗？",
                           @"date":@"1459668442",
                           @"imgs":@[@"http://ww3.sinaimg.cn/mw690/66e8f898gw1f2jck6jnckj20go0fwdhb.jpg"],
-                          @"statusID":@"9"},
-                        @{@"name":@"欧美街拍XOXO",
+                          @"statusID":@"9",
+                          @"isLike":@(NO),
+                          @"likeList":@[]},
+
+
+                        @{@"type":@"image",
+                          @"name":@"欧美街拍XOXO",
                           @"avatar":@"http://tp4.sinaimg.cn/1708004923/50/1283204657/0",
                           @"content":@"3.31～4.2 肯豆",
                           @"date":@"1459668442",
@@ -466,7 +540,10 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww1.sinaimg.cn/mw690/65ce163bjw1f2jdkjdm96j20bt0gota9.jpg",
                                     @"http://ww2.sinaimg.cn/mw690/65ce163bjw1f2jdkvwepij20go0clgnd.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/65ce163bjw1f2jdl2ao77j20ci0gojsw.jpg",],
-                          @"statusID":@"10"},];
+                          @"statusID":@"10",
+                          @"isLike":@(NO),
+                          @"likeList":@[]},
+                        ];
     return _fakeDatasource;
 }
 

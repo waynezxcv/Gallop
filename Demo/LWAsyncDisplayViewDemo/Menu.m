@@ -25,6 +25,8 @@
 
 @implementation Menu
 
+
+#pragma mark - LifeCycle
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -58,6 +60,8 @@
     CGContextStrokePath(context);
 }
 
+
+#pragma mark - Actions
 - (void)clickedMenu {
     if (!self.isShowing) {
         self.isShowing = YES;
@@ -85,7 +89,7 @@
                             self.show = YES;
                             self.isShowing = NO;
                         }];
-    
+
 }
 
 - (void)menuHide {
@@ -105,13 +109,26 @@
                         }];
 }
 
+#pragma mark - Getter & Setter
+
+- (void)setStatusModel:(StatusModel *)statusModel {
+    if (_statusModel != statusModel) {
+        _statusModel = statusModel;
+    }
+    if (self.statusModel.isLike) {
+        [_likeButton setTitle:@" 取消" forState:UIControlStateNormal];
+    }
+    else {
+        [_likeButton setTitle:@"  赞" forState:UIControlStateNormal];
+    }
+}
+
 - (LikeButton *)likeButton {
     if (_likeButton) {
         return _likeButton;
     }
     _likeButton = [LikeButton buttonWithType:UIButtonTypeCustom];
     [_likeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_likeButton setTitle:@"  赞" forState:UIControlStateNormal];
     [_likeButton setImage:[UIImage imageNamed:@"likewhite.png"] forState:UIControlStateNormal];
     [_likeButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     return _likeButton;
@@ -121,7 +138,7 @@
     if (_commentButton) {
         return _commentButton;
     }
-    
+
     _commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_commentButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_commentButton setTitle:@" 评论" forState:UIControlStateNormal];

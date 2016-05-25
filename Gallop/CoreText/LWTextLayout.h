@@ -65,7 +65,7 @@
  *
  *  @return LWTextLayout实例
  */
-+ (LWTextLayout *)lw_layoutWithContainer:(LWTextContainer *)container text:(NSAttributedString *)text;
++ (LWTextLayout *)lw_layoutWithContainer:(LWTextContainer *)container text:(NSAttributedString *)text sizeToFit:(BOOL)sizeToFit;
 
 
 

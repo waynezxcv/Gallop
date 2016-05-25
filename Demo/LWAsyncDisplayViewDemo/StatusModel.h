@@ -11,13 +11,16 @@
 
 @interface StatusModel : NSObject
 
-@property (nullable, nonatomic, retain) NSURL* avatar;
-@property (nullable, nonatomic, retain) NSString *content;
-@property (nullable, nonatomic, retain) NSDate *date;
-@property (nullable, nonatomic, retain) NSArray* imgs;
-@property (nullable, nonatomic, retain) NSString *name;
-@property (nullable, nonatomic, retain) NSNumber *statusID;
-@property (nullable, nonatomic, retain) NSArray* commentList;
-@property (nullable, nonatomic, retain) NSArray* likeList;
+@property (nullable, nonatomic, copy) NSString* type;
+@property (nullable, nonatomic, strong) NSURL* avatar;
+@property (nullable, nonatomic, copy) NSString* content;
+@property (nullable, nonatomic, copy) NSString* detail;
+@property (nullable, nonatomic, strong) NSDate* date;
+@property (nullable, nonatomic, copy) NSArray* imgs;
+@property (nullable, nonatomic, copy) NSString* name;
+@property (nullable, nonatomic, strong) NSNumber* statusID;
+@property (nullable, nonatomic, copy) NSArray* commentList;
+@property (nullable, nonatomic, copy) NSArray* likeList;
+@property (nonatomic,assign) BOOL isLike;
 
 @end

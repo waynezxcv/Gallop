@@ -32,6 +32,8 @@
 - (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
               atIndexPath:(NSIndexPath *)indexPath;
 
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike atIndexPath:(NSIndexPath *)indexPath;
+
 @end
 
 @interface TableViewCell : UITableViewCell

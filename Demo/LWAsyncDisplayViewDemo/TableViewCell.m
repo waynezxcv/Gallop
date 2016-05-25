@@ -26,11 +26,11 @@
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
 @property (nonatomic,strong) UIButton* menuButton;
 @property (nonatomic,strong) Menu* menu;
+@property (nonatomic,strong) UIView* line;
 
 @end
 
 @implementation TableViewCell
-
 
 #pragma mark - Init
 
@@ -41,6 +41,7 @@
         [self.contentView addSubview:self.asyncDisplayView];
         [self.contentView addSubview:self.menuButton];
         [self.contentView addSubview:self.menu];
+        [self.contentView addSubview:self.line];
     }
     return self;
 }
@@ -89,9 +90,11 @@
 //** 点赞 **//
 - (void)didclickedLikeButton:(LikeButton *)likeButton {
     __weak typeof(self) weakSelf = self;
-    [likeButton setLike:YES animated:YES completion:^(BOOL isSelectd) {
+    [likeButton likeButtonAnimationCompletion:^(BOOL isSelectd) {
         [weakSelf.menu menuHide];
-
+        if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithIsLike:atIndexPath:)]) {
+            [weakSelf.delegate tableViewCell:weakSelf didClickedLikeButtonWithIsLike:!weakSelf.cellLayout.statusModel.isLike atIndexPath:weakSelf.indexPath];
+        }
     }];
 }
 
@@ -102,7 +105,8 @@
         return;
     }
     _cellLayout = cellLayout;
-    self.asyncDisplayView.layout = cellLayout;
+    self.asyncDisplayView.layout = self.cellLayout;
+    self.menu.statusModel = self.cellLayout.statusModel;
 }
 
 - (void)layoutSubviews {
@@ -110,6 +114,7 @@
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.cellLayout.cellHeight);
     self.menuButton.frame = self.cellLayout.menuPosition;
     self.menu.frame = CGRectMake(self.cellLayout.menuPosition.origin.x - 5.0f,self.cellLayout.menuPosition.origin.y - 9.0f + 14.5f,0,34);
+    self.line.frame = self.cellLayout.lineRect;
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
@@ -120,22 +125,14 @@
         CGContextSetLineWidth(context, 0.3f);
         CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
         CGContextStrokePath(context);
-        CGContextMoveToPoint(context, self.cellLayout.lineRect.origin.x, self.cellLayout.lineRect.origin.y);
-        CGContextAddLineToPoint(context, self.cellLayout.lineRect.origin.x + self.cellLayout.lineRect.size.width, self.cellLayout.lineRect.origin.y);
-        CGContextSetLineWidth(context, 0.1f);
-        CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
-        CGContextStrokePath(context);
-    }
-}
 
-- (void)_drawImage:(UIImage *)image rect:(CGRect)rect context:(CGContextRef)context {
-    CGContextSaveGState(context);
-    CGContextTranslateCTM(context, rect.origin.x, rect.origin.y);
-    CGContextTranslateCTM(context, 0, rect.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    CGContextTranslateCTM(context, -rect.origin.x, -rect.origin.y);
-    CGContextDrawImage(context, rect, image.CGImage);
-    CGContextRestoreGState(context);
+
+        if ([self.cellLayout.statusModel.type isEqualToString:@"website"]) {
+            CGContextAddRect(context, self.cellLayout.websiteRect);
+            CGContextSetFillColorWithColor(context, RGB(240, 240, 240, 1).CGColor);
+            CGContextFillPath(context);
+        }
+    }
 }
 
 #pragma mark - Getter
@@ -169,6 +166,15 @@
     [_menu.likeButton addTarget:self action:@selector(didclickedLikeButton:)
                forControlEvents:UIControlEventTouchUpInside];
     return _menu;
+}
+
+- (UIView *)line {
+    if (_line) {
+        return _line;
+    }
+    _line = [[UIView alloc] initWithFrame:CGRectZero];
+    _line.backgroundColor = RGB(220.0f, 220.0f, 220.0f, 1);
+    return _line;
 }
 
 @end

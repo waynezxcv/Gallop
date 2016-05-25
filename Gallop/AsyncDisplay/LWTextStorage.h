@@ -50,6 +50,7 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 @property (nonatomic,assign) NSUnderlineStyle underlineStyle;
 @property (nonatomic,strong) UIColor* underlineColor;
 @property (nonatomic,assign) NSLineBreakMode lineBreakMode;
+@property (nonatomic,assign) BOOL sizeToFit;
 
 /***  构造方法  ***/
 - (id)initWithFrame:(CGRect)frame;

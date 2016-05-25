@@ -27,8 +27,6 @@
 
 //** copy with zone **//
 #define LWSERIALIZE_COPY_WITH_ZONE()  \
-\
-/*如果不实现copyWithZone:方法，则[personObject copy]时会崩溃*/   \
 - (id)copyWithZone:(NSZone *)zone   \
 {   \
 NSLog(@"%s",__func__);  \
@@ -47,7 +45,6 @@ sharedVarCount = bIsSelfClass ? iVarCount : propVarCount;   \
 for (int i = 0; i < sharedVarCount; i++) {  \
 const char *varName = bIsSelfClass ? ivar_getName(*(ivarList + i)) : property_getName(*(propList + i)); \
 NSString *key = [NSString stringWithUTF8String:varName];    \
-/*valueForKey只能获取本类所有变量以及所有层级父类的属性，不包含任何父类的私有变量(会崩溃)*/  \
 id varValue = [self valueForKey:key];   \
 if (varValue) { \
 [copy setValue:varValue forKey:key];    \
@@ -111,7 +108,6 @@ sharedVarCount = bIsSelfClass ? iVarCount : propVarCount;   \
 for (int i = 0; i < sharedVarCount; i++) {  \
 const char *varName = bIsSelfClass ? ivar_getName(*(ivarList + i)) : property_getName(*(propList + i)); \
 NSString *key = [NSString stringWithUTF8String:varName];    \
-/*valueForKey只能获取本类所有变量以及所有层级父类的属性，不包含任何父类的私有变量(会崩溃)*/  \
 id varValue = [self valueForKey:key];   \
 if (varValue) { \
 [coder encodeObject:varValue forKey:key];   \

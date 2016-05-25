@@ -13,7 +13,7 @@
 #import "CellLayout.h"
 #import "LWTextParser.h"
 #import "CommentModel.h"
-#import "GallopUtils.h"
+#import "Gallop.h"
 
 
 @implementation CellLayout
@@ -25,7 +25,7 @@
     if (self) {
         self.statusModel = statusModel;
         /****************************生成Storage 相当于模型*************************************/
-        /*********LWAsyncDisplayView用将所有文本跟图片的模型都抽象成LWStorage，方便你能预先将所有的需要计算的布局内容直接缓存起来***/
+        /*********Gallop用将所有文本跟图片的模型都抽象成LWStorage，方便你能预先将所有的需要计算的布局内容直接缓存起来***/
         /*******而不是在渲染的时候才进行计算*******************************************/
         //头像模型 avatarImageStorage
         LWImageStorage* avatarStorage = [[LWImageStorage alloc] init];
@@ -40,7 +40,6 @@
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
         nameTextStorage.text = statusModel.name;
         nameTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
-        nameTextStorage.textAlignment = NSTextAlignmentLeft;
         nameTextStorage.frame = CGRectMake(60.0f, 20.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
         [nameTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%@",statusModel.name]
                                       range:NSMakeRange(0,statusModel.name.length)
@@ -58,48 +57,68 @@
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
 
-        CGFloat imageWidth = (SCREEN_WIDTH - 110.0f)/3.0f;
         //发布的图片模型 imgsStorage
+        CGFloat imageWidth = (SCREEN_WIDTH - 110.0f)/3.0f;
         NSInteger imageCount = [statusModel.imgs count];
         NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
         NSMutableArray* imagePositionArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
-        NSInteger row = 0;
-        NSInteger column = 0;
-        if (imageCount == 1) {
-            CGRect imageRect = CGRectMake(nameTextStorage.left,
-                                          avatarStorage.bottom + 10.0f + contentTextStorage.height,
-                                          imageWidth*1.7,
-                                          imageWidth*1.7);
-            NSString* imagePositionString = NSStringFromCGRect(imageRect);
-            [imagePositionArray addObject:imagePositionString];
-            LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
-            imageStorage.frame = imageRect;
-            NSString* URLString = [statusModel.imgs objectAtIndex:0];
-            imageStorage.contents = [NSURL URLWithString:URLString];
-            imageStorage.fadeShow = YES;
-            imageStorage.clipsToBounds = YES;
-            [imageStorageArray addObject:imageStorage];
-        } else {
-            for (NSInteger i = 0; i < imageCount; i ++) {
-                CGRect imageRect = CGRectMake(nameTextStorage.left + (column * (imageWidth + 5.0f)),
-                                              avatarStorage.bottom + 10.0f + contentTextStorage.height + (row * (imageWidth + 5.0f)),
-                                              imageWidth,
-                                              imageWidth);
+        if ([self.statusModel.type isEqualToString:@"image"]) {
+            NSInteger row = 0;
+            NSInteger column = 0;
+            if (imageCount == 1) {
+                CGRect imageRect = CGRectMake(nameTextStorage.left,
+                                              contentTextStorage.bottom + 5.0f + (row * (imageWidth + 5.0f)),
+                                              imageWidth*1.7,
+                                              imageWidth*1.7);
                 NSString* imagePositionString = NSStringFromCGRect(imageRect);
                 [imagePositionArray addObject:imagePositionString];
                 LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
                 imageStorage.frame = imageRect;
-                NSString* URLString = [statusModel.imgs objectAtIndex:i];
+                NSString* URLString = [statusModel.imgs objectAtIndex:0];
                 imageStorage.contents = [NSURL URLWithString:URLString];
-                imageStorage.fadeShow = YES;
-                imageStorage.clipsToBounds = YES;
                 [imageStorageArray addObject:imageStorage];
-                column = column + 1;
-                if (column > 2) {
-                    column = 0;
-                    row = row + 1;
+            } else {
+                for (NSInteger i = 0; i < imageCount; i ++) {
+                    CGRect imageRect = CGRectMake(nameTextStorage.left + (column * (imageWidth + 5.0f)),
+                                                  contentTextStorage.bottom + 5.0f + (row * (imageWidth + 5.0f)),
+                                                  imageWidth,
+                                                  imageWidth);
+                    NSString* imagePositionString = NSStringFromCGRect(imageRect);
+                    [imagePositionArray addObject:imagePositionString];
+                    LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+                    imageStorage.frame = imageRect;
+                    NSString* URLString = [statusModel.imgs objectAtIndex:i];
+                    imageStorage.contents = [NSURL URLWithString:URLString];
+                    [imageStorageArray addObject:imageStorage];
+                    column = column + 1;
+                    if (column > 2) {
+                        column = 0;
+                        row = row + 1;
+                    }
                 }
             }
+
+        }
+        else if ([self.statusModel.type isEqualToString:@"website"]) {
+            self.websiteRect = CGRectMake(nameTextStorage.left,contentTextStorage.bottom + 5.0f,SCREEN_WIDTH - 80.0f,60.0f);
+
+            LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+            NSString* URLString = [statusModel.imgs objectAtIndex:0];
+            imageStorage.contents = [NSURL URLWithString:URLString];
+            imageStorage.frame = CGRectMake(nameTextStorage.left + 5.0f, contentTextStorage.bottom + 10.0f , 50.0f, 50.0f);
+            [imageStorageArray addObject:imageStorage];
+
+            LWTextStorage* detailTextStorage = [[LWTextStorage alloc] init];
+            detailTextStorage.text = statusModel.detail;
+            detailTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:12.0f];
+            detailTextStorage.textColor = RGB(40, 40, 40, 1);
+            detailTextStorage.frame = CGRectMake(imageStorage.right + 10.0f, contentTextStorage.bottom + 10.0f, SCREEN_WIDTH - 150.0f, 60.0f);
+            detailTextStorage.linespacing = 0.5f;
+            [detailTextStorage lw_addLinkWithData:@"https://github.com/waynezxcv/LWAlchemy" range:NSMakeRange(0, detailTextStorage.text.length) linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
+            [self addStorage:detailTextStorage];
+        }
+        else if ([self.statusModel.type isEqualToString:@"video"]) {
+
         }
         //获取最后一张图片的模型
         LWImageStorage* lastImageStorage = (LWImageStorage *)[imageStorageArray lastObject];
@@ -129,12 +148,37 @@
         LWTextStorage* likeTextStorage = [[LWTextStorage alloc] init];
         if (self.statusModel.likeList.count != 0) {
             likeImageSotrage.contents = [UIImage imageNamed:@"Like"];
-            likeImageSotrage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,16.0f, 16.0f);
-            offsetY += likeImageSotrage.height + 5.0f;
+            likeImageSotrage.frame = CGRectMake(rect.origin.x + 10.0f,rect.origin.y + 10.0f + offsetY,16.0f, 16.0f);
+            NSMutableString* mutableString = [[NSMutableString alloc] init];
+            NSMutableArray* composeArray = [[NSMutableArray alloc] init];
+            int rangeOffset = 0;
+            for (NSInteger i = 0;i < self.statusModel.likeList.count; i ++) {
+                NSString* liked = self.statusModel.likeList[i];
+                [mutableString appendString:liked];
+                NSRange range = NSMakeRange(rangeOffset, liked.length);
+                [composeArray addObject:[NSValue valueWithRange:range]];
+                rangeOffset += liked.length;
+                if (i != self.statusModel.likeList.count - 1) {
+                    NSString* dotString = @",";
+                    [mutableString appendString:dotString];
+                    rangeOffset += 1;
+                }
+            }
+            likeTextStorage.text = mutableString;
+            likeTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
+            likeTextStorage.frame = CGRectMake(likeImageSotrage.right + 5.0f, rect.origin.y + 7.0f, SCREEN_WIDTH - 110.0f, CGFLOAT_MAX);
+            for (NSValue* rangeValue in composeArray) {
+                NSRange range = [rangeValue rangeValue];
+                CommentModel* commentModel = [[CommentModel alloc] init];
+                commentModel.to = [likeTextStorage.text substringWithRange:range];
+                commentModel.index = index;
+                [likeTextStorage lw_addLinkWithData:commentModel range:range linkColor:RGB(113, 129, 161, 1) highLightColor:RGB(0, 0, 0, 0.15)];
+            }
+            offsetY += likeTextStorage.height + 5.0f;
         }
         if (statusModel.commentList.count != 0 && statusModel.commentList != nil) {
             if (self.statusModel.likeList.count != 0) {
-                self.lineRect = CGRectMake(nameTextStorage.left, likeImageSotrage.bottom + 2.5f,  SCREEN_WIDTH - 80, 0.1f);
+                self.lineRect = CGRectMake(nameTextStorage.left, likeTextStorage.bottom + 2.5f,  SCREEN_WIDTH - 80, 0.1f);
             }
             NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:statusModel.commentList.count];
             for (NSDictionary* commentDict in statusModel.commentList) {
@@ -144,8 +188,6 @@
                     LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
                     commentTextStorage.text = commentString;
                     commentTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
-                    commentTextStorage.textAlignment = NSTextAlignmentLeft;
-                    commentTextStorage.linespacing = 2.0f;
                     commentTextStorage.textColor = RGB(40, 40, 40, 1);
                     commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, CGFLOAT_MAX);
 
@@ -216,6 +258,9 @@
         [self addStorage:commentBgStorage];
         [self addStorage:likeImageSotrage];
         [self addStorages:imageStorageArray];
+        if (likeTextStorage) {
+            [self addStorage:likeTextStorage];
+        }
         //一些其他属性
         self.menuPosition = menuPosition;
         self.commentBgPosition = commentBgPosition;

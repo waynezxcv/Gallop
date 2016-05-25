@@ -130,6 +130,12 @@
 }
 
 - (void)_drawStoragesInContext:(CGContextRef)context inCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelledBlock {
+    if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:isCancelled:)]) {
+        if (isCancelledBlock()) {
+            return;
+        }
+        [self.delegate extraAsyncDisplayIncontext:context size:self.bounds.size isCancelled:isCancelledBlock];
+    }
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (isCancelledBlock()) {
             return;
@@ -159,12 +165,6 @@
             [_highlight.hightlightColor setFill];
             [beizerPath fill];
         }
-    }
-    if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:isCancelled:)]) {
-        if (isCancelledBlock()) {
-            return;
-        }
-        [self.delegate extraAsyncDisplayIncontext:context size:self.bounds.size isCancelled:isCancelledBlock];
     }
 }
 
