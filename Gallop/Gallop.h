@@ -27,7 +27,7 @@
 
 #import "LWAsyncDisplayView.h"
 #import "LWTextLayout.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 #import "NSMutableAttributedString+Gallop.h"
 #import "LWConstraintManager.h"
 #import "LWStorage+Constraint.h"

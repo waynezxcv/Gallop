@@ -7,7 +7,8 @@
 //
 
 #import "LWImageItem.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
+
 
 const CGFloat kMaximumZoomScale = 3.0f;
 const CGFloat kMinimumZoomScale = 1.0f;

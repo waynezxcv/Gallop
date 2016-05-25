@@ -137,6 +137,4 @@ static void RegisterRunLoopTransactions() {
     return other.selector == _selector && other.target == _target;
 }
 
-
-
 @end

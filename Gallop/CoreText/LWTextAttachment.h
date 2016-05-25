@@ -56,7 +56,7 @@
 
 //*** Text高亮（点击链接时） ***//
 
-@interface LWTextHighlight : NSObject <NSCopying>
+@interface LWTextHighlight : NSObject <NSCopying,NSCoding>
 
 @property (nonatomic,assign) NSRange range;//在字符串的range
 @property (nonatomic,strong) UIColor* linkColor;
@@ -70,7 +70,7 @@
 
 //*** Text背景颜色（用来代替NSBackgroundColor） ***//
 
-@interface LWTextBackgroundColor : NSObject  <NSCopying>
+@interface LWTextBackgroundColor : NSObject  <NSCopying,NSCoding>
 
 @property (nonatomic,assign) NSRange range;//在字符串的range
 @property (nonatomic,strong) UIColor* backgroundColor;

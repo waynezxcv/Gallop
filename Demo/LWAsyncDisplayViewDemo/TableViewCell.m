@@ -16,7 +16,7 @@
 
 
 #import "TableViewCell.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 #import "LWImageStorage.h"
 #import "Menu.h"
 
@@ -24,6 +24,7 @@
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate>
 
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
+@property (nonatomic,strong) UIButton* menuButton;
 @property (nonatomic,strong) Menu* menu;
 
 @end
@@ -38,15 +39,14 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
+        [self.contentView addSubview:self.menuButton];
         [self.contentView addSubview:self.menu];
-
     }
     return self;
 }
 
 
 #pragma mark - Actions
-
 
 /***  点击图片  ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
@@ -55,7 +55,6 @@
     CGPoint point = [touch locationInView:self];
     for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
-        //点击查看大图
         if (CGRectContainsPoint(imagePosition, point)) {
             if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedImageWithCellLayout:atIndex:)] &&
                 [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
@@ -64,15 +63,7 @@
         }
 
     }
-    //点击菜单按钮
-    if (CGRectContainsPoint(CGRectMake(self.cellLayout.menuPosition.origin.x,
-                                       self.cellLayout.menuPosition.origin.y ,
-                                       self.cellLayout.menuPosition.size.width ,
-                                       self.cellLayout.menuPosition.size.height), point)) {
-        [self.menu clickedMenu];
-    }
 }
-
 
 /***  点击文本链接 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data {
@@ -82,6 +73,10 @@
     }
 }
 
+/***  点击菜单按钮  ***/
+- (void)didClickedMenuButton {
+    [self.menu clickedMenu];
+}
 
 /***  点击评论 ***/
 - (void)didClickedCommentButton {
@@ -112,14 +107,9 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.asyncDisplayView.frame = CGRectMake(0,
-                                             0,
-                                             SCREEN_WIDTH,
-                                             self.cellLayout.cellHeight);
-    self.menu.frame = CGRectMake(self.cellLayout.menuPosition.origin.x - 5.0f,
-                                 self.cellLayout.menuPosition.origin.y - 9.0f,
-                                 0,
-                                 34);
+    self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.cellLayout.cellHeight);
+    self.menuButton.frame = self.cellLayout.menuPosition;
+    self.menu.frame = CGRectMake(self.cellLayout.menuPosition.origin.x - 5.0f,self.cellLayout.menuPosition.origin.y - 9.0f + 14.5f,0,34);
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
@@ -129,6 +119,11 @@
         CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
         CGContextSetLineWidth(context, 0.3f);
         CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
+        CGContextStrokePath(context);
+        CGContextMoveToPoint(context, self.cellLayout.lineRect.origin.x, self.cellLayout.lineRect.origin.y);
+        CGContextAddLineToPoint(context, self.cellLayout.lineRect.origin.x + self.cellLayout.lineRect.size.width, self.cellLayout.lineRect.origin.y);
+        CGContextSetLineWidth(context, 0.1f);
+        CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
         CGContextStrokePath(context);
     }
 }
@@ -151,6 +146,17 @@
         _asyncDisplayView.delegate = self;
     }
     return _asyncDisplayView;
+}
+
+- (UIButton *)menuButton {
+    if (_menuButton) {
+        return _menuButton;
+    }
+    _menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_menuButton setImage:[UIImage imageNamed:@"[menu]"] forState:UIControlStateNormal];
+    _menuButton.imageEdgeInsets = UIEdgeInsetsMake(14.5f, 12.0f, 14.5f, 12.0f);
+    [_menuButton addTarget:self action:@selector(didClickedMenuButton) forControlEvents:UIControlEventTouchUpInside];
+    return _menuButton;
 }
 
 - (Menu *)menu {

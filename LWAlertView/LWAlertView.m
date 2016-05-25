@@ -8,7 +8,7 @@
 
 #import "LWAlertView.h"
 #import "LWAlertContentView.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 @interface LWAlertView ()

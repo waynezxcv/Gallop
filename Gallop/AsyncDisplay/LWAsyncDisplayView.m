@@ -93,16 +93,14 @@
 
 #pragma mark - Private
 - (void)_setImageStorages {
-    for (NSInteger i = 0; i < self.maxImageStorageCount; i ++) {
+    for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
         if (i >= _imageStorages.count) {
             UIView* container = self.imageContainers[i];
             [container cleanup];
         } else {
             LWImageStorage* imageStorage = _imageStorages[i];
-            if ([imageStorage.contents isKindOfClass:[NSURL class]]) {
-                UIView* container = self.imageContainers[i];
-                [container setContentWithImageStorage:imageStorage];
-            }
+            UIView* container = self.imageContainers[i];
+            [container setContentWithImageStorage:imageStorage];
         }
     }
 }

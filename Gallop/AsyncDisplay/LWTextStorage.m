@@ -86,33 +86,14 @@
 }
 
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    unsigned int count = 0;
-    Ivar* vars = class_copyIvarList([self class], &count);
-    for (int i = 0; i < count; i ++) {
-        Ivar var = vars[i];
-        const char* varName = ivar_getName(var);
-        NSString* key = [NSString stringWithUTF8String:varName];
-        id value = [self valueForKey:key];
-        [aCoder encodeObject:value forKey:key];
-    }
-}
 
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
-    if (self) {
-        unsigned int count = 0;
-        Ivar* vars = class_copyIvarList([self class], &count);
-        for (int i = 0; i < count; i ++) {
-            Ivar var = vars[i];
-            const char* varName = ivar_getName(var);
-            NSString* key = [NSString stringWithUTF8String:varName];
-            id value = [aDecoder decodeObjectForKey:key];
-            [self setValue:value forKey:key];
-        }
-    }
-    return self;
-}
+LWSERIALIZE_CODER_DECODER();
+
+
+#pragma mark - NSCopying
+
+LWSERIALIZE_COPY_WITH_ZONE()
+
 
 #pragma mark - Methods
 /***  为指定位置的文本添加链接  ***/
@@ -375,29 +356,5 @@
                        self.textLayout.cgPathBox.origin.y + + self.position.y + self.textLayout.cgPathBox.size.height * 0.5f);
 }
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWTextStorage* textStorage = [super copyWithZone:zone];
-    textStorage.text = [self.text copy];
-    textStorage.attributedText = [self.attributedText mutableCopy];
-    textStorage.textColor = [self.textColor copy];
-    textStorage.textBackgroundColor = [self.textBackgroundColor copy];
-    textStorage.font = [self.font copy];
-    textStorage.textAlignment = self.textAlignment;
-    textStorage.lineBreakMode = self.lineBreakMode;
-    textStorage.underlineColor = [self.underlineColor copy];
-    textStorage.underlineStyle = self.underlineStyle;
-    textStorage.linespacing = self.linespacing;
-    textStorage.characterSpacing = self.characterSpacing;
-    textStorage.frame = self.frame;
-    LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:textStorage.frame.size];
-    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:textStorage.attributedText];
-    return textStorage;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
 
 @end

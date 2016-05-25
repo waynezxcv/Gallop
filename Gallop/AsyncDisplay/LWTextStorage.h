@@ -36,7 +36,7 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 
 /***  Text模型  ***/
 
-@interface LWTextStorage : LWStorage<NSCopying,NSMutableCopying,NSCoding>
+@interface LWTextStorage : LWStorage<NSCopying,NSCoding>
 
 @property (nonatomic,strong,readonly) LWTextLayout* textLayout;
 

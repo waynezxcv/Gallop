@@ -25,6 +25,7 @@
 #import "LWStorage.h"
 #import "GallopUtils.h"
 #import <objc/runtime.h>
+#import "GallopUtils.h"
 
 
 @implementation LWStorage
@@ -56,33 +57,15 @@
 }
 
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    unsigned int count = 0;
-    Ivar* vars = class_copyIvarList([self class], &count);
-    for (int i = 0; i < count; i ++) {
-        Ivar var = vars[i];
-        const char* varName = ivar_getName(var);
-        NSString* key = [NSString stringWithUTF8String:varName];
-        id value = [self valueForKey:key];
-        [aCoder encodeObject:value forKey:key];
-    }
-}
 
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
-    if (self) {
-        unsigned int count = 0;
-        Ivar* vars = class_copyIvarList([self class], &count);
-        for (int i = 0; i < count; i ++) {
-            Ivar var = vars[i];
-            const char* varName = ivar_getName(var);
-            NSString* key = [NSString stringWithUTF8String:varName];
-            id value = [aDecoder decodeObjectForKey:key];
-            [self setValue:value forKey:key];
-        }
-    }
-    return self;
-}
+LWSERIALIZE_CODER_DECODER();
+
+
+#pragma mark - NSCopying
+
+LWSERIALIZE_COPY_WITH_ZONE()
+
+
 
 #pragma mark - Getter & Setter
 - (CGRect)bounds {
@@ -129,43 +112,6 @@
     CGRect frame = self.frame;
     frame = CGRectMake(frame.origin.x, frame.origin.y, bounds.size.width, bounds.size.height);
     self.frame = frame;
-}
-
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWStorage* storage = [[[self class] allocWithZone:zone] init];
-    storage.clipsToBounds = self.clipsToBounds;
-    storage.opaque = self.opaque;
-    storage.hidden = self.hidden;
-    storage.alpha = self.alpha;
-    storage.frame = self.frame;
-    storage.bounds = self.bounds;
-    storage.height = self.height;
-    storage.width = self.width;
-    storage.left = self.left;
-    storage.right = self.right;
-    storage.top = self.top;
-    storage.bottom = self.bottom;
-    storage.center = self.center;
-    storage.position = self.position;
-    storage.cornerRadius = self.cornerRadius;
-    storage.cornerBackgroundColor = [self.cornerBackgroundColor copy];
-    storage.cornerBorderColor = [self.cornerBackgroundColor copy];
-    storage.cornerBorderWidth = self.cornerBorderWidth;
-    storage.shadowColor = self.shadowColor;
-    storage.shadowOpacity = self.shadowOpacity;
-    storage.shadowOffset = self.shadowOffset;
-    storage.shadowRadius = self.shadowRadius;
-    storage.contentsScale = self.contentsScale;
-    storage.backgroundColor = [self.backgroundColor copy];
-    storage.contentMode = self.contentMode;
-    return storage;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-
 }
 
 @end

@@ -24,6 +24,7 @@
 
 #import "LWTextContainer.h"
 #import <objc/runtime.h>
+#import "GallopUtils.h"
 
 @interface LWTextContainer ()
 
@@ -76,48 +77,15 @@
 }
 
 
+#pragma mark - NSCoding
+
+LWSERIALIZE_CODER_DECODER();
+
+
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone *)zone {
-    LWTextContainer* textConainer = [[[self class] allocWithZone:zone] init];
-    textConainer.size = self.size;
-    textConainer.path = [self.path copy];
-    textConainer.edgeInsets = self.edgeInsets;
-    return textConainer;
-}
+LWSERIALIZE_COPY_WITH_ZONE()
 
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
-
-#pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    unsigned int count = 0;
-    Ivar* vars = class_copyIvarList([self class], &count);
-    for (int i = 0; i < count; i ++) {
-        Ivar var = vars[i];
-        const char* varName = ivar_getName(var);
-        NSString* key = [NSString stringWithUTF8String:varName];
-        id value = [self valueForKey:key];
-        [aCoder encodeObject:value forKey:key];
-    }
-}
-
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
-    if (self) {
-        unsigned int count = 0;
-        Ivar* vars = class_copyIvarList([self class], &count);
-        for (int i = 0; i < count; i ++) {
-            Ivar var = vars[i];
-            const char* varName = ivar_getName(var);
-            NSString* key = [NSString stringWithUTF8String:varName];
-            id value = [aDecoder decodeObjectForKey:key];
-            [self setValue:value forKey:key];
-        }
-    }
-    return self;
-}
 
 
 @end

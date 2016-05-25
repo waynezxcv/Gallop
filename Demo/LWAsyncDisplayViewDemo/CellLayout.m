@@ -13,7 +13,7 @@
 #import "CellLayout.h"
 #import "LWTextParser.h"
 #import "CommentModel.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 @implementation CellLayout
@@ -23,6 +23,7 @@
             dateFormatter:(NSDateFormatter *)dateFormatter {
     self = [super init];
     if (self) {
+        self.statusModel = statusModel;
         /****************************生成Storage 相当于模型*************************************/
         /*********LWAsyncDisplayView用将所有文本跟图片的模型都抽象成LWStorage，方便你能预先将所有的需要计算的布局内容直接缓存起来***/
         /*******而不是在渲染的时候才进行计算*******************************************/
@@ -34,7 +35,7 @@
         avatarStorage.fadeShow = YES;
         avatarStorage.clipsToBounds = NO;
         avatarStorage.frame = CGRectMake(10, 20, 40, 40);
-        
+
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
         nameTextStorage.text = statusModel.name;
@@ -45,43 +46,59 @@
                                       range:NSMakeRange(0,statusModel.name.length)
                                   linkColor:RGB(113, 129, 161, 1)
                              highLightColor:RGB(0, 0, 0, 0.15)];
-        
+
         //正文内容模型 contentTextStorage
         LWTextStorage* contentTextStorage = [[LWTextStorage alloc] init];
         contentTextStorage.text = statusModel.content;
         contentTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
         contentTextStorage.textColor = RGB(40, 40, 40, 1);
-        contentTextStorage.frame = CGRectMake(60.0f, nameTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
+        contentTextStorage.frame = CGRectMake(nameTextStorage.left, nameTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
         [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
         [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
-        
+
+        CGFloat imageWidth = (SCREEN_WIDTH - 110.0f)/3.0f;
         //发布的图片模型 imgsStorage
         NSInteger imageCount = [statusModel.imgs count];
         NSMutableArray* imageStorageArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
         NSMutableArray* imagePositionArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
         NSInteger row = 0;
         NSInteger column = 0;
-        for (NSInteger i = 0; i < imageCount; i ++) {
-            CGRect imageRect = CGRectMake(60.0f + (column * 85.0f),
-                                          60.0f + contentTextStorage.height + (row * 85.0f),
-                                          80.0f,
-                                          80.0f);
+        if (imageCount == 1) {
+            CGRect imageRect = CGRectMake(nameTextStorage.left,
+                                          avatarStorage.bottom + 10.0f + contentTextStorage.height,
+                                          imageWidth*1.7,
+                                          imageWidth*1.7);
             NSString* imagePositionString = NSStringFromCGRect(imageRect);
             [imagePositionArray addObject:imagePositionString];
             LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
             imageStorage.frame = imageRect;
-            NSString* URLString = [statusModel.imgs objectAtIndex:i];
+            NSString* URLString = [statusModel.imgs objectAtIndex:0];
             imageStorage.contents = [NSURL URLWithString:URLString];
             imageStorage.fadeShow = YES;
             imageStorage.clipsToBounds = YES;
             [imageStorageArray addObject:imageStorage];
-            
-            column = column + 1;
-            if (column > 2) {
-                column = 0;
-                row = row + 1;
+        } else {
+            for (NSInteger i = 0; i < imageCount; i ++) {
+                CGRect imageRect = CGRectMake(nameTextStorage.left + (column * (imageWidth + 5.0f)),
+                                              avatarStorage.bottom + 10.0f + contentTextStorage.height + (row * (imageWidth + 5.0f)),
+                                              imageWidth,
+                                              imageWidth);
+                NSString* imagePositionString = NSStringFromCGRect(imageRect);
+                [imagePositionArray addObject:imagePositionString];
+                LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+                imageStorage.frame = imageRect;
+                NSString* URLString = [statusModel.imgs objectAtIndex:i];
+                imageStorage.contents = [NSURL URLWithString:URLString];
+                imageStorage.fadeShow = YES;
+                imageStorage.clipsToBounds = YES;
+                [imageStorageArray addObject:imageStorage];
+                column = column + 1;
+                if (column > 2) {
+                    column = 0;
+                    row = row + 1;
+                }
             }
         }
         //获取最后一张图片的模型
@@ -91,27 +108,34 @@
         dateTextStorage.text = [dateFormatter stringFromDate:statusModel.date];
         dateTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:13.0f];
         dateTextStorage.textColor = [UIColor grayColor];
-        
-        //生成菜单图片的模型 dateTextStorage
-        LWImageStorage* menuStorage = [[LWImageStorage alloc] init];
-        menuStorage.contents = [UIImage imageNamed:@"[menu]"];
+        //菜单按钮
         CGRect menuPosition;
         if (lastImageStorage) {
-            menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,10.0f + lastImageStorage.bottom,20.0f,15.0f);
-            dateTextStorage.frame = CGRectMake(60.0f, lastImageStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
-            
+            menuPosition = CGRectMake(SCREEN_WIDTH - 54.0f,10.0f + lastImageStorage.bottom - 14.5f,44,44);
+            dateTextStorage.frame = CGRectMake(nameTextStorage.left, lastImageStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
+
         } else {
-            menuPosition = CGRectMake(SCREEN_WIDTH - 40.0f,10.0f + contentTextStorage.bottom,20.0f,15.0f);
-            dateTextStorage.frame = CGRectMake(60.0f, contentTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
+            menuPosition = CGRectMake(SCREEN_WIDTH - 54.0f,10.0f + contentTextStorage.bottom  - 14.5f ,44,44);
+            dateTextStorage.frame = CGRectMake(nameTextStorage.left, contentTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
         }
-        menuStorage.frame = menuPosition;
         //生成评论背景Storage
         LWImageStorage* commentBgStorage = [[LWImageStorage alloc] init];
         NSArray* commentTextStorages = @[];
         CGRect commentBgPosition = CGRectZero;
         CGRect rect = CGRectMake(60.0f,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, 20);
         CGFloat offsetY = 0.0f;
+        //点赞
+        LWImageStorage* likeImageSotrage = [[LWImageStorage alloc] init];
+        LWTextStorage* likeTextStorage = [[LWTextStorage alloc] init];
+        if (self.statusModel.likeList.count != 0) {
+            likeImageSotrage.contents = [UIImage imageNamed:@"Like"];
+            likeImageSotrage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,16.0f, 16.0f);
+            offsetY += likeImageSotrage.height + 5.0f;
+        }
         if (statusModel.commentList.count != 0 && statusModel.commentList != nil) {
+            if (self.statusModel.likeList.count != 0) {
+                self.lineRect = CGRectMake(nameTextStorage.left, likeImageSotrage.bottom + 2.5f,  SCREEN_WIDTH - 80, 0.1f);
+            }
             NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:statusModel.commentList.count];
             for (NSDictionary* commentDict in statusModel.commentList) {
                 NSString* to = commentDict[@"to"];
@@ -124,7 +148,7 @@
                     commentTextStorage.linespacing = 2.0f;
                     commentTextStorage.textColor = RGB(40, 40, 40, 1);
                     commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, CGFLOAT_MAX);
-                    
+
                     CommentModel* commentModel_1 = [[CommentModel alloc] init];
                     commentModel_1.to = commentDict[@"from"];
                     commentModel_1.index = index;
@@ -132,16 +156,16 @@
                                                      range:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
-                    
+
                     CommentModel* commentModel_2 = [[CommentModel alloc] init];
                     commentModel_2.to = [NSString stringWithFormat:@"%@",commentDict[@"to"]];
                     commentModel_2.index = index;
-                    
+
                     [commentTextStorage lw_addLinkWithData:commentModel_2
                                                      range:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
-                    
+
                     [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                     linkColor:RGB(113, 129, 161, 1)
                                                highlightColor:RGB(0, 0, 0, 0.15)];
@@ -157,7 +181,7 @@
                     commentTextStorage.linespacing = 2.0f;
                     commentTextStorage.textColor = RGB(40, 40, 40, 1);
                     commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, CGFLOAT_MAX);
-                    
+
                     CommentModel* commentModel = [[CommentModel alloc] init];
                     commentModel.to = commentDict[@"from"];
                     commentModel.index = index;
@@ -165,7 +189,7 @@
                                                      range:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
-                    
+
                     [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                     linkColor:RGB(113, 129, 161, 1)
                                                highlightColor:RGB(0, 0, 0, 0.15)];
@@ -189,8 +213,8 @@
         [self addStorage:dateTextStorage];
         [self addStorages:commentTextStorages];
         [self addStorage:avatarStorage];
-        [self addStorage:menuStorage];
         [self addStorage:commentBgStorage];
+        [self addStorage:likeImageSotrage];
         [self addStorages:imageStorageArray];
         //一些其他属性
         self.menuPosition = menuPosition;

@@ -24,6 +24,7 @@
 
 #import "LWTextAttachment.h"
 #import <objc/runtime.h>
+#import "GallopUtils.h"
 
 @implementation LWTextAttachment
 
@@ -44,17 +45,15 @@
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone {
-    LWTextAttachment* attachment = [[[self class] allocWithZone:zone] init];
-    attachment.content = [self.content copy];
-    attachment.contentMode = self.contentMode;
-    attachment.contentEdgeInsets = self.contentEdgeInsets;
-    attachment.range = self.range;
-    attachment.frame = self.frame;
-    attachment.URL = [self.URL copy];
-    attachment.userInfo = [self.userInfo copy];
-    return attachment;
-}
+#pragma mark - NSCoding
+
+LWSERIALIZE_CODER_DECODER();
+
+
+#pragma mark - NSCopying
+
+LWSERIALIZE_COPY_WITH_ZONE()
+
 
 @end
 
@@ -74,16 +73,15 @@
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone {
-    LWTextHighlight* highlight = [[[self class] allocWithZone:zone] init];
-    highlight.content = [self.content copy];
-    highlight.range = self.range;
-    highlight.linkColor = [self.linkColor copy];
-    highlight.hightlightColor = [self.hightlightColor copy];
-    highlight.positions = [self.positions copy];
-    highlight.userInfo = [self.userInfo copy];
-    return highlight;
-}
+#pragma mark - NSCoding
+
+LWSERIALIZE_CODER_DECODER();
+
+
+#pragma mark - NSCopying
+
+LWSERIALIZE_COPY_WITH_ZONE()
+
 
 @end
 
@@ -100,42 +98,16 @@
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone {
-    LWTextBackgroundColor* backgroundColor = [[[self class] allocWithZone:zone] init];
-    backgroundColor.range = self.range;
-    backgroundColor.backgroundColor = [self.backgroundColor copy];
-    backgroundColor.userInfo = [self.userInfo copy];
-    return backgroundColor;
-}
-
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    unsigned int count = 0;
-    Ivar* vars = class_copyIvarList([self class], &count);
-    for (int i = 0; i < count; i ++) {
-        Ivar var = vars[i];
-        const char* varName = ivar_getName(var);
-        NSString* key = [NSString stringWithUTF8String:varName];
-        id value = [self valueForKey:key];
-        [aCoder encodeObject:value forKey:key];
-    }
-}
 
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
-    if (self) {
-        unsigned int count = 0;
-        Ivar* vars = class_copyIvarList([self class], &count);
-        for (int i = 0; i < count; i ++) {
-            Ivar var = vars[i];
-            const char* varName = ivar_getName(var);
-            NSString* key = [NSString stringWithUTF8String:varName];
-            id value = [aDecoder decodeObjectForKey:key];
-            [self setValue:value forKey:key];
-        }
-    }
-    return self;
-}
+LWSERIALIZE_CODER_DECODER();
+
+
+#pragma mark - NSCopying
+
+LWSERIALIZE_COPY_WITH_ZONE()
+
+
 
 
 @end

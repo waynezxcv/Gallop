@@ -149,7 +149,6 @@
 		01D14EB61CDCF8A00028714A /* LWTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextLayout.m; path = ../Gallop/CoreText/LWTextLayout.m; sourceTree = "<group>"; };
 		01D14EB71CDCF8A00028714A /* LWTextLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextLine.h; path = ../Gallop/CoreText/LWTextLine.h; sourceTree = "<group>"; };
 		01D14EB81CDCF8A00028714A /* LWTextLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextLine.m; path = ../Gallop/CoreText/LWTextLine.m; sourceTree = "<group>"; };
-		01D14EE51CDCF9D40028714A /* LWDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWDefine.h; path = ../Gallop/Utils/LWDefine.h; sourceTree = "<group>"; };
 		01D14EE81CDCF9D40028714A /* LWRunLoopTransactions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWRunLoopTransactions.h; path = ../Gallop/Utils/LWRunLoopTransactions.h; sourceTree = "<group>"; };
 		01D14EE91CDCF9D40028714A /* LWRunLoopTransactions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWRunLoopTransactions.m; path = ../Gallop/Utils/LWRunLoopTransactions.m; sourceTree = "<group>"; };
 		01D14EF21CDCFA780028714A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
@@ -443,7 +442,6 @@
 		B085B3431CB68D1000087739 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				01D14EE51CDCF9D40028714A /* LWDefine.h */,
 				B0A522E31CEA189000DC2D15 /* GallopUtils.h */,
 				B0A522E41CEA189000DC2D15 /* GallopUtils.m */,
 				B074BB551CEE151A003464B4 /* LWTextParser.h */,

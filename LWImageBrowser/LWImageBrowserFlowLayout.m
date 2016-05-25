@@ -7,7 +7,7 @@
 //
 
 #import "LWImageBrowserFlowLayout.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 @implementation LWImageBrowserFlowLayout

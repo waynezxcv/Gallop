@@ -24,6 +24,7 @@
 
 #import "LWTextRunDelegate.h"
 #import <objc/runtime.h>
+#import "GallopUtils.h"
 
 static void LWTextDeallocCallback(void *ref) {
     LWTextRunDelegate* self = (__bridge_transfer LWTextRunDelegate *)(ref);
@@ -59,6 +60,13 @@ static CGFloat LWTextWidthCallback(void *ref) {
     return CTRunDelegateCreate(&callbacks, (__bridge_retained void *)([self copy]));
 }
 
+#pragma mark - NSCoding
+
+LWSERIALIZE_CODER_DECODER();
+
+
+#pragma mark - NSCopying
+
 - (id)copyWithZone:(nullable NSZone *)zone {
     LWTextRunDelegate* delegate = [[[self class] allocWithZone:zone] init];
     delegate.ascent = self.ascent;
@@ -67,36 +75,5 @@ static CGFloat LWTextWidthCallback(void *ref) {
     delegate.userInfo = [self.userInfo copy];
     return delegate;
 }
-
-
-#pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    unsigned int count = 0;
-    Ivar* vars = class_copyIvarList([self class], &count);
-    for (int i = 0; i < count; i ++) {
-        Ivar var = vars[i];
-        const char* varName = ivar_getName(var);
-        NSString* key = [NSString stringWithUTF8String:varName];
-        id value = [self valueForKey:key];
-        [aCoder encodeObject:value forKey:key];
-    }
-}
-
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
-    if (self) {
-        unsigned int count = 0;
-        Ivar* vars = class_copyIvarList([self class], &count);
-        for (int i = 0; i < count; i ++) {
-            Ivar var = vars[i];
-            const char* varName = ivar_getName(var);
-            NSString* key = [NSString stringWithUTF8String:varName];
-            id value = [aDecoder decodeObjectForKey:key];
-            [self setValue:value forKey:key];
-        }
-    }
-    return self;
-}
-
 
 @end

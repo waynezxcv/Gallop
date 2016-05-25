@@ -8,7 +8,7 @@
 
 #import "LWImageBrowserModel.h"
 #import "SDWebImageManager.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 #define kImageBrowserWidth ([UIScreen mainScreen].bounds.size.width + 10.0f)

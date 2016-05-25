@@ -7,7 +7,7 @@
 //
 
 #import "LWAlertContentView.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 

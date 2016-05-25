@@ -9,7 +9,7 @@
 #import "LWActionSheetView.h"
 #import "UIImage+ImageEffects.h"
 #import "LWActionSheetTableViewCell.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 const CGFloat cellHeight = 60.0f;

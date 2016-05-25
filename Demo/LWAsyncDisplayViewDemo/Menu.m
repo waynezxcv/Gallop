@@ -14,7 +14,7 @@
 
 
 #import "Menu.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 @interface Menu ()
 

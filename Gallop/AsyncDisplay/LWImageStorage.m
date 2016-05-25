@@ -29,8 +29,6 @@
 #import <objc/runtime.h>
 #import "GallopUtils.h"
 
-
-
 @implementation LWImageStorage
 
 #pragma mark - Methods
@@ -46,19 +44,27 @@
     if (isCancelld()) {
         return;
     }
+    if ([self.contents isKindOfClass:[NSURL class]]) {
+        return;
+    }
     if ([self.contents isKindOfClass:[UIImage class]]) {
         CGContextSaveGState(context);
-        UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:self.frame
-                                                              cornerRadius:self.cornerRadius];
-        UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:self.frame];
-        [self.cornerBackgroundColor setFill];
-        [backgroundRect fill];
-        [cornerPath addClip];
-        [self.contents drawInRect:self.frame];
-        [self.cornerBorderColor setStroke];
-        [cornerPath stroke];
-        [cornerPath setLineWidth:self.cornerBorderWidth];
-        CGContextRestoreGState(context);
+        if (self.cornerRadius != 0) {
+            UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:self.frame
+                                                                  cornerRadius:self.cornerRadius];
+            UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:self.frame];
+            [self.cornerBackgroundColor setFill];
+            [backgroundRect fill];
+            [cornerPath addClip];
+            [self.contents drawInRect:self.frame];
+            [self.cornerBorderColor setStroke];
+            [cornerPath stroke];
+            [cornerPath setLineWidth:self.cornerBorderWidth];
+            CGContextRestoreGState(context);
+        }
+        else {
+            [self.contents drawInRect:self.frame];
+        }
     }
 }
 
@@ -74,111 +80,86 @@
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone {
-    LWImageStorage* imamgeStorage = [super copyWithZone:zone];
-    imamgeStorage.contents = [self.contents copy];
-    imamgeStorage.placeholder = [self.placeholder copy];
-    imamgeStorage.fadeShow = self.fadeShow;
-    imamgeStorage.userInteractionEnabled = self.userInteractionEnabled;
-    return imamgeStorage;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
-
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    unsigned int count = 0;
-    Ivar* vars = class_copyIvarList([self class], &count);
-    for (int i = 0; i < count; i ++) {
-        Ivar var = vars[i];
-        const char* varName = ivar_getName(var);
-        NSString* key = [NSString stringWithUTF8String:varName];
-        id value = [self valueForKey:key];
-        [aCoder encodeObject:value forKey:key];
-    }
-}
 
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
-    if (self) {
-        unsigned int count = 0;
-        Ivar* vars = class_copyIvarList([self class], &count);
-        for (int i = 0; i < count; i ++) {
-            Ivar var = vars[i];
-            const char* varName = ivar_getName(var);
-            NSString* key = [NSString stringWithUTF8String:varName];
-            id value = [aDecoder decodeObjectForKey:key];
-            [self setValue:value forKey:key];
-        }
-    }
-    return self;
-}
+LWSERIALIZE_CODER_DECODER();
+
+
+#pragma mark - NSCopying
+
+LWSERIALIZE_COPY_WITH_ZONE()
+
 
 @end
 
 @implementation UIView (LWImageStorage)
 
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
+    if ([imageStorage.contents isKindOfClass:[UIImage class]]) {
+        return;
+    }
+    if ([imageStorage.contents isKindOfClass:[NSString class]]) {
+        imageStorage.contents = [NSURL URLWithString:imageStorage.contents];
+    }
     [self layoutWithStorage:imageStorage];
     [self.layer removeAnimationForKey:@"fadeshowAnimation"];
     __weak typeof(self) weakSelf = self;
     [self.layer sd_setImageWithURL:(NSURL *)imageStorage.contents
                   placeholderImage:imageStorage.placeholder
-                           options:SDWebImageAvoidAutoSetImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                               __strong typeof(weakSelf) strongSelf = weakSelf;
-                               if (image) {
-                                   int width = imageStorage.frame.size.width;
-                                   int height = imageStorage.frame.size.height;
-                                   CGFloat scale = (height / width) / (strongSelf.bounds.size.height / strongSelf.bounds.size.width);
-                                   if (scale < 0.99 || isnan(scale)) {
-                                       strongSelf.contentMode = UIViewContentModeScaleAspectFill;
-                                       strongSelf.layer.contentsRect = CGRectMake(0, 0, 1, 1);
-                                   } else {
-                                       strongSelf.contentMode = UIViewContentModeScaleAspectFill;
-                                       strongSelf.layer.contentsRect = CGRectMake(0, 0, 1, (float)width / height);
-                                   }
-                                   if (imageStorage.cornerRadius != 0) {
-                                       CGFloat scale = [GallopUtils contentsScale];
-                                       CGSize size = imageStorage.frame.size;
-                                       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                                           UIGraphicsBeginImageContextWithOptions(size,YES,scale);
-                                           if (nil == UIGraphicsGetCurrentContext()) {
-                                               return;
-                                           }
-                                           UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height)
-                                                                                                 cornerRadius:imageStorage.cornerRadius];
-                                           UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, size.width, size.height)];
-                                           if (imageStorage.cornerBackgroundColor) {
-                                               [imageStorage.cornerBackgroundColor setFill];
-                                           }
-                                           [backgroundRect fill];
-                                           [cornerPath addClip];
-                                           [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-                                           if (imageStorage.cornerBorderColor) {
-                                               [imageStorage.cornerBorderColor setStroke];
-                                           }
-                                           [cornerPath stroke];
-                                           [cornerPath setLineWidth:imageStorage.cornerBorderWidth];
-                                           id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
-                                           UIGraphicsEndImageContext();
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               strongSelf.layer.contents = processedImageRef;
-                                           });
-                                       });
-                                   } else {
-                                       strongSelf.layer.contents = (__bridge id _Nullable)(image.CGImage);
-                                   }
-                                   if (imageStorage.fadeShow) {
-                                       CATransition* transition = [CATransition animation];
-                                       transition.duration = 0.15;
-                                       transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-                                       transition.type = kCATransitionFade;
-                                       [strongSelf.layer addAnimation:transition forKey:@"fadeshowAnimation"];
-                                   }
-                               }
-                           }];
+                           options:SDWebImageAvoidAutoSetImage
+                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                             __strong typeof(weakSelf) strongSelf = weakSelf;
+                             if (image) {
+                                 int width = imageStorage.frame.size.width;
+                                 int height = imageStorage.frame.size.height;
+                                 CGFloat scale = (height / width) / (strongSelf.bounds.size.height / strongSelf.bounds.size.width);
+                                 if (scale < 0.99 || isnan(scale)) {
+                                     strongSelf.contentMode = UIViewContentModeScaleAspectFill;
+                                     strongSelf.layer.contentsRect = CGRectMake(0, 0, 1, 1);
+                                 } else {
+                                     strongSelf.contentMode = UIViewContentModeScaleAspectFill;
+                                     strongSelf.layer.contentsRect = CGRectMake(0, 0, 1, (float)width / height);
+                                 }
+                                 if (imageStorage.cornerRadius != 0) {
+                                     CGFloat scale = [GallopUtils contentsScale];
+                                     CGSize size = imageStorage.frame.size;
+                                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                                         UIGraphicsBeginImageContextWithOptions(size,YES,scale);
+                                         if (nil == UIGraphicsGetCurrentContext()) {
+                                             return;
+                                         }
+                                         UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height)
+                                                                                               cornerRadius:imageStorage.cornerRadius];
+                                         UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, size.width, size.height)];
+                                         if (imageStorage.cornerBackgroundColor) {
+                                             [imageStorage.cornerBackgroundColor setFill];
+                                         }
+                                         [backgroundRect fill];
+                                         [cornerPath addClip];
+                                         [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+                                         if (imageStorage.cornerBorderColor) {
+                                             [imageStorage.cornerBorderColor setStroke];
+                                         }
+                                         [cornerPath stroke];
+                                         [cornerPath setLineWidth:imageStorage.cornerBorderWidth];
+                                         id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
+                                         UIGraphicsEndImageContext();
+                                         dispatch_sync(dispatch_get_main_queue(), ^{
+                                             strongSelf.layer.contents = processedImageRef;
+                                         });
+                                     });
+                                 } else {
+                                     strongSelf.layer.contents = (__bridge id _Nullable)(image.CGImage);
+                                 }
+                                 if (imageStorage.fadeShow) {
+                                     CATransition* transition = [CATransition animation];
+                                     transition.duration = 0.15;
+                                     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+                                     transition.type = kCATransitionFade;
+                                     [strongSelf.layer addAnimation:transition forKey:@"fadeshowAnimation"];
+                                 }
+                             }
+                         }];
 }
 
 - (void)layoutWithStorage:(LWImageStorage *)imageStorage {

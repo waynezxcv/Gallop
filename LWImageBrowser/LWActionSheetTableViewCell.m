@@ -7,7 +7,7 @@
 //
 
 #import "LWActionSheetTableViewCell.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 @interface LWActionSheetTableViewCell ()

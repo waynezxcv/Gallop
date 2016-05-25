@@ -25,7 +25,8 @@
 
 
 #import <UIKit/UIKit.h>
-#import "LWDefine.h"
+#import "GallopUtils.h"
+
 
 @class LWFlag;
 @protocol LWAsyncDisplayLayerDelegate;

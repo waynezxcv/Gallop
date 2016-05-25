@@ -25,6 +25,7 @@
 #import "LWTextLine.h"
 #import "LWTextAttachment.h"
 #import <objc/runtime.h>
+#import "GallopUtils.h"
 
 @interface LWTextLine ()
 
@@ -225,65 +226,13 @@
 }
 
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    unsigned int count = 0;
-    Ivar* vars = class_copyIvarList([self class], &count);
-    for (int i = 0; i < count; i ++) {
-        Ivar var = vars[i];
-        const char* varName = ivar_getName(var);
-        NSString* key = [NSString stringWithUTF8String:varName];
-        id value = [self valueForKey:key];
-        [aCoder encodeObject:value forKey:key];
-    }
-}
 
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
-    if (self) {
-        unsigned int count = 0;
-        Ivar* vars = class_copyIvarList([self class], &count);
-        for (int i = 0; i < count; i ++) {
-            Ivar var = vars[i];
-            const char* varName = ivar_getName(var);
-            NSString* key = [NSString stringWithUTF8String:varName];
-            id value = [aDecoder decodeObjectForKey:key];
-            [self setValue:value forKey:key];
-        }
-    }
-    return self;
-}
+LWSERIALIZE_CODER_DECODER();
 
 
-#pragma mark - NSCoping
+#pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone *)zone {
-    LWTextLine* textLine = [[[self class] allocWithZone:zone] init];
-    textLine.CTLine = self.CTLine;
-    textLine.range = self.range;
-    textLine.frame = self.frame;
-    textLine.size = self.size;
-    textLine.width = self.width;
-    textLine.height = self.height;
-    textLine.top = self.top;
-    textLine.bottom = self.bottom;
-    textLine.left = self.left;
-    textLine.right = self.right;
-    textLine.lineOrigin = self.lineOrigin;
-    textLine.ascent = self.ascent;
-    textLine.descent = self.descent;
-    textLine.leading = self.leading;
-    textLine.lineWidth = self.lineWidth;
-    textLine.trailingWhitespaceWidth = self.trailingWhitespaceWidth;
-    textLine.index = self.index;
-    textLine.row  = self.row;
-    textLine.attachments = [self.attachments mutableCopy];
-    textLine.attachmentRanges = [self.attachmentRanges mutableCopy];
-    textLine.attachmentRects = [self.attachmentRects mutableCopy];
-    return textLine;
-}
+LWSERIALIZE_COPY_WITH_ZONE()
 
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
 
 @end

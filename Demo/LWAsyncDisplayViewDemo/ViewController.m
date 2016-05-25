@@ -20,7 +20,7 @@
 #import "LWImageBrowser.h"
 #import "TableViewCell.h"
 #import "TableViewHeader.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 #import "LWAlchemy.h"
 #import "StatusModel.h"
 #import "CellLayout.h"

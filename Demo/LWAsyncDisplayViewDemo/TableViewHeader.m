@@ -7,7 +7,7 @@
 //
 
 #import "TableViewHeader.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 #import "UIImageView+WebCache.h"
 
 

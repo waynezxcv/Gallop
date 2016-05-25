@@ -24,7 +24,7 @@
 
 #import "LWAsyncDisplayLayer.h"
 #import "GallopUtils.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 @interface LWAsyncDisplayLayer ()

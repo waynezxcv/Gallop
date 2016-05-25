@@ -7,7 +7,7 @@
 //
 
 #import "LWImageBrowserCell.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 

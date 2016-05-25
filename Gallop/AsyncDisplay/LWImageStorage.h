@@ -25,7 +25,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LWStorage.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 /***  Image模型  ***/
 @interface LWImageStorage : LWStorage <NSCopying,NSCoding>
@@ -38,7 +38,6 @@
 
 /*** 绘制 ***/
 - (void)lw_drawInContext:(CGContextRef)context isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld;
-;
 
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
 

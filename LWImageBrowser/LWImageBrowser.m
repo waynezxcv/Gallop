@@ -12,7 +12,7 @@
 #import "UIImage+ImageEffects.h"
 #import "LWImageBrowserButton.h"
 #import "LWActionSheetView.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
 
 
 #define kPageControlHeight 40.0f

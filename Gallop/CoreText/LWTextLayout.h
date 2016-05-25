@@ -27,13 +27,14 @@
 #import <CoreText/CoreText.h>
 #import "LWTextContainer.h"
 #import "LWTextAttachment.h"
-#import "LWDefine.h"
+#import "GallopUtils.h"
+
 
 @class LWTextLine;
 
 
 
-@interface LWTextLayout : NSObject<NSCopying,NSMutableCopying,NSCoding>
+@interface LWTextLayout : NSObject<NSCopying,NSCoding>
 
 @property (nonatomic,strong,readonly) LWTextContainer* container;
 @property (nonatomic,strong,readonly) NSAttributedString* text;

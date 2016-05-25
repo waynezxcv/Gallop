@@ -32,7 +32,7 @@
 
 //*** LWAsncDisplayView的模型，是LWStorage的容器  ****//
 
-@interface LWLayout : NSObject<NSCopying,NSMutableCopying,NSCoding>
+@interface LWLayout : NSObject<NSCopying,NSCoding>
 
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextStorage *>* textStorages;
 @property (nonatomic,strong,readonly) NSMutableArray<LWImageStorage *>* imageStorages;
