@@ -31,8 +31,6 @@ Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文
 
 ## Usage
 
- ![image](https://github.com/waynezxcv/Gallop/raw/master/pics/1.jpg)
-
 * **API Quickstart**
 
 
@@ -130,9 +128,6 @@ asyncDisplayView.layout = layout;
 
 * **如果需要更加详细的内容，请看各个头文件和Demo，有详细的注释**
 *  Demo中有用Gallop构建的微信朋友圈,下载Demo真机调试。
-
-![image](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
-![image](https://github.com/waynezxcv/Gallop/raw/master/pics/3.PNG)
 
 
 
