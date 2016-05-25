@@ -62,7 +62,7 @@
                 [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.cellLayout atIndex:i];
             }
         }
-
+        
     }
 }
 
@@ -122,11 +122,10 @@
         //绘制分割线
         CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
         CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
-        CGContextSetLineWidth(context, 0.3f);
-        CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
+        CGContextSetLineWidth(context, 0.2f);
+        CGContextSetStrokeColorWithColor(context,RGB(220.0f, 220.0f, 220.0f, 1).CGColor);
         CGContextStrokePath(context);
-
-
+        
         if ([self.cellLayout.statusModel.type isEqualToString:@"website"]) {
             CGContextAddRect(context, self.cellLayout.websiteRect);
             CGContextSetFillColorWithColor(context, RGB(240, 240, 240, 1).CGColor);
