@@ -391,9 +391,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"to":@"waynezxcv",
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。并且支持图文混排[face]和点击链接#Waynezxcv#.Hello，world"}],
                           @"isLike":@(YES),
-                          @"likeList":@[@"waynezxcv","G-Dragon"]
-                          
-                          },
+                          @"likeList":@[@"waynezxcv",@"G-Dragon"]},
                         @{@"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
                           @"content":@"出国留学的儿子为思念自己的家人们寄来一个用自己照片做成的人形立牌",
