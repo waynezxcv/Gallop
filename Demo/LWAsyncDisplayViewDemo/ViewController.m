@@ -67,7 +67,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidAppearNotifications:)
                                                  name:UIKeyboardWillShowNotification object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidHidenNotifications:)
                                                  name:UIKeyboardWillHideNotification object:nil];
@@ -78,7 +78,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidHideNotification
                                                   object:nil];
@@ -125,7 +125,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         [self.dataSource replaceObjectAtIndex:indexPath.row withObject:layout];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
                               withRowAnimation:UITableViewRowAnimationAutomatic];
-
+        
     }
 }
 
@@ -406,7 +406,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv",@"伊布拉希莫维奇",@"权志龙",@"郜林",@"扎克伯格"]},
-
+                        
                         @{@"type":@"website",
                           @"name":@"Ronaldo",
                           @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
@@ -415,19 +415,13 @@ const CGFloat kRefreshBoundary = 170.0f;
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hgxij20lo0egwgc.jpg"],
                           @"detail":@"LWAlchemy,A fast and lightweight ORM framework for Cocoa and Cocoa Touch.",
                           @"statusID":@"1",
-                          @"commentList":@[@{@"from":@"SIZE潮流生活",
+                          @"commentList":@[@{@"from":@"伊布拉西莫维奇",
                                              @"to":@"",
-                                             @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
-                                           @{@"from":@"waynezxcv",
-                                             @"to":@"SIZE潮流生活",
-                                             @"content":@"哈哈哈哈"},
-                                           @{@"from":@"SIZE潮流生活",
-                                             @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                                             @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
                           @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv"]},
-
-
+                          @"likeList":@[@"waynezxcv",@"Gallop"]},
+                        
+                        
                         @{@"type":@"image",
                           @"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
@@ -441,12 +435,18 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww2.sinaimg.cn/mw690/8245bf01jw1f2jhh4mutgj20jg0ly0xt.jpg",
                                     @"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh4vc7pj20jg0px41m.jpg",],
                           @"statusID":@"2",
-                          @"commentList":@[@{@"from":@"waynezxcv",
-                                             @"to":@"妖妖小精",
-                                             @"content":@"[心]"}],
+                          @"commentList":@[@{@"from":@"炉石传说",
+                                             @"to":@"",
+                                             @"content":@"#炉石传说#"},
+                                           @{@"from":@"waynezxcv",
+                                             @"to":@"SIZE潮流生活",
+                                             @"content":@"哈哈哈哈"},
+                                           @{@"from":@"SIZE潮流生活",
+                                             @"to":@"waynezxcv",
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
-                          @"likeList":@[]},
-
+                          @"likeList":@[@"waynezxcv"]},
+                        
                         @{@"type":@"image",
                           @"name":@"Instagram热门",
                           @"avatar":@"http://tp4.sinaimg.cn/5074408479/50/5706839595/0",
@@ -460,10 +460,16 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww4.sinaimg.cn/mw690/005xpHs3gw1f2jg178dxdj30am0gowgv.jpg",
                                     @"http://ww2.sinaimg.cn/mw690/005xpHs3gw1f2jg17c5urj30b40ghjto.jpg"],
                           @"statusID":@"3",
+                          @"commentList":@[@{@"from":@"waynezxcv",
+                                             @"to":@"SIZE潮流生活",
+                                             @"content":@"哈哈哈哈"},
+                                           @{@"from":@"SIZE潮流生活",
+                                             @"to":@"waynezxcv",
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
-                          @"likeList":@[]},
-
-
+                          @"likeList":@[@"Tim Cook"]},
+                        
+                        
                         @{@"type":@"image",
                           @"name":@"头条新闻",
                           @"avatar":@"http://tp1.sinaimg.cn/1618051664/50/5735009977/0",
@@ -471,10 +477,16 @@ const CGFloat kRefreshBoundary = 170.0f;
                           @"date":@"1459668442",
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/60718250jw1f2jg46smtmj20go0go77r.jpg"],
                           @"statusID":@"4",
+                          @"commentList":@[@{@"from":@"waynezxcv",
+                                             @"to":@"SIZE潮流生活",
+                                             @"content":@"哈哈哈哈"},
+                                           @{@"from":@"SIZE潮流生活",
+                                             @"to":@"waynezxcv",
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
-                          @"likeList":@[]},
-
-
+                          @"likeList":@[@"Tim Cook"]},
+                        
+                        
                         @{@"type":@"image",
                           @"name":@"Kindle中国",
                           @"avatar":@"http://tp1.sinaimg.cn/3262223112/50/5684307907/1",
@@ -483,11 +495,14 @@ const CGFloat kRefreshBoundary = 170.0f;
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/c2719308gw1f2hav54htyj20dj0l00uk.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/c2719308gw1f2hav47jn7j20dj0j341h.jpg"],
                           @"statusID":@"6",
+                          @"commentList":@[@{@"from":@"Kindle中国",
+                                             @"to":@"",
+                                             @"content":@"统一回复,使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
                           @"isLike":@(NO),
-                          @"likeList":@[]},
-
-
-
+                          @"likeList":@[@"waynezxcv"]},
+                        
+                        
+                        
                         @{@"type":@"image",
                           @"name":@"G-SHOCK",
                           @"avatar":@"http://tp3.sinaimg.cn/1595142730/50/5691224157/1",
@@ -495,11 +510,20 @@ const CGFloat kRefreshBoundary = 170.0f;
                           @"date":@"1459668442",
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/5f13f24ajw1f2hc1r6j47j20dc0dc0t4.jpg"],
                           @"statusID":@"7",
+                          @"commentList":@[@{@"from":@"SIZE潮流生活",
+                                             @"to":@"",
+                                             @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
+                                           @{@"from":@"waynezxcv",
+                                             @"to":@"SIZE潮流生活",
+                                             @"content":@"哈哈哈哈"},
+                                           @{@"from":@"SIZE潮流生活",
+                                             @"to":@"waynezxcv",
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
-                          @"likeList":@[]},
-
-
-
+                          @"likeList":@[@"waynezxcv"]},
+                        
+                        
+                        
                         @{@"type":@"image",
                           @"name":@"型格志style",
                           @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
@@ -515,11 +539,14 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jem32ccrj30xm0sdwjt.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jelyhutwj30fz0fxwfr.jpg",],
                           @"statusID":@"8",
+                          @"commentList":@[@{@"from":@"SIZE潮流生活",
+                                             @"to":@"waynezxcv",
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
-                          @"likeList":@[]},
-
-
-
+                          @"likeList":@[@"waynezxcv"]},
+                        
+                        
+                        
                         @{@"type":@"image",
                           @"name":@"数字尾巴",
                           @"avatar":@"http://tp1.sinaimg.cn/1726544024/50/5630520790/1",
@@ -527,10 +554,19 @@ const CGFloat kRefreshBoundary = 170.0f;
                           @"date":@"1459668442",
                           @"imgs":@[@"http://ww3.sinaimg.cn/mw690/66e8f898gw1f2jck6jnckj20go0fwdhb.jpg"],
                           @"statusID":@"9",
+                          @"commentList":@[@{@"from":@"SIZE潮流生活",
+                                             @"to":@"",
+                                             @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
+                                           @{@"from":@"waynezxcv",
+                                             @"to":@"SIZE潮流生活",
+                                             @"content":@"哈哈哈哈"},
+                                           @{@"from":@"SIZE潮流生活",
+                                             @"to":@"waynezxcv",
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
-                          @"likeList":@[]},
-
-
+                          @"likeList":@[@"waynezxcv"]},
+                        
+                        
                         @{@"type":@"image",
                           @"name":@"欧美街拍XOXO",
                           @"avatar":@"http://tp4.sinaimg.cn/1708004923/50/1283204657/0",
@@ -541,8 +577,11 @@ const CGFloat kRefreshBoundary = 170.0f;
                                     @"http://ww2.sinaimg.cn/mw690/65ce163bjw1f2jdkvwepij20go0clgnd.jpg",
                                     @"http://ww4.sinaimg.cn/mw690/65ce163bjw1f2jdl2ao77j20ci0gojsw.jpg",],
                           @"statusID":@"10",
+                          @"commentList":@[@{@"from":@"waynezxcv",
+                                             @"to":@"SIZE潮流生活",
+                                             @"content":@"哈哈哈哈"}],
                           @"isLike":@(NO),
-                          @"likeList":@[]},
+                          @"likeList":@[@"waynezxcv"]},
                         ];
     return _fakeDatasource;
 }
