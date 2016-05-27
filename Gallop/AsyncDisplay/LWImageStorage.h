@@ -38,7 +38,6 @@
 
 /*** 绘制 ***/
 - (void)lw_drawInContext:(CGContextRef)context isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld;
-
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
 
 @end

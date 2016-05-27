@@ -44,8 +44,21 @@
                                    alignment:LWTextAttachAlignmentTop
                                        range:NSMakeRange(5, 1)];
 
+        [textStorage lw_addLinkWithData:@"iPhone."
+                                  range:NSMakeRange(textStorage.text.length - 7,8)
+                              linkColor:[UIColor greenColor]
+                         highLightColor:RGB(0, 0, 0, 0.35f)];
+
         [textStorage lw_addLinkWithData:@"Easy"
                                   range:NSMakeRange(0, 5)
+                              linkColor:[UIColor blueColor]
+                         highLightColor:RGB(0, 0, 0, 0.35f)];
+
+        [textStorage lw_addLinkForWholeTextStorageWithData:@"whole" linkColor:nil highLightColor:RGB(0, 0, 0, 0.15f)];
+
+
+        [textStorage lw_addLinkWithData:@"capable"
+                                  range:NSMakeRange(17, 7)
                               linkColor:[UIColor blueColor]
                          highLightColor:RGB(0, 0, 0, 0.35f)];
 
@@ -54,15 +67,6 @@
                               linkColor:[UIColor greenColor]
                          highLightColor:RGB(0, 0, 0, 0.35f)];
 
-        [textStorage lw_addLinkWithData:@"capable"
-                                  range:NSMakeRange(17, 7)
-                              linkColor:[UIColor blueColor]
-                         highLightColor:RGB(0, 0, 0, 0.35f)];
-
-        [textStorage lw_addLinkWithData:@"iPhone."
-                                  range:NSMakeRange(textStorage.text.length - 7,8)
-                              linkColor:[UIColor greenColor]
-                         highLightColor:RGB(0, 0, 0, 0.35f)];
         [layout addStorage:textStorage];
 
         LWImageStorage* imamgeStorage = [[LWImageStorage alloc] init];
@@ -110,7 +114,7 @@
     return _asyncDisplayView;
 }
 
-- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data {
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
     if ([data isKindOfClass:[NSString class]]) {
         [LWAlertView shoWithMessage:data];
     }

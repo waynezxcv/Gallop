@@ -30,6 +30,9 @@
 
 @interface LWStorage : NSObject<NSCopying,NSCoding>
 
+
+
+@property (nonatomic,assign) NSInteger tag;
 @property (nonatomic,assign) BOOL clipsToBounds;
 @property (nonatomic,getter = isOpaque) BOOL opaque;
 @property (nonatomic,getter = isHidden) BOOL hidden;

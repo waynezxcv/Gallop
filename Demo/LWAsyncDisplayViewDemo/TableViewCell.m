@@ -53,6 +53,7 @@
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                      touch:(UITouch *)touch{
+    NSLog(@"tag:%ld",imageStorage.tag);//这里可以通过判断Tag来执行相应的回调。
     CGPoint point = [touch locationInView:self];
     for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
@@ -62,12 +63,12 @@
                 [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.cellLayout atIndex:i];
             }
         }
-        
     }
 }
 
 /***  点击文本链接 ***/
-- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data {
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
+    NSLog(@"tag:%ld",textStorage.tag);//这里可以通过判断Tag来执行相应的回调。
     if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLinkWithData:)] &&
         [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
         [self.delegate tableViewCell:self didClickedLinkWithData:data];
@@ -125,7 +126,7 @@
         CGContextSetLineWidth(context, 0.2f);
         CGContextSetStrokeColorWithColor(context,RGB(220.0f, 220.0f, 220.0f, 1).CGColor);
         CGContextStrokePath(context);
-        
+
         if ([self.cellLayout.statusModel.type isEqualToString:@"website"]) {
             CGContextAddRect(context, self.cellLayout.websiteRect);
             CGContextSetFillColorWithColor(context, RGB(240, 240, 240, 1).CGColor);

@@ -120,6 +120,76 @@
 
 #pragma mark - Link & Attachment
 
+- (void)addLinkForWholeTextWithData:(id)data linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor {
+    LWTextHighlight* highlight = [[LWTextHighlight alloc] init];
+    highlight.hightlightColor = highLightColor;
+    highlight.linkColor = linkColor;
+    highlight.content = data;
+    highlight.userInfo = @{@"type":@"wholeText"};
+    NSRange range;
+    NSMutableArray* existLinkRanges = [[NSMutableArray alloc] init];
+    CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFTypeRef)self);
+    CGMutablePathRef cgPath = CGPathCreateMutable();
+    CGPathAddRect(cgPath, NULL, CGRectMake(0, 0,CGFLOAT_MAX,CGFLOAT_MAX));
+    CTFrameRef ctFrame = CTFramesetterCreateFrame(ctFrameSetter,CFRangeMake(0, self.length),cgPath,NULL);
+    CFRelease(cgPath);
+    CFArrayRef ctLines = CTFrameGetLines(ctFrame);
+    CFIndex lineCount = CFArrayGetCount(ctLines);
+    for (NSUInteger i = 0; i < lineCount; i++) {
+        CTLineRef ctLine = CFArrayGetValueAtIndex(ctLines, i);
+        CFArrayRef ctRuns = CTLineGetGlyphRuns(ctLine);
+        CFIndex runCount = CFArrayGetCount(ctRuns);
+        if (!ctRuns || runCount == 0){
+            continue;
+        }
+        for (NSUInteger i = 0; i < runCount; i ++) {
+            CTRunRef run = CFArrayGetValueAtIndex(ctRuns, i);
+            CFIndex glyphCount = CTRunGetGlyphCount(run);
+            if (glyphCount == 0) {
+                continue;
+            }
+            NSDictionary* attributes = (id)CTRunGetAttributes(run);
+            LWTextHighlight* highlight = [attributes objectForKey:LWTextLinkAttributedName];
+            if (!highlight) {
+                continue;
+            }
+            NSRange existLinkRange = highlight.range;
+            NSValue* rValue = [NSValue valueWithRange:existLinkRange];
+            if (![existLinkRanges containsObject:rValue]) {
+                [existLinkRanges addObject:rValue];
+            }
+        }
+    }
+    if (existLinkRanges.count != 0) {
+        for (NSInteger i = 0; i < existLinkRanges.count; i ++) {
+            NSValue* value = existLinkRanges[i];
+            NSRange currentRange = [value rangeValue];
+            NSRange nextRange;
+            if (i + 1 < existLinkRanges.count) {
+                nextRange = [existLinkRanges[i + 1] rangeValue];
+                NSInteger length = nextRange.location - (currentRange.location + currentRange.length) - 1;
+                NSInteger location = (currentRange.location + currentRange.length);
+                range = NSMakeRange(location,length);
+            } else {
+                NSInteger location = (currentRange.location + currentRange.length);
+                NSInteger length = self.length - (currentRange.location + currentRange.length);
+                range = NSMakeRange(location,length);
+            }
+            [self setAttribute:LWTextLinkAttributedName value:highlight range:range];
+            if (linkColor) {
+                [self setAttribute:NSForegroundColorAttributeName value:linkColor range:range];
+            }
+        }
+    }
+    else {
+        NSRange range = NSMakeRange(0, self.length);
+        [self setAttribute:LWTextLinkAttributedName value:highlight range:range];
+        if (linkColor) {
+            [self setAttribute:NSForegroundColorAttributeName value:linkColor range:range];
+        }
+    }
+}
+
 - (void)addLinkWithData:(id)data range:(NSRange)range linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor {
     LWTextHighlight* highlight = [[LWTextHighlight alloc] init];
     highlight.hightlightColor = highLightColor;

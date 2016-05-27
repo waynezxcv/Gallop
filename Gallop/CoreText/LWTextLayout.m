@@ -110,7 +110,6 @@
         if (!ctRuns || runCount == 0){
             continue;
         }
-
         for (NSUInteger i = 0; i < runCount; i ++) {
             CTRunRef run = CFArrayGetValueAtIndex(ctRuns, i);
             CFIndex glyphCount = CTRunGetGlyphCount(run);
@@ -120,9 +119,21 @@
             NSDictionary* attributes = (id)CTRunGetAttributes(run);
             LWTextHighlight* highlight = [attributes objectForKey:LWTextLinkAttributedName];
             if (highlight) {
-                NSArray* highlightPositions = [self _highlightPositionsWithCtFrame:ctFrame range:highlight.range];
-                highlight.positions = highlightPositions;
-                if (![highlights containsObject:highlight]) {
+                if ([highlight.userInfo[@"type"] isEqualToString:@"wholeText"]) {
+                    NSArray* highlightPositions = @[[NSValue valueWithCGRect:CGRectMake(cgPathBox.origin.x, cgPathBox.origin.y,cgPathBox.size.width,suggestSize.height)]];
+                    highlight.positions = highlightPositions;
+                }
+                else {
+                    NSArray* highlightPositions = [self _highlightPositionsWithCtFrame:ctFrame range:highlight.range];
+                    highlight.positions = highlightPositions;
+                }
+                bool isContain = NO;
+                for (LWTextHighlight* one in highlights) {
+                    if ([one isEqual:highlight]) {
+                        isContain = YES;
+                    }
+                }
+                if (!isContain) {
                     [highlights addObject:highlight];
                 }
             }
@@ -214,7 +225,6 @@
     }
     return layout;
 }
-
 
 - (id)init {
     self = [super init];

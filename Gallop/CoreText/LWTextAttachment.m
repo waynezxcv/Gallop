@@ -73,6 +73,23 @@ LWSERIALIZE_COPY_WITH_ZONE()
     return self;
 }
 
+- (NSUInteger)hash {
+    long v1 = (long)((__bridge void *)self.content);
+    long v2 = (long)[NSValue valueWithRange:self.range];
+    return v1 ^ v2;
+}
+
+- (BOOL)isEqual:(id)object{
+    if (self == object) {
+        return YES;
+    }
+    if (![object isMemberOfClass:self.class]){
+        return NO;
+    }
+    LWTextHighlight* other = object;
+    return other.content == _content && [NSValue valueWithRange:other.range] == [NSValue valueWithRange:self.range];
+}
+
 #pragma mark - NSCoding
 
 LWSERIALIZE_CODER_DECODER();

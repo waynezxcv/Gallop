@@ -97,6 +97,14 @@ LWSERIALIZE_COPY_WITH_ZONE()
 
 
 #pragma mark - Methods
+/***  为整个文本添加链接  ***/
+- (void)lw_addLinkForWholeTextStorageWithData:(id)data
+                                    linkColor:(UIColor *)linkColor
+                               highLightColor:(UIColor *)highLightColor {
+    [self.attributedText addLinkForWholeTextWithData:data linkColor:linkColor highLightColor:highLightColor];
+    [self _creatTextLayout];
+}
+
 /***  为指定位置的文本添加链接  ***/
 - (void)lw_addLinkWithData:(id)data range:(NSRange)range linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor {
     [self.attributedText addLinkWithData:data range:range linkColor:linkColor highLightColor:highLightColor];

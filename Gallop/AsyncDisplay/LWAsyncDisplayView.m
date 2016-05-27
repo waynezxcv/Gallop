@@ -168,9 +168,9 @@
     }
 }
 
-
 #pragma mark - Touch
 - (LWTextHighlight *)_isNeedShowHighlight:(LWTextStorage *)textStorage touchPoint:(CGPoint)touchPoint {
+    LWTextHighlight* wholeTextHighlight = nil;
     if ([textStorage isKindOfClass:[LWTextStorage class]]) {
         CGPoint adjustPosition = textStorage.frame.origin;
         for (LWTextHighlight* aHighlight in textStorage.textLayout.textHighlights) {
@@ -181,13 +181,18 @@
                                                rect.size.width,
                                                rect.size.height);
                 if (CGRectContainsPoint(adjustRect, touchPoint)) {
-                    return aHighlight;
+                    if (![aHighlight.userInfo[@"type"] isEqualToString:@"wholeText"]) {
+                        return aHighlight;
+                    } else {
+                        wholeTextHighlight = aHighlight;
+                    }
                 }
             }
         }
     }
-    return nil;
+    return wholeTextHighlight;
 }
+
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     BOOL found = NO;
@@ -254,8 +259,8 @@
         }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
             if (_highlight) {
-                if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedLinkWithfData:)]) {
-                    [self.delegate lwAsyncDisplayView:self didCilickedLinkWithfData:_highlight.content];
+                if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedTextStorage:linkdata:)]) {
+                    [self.delegate lwAsyncDisplayView:self didCilickedTextStorage:textStorage linkdata:_highlight.content];
                 }
             }
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

@@ -39,12 +39,12 @@
 
 #pragma mark - Link & Attachment
 - (void)addLinkWithData:(id)data range:(NSRange)range linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor;
+- (void)addLinkForWholeTextWithData:(id)data linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor;
 + (NSMutableAttributedString *)lw_textAttachmentStringWithContent:(id)content
                                                       contentMode:(UIViewContentMode)contentMode
                                                            ascent:(CGFloat)ascent
                                                           descent:(CGFloat)descent
                                                             width:(CGFloat)width;
-
 + (NSMutableAttributedString *)lw_textAttachmentStringWithContent:(id)content
                                                          userInfo:(NSDictionary *)userInfo
                                                       contentMode:(UIViewContentMode)contentMode

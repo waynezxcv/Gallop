@@ -35,6 +35,7 @@
         avatarStorage.fadeShow = YES;
         avatarStorage.clipsToBounds = NO;
         avatarStorage.frame = CGRectMake(10, 20, 40, 40);
+        avatarStorage.tag = 9;
 
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
@@ -56,7 +57,6 @@
         [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
-
         //发布的图片模型 imgsStorage
         CGFloat imageWidth = (SCREEN_WIDTH - 110.0f)/3.0f;
         NSInteger imageCount = [statusModel.imgs count];
@@ -73,6 +73,7 @@
                 NSString* imagePositionString = NSStringFromCGRect(imageRect);
                 [imagePositionArray addObject:imagePositionString];
                 LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+                imageStorage.tag = 0;
                 imageStorage.frame = imageRect;
                 NSString* URLString = [statusModel.imgs objectAtIndex:0];
                 imageStorage.contents = [NSURL URLWithString:URLString];
@@ -86,6 +87,7 @@
                     NSString* imagePositionString = NSStringFromCGRect(imageRect);
                     [imagePositionArray addObject:imagePositionString];
                     LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+                    imageStorage.tag = i;
                     imageStorage.frame = imageRect;
                     NSString* URLString = [statusModel.imgs objectAtIndex:i];
                     imageStorage.contents = [NSURL URLWithString:URLString];
@@ -114,7 +116,7 @@
             detailTextStorage.textColor = RGB(40, 40, 40, 1);
             detailTextStorage.frame = CGRectMake(imageStorage.right + 10.0f, contentTextStorage.bottom + 10.0f, SCREEN_WIDTH - 150.0f, 60.0f);
             detailTextStorage.linespacing = 0.5f;
-            [detailTextStorage lw_addLinkWithData:@"https://github.com/waynezxcv/LWAlchemy" range:NSMakeRange(0, detailTextStorage.text.length) linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
+            [detailTextStorage lw_addLinkForWholeTextStorageWithData:@"https://github.com/waynezxcv/LWAlchemy" linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
             [self addStorage:detailTextStorage];
         }
         else if ([self.statusModel.type isEqualToString:@"video"]) {
@@ -191,19 +193,21 @@
                     commentTextStorage.textColor = RGB(40, 40, 40, 1);
                     commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, CGFLOAT_MAX);
 
-                    CommentModel* commentModel_1 = [[CommentModel alloc] init];
-                    commentModel_1.to = commentDict[@"from"];
-                    commentModel_1.index = index;
-                    [commentTextStorage lw_addLinkWithData:commentModel_1
+
+                    CommentModel* commentModel1 = [[CommentModel alloc] init];
+                    commentModel1.to = commentDict[@"from"];
+                    commentModel1.index = index;
+                    [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentModel1 linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
+
+                    [commentTextStorage lw_addLinkWithData:commentModel1
                                                      range:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
 
-                    CommentModel* commentModel_2 = [[CommentModel alloc] init];
-                    commentModel_2.to = [NSString stringWithFormat:@"%@",commentDict[@"to"]];
-                    commentModel_2.index = index;
-
-                    [commentTextStorage lw_addLinkWithData:commentModel_2
+                    CommentModel* commentModel2 = [[CommentModel alloc] init];
+                    commentModel2.to = [NSString stringWithFormat:@"%@",commentDict[@"to"]];
+                    commentModel2.index = index;
+                    [commentTextStorage lw_addLinkWithData:commentModel2
                                                      range:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
@@ -227,6 +231,7 @@
                     CommentModel* commentModel = [[CommentModel alloc] init];
                     commentModel.to = commentDict[@"from"];
                     commentModel.index = index;
+                    [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentModel linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
                     [commentTextStorage lw_addLinkWithData:commentModel
                                                      range:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                                  linkColor:RGB(113, 129, 161, 1)

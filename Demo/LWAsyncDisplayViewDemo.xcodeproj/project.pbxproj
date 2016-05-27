@@ -466,8 +466,8 @@
 			isa = PBXGroup;
 			children = (
 				B0ACEBE51CEDB1320019074F /* LWAlertView */,
-				011DFA681C9881AE000410D7 /* SDWebImage */,
 				011DFA361C987DFC000410D7 /* LWAlchemy */,
+				011DFA681C9881AE000410D7 /* SDWebImage */,
 				011DFA351C987DF8000410D7 /* LWImageBrowser */,
 			);
 			name = Vendors;
