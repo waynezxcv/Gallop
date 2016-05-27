@@ -58,7 +58,6 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 + (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout frame:(CGRect)frame;
 
 /***  为整个文本添加链接  ***/
-
 /* 如果两个点击事件重叠，会优先响应使用
  “- (void)lw_addLinkWithData:(id)data
  range:(NSRange)range
