@@ -50,12 +50,5 @@
 @property (nonatomic,strong) LWLayout* layout;//布局模型
 @property (nonatomic,assign) BOOL displaysAsynchronously;
 
-/**
- *  初始化并设置最大ImageContainer的数量。
- *  @param count 最大ImageStorage的数量。
- *
- *  @return
- */
-- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)count;
 
 @end

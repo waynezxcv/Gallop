@@ -92,7 +92,19 @@ LWSERIALIZE_COPY_WITH_ZONE()
 
 @end
 
+
+
+static const void* reuseIdentifierKey;
+
 @implementation UIView (LWImageStorage)
+
+- (NSString *)identifier {
+    return objc_getAssociatedObject(self, &reuseIdentifierKey);
+}
+
+- (void)setIdentifier:(NSString *)identifier {
+    objc_setAssociatedObject(self, &reuseIdentifierKey, identifier, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
 
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
     if ([imageStorage.contents isKindOfClass:[UIImage class]]) {

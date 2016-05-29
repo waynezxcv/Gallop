@@ -17,6 +17,11 @@ highLightColor:(UIColor *)highLightColor;”
 
 2.修复了对文字添加链接重叠而发生冲突的bug.
 
+3.废弃了方法
+“- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)maxCount;"
+现在，LWAsyncDisplayView内部将自动维护一个复用池，可以为LWStorage设置一个NSString*类型的Identifier，
+来复用内部的相关UIView。简化API，为后续扩展除UIImageView之外类型的其他UIView子类实例做准备。
+
 
 ## Features
 * 支持文本布局绘制预加载，并使用异步绘制的方式，保持界面的流畅性
@@ -130,7 +135,7 @@ LWLayout* layout = [[LWLayout alloc] init];
 5.创建LWAsyncDisplayView，并将LWLayout实例赋值给创建LWAsyncDisplayView对象
 
 ```objc
-LWAsyncDisplayView* asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero maxImageStorageCount:10];
+LWAsyncDisplayView* asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero];
 asyncDisplayView.layout = layout;
 [self.view addSubview:asyncDisplayView];
 

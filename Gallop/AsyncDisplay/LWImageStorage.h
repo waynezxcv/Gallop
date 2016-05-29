@@ -44,6 +44,9 @@
 
 @interface UIView (LWImageStorage)
 
+
+@property (nonatomic,copy) NSString* identifier;
+
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage;
 - (void)layoutWithStorage:(LWImageStorage *)imageStorage;
 - (void)cleanup;
