@@ -60,7 +60,7 @@ static void RegisterRunLoopTransactions() {
     dispatch_once(&onceToken, ^{
         transactionSet = [[NSMutableSet alloc] init];
         static CFRunLoopObserverRef observer;
-        CFRunLoopRef runLoop = CFRunLoopGetCurrent();
+        CFRunLoopRef runLoop = CFRunLoopGetMain();
         CFOptionFlags activities = (kCFRunLoopBeforeWaiting |
                                     kCFRunLoopExit);
         CFRunLoopObserverContext context = {
@@ -73,7 +73,7 @@ static void RegisterRunLoopTransactions() {
         observer = CFRunLoopObserverCreate(NULL,        // allocator
                                            activities,  // activities
                                            YES,         // repeats
-                                           INT_MAX,     // order after CA transaction commits
+                                           0xFFFFFF,     // order after CA transaction commits
                                            RunLoopObserverCallBack,  // callback
                                            &context);   // context
         CFRunLoopAddObserver(runLoop, observer, kCFRunLoopCommonModes);
