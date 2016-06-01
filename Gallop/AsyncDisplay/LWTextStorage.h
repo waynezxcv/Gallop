@@ -33,6 +33,12 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
     LWTextAttachAlignmentBottom,//attachment的顶部与baseline对齐
 };
 
+/*** Text绘制方式  ***/
+typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
+    LWTextDrawModeFill,//填充方式绘制
+    LWTextDrawModeStroke,//描边方式绘制
+};
+
 
 /***  Text模型  ***/
 
@@ -51,6 +57,9 @@ typedef NS_ENUM(NSUInteger, LWTextAttachAlignment) {
 @property (nonatomic,strong) UIColor* underlineColor;
 @property (nonatomic,assign) NSLineBreakMode lineBreakMode;
 @property (nonatomic,assign) BOOL sizeToFit;
+@property (nonatomic,assign) LWTextDrawMode textDrawMode;
+@property (nonatomic,strong) UIColor* strokeColor;
+@property (nonatomic,assign) CGFloat strokeWidth;
 
 /***  构造方法  ***/
 - (id)initWithFrame:(CGRect)frame;

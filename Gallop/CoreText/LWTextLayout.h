@@ -56,6 +56,7 @@
 @property (nonatomic,assign,getter = isNeedDebugDraw) BOOL needDebugDraw;
 @property (nonatomic,assign,getter = isNeedAttachmentDraw) BOOL needAttachmentDraw;
 @property (nonatomic,assign,getter = isNeedTextBackgroundColorDraw) BOOL needTextBackgroundColorDraw;
+@property (nonatomic,assign,getter = isNeedStrokeDraw) BOOL needStrokeDraw;
 
 /**
  *  构造方法

@@ -61,8 +61,8 @@ static void RegisterRunLoopTransactions() {
         transactionSet = [[NSMutableSet alloc] init];
         static CFRunLoopObserverRef observer;
         CFRunLoopRef runLoop = CFRunLoopGetMain();
-        CFOptionFlags activities = (kCFRunLoopBeforeWaiting |
-                                    kCFRunLoopExit);
+        CFOptionFlags activities = (kCFRunLoopBeforeWaiting | kCFRunLoopExit);
+        
         CFRunLoopObserverContext context = {
             0,           // version
             (__bridge void *)transactionSet,  // info

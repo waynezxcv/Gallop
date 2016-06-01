@@ -32,6 +32,7 @@
 - (void)setFont:(UIFont *)font range:(NSRange)range;
 - (void)setCharacterSpacing:(unichar)characterSpacing range:(NSRange)range;
 - (void)setUnderlineStyle:(NSUnderlineStyle)underlineStyle underlineColor:(UIColor *)underlineColor range:(NSRange)range;
+- (void)setStrokeColor:(UIColor *)strokeColor strokeWidth:(CGFloat)strokeWidth range:(NSRange)range;
 #pragma mark - ParagraphStyle
 - (void)setLineSpacing:(CGFloat)lineSpacing range:(NSRange)range;
 - (void)setTextAlignment:(NSTextAlignment)textAlignment range:(NSRange)range;

@@ -2,14 +2,21 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# Gallop v0.2.2
+# Gallop v0.2.3
 Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文混排显示，支持添加链接、支持自定义排版，自动布局。
 只需要少量简单代码，就可以构建一个性能相当优秀（滚动时帧数60）的图文混排界面。
 <br>
 
 
-# v0.2.2 modification
+# Modification
 
+
+v0.2.2 
+文字添加了描边绘制模式。
+
+![image](https://github.com/waynezxcv/Gallop/raw/master/pics/4.png)
+
+v0.2.2 
 1.增加了一个方法 
 “- (void)lw_addLinkForWholeTextStorageWithData:(id)data
 linkColor:(UIColor *)linkColor

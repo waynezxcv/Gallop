@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -84,6 +84,9 @@
     self.underlineStyle = NSUnderlineStyleNone;
     self.linespacing = 2.0f;
     self.characterSpacing = 1.0f;
+    self.textDrawMode = LWTextDrawModeFill;
+    self.strokeColor = [UIColor blackColor];
+    self.strokeWidth = 1.0f;
 }
 
 #pragma mark - NSCoding
@@ -240,6 +243,39 @@ LWSERIALIZE_COPY_WITH_ZONE()
     [_attributedText setTextAlignment:self.textAlignment range:range];
     [_attributedText setLineSpacing:self.linespacing range:range];
     [_attributedText setLineBreakMode:self.lineBreakMode range:range];
+    [self _creatTextLayout];
+}
+
+- (void)setTextDrawMode:(LWTextDrawMode)textDrawMode {
+    if (_textDrawMode != textDrawMode) {
+        _textDrawMode = textDrawMode;
+    }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    if (self.textDrawMode == LWTextDrawModeStroke) {
+        [_attributedText setStrokeColor:self.strokeColor strokeWidth:self.strokeWidth range:range];
+    }
+    [self _creatTextLayout];
+}
+
+- (void)setStrokeColor:(UIColor *)strokeColor {
+    if (_strokeColor != strokeColor) {
+        _strokeColor = strokeColor;
+    }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    if (self.textDrawMode == LWTextDrawModeStroke) {
+        [_attributedText setStrokeColor:self.strokeColor strokeWidth:self.strokeWidth range:range];
+    }
+    [self _creatTextLayout];
+}
+
+- (void)setStrokeWidth:(CGFloat)strokeWidth {
+    if (_strokeWidth != strokeWidth) {
+        _strokeWidth = strokeWidth;
+    }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    if (self.textDrawMode == LWTextDrawModeStroke) {
+        [_attributedText setStrokeColor:self.strokeColor strokeWidth:self.strokeWidth range:range];
+    }
     [self _creatTextLayout];
 }
 

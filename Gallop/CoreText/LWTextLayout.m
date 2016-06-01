@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -103,6 +103,7 @@
     NSUInteger lineCurrentIndex = 0;
     NSMutableArray* highlights = [[NSMutableArray alloc] init];
     NSMutableArray* backgroundColors = [[NSMutableArray alloc] init];
+    BOOL isNeedStroke = NO;
     for (NSUInteger i = 0; i < lineCount; i++) {
         CTLineRef ctLine = CFArrayGetValueAtIndex(ctLines, i);
         CFArrayRef ctRuns = CTLineGetGlyphRuns(ctLine);
@@ -144,6 +145,11 @@
                 if (![backgroundColors containsObject:color]) {
                     [backgroundColors addObject:color];
                 }
+            }
+            
+            LWTextStroke* textStroke = [attributes objectForKey:LWTextStrokeAttributedName];
+            if (textStroke) {
+                isNeedStroke = YES;
             }
         }
         CGPoint ctLineOrigin = lineOrigins[i];
@@ -188,6 +194,7 @@
     cgPath = [UIBezierPath bezierPathWithRect:cgPathBox].CGPath;
     layout.needTextBackgroundColorDraw = NO;
     layout.needAttachmentDraw = NO;
+    layout.needStrokeDraw = isNeedStroke;
     layout.container = container;
     layout.text = mutableAtrributedText;
     layout.cgPath = cgPath;
@@ -264,7 +271,7 @@
                                           point:point
                                     isCancelled:isCancelld];
     }
-
+    
     if (self.isNeedDebugDraw) {
         [self _drawDebugInContext:context
                        textLayout:self
@@ -277,7 +284,7 @@
                         size:size
                        point:point
                  isCancelled:isCancelld];
-
+    
     if (self.isNeedAttachmentDraw) {
         [self _drawAttachmentsIncontext:context
                               textLayou:self
@@ -293,7 +300,7 @@
                                textLayout:(LWTextLayout *)textLayout
                                      size:(CGSize)size point:(CGPoint)point
                               isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld  {
-
+    
     [textLayout.backgroundColors enumerateObjectsUsingBlock:^(LWTextBackgroundColor * _Nonnull background, NSUInteger idx, BOOL * _Nonnull stop) {
         if (isCancelld()) {
             return ;
@@ -372,9 +379,53 @@
                 break;
             }
             CTRunRef run = CFArrayGetValueAtIndex(runs, j);
-            CTRunDraw(run, context, CFRangeMake(0, 0));
+            if (textLayout.isNeedStrokeDraw) {
+                NSDictionary* attributes = (id)CTRunGetAttributes(run);
+                LWTextStroke* textStroke = [attributes objectForKey:LWTextStrokeAttributedName];
+                if (textStroke) {
+                    [self _drawGlyphsInContext:context run:run];
+                }
+                else {
+                    CTRunDraw(run, context, CFRangeMake(0, 0));
+                }
+            } else {
+                CTRunDraw(run, context, CFRangeMake(0, 0));
+            }
         }
     }];
+    CGContextRestoreGState(context);
+}
+
+- (void) _drawGlyphsInContext:(CGContextRef)context
+                          run:(CTRunRef)run {
+    CFDictionaryRef runAttrs = CTRunGetAttributes(run);
+    LWTextStroke* textStroke = CFDictionaryGetValue(runAttrs, LWTextStrokeAttributedName);
+    if (!textStroke) {
+        return;
+    }
+    CTFontRef runFont = CFDictionaryGetValue(runAttrs, kCTFontAttributeName);
+    if (!runFont){
+        return;
+    }
+    NSUInteger glyphCount = CTRunGetGlyphCount(run);
+    if (glyphCount <= 0) {
+        return;
+    }
+    CGGlyph glyphs[glyphCount];
+    CTRunGetGlyphs(run, CFRangeMake(0, 0),glyphs);
+    CGPoint glyphPositions[glyphCount];
+    CTRunGetPositions(run, CFRangeMake(0, 0), glyphPositions);
+    CGColorRef strokeColor = textStroke.strokeColor.CGColor;
+    CGFloat strokeWidth = textStroke.strokeWidth;
+    CGContextSaveGState(context);
+    CGContextSetTextDrawingMode(context, kCGTextStroke);
+    CGContextSetStrokeColorWithColor(context, strokeColor);
+    CGContextSetLineWidth(context, CTFontGetSize(runFont) * fabs(strokeWidth * 0.01));
+    CGFontRef cgFont = CTFontCopyGraphicsFont(runFont, NULL);
+    CGContextSetFont(context, cgFont);
+    CGContextSetFontSize(context, CTFontGetSize(runFont));
+    CGContextShowGlyphsAtPositions(context, glyphs, glyphPositions, glyphCount);
+    CGFontRelease(cgFont);
     CGContextRestoreGState(context);
 }
 

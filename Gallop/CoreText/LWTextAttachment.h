@@ -28,6 +28,7 @@
 #define LWTextAttachmentAttributeName @"LWTextAttachmentKey"
 #define LWTextLinkAttributedName @"LWTextLinkAttributedName"
 #define LWTextBackgroundColorAttributedName @"LWTextBackgroundColorAttributedName"
+#define LWTextStrokeAttributedName @"LWTextStrokeAttributedName"
 
 //*** Text附件 ***//
 
@@ -75,6 +76,18 @@
 @property (nonatomic,assign) NSRange range;//在字符串的range
 @property (nonatomic,strong) UIColor* backgroundColor;
 @property (nonatomic,copy) NSArray<NSValue *>* positions;//位置数组
+@property (nonatomic,strong) NSDictionary* userInfo;//自定义的一些信息
+
+@end
+
+
+//*** Text描边（用来代替NSBackgroundColor） ***//
+
+@interface LWTextStroke : NSObject  <NSCopying,NSCoding>
+
+@property (nonatomic,assign) NSRange range;//在字符串的range
+@property (nonatomic,strong) UIColor* strokeColor;
+@property (nonatomic,assign) CGFloat strokeWidth;
 @property (nonatomic,strong) NSDictionary* userInfo;//自定义的一些信息
 
 @end
