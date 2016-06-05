@@ -195,11 +195,10 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 - (void)refreshComplete {
     [self.tableViewHeader refreshingAnimateStop];
+    [self.tableView reloadData];
     [UIView animateWithDuration:0.35f animations:^{
         self.tableView.contentInset = UIEdgeInsetsMake(64.0f, 0.0f, 0.0f, 0.0f);
     } completion:^(BOOL finished) {
-        [self.tableView reloadData];
-        [self.tableView setContentOffset:CGPointMake(0, -64.1f) animated:YES];
         self.needRefresh = NO;
     }];
 }
@@ -313,6 +312,13 @@ const CGFloat kRefreshBoundary = 170.0f;
 /****************************************************************************/
 
 
+- (UIImage *)_screenshotFromView:(UIView *)aView {
+    UIGraphicsBeginImageContextWithOptions(aView.bounds.size,NO,[UIScreen mainScreen].scale);
+    [aView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage* screenshotImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return screenshotImage;
+}
 
 #pragma mark - Getter
 

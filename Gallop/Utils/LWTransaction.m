@@ -109,7 +109,6 @@
     operation.selector = selector;
     operation.object = object;
     [self.operations addObject:operation];
-    
 }
 
 - (void)cancel {
