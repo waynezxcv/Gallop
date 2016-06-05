@@ -33,13 +33,12 @@ NSLog(@"%s",__func__);  \
 id copy = [[[self class] allocWithZone:zone] init];    \
 Class cls = [self class];   \
 while (cls != [NSObject class]) {  \
-/*判断是自身类还是父类*/    \
 BOOL bIsSelfClass = (cls == [self class]);  \
 unsigned int iVarCount = 0; \
 unsigned int propVarCount = 0;  \
 unsigned int sharedVarCount = 0;    \
-Ivar *ivarList = bIsSelfClass ? class_copyIvarList([cls class], &iVarCount) : NULL;/*变量列表，含属性以及私有变量*/   \
-objc_property_t *propList = bIsSelfClass ? NULL : class_copyPropertyList(cls, &propVarCount);/*属性列表*/   \
+Ivar *ivarList = bIsSelfClass ? class_copyIvarList([cls class], &iVarCount) : NULL; \
+objc_property_t *propList = bIsSelfClass ? NULL : class_copyPropertyList(cls, &propVarCount); \
 sharedVarCount = bIsSelfClass ? iVarCount : propVarCount;   \
 \
 for (int i = 0; i < sharedVarCount; i++) {  \
@@ -67,13 +66,12 @@ return copy;    \
 NSLog(@"%s",__func__);  \
 Class cls = [self class];   \
 while (cls != [NSObject class]) {   \
-/*判断是自身类还是父类*/    \
 BOOL bIsSelfClass = (cls == [self class]);  \
 unsigned int iVarCount = 0; \
 unsigned int propVarCount = 0;  \
 unsigned int sharedVarCount = 0;    \
-Ivar *ivarList = bIsSelfClass ? class_copyIvarList([cls class], &iVarCount) : NULL;/*变量列表，含属性以及私有变量*/   \
-objc_property_t *propList = bIsSelfClass ? NULL : class_copyPropertyList(cls, &propVarCount);/*属性列表*/   \
+Ivar *ivarList = bIsSelfClass ? class_copyIvarList([cls class], &iVarCount) : NULL; \
+objc_property_t *propList = bIsSelfClass ? NULL : class_copyPropertyList(cls, &propVarCount);  \
 sharedVarCount = bIsSelfClass ? iVarCount : propVarCount;   \
 \
 for (int i = 0; i < sharedVarCount; i++) {  \
@@ -96,13 +94,12 @@ return self;    \
 NSLog(@"%s",__func__);  \
 Class cls = [self class];   \
 while (cls != [NSObject class]) {   \
-/*判断是自身类还是父类*/    \
 BOOL bIsSelfClass = (cls == [self class]);  \
 unsigned int iVarCount = 0; \
 unsigned int propVarCount = 0;  \
 unsigned int sharedVarCount = 0;    \
-Ivar *ivarList = bIsSelfClass ? class_copyIvarList([cls class], &iVarCount) : NULL;/*变量列表，含属性以及私有变量*/   \
-objc_property_t *propList = bIsSelfClass ? NULL : class_copyPropertyList(cls, &propVarCount);/*属性列表*/ \
+Ivar *ivarList = bIsSelfClass ? class_copyIvarList([cls class], &iVarCount) : NULL; \
+objc_property_t *propList = bIsSelfClass ? NULL : class_copyPropertyList(cls, &propVarCount);\
 sharedVarCount = bIsSelfClass ? iVarCount : propVarCount;   \
 \
 for (int i = 0; i < sharedVarCount; i++) {  \

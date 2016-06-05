@@ -9,7 +9,6 @@
 #import "UIImageView+WebCache.h"
 #import "objc/runtime.h"
 #import "UIView+WebCacheOperation.h"
-#import "LWRunLoopTransactions.h"
 
 static char imageURLKey;
 static char TAG_ACTIVITY_INDICATOR;
@@ -45,13 +44,13 @@ static char TAG_ACTIVITY_SHOW;
 - (void)sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletionBlock)completedBlock {
     [self sd_cancelCurrentImageLoad];
     objc_setAssociatedObject(self, &imageURLKey, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
+    
     if (!(options & SDWebImageDelayPlaceholder)) {
         dispatch_main_async_safe(^{
             self.image = placeholder;
         });
     }
-
+    
     if (url) {
         // check if activityView is enabled or not
         if ([self showActivityIndicatorView]) {
@@ -69,11 +68,11 @@ static char TAG_ACTIVITY_SHOW;
                     return;
                 }
                 else if (image) {
-                    [wself delaySetImage:image];
+                    wself.image = image;
                     [wself setNeedsLayout];
                 } else {
                     if ((options & SDWebImageDelayPlaceholder)) {
-                        [wself delaySetImage:placeholder];
+                        wself.image = placeholder;
                         [wself setNeedsLayout];
                     }
                 }
@@ -97,7 +96,7 @@ static char TAG_ACTIVITY_SHOW;
 - (void)sd_setImageWithPreviousCachedImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletionBlock)completedBlock {
     NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:url];
     UIImage *lastPreviousCachedImage = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:key];
-
+    
     [self sd_setImageWithURL:url placeholderImage:lastPreviousCachedImage ?: placeholder options:options progress:progressBlock completed:completedBlock];
 }
 
@@ -108,9 +107,9 @@ static char TAG_ACTIVITY_SHOW;
 - (void)sd_setAnimationImagesWithURLs:(NSArray *)arrayOfURLs {
     [self sd_cancelCurrentAnimationImagesLoad];
     __weak __typeof(self)wself = self;
-
+    
     NSMutableArray *operationsArray = [[NSMutableArray alloc] init];
-
+    
     for (NSURL *logoImageURL in arrayOfURLs) {
         id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadImageWithURL:logoImageURL options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             if (!wself) return;
@@ -123,7 +122,7 @@ static char TAG_ACTIVITY_SHOW;
                         currentImages = [[NSMutableArray alloc] init];
                     }
                     [currentImages addObject:image];
-
+                    
                     sself.animationImages = currentImages;
                     [sself setNeedsLayout];
                 }
@@ -132,7 +131,7 @@ static char TAG_ACTIVITY_SHOW;
         }];
         [operationsArray addObject:operation];
     }
-
+    
     [self sd_setImageLoadOperation:[NSArray arrayWithArray:operationsArray] forKey:@"UIImageViewAnimationImages"];
 }
 
@@ -174,7 +173,7 @@ static char TAG_ACTIVITY_SHOW;
     if (!self.activityIndicator) {
         self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:[self getIndicatorStyle]];
         self.activityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-
+        
         dispatch_main_async_safe(^{
             [self addSubview:self.activityIndicator];
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
@@ -193,11 +192,11 @@ static char TAG_ACTIVITY_SHOW;
                                                               constant:0.0]];
         });
     }
-
+    
     dispatch_main_async_safe(^{
         [self.activityIndicator startAnimating];
     });
-
+    
 }
 
 - (void)removeActivityIndicator {
@@ -205,15 +204,6 @@ static char TAG_ACTIVITY_SHOW;
         [self.activityIndicator removeFromSuperview];
         self.activityIndicator = nil;
     }
-}
-
-
-- (void)delaySetImage:(UIImage *)image {
-    LWRunLoopTransactions* transactions = [LWRunLoopTransactions
-                                           transactionsWithTarget:self
-                                           selector:@selector(setImage:)
-                                           object:image];
-    [transactions commit];
 }
 
 

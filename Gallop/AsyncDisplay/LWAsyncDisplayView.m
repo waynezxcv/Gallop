@@ -25,7 +25,10 @@
 #import "LWAsyncDisplayView.h"
 #import "LWAsyncDisplayLayer.h"
 #import "GallopUtils.h"
-#import "LWRunLoopTransactions.h"
+#import "LWTransaction.h"
+#import "LWTransactionGroup.h"
+#import "CALayer+LWTransaction.h"
+
 
 
 
@@ -341,7 +344,12 @@
     self.imageStorages = self.layout.imageStorages;
     self.textStorages = self.layout.textStorages;
     [self.layer setNeedsDisplay];
-    [self _setImageStorages];
+    LWTransaction* transaction = self.layer.lw_asyncTransaction;
+    [transaction addAsyncOperationWithQueue:[LWAsyncDisplayLayer displayQueue]
+                                     target:self
+                                   selector:@selector(_setImageStorages)
+                                     object:nil
+                                 completion:^(BOOL canceled){}];
 }
 
 @end

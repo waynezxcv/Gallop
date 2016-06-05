@@ -22,20 +22,15 @@
  THE SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
 
-@interface LWRunLoopTransactions : NSObject
-
-+ (LWRunLoopTransactions *)transactionsWithTarget:(id)target
-                                         selector:(SEL)selector
-                                           object:(id)object;
+#import <UIKit/UIKit.h>
+#import "LWTransaction.h"
 
 
-+ (LWRunLoopTransactions *)transactionsWithTarget:(id)target
-                                         selector:(SEL)selector
-                                          object1:(id)object1
-                                          object2:(id)object2;
+@interface LWTransactionGroup : NSObject
 
-- (void)commit;
++ (id)mainTransactionGroup;
+- (void)addTransactionContainer:(CALayer *)containerLayer;
++ (void)commit;
 
 @end

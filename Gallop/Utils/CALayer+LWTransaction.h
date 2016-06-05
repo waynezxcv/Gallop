@@ -23,40 +23,33 @@
  */
 
 
-
 #import <UIKit/UIKit.h>
-#import "GallopUtils.h"
+#import "LWTransaction.h"
 
 
-@class LWFlag;
-@protocol LWAsyncDisplayLayerDelegate;
+typedef NS_ENUM(NSUInteger, LWTransactionContainerState) {
+    LWTransactionContainerStateNoTransactions,
+    LWTransactionContainerStatePendingTransactions,
+};
 
-//** LWAsyncDisplayLayer **//
-@interface LWAsyncDisplayLayer : CALayer
+@protocol LWTransactionContainerDelegate
 
-@property (nonatomic,assign) BOOL displaysAsynchronously;
-@property (nonatomic,strong,readonly) LWFlag* displayFlag;
+@property (nonatomic,readonly,assign) LWTransactionContainerState transactionContainerState;
 
-- (void)displayImmediately;
-- (void)cancelAsyncDisplay;
-+ (dispatch_queue_t)displayQueue;
-
-@end
-
-@interface LWAsyncDisplayTransaction : NSObject
-
-@property (nonatomic,copy) LWAsyncDisplayWillDisplayBlock willDisplayBlock;
-@property (nonatomic,copy) LWAsyncDisplayBlock displayBlock;
-@property (nonatomic,copy) LWAsyncDisplayDidDisplayBlock didDisplayBlock;
+- (void)lw_cancelAsyncTransactions;
+- (void)lw_asyncTransactionContainerStateDidChange;
 
 @end
 
 
-@protocol LWAsyncDisplayLayerDelegate <NSObject>
+@interface CALayer(LWTransaction)<LWTransactionContainerDelegate>
 
-- (LWAsyncDisplayTransaction *)asyncDisplayTransaction;
+@property (nonatomic,strong) NSHashTable* transactions;
+@property (nonatomic,strong) LWTransaction* currentTransaction;
+
+- (void)lw_transactionContainerWillBeginTransaction:(LWTransaction *)transaction;
+- (void)lw_transactionContainerrDidCompleteTransaction:(LWTransaction *)transaction;
+
+@property (nonatomic,readonly,strong) LWTransaction* lw_asyncTransaction;
 
 @end
-
-
-

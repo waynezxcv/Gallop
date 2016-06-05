@@ -160,7 +160,5 @@
 - (void)sd_cancelCurrentImageLoad;
 
 
-- (void)lw_delaySetContents:(id)contents;
-
 
 @end
