@@ -344,12 +344,7 @@
     self.imageStorages = self.layout.imageStorages;
     self.textStorages = self.layout.textStorages;
     [self.layer setNeedsDisplay];
-    LWTransaction* transaction = self.layer.lw_asyncTransaction;
-    [transaction addAsyncOperationWithQueue:[LWAsyncDisplayLayer displayQueue]
-                                     target:self
-                                   selector:@selector(_setImageStorages)
-                                     object:nil
-                                 completion:^(BOOL canceled){}];
+    [self _setImageStorages];
 }
 
 @end

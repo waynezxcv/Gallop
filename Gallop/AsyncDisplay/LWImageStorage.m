@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,6 +27,9 @@
 #import "CALayer+WebCache.h"
 #import <objc/runtime.h>
 #import "GallopUtils.h"
+#import "LWTransaction.h"
+#import "CALayer+LWTransaction.h"
+#import "LWAsyncDisplayLayer.h"
 
 @implementation LWImageStorage
 
@@ -156,11 +159,22 @@ static const void* reuseIdentifierKey;
                                          id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
                                          UIGraphicsEndImageContext();
                                          dispatch_sync(dispatch_get_main_queue(), ^{
-                                             strongSelf.layer.contents = processedImageRef;
+                                             LWTransaction* layerAsyncTransaction = strongSelf.layer.lw_asyncTransaction;
+                                             [layerAsyncTransaction
+                                              addAsyncOperationWithQueue:[LWAsyncDisplayLayer displayQueue]
+                                              target:strongSelf.layer
+                                              selector:@selector(setContents:)
+                                              object:processedImageRef
+                                              completion:^(BOOL canceled) {}];
                                          });
                                      });
                                  } else {
-                                     strongSelf.layer.contents = (__bridge id _Nullable)(image.CGImage);
+                                     LWTransaction* layerAsyncTransaction = strongSelf.layer.lw_asyncTransaction;
+                                     [layerAsyncTransaction addAsyncOperationWithQueue:[LWAsyncDisplayLayer displayQueue]
+                                                                                target:strongSelf.layer
+                                                                              selector:@selector(setContents:)
+                                                                                object:(__bridge id _Nullable)(image.CGImage)
+                                                                            completion:^(BOOL canceled) {}];
                                  }
                                  if (imageStorage.fadeShow) {
                                      CATransition* transition = [CATransition animation];
