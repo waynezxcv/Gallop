@@ -179,25 +179,6 @@
                     transaction.didDisplayBlock(self, YES);
                 }
             });
-            __weak typeof(self) weakSelf = self;
-            LWTransaction* layerAsyncTransaction = self.lw_asyncTransaction;
-            [layerAsyncTransaction addAsyncOperationWithQueue:[LWAsyncDisplayLayer displayQueue]
-                                                       target:self
-                                                     selector:@selector(setContents:)
-                                                       object:(__bridge id)(image.CGImage)
-                                                   completion:^(BOOL canceled) {
-                                                       __strong typeof(weakSelf) swself = weakSelf;
-                                                       [swself layoutIfNeeded];
-                                                       if (canceled) {
-                                                           if (transaction.didDisplayBlock) {
-                                                               transaction.didDisplayBlock(swself,NO);
-                                                           }                                                       }
-                                                       else {
-                                                           if (transaction.didDisplayBlock) {
-                                                               transaction.didDisplayBlock(swself,YES);
-                                                           }
-                                                       }
-                                                   }];
         });
     } else {
         if (transaction.willDisplayBlock) {
