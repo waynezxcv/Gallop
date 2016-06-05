@@ -199,6 +199,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         self.tableView.contentInset = UIEdgeInsetsMake(64.0f, 0.0f, 0.0f, 0.0f);
     } completion:^(BOOL finished) {
         [self.tableView reloadData];
+        [self.tableView setContentOffset:CGPointMake(0, -64.1f) animated:YES];
         self.needRefresh = NO;
     }];
 }

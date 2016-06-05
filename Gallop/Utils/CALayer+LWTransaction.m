@@ -65,12 +65,10 @@ static void* LWCurrentTransacitonKey = @"LWCurrentTransacitonKey";
     LWTransaction* currentTransaction = self.currentTransaction;
     [currentTransaction commit];
     self.currentTransaction = nil;
-    
     for (LWTransaction* transaction in [self.transactions copy]) {
         [transaction cancel];
     }
 }
-
 
 - (void)lw_asyncTransactionContainerStateDidChange {
     id delegate = self.delegate;

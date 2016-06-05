@@ -24,6 +24,8 @@
 
 #import "LWTransaction.h"
 #import "LWTransactionGroup.h"
+#import <objc/runtime.h>
+#import <objc/message.h>
 
 
 
@@ -51,11 +53,8 @@
 }
 
 - (void)callAndReleaseCompletionBlock:(BOOL)canceled {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [self.target performSelector:self.selector
-                      withObject:self.object];
-#pragma clang diagnostic pop
+    void (*objc_msgSendToPerfom)(id, SEL, id) = (void*)objc_msgSend;
+    objc_msgSendToPerfom(self.target,self.selector,self.object);
     if (self.completion) {
         self.completion(canceled);
         self.completion = nil;
@@ -110,6 +109,7 @@
     operation.selector = selector;
     operation.object = object;
     [self.operations addObject:operation];
+    
 }
 
 - (void)cancel {
