@@ -2,16 +2,19 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# Gallop v0.2.3
+# Gallop v0.2.4
 Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文混排显示，支持添加链接、支持自定义排版，自动布局。
 只需要少量简单代码，就可以构建一个性能相当优秀（滚动时帧数60）的图文混排界面。
 <br>
 
 
-# Modification
+# Modifications
 
+v0.2.4
 
-v0.2.2 
+增加了TransactionGroup，LWTransaction，CALayer+LWTransaction。
+
+v0.2.3 
 文字添加了描边绘制模式。
 
 ![image](https://github.com/waynezxcv/Gallop/raw/master/pics/4.png)
@@ -27,7 +30,7 @@ highLightColor:(UIColor *)highLightColor;”
 3.废弃了方法
 “- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)maxCount;"
 现在，LWAsyncDisplayView内部将自动维护一个复用池，可以为LWStorage设置一个NSString*类型的Identifier，
-来复用内部的相关UIView。简化API，为后续扩展除UIImageView之外类型的其他UIView子类实例做准备。
+来复用内部的相关UIView,简化API。
 
 
 ## Features
@@ -70,34 +73,34 @@ textStorage.textColor = RGB(113, 129, 161, 1);
 
 /***  为文本添加点击链接事件  ***/
 [textStorage addLinkWithData:data
-                         inRange:NSMakeRange(0,statusModel.name.length)
-                       linkColor:RGB(113, 129, 161, 1)
-                  highLightColor:RGB(0, 0, 0, 0.15)];
+inRange:NSMakeRange(0,statusModel.name.length)
+linkColor:RGB(113, 129, 161, 1)
+highLightColor:RGB(0, 0, 0, 0.15)];
 
 /***  点击链接回调  ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data;
 
 /***  用本地图片替换掉指定位置的文字  ***/
 [textStorage lw_replaceTextWithImage:[UIImage imageNamed:@"img"]
-							contentMode:UIViewContentModeScaleAspectFill
-								imageSize:CGSizeMake(60, 60)
-						alignment:LWTextAttachAlignmentTop
-			range:NSMakeRange(webImageTextStorage.text.length - 7, 0)];
+contentMode:UIViewContentModeScaleAspectFill
+imageSize:CGSizeMake(60, 60)
+alignment:LWTextAttachAlignmentTop
+range:NSMakeRange(webImageTextStorage.text.length - 7, 0)];
 
 
 /***  用网络图片替换掉指定位置的文字  ***/
 [textStorage lw_replaceTextWithImageURL:[NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"]
-                                            contentMode:UIViewContentModeScaleAspectFill
-                                              imageSize:CGSizeMake(60, 60)
-                                              alignment:LWTextAttachAlignmentTop
-                                                  range:NSMakeRange(webImageTextStorage.text.length - 7, 0)];
+contentMode:UIViewContentModeScaleAspectFill
+imageSize:CGSizeMake(60, 60)
+alignment:LWTextAttachAlignmentTop
+range:NSMakeRange(webImageTextStorage.text.length - 7, 0)];
 
 /***  用UIView替换掉指定位置的文字  ***/
 [textStorage lw_replaceTextWithView:[[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60.0f, 30.0f)]
-                                contentMode:UIViewContentModeScaleAspectFill
-                                       size:CGSizeMake(60.0f, 30.0f)
-                                  alignment:LWTextAttachAlignmentTop
-                                      range:NSMakeRange(1,0)];
+contentMode:UIViewContentModeScaleAspectFill
+size:CGSizeMake(60.0f, 30.0f)
+alignment:LWTextAttachAlignmentTop
+range:NSMakeRange(1,0)];
 
 ```
 
