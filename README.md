@@ -2,13 +2,17 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# Gallop v0.2.4
+# Gallop v0.2.5
 Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文混排显示，支持添加链接、支持自定义排版，自动布局。
 只需要少量简单代码，就可以构建一个性能相当优秀（滚动时帧数60）的图文混排界面。
 <br>
 
 
 # Modifications
+
+v0.2.5
+现在，从网络下载图片后，Gallop会预先将图片在子线程绘制到跟UIView相同的大小，
+再赋值给UIView，并且这一操作会在MainRunLoop进入休眠或者退出时完成，提高滚动流畅性。
 
 v0.2.4
 
@@ -37,7 +41,7 @@ highLightColor:(UIColor *)highLightColor;”
 * 支持文本布局绘制预加载，并使用异步绘制的方式，保持界面的流畅性
 * 支持富文本，图文混排显示，支持行间距 字间距，设置行数，自适应高度
 * 支持添加属性文本，自定义链接
-* 支持在子线程圆角图片，并避免离屏渲染
+* 支持在子线程设置圆角半径
 * 支持通过设置约束的方式自动布局
 * API简单，只需设置简单的属性，其余交给Gallop就好啦。
 

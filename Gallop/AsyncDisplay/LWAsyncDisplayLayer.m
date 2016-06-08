@@ -116,7 +116,8 @@
         CGSize size = self.bounds.size;
         BOOL opaque = self.opaque;
         CGFloat scale = self.contentsScale;
-        CGColorRef backgroundColor = (opaque && self.backgroundColor) ? CGColorRetain(self.backgroundColor) : NULL;
+        CGColorRef backgroundColor = (opaque && self.backgroundColor) ?
+        CGColorRetain(self.backgroundColor) : NULL;
         if (size.width < 1 || size.height < 1) {
             CGImageRef image = (__bridge_retained CGImageRef)(self.contents);
             self.contents = nil;
@@ -176,21 +177,22 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 __weak typeof(self) weakSelf = self;
                 LWTransaction* layerAsyncTransaction = self.lw_asyncTransaction;
-                [layerAsyncTransaction addAsyncOperationWithTarget:self
-                                                          selector:@selector(setContents:)
-                                                            object:(__bridge id)(image.CGImage)
-                                                        completion:^(BOOL canceled) {
-                                                            __strong typeof(weakSelf) swself = weakSelf;
-                                                            if (canceled) {
-                                                                if (transaction.didDisplayBlock) {
-                                                                    transaction.didDisplayBlock(swself,NO);
-                                                                }
-                                                            } else {
-                                                                if (transaction.didDisplayBlock) {
-                                                                    transaction.didDisplayBlock(swself,YES);
-                                                                }
-                                                            }
-                                                        }];
+                [layerAsyncTransaction
+                 addAsyncOperationWithTarget:self
+                 selector:@selector(setContents:)
+                 object:(__bridge id)(image.CGImage)
+                 completion:^(BOOL canceled) {
+                     __strong typeof(weakSelf) swself = weakSelf;
+                     if (canceled) {
+                         if (transaction.didDisplayBlock) {
+                             transaction.didDisplayBlock(swself,NO);
+                         }
+                     } else {
+                         if (transaction.didDisplayBlock) {
+                             transaction.didDisplayBlock(swself,YES);
+                         }
+                     }
+                 }];
             });
         });
     } else {

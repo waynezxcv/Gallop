@@ -36,7 +36,6 @@
 
 @property (nonatomic,strong) NSMutableArray* reusePool;
 @property (nonatomic,strong) NSMutableArray* imageContainers;
-
 @property (nonatomic,copy) NSArray* textStorages;
 @property (nonatomic,copy) NSArray* imageStorages;
 
@@ -88,17 +87,19 @@
 
 - (void)_setImageStorages {
     for (NSInteger i = 0; i < self.imageStorages.count; i ++) {
-        LWImageStorage* imageStorage = _imageStorages[i];
-        UIView* container = [self _dequeueReusableImageContainerWithIdentifier:imageStorage.identifier];
-        if (!container) {
-            container = [[UIView alloc] initWithFrame:CGRectZero];
-            container.identifier = imageStorage.identifier;
-            container.backgroundColor = imageStorage.backgroundColor;
-            container.clipsToBounds = imageStorage.clipsToBounds;
-            [self addSubview:container];
+        @autoreleasepool {
+            LWImageStorage* imageStorage = _imageStorages[i];
+            UIView* container = [self _dequeueReusableImageContainerWithIdentifier:imageStorage.identifier];
+            if (!container) {
+                container = [[UIView alloc] initWithFrame:CGRectZero];
+                container.identifier = imageStorage.identifier;
+                container.backgroundColor = imageStorage.backgroundColor;
+                container.clipsToBounds = imageStorage.clipsToBounds;
+                [self addSubview:container];
+            }
+            [self.imageContainers addObject:container];
+            [container setContentWithImageStorage:imageStorage];
         }
-        [self.imageContainers addObject:container];
-        [container setContentWithImageStorage:imageStorage];
     }
 }
 

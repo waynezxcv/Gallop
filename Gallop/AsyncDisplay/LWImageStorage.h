@@ -27,6 +27,10 @@
 #import "LWStorage.h"
 #import "GallopUtils.h"
 
+
+typedef UIImage* (^LWImageStorageModificationBlock)(UIImage *image);
+
+
 /***  Image模型  ***/
 @interface LWImageStorage : LWStorage <NSCopying,NSCoding>
 
@@ -34,6 +38,7 @@
 @property (nonatomic,strong) UIImage* placeholder;//占位图
 @property (nonatomic,assign,getter=isFadeShow) BOOL fadeShow;//加载完成是否渐隐出现
 @property (nonatomic,assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
+@property (nonatomic,copy) LWImageStorageModificationBlock imageStorageModificationBlock;
 
 
 /*** 绘制 ***/
@@ -42,8 +47,8 @@
 
 @end
 
+/***  对UIView的扩展  ***/
 @interface UIView (LWImageStorage)
-
 
 @property (nonatomic,copy) NSString* identifier;
 
@@ -52,4 +57,5 @@
 - (void)cleanup;
 
 @end
+
 

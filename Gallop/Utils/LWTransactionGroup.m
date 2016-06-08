@@ -65,12 +65,12 @@ static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observ
         &CFRelease,  // release
         NULL         // copyDescription
     };
-    observer = CFRunLoopObserverCreate(NULL,        // allocator
-                                       activities,  // activities
-                                       YES,         // repeats
-                                       INT_MAX,     // order after CA transaction commits
-                                       &_transactionGroupRunLoopObserverCallback,  // callback
-                                       &context);   // context
+    observer = CFRunLoopObserverCreate(NULL,
+                                       activities,
+                                       YES,
+                                       INT_MAX,
+                                       &_transactionGroupRunLoopObserverCallback,
+                                       &context);
     CFRunLoopAddObserver(runLoop, observer, kCFRunLoopCommonModes);
     CFRelease(observer);
 }

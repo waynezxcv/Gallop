@@ -32,11 +32,11 @@
         avatarStorage.contents = statusModel.avatar;
         avatarStorage.cornerRadius = 20.0f;
         avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
-        avatarStorage.fadeShow = YES;
-        avatarStorage.clipsToBounds = NO;
         avatarStorage.backgroundColor = RGB(240, 240, 240, 1);
         avatarStorage.frame = CGRectMake(10, 20, 40, 40);
         avatarStorage.tag = 9;
+        avatarStorage.cornerBorderWidth = 1.0f;
+        avatarStorage.cornerBorderColor = RGB(113, 129, 161, 1);
         
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
@@ -195,7 +195,6 @@
                     commentTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
                     commentTextStorage.textColor = RGB(40, 40, 40, 1);
                     commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, CGFLOAT_MAX);
-                    
                     
                     CommentModel* commentModel1 = [[CommentModel alloc] init];
                     commentModel1.to = commentDict[@"from"];

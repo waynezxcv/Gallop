@@ -85,11 +85,11 @@
         textStorage2.frame = CGRectMake(textStorage1.left, textStorage1.bottom+10, textStorage1.width/2, CGFLOAT_MAX);
         
         LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
-        imageStorage.contents = [NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"];
-        imageStorage.frame = CGRectMake(textStorage2.right + 10, textStorage1.bottom+10, textStorage1.width/2, textStorage1.width/2);
+        imageStorage.contents = [UIImage imageNamed:@"pic.jpeg"];
         imageStorage.cornerRadius = textStorage1.width/4;
+        imageStorage.frame = CGRectMake(textStorage2.right + 10, textStorage1.bottom+10, textStorage1.width/2, textStorage1.width/2);
         imageStorage.cornerBorderColor = [UIColor orangeColor];
-        
+        imageStorage.cornerBorderWidth = 3.0f;
         
         NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:@"A framework for build a smooth asynchronous feed list app.you can also use it as a rich text label."];
         [attributedString setLineSpacing:7.0f range:NSMakeRange(0, attributedString.length)];
@@ -110,8 +110,7 @@
         
         
         LWTextStorage* textStorage3 = [LWTextStorage lw_textStrageWithText:attributedString
-                                                                     frame:CGRectMake(textStorage1.left, textStorage2.bottom + 20.0f, textStorage1.width, CGFLOAT_MAX)];
-        
+                                                                     frame:CGRectMake(textStorage1.left, textStorage2.bottom + 50.0f, textStorage1.width, CGFLOAT_MAX)];
         [layout addStorage:textStorage1];
         [layout addStorage:textStorage2];
         [layout addStorage:imageStorage];
