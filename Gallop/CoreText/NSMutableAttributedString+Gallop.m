@@ -141,6 +141,7 @@
     CGPathAddRect(cgPath, NULL, CGRectMake(0, 0,CGFLOAT_MAX,CGFLOAT_MAX));
     CTFrameRef ctFrame = CTFramesetterCreateFrame(ctFrameSetter,CFRangeMake(0, self.length),cgPath,NULL);
     CFRelease(cgPath);
+    CFRelease(ctFrameSetter);
     CFArrayRef ctLines = CTFrameGetLines(ctFrame);
     CFIndex lineCount = CFArrayGetCount(ctLines);
     for (NSUInteger i = 0; i < lineCount; i++) {

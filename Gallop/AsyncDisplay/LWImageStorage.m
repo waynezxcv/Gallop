@@ -115,7 +115,46 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
     *outBackingSize = CGSizeMake(destinationWidth, destinationHeight);
 }
 
+
 @implementation LWImageStorage
+
+@synthesize cornerRadius = _cornerRadius;
+@synthesize cornerBorderWidth = _cornerBorderWidth;
+
+#pragma mark - LifeCycle
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.contents = nil;
+        self.userInteractionEnabled = YES;
+        self.placeholder = nil;
+        self.fadeShow = YES;
+        self.clipsToBounds = NO;
+        self.contentsScale = [GallopUtils contentsScale];
+        self.needRerendering = NO;
+    }
+    return self;
+}
+
+- (BOOL)needRerendering {
+    if (self.cornerBorderWidth != 0 || self.cornerRadius != 0) {
+        return YES;
+    }
+    else {
+        return _needRerendering;
+    }
+}
+
+#pragma mark - NSCoding
+
+LWSERIALIZE_CODER_DECODER();
+
+
+#pragma mark - NSCopying
+
+LWSERIALIZE_COPY_WITH_ZONE()
+
 
 #pragma mark - Methods
 
@@ -125,7 +164,6 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
     }
 }
 
-/*** 绘制 ***/
 - (void)lw_drawInContext:(CGContextRef)context isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld {
     if (isCancelld()) {
         return;
@@ -168,30 +206,6 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
     }
 }
 
-#pragma mark - LifeCycle
-- (id)init {
-    self = [super init];
-    if (self) {
-        self.contents = nil;
-        self.userInteractionEnabled = YES;
-        self.placeholder = nil;
-        self.fadeShow = YES;
-        self.clipsToBounds = NO;
-        self.contentsScale = [GallopUtils contentsScale];
-    }
-    return self;
-}
-
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
-
-#pragma mark - NSCopying
-
-LWSERIALIZE_COPY_WITH_ZONE()
-
-
 @end
 
 static const void* reuseIdentifierKey;
@@ -213,36 +227,65 @@ static const void* reuseIdentifierKey;
     if ([imageStorage.contents isKindOfClass:[NSString class]]) {
         imageStorage.contents = [NSURL URLWithString:imageStorage.contents];
     }
+    self.backgroundColor = imageStorage.backgroundColor;
+    self.clipsToBounds = imageStorage.clipsToBounds;
     [self layoutWithStorage:imageStorage];
     __weak typeof(self) weakSelf = self;
     [self.layer sd_setImageWithURL:(NSURL *)imageStorage.contents
                   placeholderImage:imageStorage.placeholder
                            options:SDWebImageAvoidAutoSetImage
-                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                             __strong typeof(weakSelf) swself = weakSelf;
-                             if (image) {
-                                 [swself drawImage:image imageStorage:imageStorage completion:^{
-                                     if (imageStorage.fadeShow) {
-                                         [swself fadeShowAnimation];
-                                     }
-                                 }];
+                         completed:^(UIImage *image, NSError *error,
+                                     SDImageCacheType cacheType,
+                                     NSURL *imageURL) {
+                             if (imageStorage.needRerendering) {
+                                 [weakSelf _rerenderingImage:image
+                                                imageStorage:imageStorage
+                                                  completion:^{
+                                                      if (imageStorage.fadeShow) {
+                                                          [weakSelf fadeShowAnimation];
+                                                      }
+                                                  }];
+                             } else {
+                                 [weakSelf _setContentsImage:image
+                                                imageStorage:imageStorage
+                                                  completion:^{
+                                                      if (imageStorage.fadeShow) {
+                                                          [weakSelf fadeShowAnimation];
+                                                      }
+                                                  }];
                              }
                          }];
 }
 
-- (void)layoutWithStorage:(LWImageStorage *)imageStorage {
-    if (!CGRectEqualToRect(self.frame, imageStorage.frame)) {
-        self.frame = imageStorage.frame;
+- (void)_setContentsImage:(UIImage *)image
+             imageStorage:(LWImageStorage *)imageStorage
+               completion:(void(^)())completion {
+    if (!image || !imageStorage) {
+        return;
     }
-    self.hidden = NO;
+    int width = imageStorage.frame.size.width;
+    int height = imageStorage.frame.size.height;
+    CGFloat scale = (height / width) / (self.bounds.size.height / self.bounds.size.width);
+    if (scale < 0.99 || isnan(scale)) {
+        self.contentMode = UIViewContentModeScaleAspectFill;
+        self.layer.contentsRect = CGRectMake(0, 0, 1, 1);
+    } else {
+        self.contentMode = UIViewContentModeScaleAspectFill;
+        self.layer.contentsRect = CGRectMake(0, 0, 1, (float)width / height);
+    }
+    LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
+    [layerAsyncTransaction
+     addAsyncOperationWithTarget:self.layer
+     selector:@selector(setContents:)
+     object:(__bridge id _Nullable)image.CGImage
+     completion:^(BOOL canceled) {
+         completion();
+     }];
 }
 
-- (void)cleanup {
-    self.layer.contents = nil;
-    self.hidden = YES;
-}
-
-- (void)drawImage:(UIImage *)image imageStorage:(LWImageStorage *)imageStorage completion:(void(^)())compeltion {
+- (void)_rerenderingImage:(UIImage *)image
+             imageStorage:(LWImageStorage *)imageStorage
+               completion:(void(^)())compeltion {
     if (!image || !imageStorage) {
         return;
     }
@@ -270,7 +313,6 @@ static const void* reuseIdentifierKey;
         UIColor* cornerBorderColor = imageStorage.cornerBorderColor;
         CGFloat cornerBorderWidth = imageStorage.cornerBorderWidth;
         
-        
         if (boundsSizeInPixels.width * contentsScale < 1.0f || boundsSizeInPixels.height * contentsScale < 1.0f ||
             imageSizeInPixels.width < 1.0f                  || imageSizeInPixels.height < 1.0f) {
             return;
@@ -295,7 +337,7 @@ static const void* reuseIdentifierKey;
         }
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            UIGraphicsBeginImageContextWithOptions(backingSize,isOpaque,contentsScale);
+            UIGraphicsBeginImageContextWithOptions(backingSize,isOpaque,1.0f);
             if (nil == UIGraphicsGetCurrentContext()) {
                 return;
             }
@@ -318,20 +360,38 @@ static const void* reuseIdentifierKey;
             }
             [cornerPath stroke];
             [cornerPath setLineWidth:cornerBorderWidth];
-            id processedImageRef = (__bridge id _Nullable)(UIGraphicsGetImageFromCurrentImageContext().CGImage);
+            CGImageRef processedImageRef = (UIGraphicsGetImageFromCurrentImageContext().CGImage);
             UIGraphicsEndImageContext();
             dispatch_sync(dispatch_get_main_queue(), ^{
                 LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
                 [layerAsyncTransaction
                  addAsyncOperationWithTarget:self.layer
                  selector:@selector(setContents:)
-                 object:processedImageRef
+                 object:(__bridge id _Nullable)processedImageRef
                  completion:^(BOOL canceled) {
                      compeltion();
                  }];
             });
         });
     }
+}
+
+- (void)layoutWithStorage:(LWImageStorage *)imageStorage {
+    if (!CGRectEqualToRect(self.frame, imageStorage.frame)) {
+        self.frame = imageStorage.frame;
+    }
+    self.hidden = NO;
+}
+
+- (void)cleanup {
+    CGImageRef imageRef = (__bridge_retained CGImageRef)(self.layer.contents);
+    self.layer.contents = nil;
+    if (imageRef) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            CFRelease(imageRef);
+        });
+    }
+    self.hidden = YES;
 }
 
 - (void)fadeShowAnimation {

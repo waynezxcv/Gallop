@@ -93,8 +93,6 @@
             if (!container) {
                 container = [[UIView alloc] initWithFrame:CGRectZero];
                 container.identifier = imageStorage.identifier;
-                container.backgroundColor = imageStorage.backgroundColor;
-                container.clipsToBounds = imageStorage.clipsToBounds;
                 [self addSubview:container];
             }
             [self.imageContainers addObject:container];
