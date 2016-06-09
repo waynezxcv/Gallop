@@ -337,7 +337,7 @@ static const void* reuseIdentifierKey;
         }
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            UIGraphicsBeginImageContextWithOptions(backingSize,isOpaque,1.0f);
+            UIGraphicsBeginImageContextWithOptions(backingSize,isOpaque,contentsScale);
             if (nil == UIGraphicsGetCurrentContext()) {
                 return;
             }
