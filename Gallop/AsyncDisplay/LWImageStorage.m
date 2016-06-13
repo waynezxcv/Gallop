@@ -209,6 +209,7 @@ LWSERIALIZE_COPY_WITH_ZONE()
 @end
 
 static const void* reuseIdentifierKey;
+static const void* URLKey;
 
 @implementation UIView (LWImageStorage)
 
@@ -220,6 +221,15 @@ static const void* reuseIdentifierKey;
     objc_setAssociatedObject(self, &reuseIdentifierKey, identifier, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+- (NSURL *)URL {
+    return objc_getAssociatedObject(self, &URLKey);
+}
+
+- (void)setURL:(NSURL *)URL {
+    objc_setAssociatedObject(self, &URLKey, URL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
     if ([imageStorage.contents isKindOfClass:[UIImage class]]) {
         return;
@@ -227,6 +237,10 @@ static const void* reuseIdentifierKey;
     if ([imageStorage.contents isKindOfClass:[NSString class]]) {
         imageStorage.contents = [NSURL URLWithString:imageStorage.contents];
     }
+    if ([[(NSURL *)imageStorage.contents absoluteString] isEqualToString:self.URL.absoluteString]) {
+        return;
+    }
+    self.URL = imageStorage.contents;
     self.backgroundColor = imageStorage.backgroundColor;
     self.clipsToBounds = imageStorage.clipsToBounds;
     [self layoutWithStorage:imageStorage];
@@ -312,7 +326,6 @@ static const void* reuseIdentifierKey;
         UIColor* cornerBackgroundColor = imageStorage.cornerBackgroundColor;
         UIColor* cornerBorderColor = imageStorage.cornerBorderColor;
         CGFloat cornerBorderWidth = imageStorage.cornerBorderWidth;
-        
         if (boundsSizeInPixels.width * contentsScale < 1.0f || boundsSizeInPixels.height * contentsScale < 1.0f ||
             imageSizeInPixels.width < 1.0f                  || imageSizeInPixels.height < 1.0f) {
             return;
