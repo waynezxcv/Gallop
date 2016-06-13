@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -60,10 +60,10 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
     size_t destinationWidth = boundsSize.width;
     size_t destinationHeight = boundsSize.height;
     CGFloat boundsAspectRatio = (float)destinationWidth / (float)destinationHeight;
-    
+
     CGSize scaledSizeForImage = sourceImageSize;
     BOOL cropToRectDimensions = !CGRectIsEmpty(cropRect);
-    
+
     if (cropToRectDimensions) {
         scaledSizeForImage = CGSizeMake(boundsSize.width / cropRect.size.width, boundsSize.height / cropRect.size.height);
     } else {
@@ -103,7 +103,7 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
                                   ((destinationHeight - scaledSizeForDestination.height) * cropRect.origin.y),
                                   scaledSizeForDestination.width,
                                   scaledSizeForDestination.height);
-            
+
         } else {
             drawRect = CGRectMake(((destinationWidth - scaledSizeForDestination.width) / 2.0),
                                   ((destinationHeight - scaledSizeForDestination.height) / 2.0),
@@ -343,12 +343,12 @@ static const void* URLKey;
                                                           &backingSize,
                                                           &imageDrawRect);
         }
-        
+
         if (backingSize.width <= 0.0f || backingSize.height <= 0.0f ||
             imageDrawRect.size.width <= 0.0f || imageDrawRect.size.height <= 0.0f) {
             return;
         }
-        
+
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             UIGraphicsBeginImageContextWithOptions(backingSize,isOpaque,contentsScale);
             if (nil == UIGraphicsGetCurrentContext()) {
@@ -358,7 +358,7 @@ static const void* URLKey;
                 [backgroundColor setFill];
                 UIRectFill(CGRectMake(0, 0, backingSize.width, backingSize.height));
             }
-            
+
             UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:imageDrawRect
                                                                   cornerRadius:cornerRadius * contentsScale];
             UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:imageDrawRect];
@@ -398,9 +398,14 @@ static const void* URLKey;
 
 - (void)cleanup {
     CGImageRef imageRef = (__bridge_retained CGImageRef)(self.layer.contents);
+    id contents = self.layer.contents;
+    NSURL* URL = self.URL;
     self.layer.contents = nil;
+    self.URL = nil;
     if (imageRef) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            [contents class];
+            [URL class];
             CFRelease(imageRef);
         });
     }
