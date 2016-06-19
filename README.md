@@ -20,8 +20,6 @@ v0.2.4
 v0.2.3 
 文字添加了描边绘制模式。
 
-![image](https://github.com/waynezxcv/Gallop/raw/master/pics/4.png)
-
 v0.2.2 
 1.增加了一个方法 
 “- (void)lw_addLinkForWholeTextStorageWithData:(id)data
