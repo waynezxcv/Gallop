@@ -57,17 +57,5 @@
 @end
 
 
-@implementation NSObject(SwizzleMethod)
-
-+ (void)swizzleMethod:(SEL)origSel withMethod:(SEL)aftSel {
-    Method originMethod = class_getInstanceMethod(self, origSel);
-    Method newMethod = class_getInstanceMethod(self, aftSel);
-    if(originMethod && newMethod) {
-        method_exchangeImplementations(originMethod, newMethod);
-    }
-}
-
-
-@end
 
 
