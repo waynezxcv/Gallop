@@ -17,7 +17,8 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 * 滚动列表的性能优化。Gallop使用异步绘制、视图层级合并、主线程Runloop空闲时执行只能在主线程完成的任务、对布局模型预先缓存等方法，能在实现复杂的图文混排界面时，仍然保持一个相当优秀的滚动性能（FPS基本保持在60HZ）。
 * 方便的解析HTML生成原生iOS页面。
 
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.PNG)  
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.png)  
+
 ![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)  
 
 # Modifications
