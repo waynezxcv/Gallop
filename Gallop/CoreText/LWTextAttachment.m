@@ -128,7 +128,7 @@ LWSERIALIZE_COPY_WITH_ZONE()
 
 @end
 
-//*** Text描边（用来代替NSBackgroundColor） ***//
+//*** Text描边 ***//
 
 @implementation LWTextStroke
 

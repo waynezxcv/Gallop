@@ -56,6 +56,36 @@
 
 @end
 
+#define IS_WHITESPACE(_c) (_c == ' ' || _c == '\t' || _c == 0xA || _c == 0xB || _c == 0xC || _c == 0xD || _c == 0x85)
 
+@implementation NSString(HTML)
+
+- (NSString *)stringByNormalizingWhitespace {
+    NSInteger stringLength = [self length];
+    unichar* _characters = calloc(stringLength, sizeof(unichar));
+    [self getCharacters:_characters range:NSMakeRange(0, stringLength)];
+    NSInteger outputLength = 0;
+    BOOL inWhite = NO;
+    for (NSInteger i = 0; i<stringLength; i++) {
+        unichar oneChar = _characters[i];
+        if (IS_WHITESPACE(oneChar)) {
+            if (!inWhite) {
+                _characters[outputLength] = 32;
+                outputLength++;
+                inWhite = YES;
+            }
+        } else {
+            _characters[outputLength] = oneChar;
+            outputLength++;
+            inWhite = NO;
+        }
+    }
+    NSString* retString = [NSString stringWithCharacters:_characters length:outputLength];
+    free(_characters);
+    return retString;
+}
+
+
+@end
 
 

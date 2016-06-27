@@ -81,7 +81,7 @@
 @end
 
 
-//*** Text描边（用来代替NSBackgroundColor） ***//
+//*** Text描边  ***//
 
 @interface LWTextStroke : NSObject  <NSCopying,NSCoding>
 

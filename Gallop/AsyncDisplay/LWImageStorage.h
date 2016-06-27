@@ -41,7 +41,6 @@ typedef UIImage* (^LWImageStorageModificationBlock)(UIImage *image);
 @property (nonatomic,copy) LWImageStorageModificationBlock imageStorageModificationBlock;
 @property (nonatomic,assign) BOOL needRerendering;
 
-
 /*** 绘制 ***/
 - (void)lw_drawInContext:(CGContextRef)context isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld;
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight;

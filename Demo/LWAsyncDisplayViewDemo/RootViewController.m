@@ -8,6 +8,7 @@
 #import "RootViewController.h"
 #import "ViewController.h"
 #import "CoreTextDemoViewController.h"
+#import "HTMLParsingViewController.h"
 
 
 
@@ -29,11 +30,10 @@
     [self.view addSubview:self.tableView];
 }
 
-
 #pragma mark -
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -48,6 +48,9 @@
     else if (indexPath.row == 1) {
         cell.textLabel.text = @"Wechat moment Demo";
     }
+    else if (indexPath.row == 2) {
+        cell.textLabel.text = @"HTML Parsing Demo";
+    }
     return cell;
 }
 
@@ -59,6 +62,11 @@
     }
     else if (indexPath.row == 1) {
         ViewController* vc = [[ViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if (indexPath.row == 2) {
+        HTMLParsingViewController* vc = [[HTMLParsingViewController alloc] init];
+        vc.URL = [NSURL URLWithString:@"http://daily.zhihu.com/story/8457644"];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }

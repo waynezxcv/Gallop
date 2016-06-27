@@ -83,7 +83,8 @@
 
 #pragma mark - LifeCycle
 
-- (id)initWithCallbackQueue:(dispatch_queue_t)callbackQueue completionBlock:(LWAsyncTransactionCompletionBlock)completionBlock {
+- (id)initWithCallbackQueue:(dispatch_queue_t)callbackQueue
+            completionBlock:(LWAsyncTransactionCompletionBlock)completionBlock {
     if ((self = [self init])) {
         if (callbackQueue == NULL) {
             callbackQueue = dispatch_get_main_queue();

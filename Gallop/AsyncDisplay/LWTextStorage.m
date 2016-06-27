@@ -82,8 +82,8 @@
     self.textAlignment = NSTextAlignmentLeft;
     self.lineBreakMode = NSLineBreakByWordWrapping;
     self.underlineStyle = NSUnderlineStyleNone;
-    self.linespacing = 2.0f;
-    self.characterSpacing = 1.0f;
+    self.linespacing = 1.0f;
+    self.characterSpacing = 0.0f;
     self.textDrawMode = LWTextDrawModeFill;
     self.strokeColor = [UIColor blackColor];
     self.strokeWidth = 1.0f;

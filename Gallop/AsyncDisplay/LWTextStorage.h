@@ -45,7 +45,6 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 @interface LWTextStorage : LWStorage<NSCopying,NSCoding>
 
 @property (nonatomic,strong,readonly) LWTextLayout* textLayout;
-
 @property (nonatomic,copy) NSString* text;
 @property (nonatomic,strong) UIColor* textColor;
 @property (nonatomic,strong) UIColor* textBackgroundColor;

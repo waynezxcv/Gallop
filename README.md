@@ -2,66 +2,66 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# Gallop v0.2.5
-Gallop --- 异步绘制排版引擎，支持布局预加载缓存、支持图文混排显示，支持添加链接、支持自定义排版，自动布局。
-只需要少量简单代码，就可以构建一个性能相当优秀（滚动时帧数60）的图文混排界面。
-<br>
+# Gallop v0.3.0
+Gallop --- 强大、快速地图文混排框架。
+A framework for build a smooth asynchronous iOS APP.
 
+# About Gallop
+
+Gallop是一个功能强大、性能优秀的图文混排框架。
+
+## Features
+
+主要用于解决以下需求：
+* 实现图文混排界面，比如在文本中添加表情，对文字添加点击链接。Gallop还提供了方便的方法可以直接完成表情、URL链接、@用户、#话题#等的解析。
+* 滚动列表的性能优化。Gallop使用异步绘制、视图层级合并、主线程Runloop空闲时执行只能在主线程完成的任务、对布局模型预先缓存等方法，能在实现复杂的图文混排界面时，仍然保持一个相当优秀的滚动性能（FPS基本保持在60HZ）。
+* 方便的解析HTML生成原生iOS页面。
+
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.PNG)  
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.PNG)  
 
 # Modifications
 
+v0.3.0 
+* 增加了解析HTML生成原生iOS页面的功能。
+
 v0.2.5
-对图片加载进行了优化。
+* 对图片加载进行了优化。
 
 v0.2.4
-
-增加了TransactionGroup，LWTransaction，CALayer+LWTransaction。
+* 增加了TransactionGroup，LWTransaction，CALayer+LWTransaction。
 
 v0.2.3 
-文字添加了描边绘制模式。
+* 文字添加了描边绘制模式。
 
 v0.2.2 
-1.增加了一个方法 
-“- (void)lw_addLinkForWholeTextStorageWithData:(id)data
-linkColor:(UIColor *)linkColor
-highLightColor:(UIColor *)highLightColor;”
-
-2.修复了对文字添加链接重叠而发生冲突的bug.
-
-3.废弃了方法
-“- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)maxCount;"
+* 增加了一个方法 
+“- (void)lw_addLinkForWholeTextStorageWithData:(id)data linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor;”
+* 废弃了方法“- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)maxCount;"
 现在，LWAsyncDisplayView内部将自动维护一个复用池，可以为LWStorage设置一个NSString*类型的Identifier，
 来复用内部的相关UIView,简化API。
+* 修复了对文字添加链接重叠而发生冲突的bug.
 
 
-## Features
-* 支持文本布局绘制预加载，并使用异步绘制的方式，保持界面的流畅性
-* 支持富文本，图文混排显示，支持行间距 字间距，设置行数，自适应高度
-* 支持添加属性文本，自定义链接
-* 支持在子线程设置圆角半径
-* 支持通过设置约束的方式自动布局
-* API简单，只需设置简单的属性，其余交给Gallop就好啦。
+# Requirements
+* 使用Gallop实现网络图片加载部分依赖于SDWebImage（https://github.com/rs/SDWebImage）'SDWebImage', '~>3.7'
+* HTML解析依赖libxml2库
 
-## Requirements
-使用Gallop实现网络图片加载部分依赖于SDWebImage（https://github.com/rs/SDWebImage）
-'SDWebImage', '~>3.7'
 
-## Who Use
-适合于想要快速搭建类似微信朋友圈、新浪微博Timeline等复杂的图文混排滚动界面，并对于滚动流畅性性能有一定要求的情况。
+# Installation
+1. 将Gallop文件夹下的.h及.m文件添加到你的工程当中。
+2. 在XCode的Build Phases-> Link Binary With Libraries中添加libxml2.tbd库
+3. 在XCode的Build Setting->Header Search Paths中添加‘/usr/include/libxml2’
+4. #import "Gallop.h"
+ 
 
-## Installation
-将Gallop文件夹下的.h及.m文件添加到你的工程当中。
+# Usage
+
+## API Quickstart
 
 ```objc
 #import "Gallop.h"
 ```
-
-## Usage
-
-* **API Quickstart**
-
-
-### 使用示例
 
 1.生成一个文本模型
 
@@ -105,7 +105,6 @@ range:NSMakeRange(1,0)];
 
 ```
 
-
 2.生成一个图片模型
 ```objc
 
@@ -126,7 +125,6 @@ imamgeStorage.cornerRadius = 40.0f;
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedImageStorage:(LWImageStorage *)imageStorage touch:(UITouch *)touch;
 
 ```
-
 
 3.设置约束 自动布局
 ```objc
@@ -150,20 +148,15 @@ LWAsyncDisplayView* asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame
 asyncDisplayView.layout = layout;
 [self.view addSubview:asyncDisplayView];
 
+
 ```
-
-
 * **如果需要更加详细的内容，请看各个头文件和Demo，有详细的注释**
-*  Demo中有用Gallop构建的微信朋友圈,下载Demo真机调试。
 
 
+# 正在不断完善中...
+# 有任何问题请联系我 liuweiself@126.com
 
-## 正在不断完善中...
-## 有任何问题请联系我 liuweiself@126.com
-
-
-
-## License
+# License
 
 Gallop is available under the MIT license. See the LICENSE file for more info.
 
