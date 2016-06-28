@@ -41,6 +41,8 @@ typedef void(^LWStorageBuildingCompletion)(NSArray* storages);
 
 - (NSArray<LWStorage *>*)storages;
 
+- (LWStorage *)firstStorage;
+- (LWStorage *)lastStorage;
 
 @end
 

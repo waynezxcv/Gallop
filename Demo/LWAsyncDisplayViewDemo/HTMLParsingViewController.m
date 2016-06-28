@@ -101,16 +101,18 @@
         [builder createLWStorageWithXPath:@"//div[@class='meta']/span[@class='author']"
                                edgeInsets:UIEdgeInsetsMake(avatarTop, 60.0f, 10.0, 10.0f)
                          configDictionary:@{@"span":nameConfig}];
-        [layout addStorages:builder.storages];//作者名
+        LWTextStorage* nameStorage = (LWTextStorage*)builder.firstStorage;
 
         /** description  **/
         LWHTMLTextConfig* desConfig = [[LWHTMLTextConfig alloc] init];
         desConfig.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
         desConfig.textColor = [UIColor grayColor];
         [builder createLWStorageWithXPath:@"//div[@class='meta']/span[@class='bio']"
-                               edgeInsets:UIEdgeInsetsMake(avatarTop,100.0f, 10.0, 10.0f)
+                               edgeInsets:UIEdgeInsetsMake(avatarTop,60.0f, 10.0, 10.0f)
                          configDictionary:@{@"span":desConfig}];
-        [layout addStorages:builder.storages];//作者描述
+        LWTextStorage* desStorage =(LWTextStorage*)builder.firstStorage;
+        [nameStorage lw_appendTextStorage:desStorage];
+        [layout addStorage:nameStorage];
 
         /** content  **/
         LWHTMLTextConfig* contentConfig = [[LWHTMLTextConfig alloc] init];

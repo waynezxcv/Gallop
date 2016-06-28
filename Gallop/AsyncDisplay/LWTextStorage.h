@@ -46,6 +46,7 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 
 @property (nonatomic,strong,readonly) LWTextLayout* textLayout;
 @property (nonatomic,copy) NSString* text;
+@property (nonatomic,strong) NSMutableAttributedString* attributedText;
 @property (nonatomic,strong) UIColor* textColor;
 @property (nonatomic,strong) UIColor* textBackgroundColor;
 @property (nonatomic,strong) UIFont* font;
@@ -102,5 +103,8 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
                           size:(CGSize)size
                      alignment:(LWTextAttachAlignment)attachAlignment
                          range:(NSRange)range;
+
+/***  在末尾拼接一个LWtextStorage实例  ***/
+- (void)lw_appendTextStorage:(LWTextStorage *)aTextStorage;
 
 @end

@@ -89,6 +89,17 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     return [self.tmpStorages copy];
 }
 
+- (LWStorage *)firstStorage {
+    if (self.tmpStorages.count) {
+        return [self.tmpStorages objectAtIndex:0];
+    }
+    return nil;
+}
+
+- (LWStorage *)lastStorage {
+    return [self.tmpStorages lastObject];
+}
+
 #pragma mark - ParserDelegate
 
 - (void)parserDidStartDocument:(LWHTMLParser *)parser {
@@ -252,7 +263,6 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     _tmpStorages = [[NSMutableArray alloc] init];
     return _tmpStorages;
 }
-
 
 @end
 
