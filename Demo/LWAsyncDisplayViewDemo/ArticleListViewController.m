@@ -8,6 +8,7 @@
 #import "ArticleListViewController.h"
 #import "ArticleListTableViewCell.h"
 #import "HTMLParsingViewController.h"
+#import "LWLoadingView.h"
 
 @interface ArticleListViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -21,6 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"ariticle list";
     self.isNeedRefresh = YES;
     self.dataSource = [[NSMutableArray alloc] init];
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -33,20 +35,24 @@
     [super viewWillAppear:animated];
     if (self.isNeedRefresh) {
         self.isNeedRefresh = NO;
+        [LWLoadingView showInView:self.view];
+        __weak typeof(self) weakSelf = self;
         [self downloadDataCompletion:^(NSData *data) {
+            __strong typeof(weakSelf) swself = weakSelf;
             NSString* receiveStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
             NSData* d = [receiveStr dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:d options:NSJSONReadingMutableLeaves error:nil];
             NSArray* list = [jsonDict objectForKey:@"stories"];
-            [self.dataSource removeAllObjects];
+            [swself.dataSource removeAllObjects];
             for (NSDictionary* dict in list) {
                 @autoreleasepool {
                     ArticleListModel* model = [ArticleListModel modelWithJSON:dict];
-                    [self.dataSource addObject:model];
+                    [swself.dataSource addObject:model];
                 }
             }
             dispatch_sync(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
+                [swself.tableView reloadData];
+                [LWLoadingView hideInViwe:swself.view];
             });
         }];
     }

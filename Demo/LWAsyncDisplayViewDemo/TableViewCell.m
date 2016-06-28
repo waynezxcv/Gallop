@@ -126,7 +126,7 @@
         CGContextSetLineWidth(context, 0.2f);
         CGContextSetStrokeColorWithColor(context,RGB(220.0f, 220.0f, 220.0f, 1).CGColor);
         CGContextStrokePath(context);
-        
+
         if ([self.cellLayout.statusModel.type isEqualToString:@"website"]) {
             CGContextAddRect(context, self.cellLayout.websiteRect);
             CGContextSetFillColorWithColor(context, RGB(240, 240, 240, 1).CGColor);
@@ -150,8 +150,6 @@
         return _menuButton;
     }
     _menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _menuButton.backgroundColor = [UIColor whiteColor];
-    _menuButton.opaque = YES;
     [_menuButton setImage:[UIImage imageNamed:@"[menu]"] forState:UIControlStateNormal];
     _menuButton.imageEdgeInsets = UIEdgeInsetsMake(14.5f, 12.0f, 14.5f, 12.0f);
     [_menuButton addTarget:self action:@selector(didClickedMenuButton) forControlEvents:UIControlEventTouchUpInside];
@@ -162,7 +160,7 @@
     if (_menu) {
         return _menu;
     }
-    
+
     _menu = [[Menu alloc] initWithFrame:CGRectZero];
     _menu.backgroundColor = [UIColor whiteColor];
     _menu.opaque = YES;

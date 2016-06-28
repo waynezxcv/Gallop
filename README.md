@@ -14,12 +14,11 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 
 主要用于解决以下需求：
 * 实现图文混排界面，比如在文本中添加表情，对文字添加点击链接。Gallop还提供了方便的方法可以直接完成表情、URL链接、@用户、#话题#等的解析。
-* 滚动列表的性能优化。Gallop使用异步绘制、视图层级合并、主线程Runloop空闲时执行只能在主线程完成的任务、对布局模型预先缓存等方法，能在实现复杂的图文混排界面时，仍然保持一个相当优秀的滚动性能（FPS基本保持在60HZ）。
-* 方便的解析HTML生成原生iOS页面。
-
+* 滚动列表的性能优化。Gallop使用异步绘制、视图层级合并、主线程Runloop空闲时执行只能在主线程完成的任务、对布局模型预先缓存等方法，能在实现复杂的图文混排界面时，仍然保持一个相当优秀的滚动性能（FPS基本保持在60HZ），项目内有使用Gallop构建的微信朋友圈Demo。
 ![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.png)
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
 
+* 方便的解析HTML渲染生成原生iOS页面。
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
 
 
 
@@ -56,7 +55,7 @@ v0.2.2
 2. 在XCode的Build Phases-> Link Binary With Libraries中添加libxml2.tbd库
 3. 在XCode的Build Setting->Header Search Paths中添加‘/usr/include/libxml2’
 4. #import "Gallop.h"
- 
+
 
 # Usage
 
@@ -129,13 +128,7 @@ imamgeStorage.cornerRadius = 40.0f;
 
 ```
 
-3.设置约束 自动布局
-```objc
-[LWConstraintManager lw_makeConstraint:textStorage.constraint.leftMargin(10).topMargin(20).widthLength(40.0f).heightLength(40.0f)];
-[LWConstraintManager lw_makeConstraint:imamgeStorage.constraint.leftMarginToStorage(textStorage,10).topMargin(20).widthLength(SCREEN_WIDTH)];
-```
-
-4.生成布局模型
+3.生成布局模型
 ```objc
 LWLayout* layout = [[LWLayout alloc] init];
 
@@ -144,7 +137,7 @@ LWLayout* layout = [[LWLayout alloc] init];
 [layout addStorage:imamgeStorage];
 ```
 
-5.创建LWAsyncDisplayView，并将LWLayout实例赋值给创建LWAsyncDisplayView对象
+4.创建LWAsyncDisplayView，并将LWLayout实例赋值给创建LWAsyncDisplayView对象
 
 ```objc
 LWAsyncDisplayView* asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero];
@@ -153,8 +146,57 @@ asyncDisplayView.layout = layout;
 
 
 ```
-* **如果需要更加详细的内容，请看各个头文件和Demo，有详细的注释**
 
+
+5.解析HTML生成iOS原生页面
+
+```objc
+/***  创建LWStorageBuilder  ***/
+LWStorageBuilder* builder = [[LWStorageBuilder alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+
+/***  创建LWLayout  ***/
+LWLayout* layout = [[LWLayout alloc] init];
+
+/***  创建LWHTMLTextConfig  ***/
+LWHTMLTextConfig* contentConfig = [[LWHTMLTextConfig alloc] init];
+contentConfig.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
+contentConfig.textColor = RGB(50, 50, 50, 1);
+contentConfig.linkColor = RGB(232, 104, 96,1.0f);
+contentConfig.linkHighlightColor = RGB(0, 0, 0, 0.35f);
+
+/***  创建另一个LWHTMLTextConfig  ***/
+LWHTMLTextConfig* strongConfig = [[LWHTMLTextConfig alloc] init];
+strongConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:15.0f];
+strongConfig.textColor = [UIColor blackColor];
+
+
+/***  通过XPath解析HTML并生成LWStorage  ***/
+/***  通过UIEdgeInsets设置布局传入第二个参数 ***/
+/*** 标签名对应的LWHTMLTextConfig以字典的Key-Value格式传入最后一个参数 ***/
+[builder createLWStorageWithXPath:@"//div[@class='content']/p"
+edgeInsets:UIEdgeInsetsMake([layout suggestHeightWithBottomMargin:10.0f], 10.0f, 10.0, 10.0f)
+configDictionary:@{@"p":contentConfig,
+@"strong":strongConfig,
+@"em":strongConfig}];
+
+/***  获取生成的LWStorage实例数组  ***/
+NSArray* storages = builder.storages;
+
+/***  添加到LWLayout实例  ***/
+[layout addStorages:storages];
+
+/***  创建LWHTMLDisplayView对象并赋值  ***/
+LWHTMLDisplayView* htmlView = [[LWHTMLDisplayView alloc] initWithFrame:self.view.bounds];
+htmlView.displayDelegate = self;
+[self.view addSubview:htmlView];
+
+```
+
+
+XPath教程（http://www.w3school.com.cn/xpath/）
+
+* **如果需要更加详细的内容，请看各个头文件和Demo，有详细的注释**
 
 # 正在不断完善中...
 # 有任何问题请联系我 liuweiself@126.com

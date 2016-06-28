@@ -94,9 +94,6 @@ const CGFloat kRefreshBoundary = 170.0f;
 - (void)setup {
     self.needRefresh = YES;
     self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
-    NSDictionary* attributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
-    self.navigationController.navigationBar.titleTextAttributes = attributes;
     self.navigationItem.title = @"朋友圈";
 }
 

@@ -19,6 +19,13 @@
 
 @implementation RootViewController
 
+- (void)loadView {
+    [super loadView];
+    self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
+    NSDictionary* attributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
+    self.navigationController.navigationBar.titleTextAttributes = attributes;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Gallop";
