@@ -17,6 +17,7 @@
         self.placeholder = nil;
         self.userInteractionEnabled = YES;
         self.size = CGSizeMake(SCREEN_WIDTH, 200.0f);
+        self.paragraphSpacing = 10.0f;
     }
     return self;
 }

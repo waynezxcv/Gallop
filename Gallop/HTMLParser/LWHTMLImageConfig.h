@@ -15,6 +15,8 @@
 @property (nonatomic,assign) CGSize size;
 @property (nonatomic,strong) UIImage* placeholder;
 @property (nonatomic,assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
+@property (nonatomic,assign) CGFloat paragraphSpacing;
+
 
 + (LWHTMLImageConfig *)defaultsConfig;
 

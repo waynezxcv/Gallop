@@ -39,19 +39,21 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 @property (nonatomic,strong) LWHTMLParser* parser;
 @property (nonatomic,copy) NSString* xpath;
 @property (nonatomic,copy) NSArray<LWStorage *>* storages;
+@property (nonatomic,assign) CGFloat offsetY;
+@property (nonatomic,copy) NSDictionary* configDict;
+@property (nonatomic,assign) UIEdgeInsets edgeInsets;
+
+@property (nonatomic,assign) BOOL isTagEnd;
+@property (nonatomic,copy) NSString* parentTag;
+@property (nonatomic,assign) LWElementType currentType;
+@property (nonatomic,strong) _LWHTMLLink* currentLink;
+@property (nonatomic,strong) _LWHTMLTag* currentTag;
+
 @property (nonatomic,strong) NSMutableString* contentString;
 @property (nonatomic,strong) NSMutableArray* tmpStorages;
 @property (nonatomic,strong) NSMutableString* tmpString;
 @property (nonatomic,strong) NSMutableArray* tmpLinks;
-
-@property (nonatomic,copy) NSString* parentTag;
-@property (nonatomic,assign) BOOL isTagEnd;
-@property (nonatomic,assign) LWElementType currentType;
-@property (nonatomic,strong) _LWHTMLLink* currentLink;
-
-@property (nonatomic,assign) CGFloat offsetY;
-@property (nonatomic,copy) NSDictionary* configDict;
-@property (nonatomic,assign) UIEdgeInsets edgeInsets;
+@property (nonatomic,strong) NSMutableArray* tmpTags;
 
 @end
 
@@ -131,11 +133,14 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
         self.parentTag = elementName;
         self.tmpString = [[NSMutableString alloc] init];
         self.tmpLinks = [[NSMutableArray alloc] init];
+        self.tmpTags = [[NSMutableArray alloc] init];
     }
     LWElementType type = [self _elementTypeWithElementName:elementName];
     switch (type) {
         case LWHTMLElementTypeText: {
             self.currentType = LWHTMLElementTypeText;
+            self.currentTag = [[_LWHTMLTag alloc] init];
+            self.currentTag.tagName = elementName;
         }break;
         case LWHTMLElementTypeImage: {
             self.currentType = LWHTMLElementTypeImage;
@@ -152,13 +157,13 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
                 CGFloat width = (imageConfig.size.width >= SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right) ?
                 SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right : imageConfig.size.width;
                 imageStorage.frame = CGRectMake(self.edgeInsets.left,
-                                                self.offsetY + 10.0f,
+                                                self.offsetY + imageConfig.paragraphSpacing,
                                                 width,
                                                 imageConfig.size.height);
                 imageStorage.clipsToBounds = YES;
                 imageStorage.placeholder = imageConfig.placeholder;
                 imageStorage.userInteractionEnabled = imageConfig.userInteractionEnabled;
-                self.offsetY += (imageStorage.height + 5.0f);
+                self.offsetY += (imageStorage.height + imageConfig.paragraphSpacing);
                 [self.tmpStorages addObject:imageStorage];
             }
         }break;
@@ -180,7 +185,15 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     switch (self.currentType) {
         case LWHTMLElementTypeText: {
             if (self.tmpString) {
+                if (self.currentTag) {
+                    self.currentTag.range =  NSMakeRange(self.tmpString.length, string.length);
+                }
                 [self.tmpString appendString:string];
+                _LWHTMLTag* aTag = [[_LWHTMLTag alloc] init];
+                aTag.range = self.currentTag.range;
+                aTag.tagName = [self.currentTag.tagName copy];
+                [self.tmpTags addObject:aTag];
+                self.currentTag = nil;
             }
         } break;
         case LWElementTypeLink: {
@@ -210,10 +223,11 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
         } else {
             config = [LWHTMLTextConfig defaultsTextConfig];
         }
+
         LWTextStorage* textStorage = [[LWTextStorage alloc] init];
         textStorage.text = [[self.tmpString copy] stringByNormalizingWhitespace];
         textStorage.frame = CGRectMake(self.edgeInsets.left,
-                                       self.offsetY + 10.0f,
+                                       self.offsetY + config.paragraphSpacing,
                                        SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right,
                                        CGFLOAT_MAX);
         textStorage.textColor = config.textColor;
@@ -236,7 +250,7 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
                                  highLightColor:config.linkHighlightColor];
             }
         }
-        self.offsetY += (textStorage.height + 5.0f);
+        self.offsetY += (textStorage.height + config.paragraphSpacing);
         [self.tmpStorages addObject:textStorage];
         self.tmpString = nil;
         self.tmpLinks = nil;

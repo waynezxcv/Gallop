@@ -59,7 +59,6 @@ typedef void(^LWStorageBuildingCompletion)(NSArray* storages);
 //** 获取生成的字符串 **//
 - (NSString *)contents;
 
-
 @end
 
 

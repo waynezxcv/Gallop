@@ -49,6 +49,7 @@
     self.strokeWidth = 1.0f;
     self.linkColor = [UIColor blueColor];
     self.linkHighlightColor = RGB(0, 0, 0, 0.35f);
+    self.paragraphSpacing = 10.0f;
 }
 
 + (LWHTMLTextConfig *)defaultsTextConfig {

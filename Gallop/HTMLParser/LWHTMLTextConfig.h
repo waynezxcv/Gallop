@@ -41,6 +41,7 @@
 @property (nonatomic,assign) CGFloat strokeWidth;
 @property (nonatomic,strong) UIColor* linkColor;
 @property (nonatomic,strong) UIColor* linkHighlightColor;
+@property (nonatomic,assign) CGFloat paragraphSpacing;
 
 + (LWHTMLTextConfig *)defaultsTextConfig;
 
