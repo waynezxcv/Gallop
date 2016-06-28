@@ -80,13 +80,13 @@
     if ([data isKindOfClass:[NSString class]]) {
         NSString* string = (NSString *)data;
         if ([string hasPrefix:@"http://daily.zhihu.com/story/"]) {
-            [LWAlertView shoWithMessage:@"缺少模板，使用浏览器打开"];
+            [LWAlertView shoWithMessage:@"使用HTMLParsingViewController打开"];
             HTMLParsingViewController* vc = [[HTMLParsingViewController alloc] init];
             vc.URL = [NSURL URLWithString:string];
             [self.navigationController pushViewController:vc animated:YES];
         }
         else {
-            [LWAlertView shoWithMessage:@"使用HTMLParsingViewController打开"];
+            [LWAlertView shoWithMessage:@"缺少模板，使用浏览器打开"];
             WebViewController* vc = [[WebViewController alloc] init];
             vc.URL = [NSURL URLWithString:string];
             [self.navigationController pushViewController:vc animated:YES];
