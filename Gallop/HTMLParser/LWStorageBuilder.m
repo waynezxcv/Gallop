@@ -135,6 +135,7 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
         self.tmpLinks = [[NSMutableArray alloc] init];
         self.tmpTags = [[NSMutableArray alloc] init];
     }
+    
     LWElementType type = [self _elementTypeWithElementName:elementName];
     switch (type) {
         case LWHTMLElementTypeText: {
