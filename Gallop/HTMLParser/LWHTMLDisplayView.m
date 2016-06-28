@@ -22,14 +22,18 @@
  THE SOFTWARE.
  */
 
-
 #import "LWHTMLDisplayView.h"
 #import "LWAsyncDisplayView.h"
 #import "LWLayout.h"
+#import "LWStorageBuilder.h"
+#import "LWImageBrowser/LWImageBrowser.h"
+
 
 @interface LWHTMLDisplayView ()<LWAsyncDisplayViewDelegate>
 
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
+@property (nonatomic,strong) LWStorageBuilder* storageBuilder;
+@property (nonatomic,copy) NSArray* imageCallbacks;
 
 @end
 
@@ -55,6 +59,24 @@
     return self;
 }
 
+- (id)initWithFrame:(CGRect)frame parentVC:(UIViewController *)parentVC {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero];
+        self.asyncDisplayView.delegate = self;
+        [self addSubview:self.asyncDisplayView];
+        self.parentVC = parentVC;
+    }
+    return self;
+}
+
+- (void)setData:(NSData *)data {
+    if (_data != data) {
+        _data = data;
+    }
+    self.storageBuilder = [[LWStorageBuilder alloc] initWithData:self.data encoding:NSUTF8StringEncoding];
+}
+
 - (void)setLayout:(LWLayout *)layout {
     if (_layout != layout) {
         _layout = layout;
@@ -64,18 +86,48 @@
     self.asyncDisplayView.frame = CGRectMake(0, 0, SCREEN_WIDTH, contentSize.height);
     self.asyncDisplayView.layout = self.layout;
 }
+
 #pragma mark - LWAsyncDisplayViewDelegate
 
 /***  点击链接 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
-    if ([self.displayDelegate respondsToSelector:@selector(lwhtmlDisplayView:didCilickedTextStorage:linkdata:)]) {
+    if ([self.displayDelegate respondsToSelector:@selector(lwhtmlDisplayView:didCilickedTextStorage:linkdata:)] &&
+        [self.displayDelegate conformsToProtocol:@protocol(LWHTMLDisplayViewDelegate)]) {
         [self.displayDelegate lwhtmlDisplayView:self didCilickedTextStorage:textStorage linkdata:data];
     }
 }
+
 /***  点击LWImageStorage回调 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedImageStorage:(LWImageStorage *)imageStorage touch:(UITouch *)touch {
-    NSLog(@"%@",imageStorage.contents);
+    if ([self.imageCallbacks containsObject:imageStorage]) {
+        NSInteger index = [self.imageCallbacks indexOfObject:imageStorage];
+        NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:self.imageCallbacks.count];
+        for (NSInteger i = 0; i < self.imageCallbacks.count; i ++) {
+            @autoreleasepool {
+                LWImageStorage* imageStorage = [self.imageCallbacks objectAtIndex:i];
+                LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
+                                                                                      thumbnailURL:(NSURL *)imageStorage.contents
+                                                                                             HDURL:(NSURL *)imageStorage.contents
+                                                                                imageViewSuperView:self.asyncDisplayView
+                                                                               positionAtSuperView:imageStorage.frame
+                                                                                             index:index];
+                [tmp addObject:imageModel];
+            }
+        }
+        LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self.parentVC
+                                                                                imageModels:tmp
+                                                                               currentIndex:index];
+        [imageBrowser show];
+    }
+    if ([self.displayDelegate respondsToSelector:@selector(lwhtmlDisplayView:didCilickedImageStorage:)] &&
+        [self.displayDelegate conformsToProtocol:@protocol(LWHTMLDisplayViewDelegate)]) {
+        [self.displayDelegate lwhtmlDisplayView:self didCilickedImageStorage:imageStorage];
+    }
+}
 
+#pragma mark - Getter
+- (NSArray *)imageCallbacks {
+    return self.storageBuilder.imageCallbacks;
 }
 
 @end

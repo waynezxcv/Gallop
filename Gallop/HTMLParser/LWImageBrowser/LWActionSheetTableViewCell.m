@@ -23,9 +23,9 @@
  */
 
 
-
 #import "LWActionSheetTableViewCell.h"
 #import "GallopUtils.h"
+
 
 
 @interface LWActionSheetTableViewCell ()
@@ -47,6 +47,7 @@
     }
     return self;
 }
+
 
 - (void)show {
     [UIView animateWithDuration:0.1f delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -77,12 +78,14 @@
 
 @implementation LWActionSheetTableViewCellContent : UIView
 
+
 - (void)setTitle:(NSString *)title {
     if (_title != title) {
         _title = [title copy];
     }
     self.textLabel.text = self.title;
 }
+
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -91,12 +94,13 @@
 
         self.textLabel = [[UILabel alloc] initWithFrame:self.bounds];
         self.textLabel.backgroundColor = [UIColor clearColor];
-        self.textLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+        self.textLabel.font = [UIFont fontWithName:@"Heiti SC" size:18.0f];
         self.textLabel.textAlignment = NSTextAlignmentCenter;
         self.textLabel.textColor = [UIColor whiteColor];
         [self addSubview:self.textLabel];
     }
     return self;
+
 }
 
 - (void)drawRect:(CGRect)rect {

@@ -67,7 +67,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidAppearNotifications:)
                                                  name:UIKeyboardWillShowNotification object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidHidenNotifications:)
                                                  name:UIKeyboardWillHideNotification object:nil];
@@ -78,7 +78,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidHideNotification
                                                   object:nil];
@@ -122,7 +122,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         [self.dataSource replaceObjectAtIndex:indexPath.row withObject:layout];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
                               withRowAnimation:UITableViewRowAnimationAutomatic];
-        
+
     }
 }
 
@@ -167,7 +167,6 @@ const CGFloat kRefreshBoundary = 170.0f;
         [tmp addObject:imageModel];
     }
     LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self
-                                                                                  style:LWImageBrowserAnimationStyleScale
                                                                             imageModels:tmp
                                                                            currentIndex:index];
     imageBrowser.view.backgroundColor = [UIColor blackColor];
@@ -410,7 +409,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv",@"伊布拉希莫维奇",@"权志龙",@"郜林",@"扎克伯格"]},
-                        
+
                         @{@"type":@"website",
                           @"name":@"Ronaldo",
                           @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
@@ -424,8 +423,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv",@"Gallop"]},
-                        
-                        
+
+
                         @{@"type":@"image",
                           @"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
@@ -450,7 +449,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
+
                         @{@"type":@"image",
                           @"name":@"Instagram热门",
                           @"avatar":@"http://tp4.sinaimg.cn/5074408479/50/5706839595/0",
@@ -472,8 +471,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"Tim Cook"]},
-                        
-                        
+
+
                         @{@"type":@"image",
                           @"name":@"头条新闻",
                           @"avatar":@"http://tp1.sinaimg.cn/1618051664/50/5735009977/0",
@@ -489,8 +488,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"Tim Cook"]},
-                        
-                        
+
+
                         @{@"type":@"image",
                           @"name":@"Kindle中国",
                           @"avatar":@"http://tp1.sinaimg.cn/3262223112/50/5684307907/1",
@@ -504,9 +503,9 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"统一回复,使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
-                        
-                        
+
+
+
                         @{@"type":@"image",
                           @"name":@"G-SHOCK",
                           @"avatar":@"http://tp3.sinaimg.cn/1595142730/50/5691224157/1",
@@ -525,9 +524,9 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
-                        
-                        
+
+
+
                         @{@"type":@"image",
                           @"name":@"型格志style",
                           @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
@@ -548,9 +547,9 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
-                        
-                        
+
+
+
                         @{@"type":@"image",
                           @"name":@"数字尾巴",
                           @"avatar":@"http://tp1.sinaimg.cn/1726544024/50/5630520790/1",
@@ -569,8 +568,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
-                        
+
+
                         @{@"type":@"image",
                           @"name":@"欧美街拍XOXO",
                           @"avatar":@"http://tp4.sinaimg.cn/1708004923/50/1283204657/0",

@@ -55,12 +55,12 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 @property (nonatomic,strong) NSMutableString* tmpString;
 @property (nonatomic,strong) NSMutableArray* tmpLinks;
 @property (nonatomic,strong) NSMutableArray* tmpTags;
+@property (nonatomic,strong) NSMutableArray* imageCallbacksArray;
 
 @end
 
 
 @implementation LWStorageBuilder
-
 
 #pragma mark - Init
 
@@ -68,13 +68,13 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     if (!data) {
         return nil;
     }
-
     self = [super init];
     if (self) {
         self.isTagEnd = YES;
         self.offsetY = 0.0f;
         self.parser = [[LWHTMLParser alloc] initWithData:data encoding:encoding];
         self.parser.delegate = self;
+        self.imageCallbacksArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -117,6 +117,10 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 
 - (NSString *)contents {
     return [self.contentString copy];
+}
+
+- (NSArray<LWImageStorage *>*)imageCallbacks {
+    return self.imageCallbacksArray;
 }
 
 #pragma mark - ParserDelegate
@@ -168,6 +172,9 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
                 imageStorage.userInteractionEnabled = imageConfig.userInteractionEnabled;
                 self.offsetY += (imageStorage.height + imageConfig.paragraphSpacing);
                 [self.tmpStorages addObject:imageStorage];
+                if (imageConfig.needAddToImageBrowser && ![self.imageCallbacksArray containsObject:imageStorage]) {
+                    [self.imageCallbacksArray addObject:imageStorage];
+                }
             }
         }break;
         case LWElementTypeLink: {
@@ -308,7 +315,6 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 }
 
 @end
-
 
 @implementation _LWHTMLLink
 

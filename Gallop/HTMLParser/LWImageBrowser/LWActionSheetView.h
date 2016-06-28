@@ -22,7 +22,6 @@
  THE SOFTWARE.
  */
 
-
 #import <UIKit/UIKit.h>
 
 @class LWActionSheetView;
@@ -38,10 +37,9 @@
 @interface LWActionSheetView : UIView
 
 @property (nonatomic,weak) id <LWActionSheetViewDelegate> delegate;
+@property (nonatomic,strong) id userInfo;
 
 - (id)initTilesArray:(NSArray *)titles delegate:(id <LWActionSheetViewDelegate>)delegate;
-
 - (void)show;
-
 
 @end

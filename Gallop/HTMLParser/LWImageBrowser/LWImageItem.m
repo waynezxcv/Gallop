@@ -28,7 +28,7 @@
 
 const CGFloat kMaximumZoomScale = 3.0f;
 const CGFloat kMinimumZoomScale = 1.0f;
-const CGFloat kDuration = 0.18f;
+const CGFloat kDuration = 0.3f;
 
 @interface LWImageItem ()<UIScrollViewDelegate,UIActionSheetDelegate>
 
@@ -87,7 +87,6 @@ const CGFloat kDuration = 0.18f;
     }
 }
 
-
 - (void)loadHdImage:(BOOL)animated {
     if (!self.imageModel.thumbnailImage) {
         self.imageView.image = self.imageModel.placeholder;
@@ -123,16 +122,19 @@ const CGFloat kDuration = 0.18f;
     }
     //已经下载的图片
     else {
+
         if (animated) {
             self.imageView.frame = self.imageModel.originPosition;
             [self.imageView sd_setImageWithURL:self.imageModel.HDURL];
             [UIView animateWithDuration:kDuration
                                   delay:0.0f
-                                options:UIViewAnimationOptionCurveEaseOut
-                             animations:^{
-                                 weakSelf.imageView.frame = destinationRect;
-                             } completion:^(BOOL finished) {
-                             }];
+                 usingSpringWithDamping:0.7
+                  initialSpringVelocity:0.0f
+                                options:0 animations:^{
+                                    weakSelf.imageView.frame = destinationRect;
+                                } completion:^(BOOL finished) {
+
+                                }];
         } else {
             [self.imageView sd_setImageWithURL:self.imageModel.HDURL];
             self.imageView.frame = destinationRect;
@@ -142,26 +144,33 @@ const CGFloat kDuration = 0.18f;
 
 - (void)downloadImageWithDestinationRect:(CGRect)destinationRect {
     __weak typeof(self) weakSelf = self;
+    //    MBProgressHUD* progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+    //    progressHUD.mode = MBProgressHUDModeAnnularDeterminate;
+    //    progressHUD.animationType = MBProgressHUDAnimationFade;
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [manager downloadImageWithURL:self.imageModel.HDURL
                               options:options
                              progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                 //TODO:加载动画
-
+                                 //                                 progressHUD.progress = [[NSNumber numberWithInteger:receivedSize] floatValue] / [[NSNumber numberWithInteger:expectedSize] floatValue];
                              } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                                 if (finished) {
+                                 if (finished && image) {
+                                     //                                     [MBProgressHUD hideAllHUDsForView:weakSelf animated:NO];
                                      weakSelf.imageView.image = image;
                                      weakSelf.imageModel.thumbnailImage = image;
-                                     // 通知刷新
                                      if ([self.eventDelegate respondsToSelector:@selector(didFinishRefreshThumbnailImageIfNeed)]) {
                                          [self.eventDelegate didFinishRefreshThumbnailImageIfNeed];
                                      }
-                                     [UIView animateWithDuration:0.2f animations:^{
-                                         weakSelf.imageView.frame = destinationRect;
-                                     } completion:^(BOOL finished) {
-                                     }];
+                                     [UIView animateWithDuration:kDuration
+                                                           delay:0.0f
+                                          usingSpringWithDamping:0.7
+                                           initialSpringVelocity:0.0f
+                                                         options:0 animations:^{
+                                                             weakSelf.imageView.frame = destinationRect;
+                                                         } completion:^(BOOL finished) {
+
+                                                         }];
                                  }
                              }];
     });
@@ -180,10 +189,15 @@ const CGFloat kDuration = 0.18f;
 }
 
 - (CGRect)calculateDestinationFrameWithSize:(CGSize)size{
-    CGRect rect = CGRectMake(0.0f,
-                             (SCREEN_HEIGHT - size.height * SCREEN_WIDTH/size.width)/2,
-                             SCREEN_WIDTH,
-                             size.height * SCREEN_WIDTH/size.width);
+    CGRect rect;
+    rect = CGRectMake(0.0f,
+                      (SCREEN_HEIGHT - size.height * SCREEN_WIDTH/size.width)/2,
+                      SCREEN_WIDTH,
+                      size.height * SCREEN_WIDTH/size.width);
+    if (rect.size.height > SCREEN_HEIGHT) {
+        rect = CGRectMake(0, 0, rect.size.width, rect.size.height);
+    }
+    self.contentSize = rect.size;
     return rect;
 }
 
@@ -217,10 +231,8 @@ const CGFloat kDuration = 0.18f;
 }
 
 #pragma mark - UIGestureRecognizerHandler
-/**
- *  单击
- *
- */
+
+/**单击*/
 - (void)handleSingleTap:(UITapGestureRecognizer *)gestureRecognizer{
     if (gestureRecognizer.numberOfTapsRequired == 1) {
         if ([self.eventDelegate respondsToSelector:@selector(didClickedItemToHide)]) {
@@ -229,10 +241,7 @@ const CGFloat kDuration = 0.18f;
     }
 }
 
-/**
- *  双击
- *
- */
+/**双击**/
 - (void)handleDoubleTap:(UITapGestureRecognizer *)gestureRecognizer{
     if (gestureRecognizer.numberOfTapsRequired == 2) {
         if(self.zoomScale == 1){

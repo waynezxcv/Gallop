@@ -61,16 +61,16 @@ const CGFloat cellHeight = 60.0f;
                                                                maskImage:nil];
         [self addSubview:self.screenshotImageView];
 
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, SCREEN_HEIGHT  - cellHeight * self.titlesCount , SCREEN_WIDTH, cellHeight * self.titlesCount)
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f,
+                                                                       SCREEN_HEIGHT  - cellHeight * self.titlesCount ,
+                                                                       SCREEN_WIDTH,
+                                                                       cellHeight * self.titlesCount)
                                                       style:UITableViewStylePlain];
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:self.tableView];
-//        UITapGestureRecognizer* tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapView)];
-//        tapGesture.delegate = self;
-//        [self addGestureRecognizer:tapGesture];
     }
     return self;
 }
@@ -87,6 +87,15 @@ const CGFloat cellHeight = 60.0f;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(i * 0.09f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [cell show];
         });
+    }
+}
+
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    UITouch* touch = [touches anyObject];
+    CGPoint point = [touch locationInView:self];
+    if (CGRectContainsPoint(CGRectMake(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT - cellHeight * self.titlesCount ), point)) {
+        [self _hide];
     }
 }
 
@@ -128,7 +137,7 @@ const CGFloat cellHeight = 60.0f;
 - (void)_hide {
     __weak typeof(self) weakSelf = self;
     [UIView animateWithDuration:0.2f animations:^{
-        weakSelf.tableView.frame = CGRectMake(0.0f, SCREEN_HEIGHT, SCREEN_WIDTH,  cellHeight * self.titlesCount);
+        weakSelf.tableView.frame = CGRectMake(0.0f, SCREEN_HEIGHT, SCREEN_WIDTH,cellHeight * self.titlesCount);
         weakSelf.screenshotImageView.alpha = 0.0f;
     } completion:^(BOOL finished) {
         [weakSelf removeFromSuperview];

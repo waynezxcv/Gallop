@@ -55,13 +55,14 @@ typedef void(^LWStorageBuildingCompletion)(NSArray* storages);
 //** 获取生成的LWstorage实例数组中的最后一个元素  **//
 - (LWStorage *)lastStorage;
 
+//** 获取加入回调列表的LWImageStorage数组 **//
+- (NSArray<LWImageStorage *>*)imageCallbacks;
+
 #pragma mark - Content getter
 //** 获取生成的字符串 **//
 - (NSString *)contents;
 
 @end
-
-
 
 
 #pragma mark - Private

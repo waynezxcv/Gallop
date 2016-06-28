@@ -22,23 +22,26 @@
  THE SOFTWARE.
  */
 
-
 #import <UIKit/UIKit.h>
 
 @class LWLayout;
 @class LWHTMLDisplayView;
 @class LWTextStorage;
-
+@class LWStorageBuilder;
+@class LWImageStorage;
 
 @protocol LWHTMLDisplayViewDelegate <NSObject>
 
 @optional
 
 /***  点击链接 ***/
-- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data;
-/***  点击LWImageStorage回调 ***/
-- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView didCilickedImageStorages:(NSArray *)imageStorages index:(NSInteger)index;
+- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
+   didCilickedTextStorage:(LWTextStorage *)textStorage
+                 linkdata:(id)data;
 
+/***  点击LWImageStorage回调 ***/
+- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
+  didCilickedImageStorage:(LWImageStorage *)imageStorage;
 
 @end
 
@@ -46,5 +49,10 @@
 
 @property (nonatomic,strong) LWLayout* layout;
 @property (nonatomic,weak) id <LWHTMLDisplayViewDelegate> displayDelegate;
+@property (nonatomic,strong,readonly) LWStorageBuilder* storageBuilder;
+@property (nonatomic,strong) NSData* data;
+@property (nonatomic,weak) UIViewController* parentVC;//如果要使用图片浏览器，需要设置parentVC
+
+- (id)initWithFrame:(CGRect)frame parentVC:(UIViewController *)parentVC;
 
 @end

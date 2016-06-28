@@ -15,7 +15,17 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 主要用于解决以下需求：
 * 实现图文混排界面，比如在文本中添加表情，对文字添加点击链接。Gallop还提供了方便的方法可以直接完成表情、URL链接、@用户、#话题#等的解析。
 * 滚动列表的性能优化。Gallop使用异步绘制、视图层级合并、主线程Runloop空闲时执行只能在主线程完成的任务、对布局模型预先缓存等方法，能在实现复杂的图文混排界面时，仍然保持一个相当优秀的滚动性能（FPS基本保持在60HZ），项目内有使用Gallop构建的微信朋友圈Demo。
-* 方便的解析HTML渲染生成原生iOS页面。
+* 方便的解析HTML渲染生成原生iOS页面，项目内有使用Gallop构建的知乎日报Demo。
+
+解析HTML渲染生成原生iOS页面的优势：
+
+1.性能更好。
+2.可以将图片缓存到本地，无需重复加载，使用UIWebView只能缓存到内存，当UIWebView释放之后，就需要重新加载。
+3.可以使用原生的图片浏览器来浏览照片，体验更好，可以解决UIWebView查看大图时无法覆盖NavigationBar的问题。
+4.可以根据需要对HTML的内容重新布局、设置样式，去除不需要的部分。
+5.可以根据需要在内容中添加其他原生控件。
+
+//TODO：目前只支持，文字、图片，后续会支持视频。
 
 ![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.PNG)
 ![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
@@ -25,7 +35,7 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 # Modifications
 
 v0.3.0 
-* 增加了解析HTML生成原生iOS页面的功能。
+* 增加了解析HTML渲染生成原生iOS页面的功能。
 
 v0.2.5
 * 对图片加载进行了优化。
@@ -151,9 +161,15 @@ asyncDisplayView.layout = layout;
 5.解析HTML生成iOS原生页面
 
 ```objc
-/***  创建LWStorageBuilder  ***/
-LWStorageBuilder* builder = [[LWStorageBuilder alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
+/*** 创建LWHTMLDisplayView  ***/
+LWHTMLDisplayView* htmlView = [[LWHTMLDisplayView alloc] initWithFrame:self.view.bounds];
+htmlView.parentVC = self;
+htmlView.displayDelegate = self;
+[self.view addSubview:htmlView];
+
+/***  获取LWStorageBuilder  ***/
+LWStorageBuilder* builder = htmlView.storageBuilder;
 
 /***  创建LWLayout  ***/
 LWLayout* layout = [[LWLayout alloc] init];
@@ -186,13 +202,10 @@ NSArray* storages = builder.storages;
 /***  添加到LWLayout实例  ***/
 [layout addStorages:storages];
 
-/***  创建LWHTMLDisplayView对象并赋值  ***/
-LWHTMLDisplayView* htmlView = [[LWHTMLDisplayView alloc] initWithFrame:self.view.bounds];
-htmlView.displayDelegate = self;
-[self.view addSubview:htmlView];
+/***  给LWHTMLDisplayView对象并赋值  ***/
+htmlView.layout = layout;
 
 ```
-
 
 XPath教程（http://www.w3school.com.cn/xpath/index.asp）
 

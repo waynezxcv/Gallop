@@ -16,7 +16,7 @@
 @property (nonatomic,strong) UIImage* placeholder;
 @property (nonatomic,assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
 @property (nonatomic,assign) CGFloat paragraphSpacing;
-
+@property (nonatomic,assign) BOOL needAddToImageBrowser;//是否需要将这个Image包含到照片浏览器的内容中去
 
 + (LWHTMLImageConfig *)defaultsConfig;
 
