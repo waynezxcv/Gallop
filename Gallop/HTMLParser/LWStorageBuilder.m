@@ -25,6 +25,7 @@
 
 #import "LWStorageBuilder.h"
 #import "LWHTMLParser.h"
+#import "NSMutableAttributedString+Gallop.h"
 
 
 
@@ -67,6 +68,7 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     if (!data) {
         return nil;
     }
+
     self = [super init];
     if (self) {
         self.isTagEnd = YES;
@@ -135,23 +137,23 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
         self.tmpLinks = [[NSMutableArray alloc] init];
         self.tmpTags = [[NSMutableArray alloc] init];
     }
-    
     LWElementType type = [self _elementTypeWithElementName:elementName];
     switch (type) {
         case LWHTMLElementTypeText: {
             self.currentType = LWHTMLElementTypeText;
             self.currentTag = [[_LWHTMLTag alloc] init];
             self.currentTag.tagName = elementName;
+            self.currentTag.isParent = NO;
+            if ([self.parentTag isEqualToString:elementName]) {
+                self.currentTag.isParent = YES;
+            }
         }break;
         case LWHTMLElementTypeImage: {
             self.currentType = LWHTMLElementTypeImage;
             if (attributeDict[@"src"]) {
-                LWHTMLImageConfig* imageConfig;
-                if (self.configDict[@"img"]) {
+                LWHTMLImageConfig* imageConfig = [LWHTMLImageConfig defaultsConfig];
+                if (self.configDict[@"img"] && [self.configDict[@"img"] isKindOfClass:[LWHTMLImageConfig class]]) {
                     imageConfig = self.configDict[@"img"];
-                }
-                else {
-                    imageConfig = [[LWHTMLImageConfig alloc] init];
                 }
                 LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
                 imageStorage.contents = [NSURL URLWithString:[NSString stringWithFormat:@"%@",(NSString *)attributeDict[@"src"]]];
@@ -190,10 +192,15 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
                     self.currentTag.range =  NSMakeRange(self.tmpString.length, string.length);
                 }
                 [self.tmpString appendString:string];
-                _LWHTMLTag* aTag = [[_LWHTMLTag alloc] init];
-                aTag.range = self.currentTag.range;
-                aTag.tagName = [self.currentTag.tagName copy];
-                [self.tmpTags addObject:aTag];
+                if (![self.currentTag.tagName isEqualToString:self.parentTag]) {
+                    _LWHTMLTag* aTag = [[_LWHTMLTag alloc] init];
+                    aTag.range = self.currentTag.range;
+                    aTag.tagName = [self.currentTag.tagName copy];
+                    aTag.isParent = self.currentTag.isParent;
+                    if (aTag.tagName) {
+                        [self.tmpTags addObject:aTag];
+                    }
+                }
                 self.currentTag = nil;
             }
         } break;
@@ -214,51 +221,55 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 }
 
 - (void)parser:(LWHTMLParser *)parser didEndElement:(NSString *)elementName {
-    if ([self.parentTag isEqualToString:elementName]) {
-        self.isTagEnd = YES;
-        LWHTMLTextConfig* config;
-        if (self.configDict[elementName]) {
-            if ([self.configDict[elementName] isKindOfClass:[LWHTMLTextConfig class]]) {
-                config = self.configDict[elementName];
-            }
-        } else {
-            config = [LWHTMLTextConfig defaultsTextConfig];
-        }
-
-        LWTextStorage* textStorage = [[LWTextStorage alloc] init];
-        textStorage.text = [[self.tmpString copy] stringByNormalizingWhitespace];
-        textStorage.frame = CGRectMake(self.edgeInsets.left,
-                                       self.offsetY + config.paragraphSpacing,
-                                       SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right,
-                                       CGFLOAT_MAX);
-        textStorage.textColor = config.textColor;
-        textStorage.textBackgroundColor = config.textBackgroundColor;
-        textStorage.font = config.font;
-        textStorage.linespacing = config.linespacing;
-        textStorage.characterSpacing = config.characterSpacing;
-        textStorage.textAlignment = config.textAlignment;
-        textStorage.underlineStyle = config.underlineStyle;
-        textStorage.underlineColor = config.underlineColor;
-        textStorage.lineBreakMode = config.lineBreakMode;
-        textStorage.textDrawMode = config.textDrawMode;
-        textStorage.strokeColor = config.strokeColor;
-        textStorage.strokeWidth = config.strokeWidth;
-        if (self.tmpLinks && self.tmpLinks.count) {
-            for (_LWHTMLLink* aLink in self.tmpLinks) {
-                [textStorage lw_addLinkWithData:aLink.URL
-                                          range:aLink.range
-                                      linkColor:config.linkColor
-                                 highLightColor:config.linkHighlightColor];
-            }
-        }
-        self.offsetY += (textStorage.height + config.paragraphSpacing);
-        [self.tmpStorages addObject:textStorage];
-        self.tmpString = nil;
-        self.tmpLinks = nil;
-    }
-    else {
+    if (![self.parentTag isEqualToString:elementName]) {
         self.currentType = [self _elementTypeWithElementName:self.parentTag];
+        return;
     }
+    self.isTagEnd = YES;
+    NSMutableAttributedString* attributedString = nil;
+    LWHTMLTextConfig* config = [LWHTMLTextConfig defaultsTextConfig];
+    if (self.configDict[elementName] && [self.configDict[elementName] isKindOfClass:[LWHTMLTextConfig class]]) {
+        config = self.configDict[elementName];
+    }
+    NSString* string = [[self.tmpString stringByNormalizingWhitespace] copy];
+    NSRange range = NSMakeRange(0, string.length);
+    attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+    [attributedString setTextColor:config.textColor range:range];
+    [attributedString setTextBackgroundColor:config.textBackgroundColor range:range];
+    [attributedString setFont:config.font range:range];
+    [attributedString setLineSpacing:config.linespacing range:range];
+    [attributedString setCharacterSpacing:config.characterSpacing range:range];
+    [attributedString setTextAlignment:config.textAlignment range:range];
+    [attributedString setUnderlineStyle:config.underlineStyle underlineColor:config.underlineColor range:range];
+    [attributedString setLineBreakMode:config.lineBreakMode range:range];
+    for (NSInteger i = 0; i < self.tmpTags.count; i ++) {
+        _LWHTMLTag* aTag = self.tmpTags[i];
+        if (!self.configDict[aTag.tagName] || ![self.configDict[aTag.tagName] isKindOfClass:[LWHTMLTextConfig class]]) {
+            continue;
+        }
+        LWHTMLTextConfig* chilredConfig = self.configDict[aTag.tagName];
+        [attributedString setTextColor:chilredConfig.textColor range:aTag.range];
+        [attributedString setTextBackgroundColor:chilredConfig.textBackgroundColor range:aTag.range];
+        [attributedString setFont:chilredConfig.font range:aTag.range];
+        [attributedString setLineSpacing:chilredConfig.linespacing range:aTag.range];
+        [attributedString setCharacterSpacing:chilredConfig.characterSpacing range:aTag.range];
+        [attributedString setTextAlignment:chilredConfig.textAlignment range:aTag.range];
+        [attributedString setUnderlineStyle:chilredConfig.underlineStyle underlineColor:config.underlineColor range:aTag.range];
+        [attributedString setLineBreakMode:chilredConfig.lineBreakMode range:aTag.range];
+    }
+    if (self.tmpLinks && self.tmpLinks.count) {
+        for (_LWHTMLLink* aLink in self.tmpLinks) {
+            [attributedString addLinkWithData:aLink.URL range:aLink.range linkColor:config.linkColor highLightColor:config.linkHighlightColor];
+        }
+    }
+    CGRect frame = CGRectMake(self.edgeInsets.left,self.offsetY + config.paragraphSpacing,SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right,CGFLOAT_MAX);
+    LWTextStorage* textStorage = [LWTextStorage lw_textStrageWithText:attributedString frame:frame];
+    textStorage.textDrawMode  = config.textDrawMode;
+    self.offsetY += (textStorage.height + config.paragraphSpacing);
+    [self.tmpStorages addObject:textStorage];
+    self.tmpString = nil;
+    self.tmpLinks = nil;
+    self.tmpTags = nil;
 }
 
 - (void)parserDidEndDocument:(LWHTMLParser *)parser {

@@ -147,9 +147,16 @@
         contentConfig.textColor = RGB(50, 50, 50, 1);
         contentConfig.linkColor = RGB(232, 104, 96,1.0f);
         contentConfig.linkHighlightColor = RGB(0, 0, 0, 0.35f);
+
+        LWHTMLTextConfig* strongConfig = [[LWHTMLTextConfig alloc] init];
+        strongConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:15.0f];
+        strongConfig.textColor = [UIColor blackColor];
+
         [builder createLWStorageWithXPath:@"//div[@class='content']/p"
                                edgeInsets:UIEdgeInsetsMake([layout suggestHeightWithBottomMargin:10.0f], 10.0f, 10.0, 10.0f)
-                         configDictionary:@{@"p":contentConfig}];
+                         configDictionary:@{@"p":contentConfig,
+                                            @"strong":strongConfig,
+                                            @"em":strongConfig}];
         [layout addStorages:builder.storages];//正文
 
         dispatch_async(dispatch_get_main_queue(), ^{

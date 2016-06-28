@@ -77,5 +77,6 @@ typedef void(^LWStorageBuildingCompletion)(NSArray* storages);
 
 @property (nonatomic,assign) NSRange range;
 @property (nonatomic,copy) NSString* tagName;
+@property (nonatomic,assign) BOOL isParent;
 
 @end

@@ -49,6 +49,7 @@
     LWTextStorage* textStorage = [[LWTextStorage alloc] initWithFrame:frame];
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:frame.size];
     textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:attributedText sizeToFit:YES];
+    textStorage.attributedText = [attributedText mutableCopy];
     return textStorage;
 }
 

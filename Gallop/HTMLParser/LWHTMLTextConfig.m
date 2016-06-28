@@ -45,8 +45,8 @@
     self.linespacing = 1.0f;
     self.characterSpacing = 0.0f;
     self.textDrawMode = LWTextDrawModeFill;
-    self.strokeColor = [UIColor blackColor];
-    self.strokeWidth = 1.0f;
+    self.strokeColor = nil;
+    self.strokeWidth = 0.0f;
     self.linkColor = [UIColor blueColor];
     self.linkHighlightColor = RGB(0, 0, 0, 0.35f);
     self.paragraphSpacing = 10.0f;
