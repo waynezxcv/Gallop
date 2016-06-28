@@ -33,16 +33,32 @@ typedef void(^LWStorageBuildingCompletion)(NSArray* storages);
 
 @interface LWStorageBuilder : NSObject
 
+//** 构造方法  **//
 - (id)initWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
 
+//** 使用默认的edgeInsets和configDictionary来创建LWstorage实例
+- (void)createLWStorageWithXPath:(NSString *)xpath;
+
+//** 使用edgeInsets和configDictionary来创建LWstorage实例
 - (void)createLWStorageWithXPath:(NSString *)xpath
                       edgeInsets:(UIEdgeInsets)edgeInsets
                 configDictionary:(NSDictionary *)dict;
 
+
+#pragma mark - Storage getter
+//** 获取生成的LWstorage实例数组  **//
 - (NSArray<LWStorage *>*)storages;
 
+//** 获取生成的LWstorage实例数组中的第一个元素  **//
 - (LWStorage *)firstStorage;
+
+//** 获取生成的LWstorage实例数组中的最后一个元素  **//
 - (LWStorage *)lastStorage;
+
+#pragma mark - Content getter
+//** 获取生成的字符串 **//
+- (NSString *)contents;
+
 
 @end
 

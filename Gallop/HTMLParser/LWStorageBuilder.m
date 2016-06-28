@@ -37,8 +37,9 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 @interface LWStorageBuilder ()<LWHTMLParserDelegate>
 
 @property (nonatomic,strong) LWHTMLParser* parser;
-@property (nonatomic,copy) NSArray<LWStorage *>* storages;
 @property (nonatomic,copy) NSString* xpath;
+@property (nonatomic,copy) NSArray<LWStorage *>* storages;
+@property (nonatomic,strong) NSMutableString* contentString;
 @property (nonatomic,strong) LWStorage* currentStorage;
 @property (nonatomic,strong) NSMutableArray* tmpStorages;
 @property (nonatomic,assign) BOOL isTagEnd;
@@ -79,12 +80,21 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
                       edgeInsets:(UIEdgeInsets)edgeInsets
                 configDictionary:(NSDictionary *)dict {
     self.xpath = [xpath copy];
-    self.offsetY = edgeInsets.top;
     self.edgeInsets = edgeInsets;
+    self.offsetY = self.edgeInsets.top;
     self.configDict = [dict copy];
     [self.parser startSearchWithXPathQuery:xpath];
 }
 
+- (void)createLWStorageWithXPath:(NSString *)xpath {
+    self.xpath = [xpath copy];
+    self.edgeInsets = UIEdgeInsetsZero;
+    self.offsetY = self.edgeInsets.top;
+    self.configDict = nil;
+    [self.parser startSearchWithXPathQuery:xpath];
+}
+
+#pragma mark - Getter
 - (NSArray<LWStorage *>*)storages {
     return [self.tmpStorages copy];
 }
@@ -100,9 +110,14 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     return [self.tmpStorages lastObject];
 }
 
+- (NSString *)contents {
+    return [self.contentString copy];
+}
+
 #pragma mark - ParserDelegate
 
 - (void)parserDidStartDocument:(LWHTMLParser *)parser {
+    self.contentString = [[NSMutableString alloc] init];
     [self.tmpStorages removeAllObjects];
 }
 
@@ -157,16 +172,18 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 }
 
 - (void)parser:(LWHTMLParser *)parser foundCharacters:(NSString *)string {
+    if (!string || !string.length) {
+        return;
+    }
+    [self.contentString appendString:string];
     switch (self.currentType) {
         case LWHTMLElementTypeText: {
-            if (string && string.length) {
-                if (self.tmpString) {
-                    [self.tmpString appendString:string];
-                }
+            if (self.tmpString) {
+                [self.tmpString appendString:string];
             }
         } break;
         case LWElementTypeLink: {
-            if (string && string.length && self.currentLink) {
+            if (self.currentLink) {
                 self.currentLink.range = NSMakeRange(self.tmpString.length, string.length);
                 [self.tmpString appendString:string];
                 LWHTMLLink* aLink = [[LWHTMLLink alloc] init];
@@ -234,10 +251,10 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     self.isTagEnd = YES;
     self.currentTag = nil;
     self.currentType = 0;
-    self.tmpString = nil;
     self.currentLink = nil;
     self.tmpLinks = nil;
     self.configDict = nil;
+    self.tmpString = nil;
 }
 
 #pragma mark - Private

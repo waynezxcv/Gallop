@@ -16,6 +16,7 @@
 @interface HTMLParsingViewController ()<LWHTMLDisplayViewDelegate>
 
 @property (nonatomic,strong) LWHTMLDisplayView* htmlView;
+@property (nonatomic,strong) UILabel* coverLabel;
 @property (nonatomic,assign) BOOL isNeedRefresh;
 
 @end
@@ -26,12 +27,6 @@
 
 - (void)loadView {
     [super loadView];
-    self.isNeedRefresh = YES;
-    self.title = @"HTML Parsing";
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.htmlView = [[LWHTMLDisplayView alloc] initWithFrame:self.view.bounds];
-    self.htmlView.displayDelegate = self;
-    [self.view addSubview:self.htmlView];
 
     UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(0, 0, 80.0f, 30.0f);
@@ -41,6 +36,21 @@
     button.titleLabel.textAlignment = NSTextAlignmentRight;
     [button addTarget:self action:@selector(UIWebView) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+
+
+    self.isNeedRefresh = YES;
+    self.title = @"HTML Parsing";
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.htmlView = [[LWHTMLDisplayView alloc] initWithFrame:self.view.bounds];
+    self.htmlView.displayDelegate = self;
+    [self.view addSubview:self.htmlView];
+
+    self.coverLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 220.0f, SCREEN_WIDTH - 20.0f, 40.0f)];
+    self.coverLabel.textColor = [UIColor whiteColor];
+    self.coverLabel.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:20.0f];
+    self.coverLabel.numberOfLines = 0;
+    self.coverLabel.textAlignment = NSTextAlignmentLeft;
+    [self.htmlView addSubview:self.coverLabel];
 }
 
 - (void)UIWebView {
@@ -76,13 +86,17 @@
                          configDictionary:@{@"img":coverConfig}];
         [layout addStorages:builder.storages];//封面
 
+        /** cover title **/
+        [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/h1"];
+        NSString* coverTitle = [builder contents];
+
         /** title  **/
         LWHTMLTextConfig* titleConfig = [[LWHTMLTextConfig alloc] init];
         titleConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:18.0];
         titleConfig.textColor = [UIColor blackColor];
-        [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/h1"
+        [builder createLWStorageWithXPath:@"//div[@class='question']/h2"
                                edgeInsets:UIEdgeInsetsMake([layout suggestHeightWithBottomMargin:10.0f], 10.0f, 10.0, 10.0f)
-                         configDictionary:@{@"h1":titleConfig}];
+                         configDictionary:@{@"h2":titleConfig}];
         [layout addStorages:builder.storages];//标题
 
         /** avatar  **/
@@ -126,6 +140,7 @@
         [layout addStorages:builder.storages];//正文
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.htmlView.layout = layout;
+            weakSelf.coverLabel.text = coverTitle;
             [LWLoadingView hideInViwe:weakSelf.view];
         });
     }];
