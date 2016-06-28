@@ -230,6 +230,9 @@ LWSERIALIZE_COPY_WITH_ZONE()
 /***  在末尾拼接一个LWtextStorage实例  ***/
 - (void)lw_appendTextStorage:(LWTextStorage *)aTextStorage {
     NSMutableAttributedString* attributedString = [aTextStorage attributedText];
+    if (!attributedString) {
+        return;
+    }
     [self.attributedText appendAttributedString:attributedString];
     [self _creatTextLayout];
 }

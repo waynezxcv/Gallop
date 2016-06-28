@@ -76,7 +76,9 @@
 
 
 #pragma mark - LWHTMLDisplayViewDelegate
-- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
+- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
+   didCilickedTextStorage:(LWTextStorage *)textStorage
+                 linkdata:(id)data {
     if ([data isKindOfClass:[NSString class]]) {
         NSString* string = (NSString *)data;
         if ([string hasPrefix:@"http://daily.zhihu.com/story/"]) {
@@ -93,10 +95,11 @@
     }
 }
 
-- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView didCilickedImageStorages:(NSArray *)imageStorages index:(NSInteger)index {
+- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
+ didCilickedImageStorages:(NSArray *)imageStorages
+                    index:(NSInteger)index {
 
 }
-
 
 #pragma mark - Parsing
 - (void)_parsing {
@@ -178,7 +181,6 @@
                                             @"strong":strongConfig,
                                             @"em":strongConfig}];
         [layout addStorages:builder.storages];//正文
-
         dispatch_async(dispatch_get_main_queue(), ^{
             swself.htmlView.layout = layout;
             swself.coverTitleLabel.text = coverTitle;
