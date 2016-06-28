@@ -15,10 +15,10 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 主要用于解决以下需求：
 * 实现图文混排界面，比如在文本中添加表情，对文字添加点击链接。Gallop还提供了方便的方法可以直接完成表情、URL链接、@用户、#话题#等的解析。
 * 滚动列表的性能优化。Gallop使用异步绘制、视图层级合并、主线程Runloop空闲时执行只能在主线程完成的任务、对布局模型预先缓存等方法，能在实现复杂的图文混排界面时，仍然保持一个相当优秀的滚动性能（FPS基本保持在60HZ），项目内有使用Gallop构建的微信朋友圈Demo。
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.png)
-
 * 方便的解析HTML渲染生成原生iOS页面。
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
+
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.PNG)
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.PNG)
 
 
 
@@ -194,7 +194,7 @@ htmlView.displayDelegate = self;
 ```
 
 
-XPath教程（http://www.w3school.com.cn/xpath/）
+XPath教程（http://www.w3school.com.cn/xpath/index.asp）
 
 * **如果需要更加详细的内容，请看各个头文件和Demo，有详细的注释**
 
