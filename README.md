@@ -18,7 +18,7 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 * 方便的解析HTML渲染生成原生iOS页面。
 
 ![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.PNG)
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.PNG)
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
 
 
 
