@@ -62,9 +62,21 @@ typedef void(^LWStorageBuildingCompletion)(NSArray* storages);
 
 @end
 
-@interface LWHTMLLink : NSObject
+
+
+
+#pragma mark - Private
+
+@interface _LWHTMLLink : NSObject
 
 @property (nonatomic,copy) NSString* URL;
 @property (nonatomic,assign) NSRange range;
+
+@end
+
+@interface _LWHTMLTag : NSObject
+
+@property (nonatomic,assign) NSRange range;
+@property (nonatomic,copy) NSString* tagName;
 
 @end

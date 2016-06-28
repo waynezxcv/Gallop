@@ -16,7 +16,8 @@
 @interface HTMLParsingViewController ()<LWHTMLDisplayViewDelegate>
 
 @property (nonatomic,strong) LWHTMLDisplayView* htmlView;
-@property (nonatomic,strong) UILabel* coverLabel;
+@property (nonatomic,strong) UILabel* coverTitleLabel;
+@property (nonatomic,strong) UILabel* coverDesLabel;
 @property (nonatomic,assign) BOOL isNeedRefresh;
 
 @end
@@ -37,7 +38,6 @@
     [button addTarget:self action:@selector(UIWebView) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 
-
     self.isNeedRefresh = YES;
     self.title = @"HTML Parsing";
     self.view.backgroundColor = [UIColor whiteColor];
@@ -45,12 +45,19 @@
     self.htmlView.displayDelegate = self;
     [self.view addSubview:self.htmlView];
 
-    self.coverLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 220.0f, SCREEN_WIDTH - 20.0f, 40.0f)];
-    self.coverLabel.textColor = [UIColor whiteColor];
-    self.coverLabel.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:20.0f];
-    self.coverLabel.numberOfLines = 0;
-    self.coverLabel.textAlignment = NSTextAlignmentLeft;
-    [self.htmlView addSubview:self.coverLabel];
+    self.coverTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 220.0f, SCREEN_WIDTH - 20.0f, 80.0f)];
+    self.coverTitleLabel.textColor = [UIColor whiteColor];
+    self.coverTitleLabel.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:20.0f];
+    self.coverTitleLabel.numberOfLines = 0;
+    self.coverTitleLabel.textAlignment = NSTextAlignmentLeft;
+    [self.htmlView addSubview:self.coverTitleLabel];
+
+    self.coverDesLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 270.0f, SCREEN_WIDTH - 20.0f, 20.0f)];
+    self.coverDesLabel.textColor = [UIColor whiteColor];
+    self.coverDesLabel.font = [UIFont fontWithName:@"Heiti SC" size:10.0f];
+    self.coverDesLabel.numberOfLines = 0;
+    self.coverDesLabel.textAlignment = NSTextAlignmentRight;
+    [self.htmlView addSubview:self.coverDesLabel];
 }
 
 - (void)UIWebView {
@@ -76,6 +83,8 @@
     [LWLoadingView showInView:self.view];
     __weak typeof(self) weakSelf = self;
     [self downloadDataCompletion:^(NSData *data) {
+        __strong typeof(weakSelf) swself = weakSelf;
+
         LWLayout* layout = [[LWLayout alloc] init];
         LWStorageBuilder* builder = [[LWStorageBuilder alloc] initWithData:data encoding:NSUTF8StringEncoding];
         /** cover  **/
@@ -89,6 +98,10 @@
         /** cover title **/
         [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/h1"];
         NSString* coverTitle = [builder contents];
+
+        /** cover description **/
+        [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/span[@class='img-source']"];
+        NSString* coverDes = [builder contents];
 
         /** title  **/
         LWHTMLTextConfig* titleConfig = [[LWHTMLTextConfig alloc] init];
@@ -138,10 +151,12 @@
                                edgeInsets:UIEdgeInsetsMake([layout suggestHeightWithBottomMargin:10.0f], 10.0f, 10.0, 10.0f)
                          configDictionary:@{@"p":contentConfig}];
         [layout addStorages:builder.storages];//正文
+
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.htmlView.layout = layout;
-            weakSelf.coverLabel.text = coverTitle;
-            [LWLoadingView hideInViwe:weakSelf.view];
+            swself.htmlView.layout = layout;
+            swself.coverTitleLabel.text = coverTitle;
+            swself.coverDesLabel.text = coverDes;
+            [LWLoadingView hideInViwe:swself.view];
         });
     }];
 }

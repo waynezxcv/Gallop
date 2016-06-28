@@ -40,14 +40,15 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 @property (nonatomic,copy) NSString* xpath;
 @property (nonatomic,copy) NSArray<LWStorage *>* storages;
 @property (nonatomic,strong) NSMutableString* contentString;
-@property (nonatomic,strong) LWStorage* currentStorage;
 @property (nonatomic,strong) NSMutableArray* tmpStorages;
-@property (nonatomic,assign) BOOL isTagEnd;
-@property (nonatomic,copy) NSString* currentTag;
-@property (nonatomic,assign) LWElementType currentType;
 @property (nonatomic,strong) NSMutableString* tmpString;
-@property (nonatomic,strong) LWHTMLLink* currentLink;
 @property (nonatomic,strong) NSMutableArray* tmpLinks;
+
+@property (nonatomic,copy) NSString* parentTag;
+@property (nonatomic,assign) BOOL isTagEnd;
+@property (nonatomic,assign) LWElementType currentType;
+@property (nonatomic,strong) _LWHTMLLink* currentLink;
+
 @property (nonatomic,assign) CGFloat offsetY;
 @property (nonatomic,copy) NSDictionary* configDict;
 @property (nonatomic,assign) UIEdgeInsets edgeInsets;
@@ -127,7 +128,7 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     }
     if (self.isTagEnd) {
         self.isTagEnd = NO  ;
-        self.currentTag = elementName;
+        self.parentTag = elementName;
         self.tmpString = [[NSMutableString alloc] init];
         self.tmpLinks = [[NSMutableArray alloc] init];
     }
@@ -164,7 +165,7 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
         case LWElementTypeLink: {
             self.currentType = LWElementTypeLink;
             if (!self.currentLink) {
-                self.currentLink = [[LWHTMLLink alloc] init];
+                self.currentLink = [[_LWHTMLLink alloc] init];
                 self.currentLink.URL = attributeDict[@"href"];
             }
         }break;
@@ -186,7 +187,7 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
             if (self.currentLink) {
                 self.currentLink.range = NSMakeRange(self.tmpString.length, string.length);
                 [self.tmpString appendString:string];
-                LWHTMLLink* aLink = [[LWHTMLLink alloc] init];
+                _LWHTMLLink* aLink = [[_LWHTMLLink alloc] init];
                 aLink.URL = [self.currentLink.URL copy];
                 aLink.range = self.currentLink.range;
                 [self.tmpLinks addObject:aLink];
@@ -199,7 +200,7 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 }
 
 - (void)parser:(LWHTMLParser *)parser didEndElement:(NSString *)elementName {
-    if ([self.currentTag isEqualToString:elementName]) {
+    if ([self.parentTag isEqualToString:elementName]) {
         self.isTagEnd = YES;
         LWHTMLTextConfig* config;
         if (self.configDict[elementName]) {
@@ -228,7 +229,7 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
         textStorage.strokeColor = config.strokeColor;
         textStorage.strokeWidth = config.strokeWidth;
         if (self.tmpLinks && self.tmpLinks.count) {
-            for (LWHTMLLink* aLink in self.tmpLinks) {
+            for (_LWHTMLLink* aLink in self.tmpLinks) {
                 [textStorage lw_addLinkWithData:aLink.URL
                                           range:aLink.range
                                       linkColor:config.linkColor
@@ -241,15 +242,14 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
         self.tmpLinks = nil;
     }
     else {
-        self.currentType = [self _elementTypeWithElementName:self.currentTag];
+        self.currentType = [self _elementTypeWithElementName:self.parentTag];
     }
 }
 
 - (void)parserDidEndDocument:(LWHTMLParser *)parser {
     self.xpath = nil;
-    self.currentStorage = nil;
     self.isTagEnd = YES;
-    self.currentTag = nil;
+    self.parentTag = nil;
     self.currentType = 0;
     self.currentLink = nil;
     self.tmpLinks = nil;
@@ -284,7 +284,10 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
 @end
 
 
-@implementation LWHTMLLink
+@implementation _LWHTMLLink
 
+@end
+
+@implementation _LWHTMLTag
 
 @end
