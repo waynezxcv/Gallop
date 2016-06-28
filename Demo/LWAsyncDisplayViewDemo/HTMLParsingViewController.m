@@ -28,7 +28,6 @@
 
 - (void)loadView {
     [super loadView];
-
     UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(0, 0, 80.0f, 30.0f);
     [button setTitle:@"UIWebView" forState:UIControlStateNormal];
@@ -60,6 +59,15 @@
     [self.htmlView addSubview:self.coverDesLabel];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if (self.isNeedRefresh) {
+        self.isNeedRefresh = NO;
+        [self _parsing];
+    }
+}
+
+#pragma mark - Actions
 - (void)UIWebView {
     WebViewController* vc = [[WebViewController alloc] init];
     vc.URL = self.URL;
@@ -67,19 +75,32 @@
 }
 
 
+#pragma mark - LWHTMLDisplayViewDelegate
 - (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
-    [LWAlertView shoWithMessage:data];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    if (self.isNeedRefresh) {
-        self.isNeedRefresh = NO;
-        [self _pasering];
+    if ([data isKindOfClass:[NSString class]]) {
+        NSString* string = (NSString *)data;
+        if ([string hasPrefix:@"http://daily.zhihu.com/story/"]) {
+            [LWAlertView shoWithMessage:@"缺少模板，使用浏览器打开"];
+            HTMLParsingViewController* vc = [[HTMLParsingViewController alloc] init];
+            vc.URL = [NSURL URLWithString:string];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else {
+            [LWAlertView shoWithMessage:@"使用HTMLParsingViewController打开"];
+            WebViewController* vc = [[WebViewController alloc] init];
+            vc.URL = [NSURL URLWithString:string];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
 }
 
-- (void)_pasering {
+- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView didCilickedImageStorages:(NSArray *)imageStorages index:(NSInteger)index {
+
+}
+
+
+#pragma mark - Parsing
+- (void)_parsing {
     [LWLoadingView showInView:self.view];
     __weak typeof(self) weakSelf = self;
     [self downloadDataCompletion:^(NSData *data) {

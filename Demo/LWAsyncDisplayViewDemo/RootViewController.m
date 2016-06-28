@@ -8,9 +8,7 @@
 #import "RootViewController.h"
 #import "ViewController.h"
 #import "CoreTextDemoViewController.h"
-#import "HTMLParsingViewController.h"
-
-
+#import "ArticleListViewController.h"
 
 
 @interface RootViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -49,7 +47,7 @@
         cell.textLabel.text = @"Wechat moment Demo";
     }
     else if (indexPath.row == 2) {
-        cell.textLabel.text = @"HTML Parsing Demo";
+        cell.textLabel.text = @"Zhihu Daily(HTML Parsing) Demo";
     }
     return cell;
 }
@@ -65,8 +63,7 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (indexPath.row == 2) {
-        HTMLParsingViewController* vc = [[HTMLParsingViewController alloc] init];
-        vc.URL = [NSURL URLWithString:@"http://daily.zhihu.com/story/8457644"];
+        ArticleListViewController* vc = [[ArticleListViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }

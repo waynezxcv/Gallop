@@ -51,6 +51,9 @@ LWSERIALIZE_COPY_WITH_ZONE()
 #pragma mark - Methods
 
 - (void)addStorage:(LWStorage *)storage {
+    if (!storage) {
+        return;
+    }
     if ([storage isMemberOfClass:[LWTextStorage class]]) {
         [self.textStorages addObject:(LWTextStorage *)storage];
     } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
@@ -60,6 +63,9 @@ LWSERIALIZE_COPY_WITH_ZONE()
 }
 
 - (void)addStorages:(NSArray <LWStorage *> *)storages {
+    if (!storages) {
+        return;
+    }
     for (LWStorage* storage in storages) {
         if ([storage isMemberOfClass:[LWTextStorage class]]) {
             [self.textStorages addObject:(LWTextStorage *)storage];
@@ -72,6 +78,9 @@ LWSERIALIZE_COPY_WITH_ZONE()
 
 
 - (void)removeStorage:(LWStorage *)storage {
+    if (!storage) {
+        return;
+    }
     if ([storage isMemberOfClass:[LWTextStorage class]]) {
         if ([self.textStorages containsObject:(LWTextStorage *)storage]) {
             [self.textStorages removeObject:(LWTextStorage *)storage];
@@ -86,6 +95,9 @@ LWSERIALIZE_COPY_WITH_ZONE()
 }
 
 - (void)removeStorages:(NSArray <LWStorage *> *)storages {
+    if (!storages) {
+        return;
+    }
     for (LWStorage* storage in storages) {
         if ([storage isMemberOfClass:[LWTextStorage class]]) {
             if ([self.textStorages containsObject:(LWTextStorage *)storage]) {
