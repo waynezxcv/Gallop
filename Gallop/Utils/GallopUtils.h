@@ -149,6 +149,7 @@ typedef void(^LWAsyncDisplayDidDisplayBlock)(CALayer *layer, BOOL finished);
 @interface GallopUtils : NSObject
 
 + (CGFloat)contentsScale;
++ (UIImage *)screenshotFromView:(UIView *)aView;
 
 @end
 
