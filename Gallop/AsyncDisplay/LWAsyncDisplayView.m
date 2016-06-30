@@ -89,6 +89,9 @@
     for (NSInteger i = 0; i < self.imageStorages.count; i ++) {
         @autoreleasepool {
             LWImageStorage* imageStorage = _imageStorages[i];
+            if ([imageStorage.contents isKindOfClass:[UIImage class]]) {
+                continue;
+            }
             UIView* container = [self _dequeueReusableImageContainerWithIdentifier:imageStorage.identifier];
             if (!container) {
                 container = [[UIView alloc] initWithFrame:CGRectZero];
