@@ -12,6 +12,7 @@
 
 @interface LWHTMLImageConfig : NSObject
 
+@property (nonatomic,assign) BOOL autolayoutHeight;
 @property (nonatomic,assign) CGSize size;
 @property (nonatomic,strong) UIImage* placeholder;
 @property (nonatomic,assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;

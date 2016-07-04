@@ -14,9 +14,10 @@
 - (id)init {
     self = [super init];
     if (self) {
+        self.autolayoutHeight = NO;
         self.placeholder = nil;
         self.userInteractionEnabled = YES;
-        self.size = CGSizeMake(SCREEN_WIDTH, 200.0f);
+        self.size = CGSizeMake(SCREEN_WIDTH, 100.0f);
         self.paragraphSpacing = 10.0f;
         self.needAddToImageBrowser = NO;
     }

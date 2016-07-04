@@ -133,6 +133,7 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
         self.clipsToBounds = NO;
         self.contentsScale = [GallopUtils contentsScale];
         self.needRerendering = NO;
+        self.needResize = NO;
     }
     return self;
 }
@@ -230,7 +231,7 @@ static const void* URLKey;
 }
 
 
-- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage {
+- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage resizeBlock:(void(^)(LWImageStorage*imageStorage, CGFloat delta))resizeBlock {
     if ([imageStorage.contents isKindOfClass:[UIImage class]]) {
         return;
     }
@@ -243,7 +244,9 @@ static const void* URLKey;
     self.URL = imageStorage.contents;
     self.backgroundColor = imageStorage.backgroundColor;
     self.clipsToBounds = imageStorage.clipsToBounds;
-    [self layoutWithStorage:imageStorage];
+    if (!imageStorage.needResize) {
+        [self layoutWithStorage:imageStorage];
+    }
     __weak typeof(self) weakSelf = self;
     [self.layer sd_setImageWithURL:(NSURL *)imageStorage.contents
                   placeholderImage:imageStorage.placeholder
@@ -251,6 +254,22 @@ static const void* URLKey;
                          completed:^(UIImage *image, NSError *error,
                                      SDImageCacheType cacheType,
                                      NSURL *imageURL) {
+                             if (!image) {
+                                 return ;
+                             }
+                             if (imageStorage.needResize) {
+                                 CGSize imageSize = image.size;
+                                 CGFloat imageScale = imageSize.height/imageSize.width;
+                                 CGSize reSize = CGSizeMake(imageStorage.bounds.size.width,
+                                                            imageStorage.bounds.size.width * imageScale);
+                                 CGFloat delta = reSize.height - imageStorage.frame.size.height;
+                                 imageStorage.frame = CGRectMake(imageStorage.frame.origin.x,
+                                                                 imageStorage.frame.origin.y,
+                                                                 imageStorage.frame.size.width,
+                                                                 imageStorage.frame.size.height + delta);
+                                 [self layoutWithStorage:imageStorage];
+                                 resizeBlock(imageStorage,delta);
+                             }
                              if (imageStorage.needRerendering) {
                                  [weakSelf _rerenderingImage:image
                                                 imageStorage:imageStorage

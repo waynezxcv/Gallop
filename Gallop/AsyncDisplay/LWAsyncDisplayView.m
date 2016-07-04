@@ -85,7 +85,7 @@
     [self.imageContainers removeAllObjects];
 }
 
-- (void)_setImageStorages {
+- (void)setImageStoragesResizeBlock:(void(^)(LWImageStorage* imageStorage, CGFloat delta))resizeBlock {
     for (NSInteger i = 0; i < self.imageStorages.count; i ++) {
         @autoreleasepool {
             LWImageStorage* imageStorage = _imageStorages[i];
@@ -99,7 +99,7 @@
                 [self addSubview:container];
             }
             [self.imageContainers addObject:container];
-            [container setContentWithImageStorage:imageStorage];
+            [container setContentWithImageStorage:imageStorage resizeBlock:resizeBlock];
         }
     }
 }
@@ -357,7 +357,13 @@
     _imageStorages = self.layout.imageStorages;
     _textStorages = self.layout.textStorages;
     [self.layer setNeedsDisplay];
-    [self _setImageStorages];
+    __weak typeof(self) weakSelf = self;
+    [self setImageStoragesResizeBlock:^(LWImageStorage* imageStorage,CGFloat delta) {
+        __strong typeof(weakSelf) swself = weakSelf;
+        if (swself.auotoLayoutCallback) {
+            swself.auotoLayoutCallback(imageStorage,delta);
+        }
+    }];
 }
 
 @end

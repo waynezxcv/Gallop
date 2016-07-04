@@ -164,11 +164,16 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
                 CGFloat width = (imageConfig.size.width >= SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right) ?
                 SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right : imageConfig.size.width;
                 imageStorage.frame = CGRectMake(self.edgeInsets.left,
-                                                self.offsetY + imageConfig.paragraphSpacing,
+                                                self.edgeInsets.top,
                                                 width,
                                                 imageConfig.size.height);
                 imageStorage.clipsToBounds = YES;
                 imageStorage.placeholder = imageConfig.placeholder;
+
+                if (imageConfig.autolayoutHeight) {
+                    imageStorage.needResize = YES;
+                }
+
                 imageStorage.userInteractionEnabled = imageConfig.userInteractionEnabled;
                 self.offsetY += (imageStorage.height + imageConfig.paragraphSpacing);
                 [self.tmpStorages addObject:imageStorage];
@@ -269,7 +274,7 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
             [attributedString addLinkWithData:aLink.URL range:aLink.range linkColor:config.linkColor highLightColor:config.linkHighlightColor];
         }
     }
-    CGRect frame = CGRectMake(self.edgeInsets.left,self.offsetY + config.paragraphSpacing,SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right,CGFLOAT_MAX);
+    CGRect frame = CGRectMake(self.edgeInsets.left,self.edgeInsets.top,SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right,CGFLOAT_MAX);
     LWTextStorage* textStorage = [LWTextStorage lw_textStrageWithText:attributedString frame:frame];
     textStorage.textDrawMode  = config.textDrawMode;
     self.offsetY += (textStorage.height + config.paragraphSpacing);

@@ -19,13 +19,10 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 
 ## 解析HTML渲染生成原生iOS页面的优势：
 
-* 性能更好。
 * 可以将图片缓存到本地，无需重复加载，使用UIWebView只能缓存到内存，当UIWebView释放之后，就需要重新加载。
 * 可以使用原生的图片浏览器来浏览照片，体验更好，可以解决UIWebView查看大图时无法覆盖NavigationBar的问题。
 * 可以根据需要对HTML的内容重新布局、设置样式，去除不需要的部分。
 * 可以根据需要在内容中添加其他原生控件。
-
-//TODO：目前只支持，文字、图片，后续会支持视频。
 
 ![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.PNG)
 ![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
@@ -33,6 +30,9 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 
 
 # Modifications
+
+v0.3.1
+* 初步完成解析HTML渲染生成原生iOS页面时，图片自适应高度。
 
 v0.3.0 
 * 增加了解析HTML渲染生成原生iOS页面的功能。

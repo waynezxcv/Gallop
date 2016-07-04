@@ -39,15 +39,15 @@
    didCilickedTextStorage:(LWTextStorage *)textStorage
                  linkdata:(id)data;
 
-/***  点击LWImageStorage回调 ***/
+/***  点击LWImageStorage ***/
 - (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
   didCilickedImageStorage:(LWImageStorage *)imageStorage;
 
 @end
 
-@interface LWHTMLDisplayView : UIScrollView
+@interface LWHTMLDisplayView : UITableView
 
-@property (nonatomic,strong) LWLayout* layout;
+@property (nonatomic,copy) NSArray* storages;
 @property (nonatomic,weak) id <LWHTMLDisplayViewDelegate> displayDelegate;
 @property (nonatomic,strong,readonly) LWStorageBuilder* storageBuilder;
 @property (nonatomic,strong) NSData* data;
@@ -56,3 +56,5 @@
 - (id)initWithFrame:(CGRect)frame parentVC:(UIViewController *)parentVC;
 
 @end
+
+

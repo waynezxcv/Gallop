@@ -28,10 +28,6 @@
 #import "LWTextStorage.h"
 #import "LWImageStorage.h"
 
-
-
-//*** LWAsncDisplayView的模型，是LWStorage的容器  ****//
-
 @interface LWLayout : NSObject<NSCopying,NSCoding>
 
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextStorage *>* textStorages;
@@ -45,6 +41,7 @@
 
 //*** 指定一个底部间距，计算LWAsncDisplayView的高度 ****//
 - (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin;
+
 
 - (void)setNeedsDisplay;
 - (void)setNeedsLayout;

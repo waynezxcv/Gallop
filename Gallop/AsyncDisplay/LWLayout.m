@@ -113,6 +113,7 @@ LWSERIALIZE_COPY_WITH_ZONE()
     }
 }
 
+
 - (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin {
     CGFloat suggestHeight = 0.0f;
     for (LWStorage* storage in self.totalStorages) {

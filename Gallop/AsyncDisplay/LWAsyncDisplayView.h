@@ -44,13 +44,14 @@
 
 @end
 
-
+typedef void(^LWAsyncDisplayViewAutoLayoutCallback)(LWImageStorage* imageStorage ,CGFloat delta);
 
 @interface LWAsyncDisplayView : UIView
 
 @property (nonatomic,weak) id <LWAsyncDisplayViewDelegate> delegate;
 @property (nonatomic,strong) LWLayout* layout;//布局模型
 @property (nonatomic,assign) BOOL displaysAsynchronously;
+@property (nonatomic,copy) LWAsyncDisplayViewAutoLayoutCallback auotoLayoutCallback;
 
 
 @end
