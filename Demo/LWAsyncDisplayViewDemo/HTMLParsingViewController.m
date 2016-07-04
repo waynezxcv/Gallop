@@ -121,7 +121,7 @@
         titleConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:18.0];
         titleConfig.textColor = [UIColor blackColor];
         [builder createLWStorageWithXPath:@"//div[@class='question']/h2"
-                               edgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 25.0f, 20.0f)
+                               edgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 15.0f, 20.0f)
                          configDictionary:@{@"h2":titleConfig}];
         [htmlLayout addStorages:builder.storages];//使用add方法添加的storage将另起一行
         
@@ -138,7 +138,7 @@
         nameConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:15.0f];
         nameConfig.textColor = [UIColor blackColor];
         [builder createLWStorageWithXPath:@"//div[@class='meta']/span[@class='author']"
-                               edgeInsets:UIEdgeInsetsMake(10.0f, 50.0f, 10.0, 20.0f)
+                               edgeInsets:UIEdgeInsetsMake(10.0f, 50.0f, 15.0f, 20.0f)
                          configDictionary:@{@"span":nameConfig}];
         
         LWTextStorage* nameStorage = (LWTextStorage*)builder.firstStorage;
@@ -147,7 +147,7 @@
         desConfig.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
         desConfig.textColor = [UIColor grayColor];
         [builder createLWStorageWithXPath:@"//div[@class='meta']/span[@class='bio']"
-                               edgeInsets:UIEdgeInsetsMake(10.0f, 50.0f, 10.0, 20.0f)
+                               edgeInsets:UIEdgeInsetsMake(10.0f, 50.0f, 15.0f, 20.0f)
                          configDictionary:@{@"span":desConfig}];
         LWTextStorage* desStorage =(LWTextStorage*)builder.firstStorage;
         [nameStorage lw_appendTextStorage:desStorage];
