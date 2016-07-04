@@ -19,6 +19,7 @@
 		01590F871CF2C5AC00F0CBA8 /* LWConstraintManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 01590F831CF2C5AC00F0CBA8 /* LWConstraintManager.m */; };
 		01590F881CF2C5AC00F0CBA8 /* LWStorage+Constraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 01590F851CF2C5AC00F0CBA8 /* LWStorage+Constraint.m */; };
 		016BDA791CDA6A6B000D1ACF /* LWTextRunDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 016BDA761CDA6A6B000D1ACF /* LWTextRunDelegate.m */; };
+		019A86141D2AEAA300980175 /* LWHTMLLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A86131D2AEAA300980175 /* LWHTMLLayout.m */; };
 		01AE7F521CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4C1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m */; };
 		01AE7F531CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F4E1CA1AEAF00E9F862 /* LWAlchemyValueTransformer.m */; };
 		01AE7F541CA1AEAF00E9F862 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AE7F501CA1AEAF00E9F862 /* NSObject+LWAlchemy.m */; };
@@ -134,6 +135,8 @@
 		015FC0E31CDFA48800B4DF82 /* Gallop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Gallop.h; path = ../Gallop/Gallop.h; sourceTree = "<group>"; };
 		016BDA751CDA6A6B000D1ACF /* LWTextRunDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextRunDelegate.h; path = ../Gallop/CoreText/LWTextRunDelegate.h; sourceTree = "<group>"; };
 		016BDA761CDA6A6B000D1ACF /* LWTextRunDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextRunDelegate.m; path = ../Gallop/CoreText/LWTextRunDelegate.m; sourceTree = "<group>"; };
+		019A86121D2AEAA300980175 /* LWHTMLLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWHTMLLayout.h; path = ../Gallop/HTMLParser/LWHTMLLayout.h; sourceTree = "<group>"; };
+		019A86131D2AEAA300980175 /* LWHTMLLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWHTMLLayout.m; path = ../Gallop/HTMLParser/LWHTMLLayout.m; sourceTree = "<group>"; };
 		01AE7F481CA1AEAF00E9F862 /* LWAlchemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemy.h; path = ../LWAlchemy/LWAlchemy.h; sourceTree = "<group>"; };
 		01AE7F4B1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyPropertyInfo.h; path = ../LWAlchemy/LWAlchemyPropertyInfo.h; sourceTree = "<group>"; };
 		01AE7F4C1CA1AEAF00E9F862 /* LWAlchemyPropertyInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyPropertyInfo.m; path = ../LWAlchemy/LWAlchemyPropertyInfo.m; sourceTree = "<group>"; };
@@ -453,6 +456,8 @@
 				011DFA351C987DF8000410D7 /* LWImageBrowser */,
 				B0C616821D20C40000150211 /* LWHTMLDisplayView.h */,
 				B0C616831D20C40000150211 /* LWHTMLDisplayView.m */,
+				019A86121D2AEAA300980175 /* LWHTMLLayout.h */,
+				019A86131D2AEAA300980175 /* LWHTMLLayout.m */,
 				0134D12B1D16C6A800FB91FF /* LWStorageBuilder.h */,
 				0134D12C1D16C6A800FB91FF /* LWStorageBuilder.m */,
 				B0C616801D20C40000150211 /* LWHTMLTextConfig.h */,
@@ -851,6 +856,7 @@
 				01D14EB91CDCF8A00028714A /* LWTextLayout.m in Sources */,
 				01D14F041CDD42ED0028714A /* NSMutableAttributedString+Gallop.m in Sources */,
 				01590F861CF2C5AC00F0CBA8 /* LWConstraint.m in Sources */,
+				019A86141D2AEAA300980175 /* LWHTMLLayout.m in Sources */,
 				0134D1201D16B64A00FB91FF /* HTMLParsingViewController.m in Sources */,
 				B0ACEC0A1CEDC9A50019074F /* TableViewHeader.m in Sources */,
 				B095D6401D22A86A003821F9 /* LWImageItem.m in Sources */,

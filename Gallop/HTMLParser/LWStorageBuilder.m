@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -169,11 +169,12 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
                                                 imageConfig.size.height);
                 imageStorage.clipsToBounds = YES;
                 imageStorage.placeholder = imageConfig.placeholder;
-
+                imageStorage.htmlLayoutEdgeInsets = self.edgeInsets;
+                
                 if (imageConfig.autolayoutHeight) {
                     imageStorage.needResize = YES;
                 }
-
+                
                 imageStorage.userInteractionEnabled = imageConfig.userInteractionEnabled;
                 self.offsetY += (imageStorage.height + imageConfig.paragraphSpacing);
                 [self.tmpStorages addObject:imageStorage];
@@ -275,10 +276,13 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
         }
     }
     CGRect frame = CGRectMake(self.edgeInsets.left,self.edgeInsets.top,SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right,CGFLOAT_MAX);
-    LWTextStorage* textStorage = [LWTextStorage lw_textStrageWithText:attributedString frame:frame];
-    textStorage.textDrawMode  = config.textDrawMode;
-    self.offsetY += (textStorage.height + config.paragraphSpacing);
-    [self.tmpStorages addObject:textStorage];
+    if (attributedString.length) {
+        LWTextStorage* textStorage = [LWTextStorage lw_textStrageWithText:attributedString frame:frame];
+        textStorage.textDrawMode  = config.textDrawMode;
+        textStorage.htmlLayoutEdgeInsets = self.edgeInsets;
+        self.offsetY += (textStorage.height + config.paragraphSpacing);
+        [self.tmpStorages addObject:textStorage];
+    }
     self.tmpString = nil;
     self.tmpLinks = nil;
     self.tmpTags = nil;

@@ -27,6 +27,8 @@
 #import "LWLayout.h"
 #import "LWStorageBuilder.h"
 #import "LWImageBrowser/LWImageBrowser.h"
+#import "SDImageCache.h"
+#import "LWHTMLLayout.h"
 
 /*********** LWHTMLDisplayCellDelegate ****************/
 
@@ -108,6 +110,11 @@
     self.delegate = self;
 }
 
+- (void)dealloc {
+    [self.cellCache removeAllObjects];
+    [[SDImageCache sharedImageCache] clearMemory];
+}
+
 #pragma mark - DataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -131,7 +138,6 @@
     if (!cell) {
         cell = [[LWHTMLDisplayCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdenfifier inTableView:self];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        //        cell.hasFixedHeight = NO;
         [self.cellCache setObject:cell forKey:key];
     }
     [self _confirgueCell:cell atIndexPath:indexPath];
@@ -158,7 +164,6 @@
     [UIView setAnimationsEnabled:NO];
     [self reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     [UIView setAnimationsEnabled:YES];
-    
 }
 
 #pragma mark - LWHTMLDisplayCellDelegate
@@ -206,23 +211,26 @@
     self.storageBuilder = [[LWStorageBuilder alloc] initWithData:self.data encoding:NSUTF8StringEncoding];
 }
 
-- (void)setStorages:(NSArray *)storages {
-    if (_storages != storages) {
-        _storages = storages;
+- (void)setLayout:(LWHTMLLayout *)layout {
+    if (_layout != layout) {
+        _layout = layout;
     }
     [self.items removeAllObjects];
-    for (id object in storages) {
+    for (id object in self.layout.allItems) {
         LWHTMLCellLayout* cellLayout = [[LWHTMLCellLayout alloc] init];
+        CGFloat bottomMarigin = 0.0f;
         if ([object isKindOfClass:[LWStorage class]]) {
+            bottomMarigin = [(LWStorage *)object htmlLayoutEdgeInsets].bottom;
             [cellLayout addStorage:object];
         }
         else if ([object isKindOfClass:[NSArray class]]) {
             NSArray* arr = (NSArray *)object;
             for (LWStorage* storage in arr) {
+                bottomMarigin =  storage.htmlLayoutEdgeInsets.bottom >= bottomMarigin ? storage.htmlLayoutEdgeInsets.bottom : bottomMarigin;
                 [cellLayout addStorage:storage];
             }
         }
-        cellLayout.cellHeight = [cellLayout suggestHeightWithBottomMargin:5.0f];
+        cellLayout.cellHeight = [cellLayout suggestHeightWithBottomMargin:bottomMarigin];
         [self.items addObject:cellLayout];
     }
     [self reloadData];

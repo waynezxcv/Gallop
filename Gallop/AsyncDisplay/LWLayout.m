@@ -122,14 +122,6 @@ LWSERIALIZE_COPY_WITH_ZONE()
     return suggestHeight + bottomMargin;
 }
 
-//TODO:
-- (void)setNeedsDisplay {
-
-}
-- (void)setNeedsLayout {
-
-}
-
 #pragma mark - Getter
 - (NSMutableArray *)textStorages {
     if (_textStorages) {

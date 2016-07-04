@@ -32,6 +32,7 @@
 #import "NSMutableAttributedString+Gallop.h"
 #import "LWConstraintManager.h"
 #import "LWStorage+Constraint.h"
-#import "LWStorageBuilder.h"   
+#import "LWStorageBuilder.h"
+#import "LWHTMLLayout.h"
 
 #endif /* Gallop_h */

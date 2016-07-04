@@ -43,7 +43,5 @@
 - (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin;
 
 
-- (void)setNeedsDisplay;
-- (void)setNeedsLayout;
 
 @end

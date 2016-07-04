@@ -29,6 +29,7 @@
 @class LWTextStorage;
 @class LWStorageBuilder;
 @class LWImageStorage;
+@class LWHTMLLayout;
 
 @protocol LWHTMLDisplayViewDelegate <NSObject>
 
@@ -47,7 +48,7 @@
 
 @interface LWHTMLDisplayView : UITableView
 
-@property (nonatomic,copy) NSArray* storages;
+@property (nonatomic,strong) LWHTMLLayout* layout;
 @property (nonatomic,weak) id <LWHTMLDisplayViewDelegate> displayDelegate;
 @property (nonatomic,strong,readonly) LWStorageBuilder* storageBuilder;
 @property (nonatomic,strong) NSData* data;

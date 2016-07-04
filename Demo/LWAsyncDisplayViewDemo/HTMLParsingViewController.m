@@ -97,16 +97,16 @@
         __strong typeof(weakSelf) swself = weakSelf;
         swself.htmlView.data = data;
         
-        NSMutableArray* tmpStorages = [[NSMutableArray alloc] init];
+        LWHTMLLayout* htmlLayout = [[LWHTMLLayout alloc] init];
         
         LWStorageBuilder* builder = swself.htmlView.storageBuilder;
         /** cover  **/
         LWHTMLImageConfig* coverConfig = [[LWHTMLImageConfig alloc] init];
         coverConfig.size = CGSizeMake(SCREEN_WIDTH, 250.0f);
         [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/img"
-                               edgeInsets:UIEdgeInsetsMake(0.0f, 0, 0, 0)
+                               edgeInsets:UIEdgeInsetsMake(0.0f, 0, 5.0f, 0)
                          configDictionary:@{@"img":coverConfig}];
-        [tmpStorages addObject:builder.firstStorage];
+        [htmlLayout addStorages:builder.storages];
         
         /** cover title **/
         [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/h1"];
@@ -121,10 +121,9 @@
         titleConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:18.0];
         titleConfig.textColor = [UIColor blackColor];
         [builder createLWStorageWithXPath:@"//div[@class='question']/h2"
-                               edgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 10.0, 20.0f)
+                               edgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 25.0f, 20.0f)
                          configDictionary:@{@"h2":titleConfig}];
-        [tmpStorages addObject:builder.firstStorage];
-        
+        [htmlLayout addStorages:builder.storages];//使用add方法添加的storage将另起一行
         
         /** avatar  **/
         LWHTMLImageConfig* avatarConfig = [[LWHTMLImageConfig alloc] init];
@@ -132,7 +131,7 @@
         [builder createLWStorageWithXPath:@"//div[@class='meta']/img"
                                edgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 10.0, 20.0f)
                          configDictionary:@{@"img":avatarConfig}];
-        LWImageStorage* avatarStorage = (LWImageStorage*)builder.firstStorage;
+        [htmlLayout addStorages:builder.storages];
         
         /** name  **/
         LWHTMLTextConfig* nameConfig = [[LWHTMLTextConfig alloc] init];
@@ -141,6 +140,7 @@
         [builder createLWStorageWithXPath:@"//div[@class='meta']/span[@class='author']"
                                edgeInsets:UIEdgeInsetsMake(10.0f, 50.0f, 10.0, 20.0f)
                          configDictionary:@{@"span":nameConfig}];
+        
         LWTextStorage* nameStorage = (LWTextStorage*)builder.firstStorage;
         /** description  **/
         LWHTMLTextConfig* desConfig = [[LWHTMLTextConfig alloc] init];
@@ -151,14 +151,7 @@
                          configDictionary:@{@"span":desConfig}];
         LWTextStorage* desStorage =(LWTextStorage*)builder.firstStorage;
         [nameStorage lw_appendTextStorage:desStorage];
-        NSMutableArray* arr = [[NSMutableArray alloc] init];
-        if (avatarStorage) {
-            [arr addObject:avatarStorage];
-        }
-        if (nameStorage) {
-            [arr addObject:nameStorage];
-        }
-        [tmpStorages addObject:arr];//在同一个数组里面的LWStorage将在同一行。单独的LWStorage将另起一行
+        [htmlLayout appendStorage:nameStorage];//使用apend方法添加的storage将不会另起一行，而是拼接在上一个storage后面
         
         /** content  **/
         LWHTMLTextConfig* contentConfig = [[LWHTMLTextConfig alloc] init];
@@ -183,12 +176,10 @@
                                             @"em":strongConfig,
                                             @"img":imageConfig}];
         
-        for (id object in builder.storages) {
-            [tmpStorages addObject:object];
-        }//在同一个数组里面的LWStorage将在同一行。单独的LWStorage将另起一行
+        [htmlLayout addStorages:builder.storages];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            swself.htmlView.storages = tmpStorages;
+            swself.htmlView.layout = htmlLayout;
             swself.coverTitleLabel.text = coverTitle;
             swself.coverDesLabel.text = coverDes;
             [LWLoadingView hideInViwe:swself.view];
