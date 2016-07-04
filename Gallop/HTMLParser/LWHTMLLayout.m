@@ -38,7 +38,7 @@
 }
 
 - (void)appendStorage:(LWStorage *)storage {
-    if (!self.items.count) {
+    if (!self.items.count || !storage) {
         return;
     }
     id lastObject = [self.items lastObject];
@@ -58,7 +58,7 @@
 }
 
 - (void)appendStorages:(NSArray <LWStorage *>*)storages {
-    if (!self.items.count) {
+    if (!self.items.count  || !storages.count ) {
         return;
     }
     id lastObject = [self.items lastObject];
