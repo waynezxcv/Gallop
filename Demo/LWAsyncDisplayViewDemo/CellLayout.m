@@ -76,11 +76,12 @@
                 LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
                 imageStorage.tag = 0;
                 imageStorage.frame = imageRect;
-                imageStorage.needRerendering = YES;
+                imageStorage.clipsToBounds = YES;
                 imageStorage.backgroundColor = RGB(240, 240, 240, 1);
                 NSString* URLString = [statusModel.imgs objectAtIndex:0];
                 imageStorage.contents = [NSURL URLWithString:URLString];
                 [imageStorageArray addObject:imageStorage];
+
             } else {
                 for (NSInteger i = 0; i < imageCount; i ++) {
                     CGRect imageRect = CGRectMake(nameTextStorage.left + (column * (imageWidth + 5.0f)),
@@ -91,7 +92,7 @@
                     [imagePositionArray addObject:imagePositionString];
                     LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
                     imageStorage.tag = i;
-                    imageStorage.needRerendering = YES;
+                    imageStorage.clipsToBounds = YES;
                     imageStorage.frame = imageRect;
                     imageStorage.backgroundColor = RGB(240, 240, 240, 1);
                     NSString* URLString = [statusModel.imgs objectAtIndex:i];
@@ -113,7 +114,7 @@
             NSString* URLString = [statusModel.imgs objectAtIndex:0];
             imageStorage.contents = [NSURL URLWithString:URLString];
             imageStorage.frame = CGRectMake(nameTextStorage.left + 5.0f, contentTextStorage.bottom + 10.0f , 50.0f, 50.0f);
-            imageStorage.needRerendering = YES;
+            imageStorage.clipsToBounds = YES;
             [imageStorageArray addObject:imageStorage];
 
             LWTextStorage* detailTextStorage = [[LWTextStorage alloc] init];
