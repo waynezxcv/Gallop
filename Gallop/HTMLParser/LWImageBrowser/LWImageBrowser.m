@@ -178,7 +178,6 @@ LWActionSheetViewDelegate>
                              weakSelf.currentImageItem.imageView.frame = weakSelf.currentImageItem.imageModel.originPosition;
                          }
                          else {
-                             weakSelf.blurImageView.alpha = 0.0f;
                              weakSelf.currentImageItem.imageView.alpha = 0.0f;
                          }
                      } completion:^(BOOL finished) {
