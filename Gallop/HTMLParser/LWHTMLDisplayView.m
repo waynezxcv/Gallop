@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -182,11 +182,12 @@
         for (NSInteger i = 0; i < self.imageCallbacks.count; i ++) {
             @autoreleasepool {
                 LWImageStorage* imageStorage = [self.imageCallbacks objectAtIndex:i];
+                LWHTMLDisplayCell* cell = [self cellForRowAtIndexPath:indexPath];
                 LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
                                                                                       thumbnailURL:(NSURL *)imageStorage.contents
                                                                                              HDURL:(NSURL *)imageStorage.contents
-                                                                                imageViewSuperView:nil
-                                                                               positionAtSuperView:CGRectZero
+                                                                                imageViewSuperView:cell.displayView
+                                                                               positionAtSuperView:imageStorage.frame
                                                                                              index:index];
                 [tmp addObject:imageModel];
             }
@@ -194,6 +195,7 @@
         LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self.parentVC
                                                                                 imageModels:tmp
                                                                                currentIndex:index];
+        imageBrowser.isScalingToHide = NO ;
         [imageBrowser show];
     }
     if ([self.displayDelegate respondsToSelector:@selector(lwhtmlDisplayView:didCilickedImageStorage:)] &&

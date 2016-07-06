@@ -42,6 +42,8 @@
 
 @property (nonatomic,weak) id <LWImageBrowserDelegate> delegate;
 
+@property (nonatomic,assign) BOOL isScalingToHide;
+
 /**
  *  存放图片模型的数组
  */

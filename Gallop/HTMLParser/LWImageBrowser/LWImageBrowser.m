@@ -169,18 +169,23 @@ LWActionSheetViewDelegate>
     if (self.currentImageItem.zoomScale != 1.0f) {
         self.currentImageItem.zoomScale = 1.0f;
     }
-    [UIView animateWithDuration:0.25f
+    [UIView animateWithDuration:0.2f
                           delay:0.0f
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         self.screenshotImageView.alpha = 1.0f;
-                         weakSelf.currentImageItem.imageView.frame = weakSelf.currentImageItem.imageModel.originPosition;
+                         weakSelf.screenshotImageView.alpha = 1.0f;
+                         if (weakSelf.isScalingToHide) {
+                             weakSelf.currentImageItem.imageView.frame = weakSelf.currentImageItem.imageModel.originPosition;
+                         }
+                         else {
+                             weakSelf.blurImageView.alpha = 0.0f;
+                             weakSelf.currentImageItem.imageView.alpha = 0.0f;
+                         }
                      } completion:^(BOOL finished) {
                          [weakSelf dismissViewControllerAnimated:NO completion:^{
                              weakSelf.imageModels = nil;
                          }];
                      }];
-
 }
 
 - (void)_hideNavigationBar {
@@ -341,6 +346,7 @@ LWActionSheetViewDelegate>
 
     self  = [super init];
     if (self) {
+        self.isScalingToHide = YES;
         self.parentVC = parentVC;
         self.imageModels = imageModels;
         self.currentIndex = index;
