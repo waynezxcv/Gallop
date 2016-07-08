@@ -271,8 +271,7 @@
             continue;
         }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
-            LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
-            if (_highlight == hightlight) {
+            if (_highlight) {
                 if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedTextStorage:linkdata:)]) {
                     [self.delegate lwAsyncDisplayView:self didCilickedTextStorage:textStorage linkdata:_highlight.content];
                 }
