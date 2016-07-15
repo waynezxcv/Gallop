@@ -108,7 +108,8 @@ static void* LWContainerSizeKey = &LWContainerSizeKey;
         [self changeTop:@(self.constraint.bottomMarginObject.referenceStorage.top - self.constraint.bottomMarginObject.value)];
     }
     if ([self.constraint.superStorage isMemberOfClass:[LWTextStorage class]]) {
-        LWTextStorage* TextStorage = (LWTextStorage *)self.constraint.superStorage;
+//        LWTextStorage* TextStorage = (LWTextStorage *)self.constraint.superStorage;
+        
     }
 }
 

@@ -189,11 +189,11 @@ LWActionSheetViewDelegate>
 
 - (void)_hideNavigationBar {
     if (self.navigationController.navigationBarHidden == NO) {
-        [[UIApplication sharedApplication] setStatusBarHidden:YES animated:NO];
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
         [self.navigationController setNavigationBarHidden:YES animated:YES];
 
     } else {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
         [self.navigationController setNavigationBarHidden:NO animated:YES];
     }
 }
