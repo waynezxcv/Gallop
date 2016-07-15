@@ -7,6 +7,7 @@
 
 #import "RootViewController.h"
 #import "ViewController.h"
+#import "CornerRadiusViewController.h"
 #import "CoreTextDemoViewController.h"
 #import "ArticleListViewController.h"
 
@@ -38,7 +39,7 @@
 #pragma mark -
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 3;
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -51,9 +52,12 @@
         cell.textLabel.text = @"CoreText Demo";
     }
     else if (indexPath.row == 1) {
-        cell.textLabel.text = @"Wechat moment Demo";
+        cell.textLabel.text = @"Corner Radius Demo";
     }
     else if (indexPath.row == 2) {
+        cell.textLabel.text = @"Wechat moment Demo";
+    }
+    else if (indexPath.row == 3) {
         cell.textLabel.text = @"Zhihu Daily(HTML Parsing) Demo";
     }
     return cell;
@@ -66,10 +70,14 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (indexPath.row == 1) {
-        ViewController* vc = [[ViewController alloc] init];
+        CornerRadiusViewController* vc = [[CornerRadiusViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (indexPath.row == 2) {
+        ViewController* vc = [[ViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if (indexPath.row == 3) {
         ArticleListViewController* vc = [[ArticleListViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }

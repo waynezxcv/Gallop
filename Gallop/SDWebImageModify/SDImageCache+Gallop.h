@@ -22,19 +22,8 @@
  THE SOFTWARE.
  */
 
-#ifndef Gallop_h
-#define Gallop_h
+#import "SDImageCache.h"
 
-#import "LWAsyncDisplayView.h"
-#import "LWHTMLDisplayView.h"
-#import "LWTextLayout.h"
-#import "GallopUtils.h"
-#import "NSMutableAttributedString+Gallop.h"
-#import "LWConstraintManager.h"
-#import "LWStorage+Constraint.h"
-#import "LWStorageBuilder.h"
-#import "LWHTMLLayout.h"
-#import "CALayer+WebCache.h"
+@interface SDImageCache (Gallop)
 
-
-#endif /* Gallop_h */
+@end

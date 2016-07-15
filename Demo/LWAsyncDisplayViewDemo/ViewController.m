@@ -309,6 +309,10 @@ const CGFloat kRefreshBoundary = 170.0f;
             [fakes addObjectsFromArray:self.fakeDatasource];
             [fakes addObjectsFromArray:self.fakeDatasource];
             [fakes addObjectsFromArray:self.fakeDatasource];
+            [fakes addObjectsFromArray:self.fakeDatasource];
+            [fakes addObjectsFromArray:self.fakeDatasource];
+            [fakes addObjectsFromArray:self.fakeDatasource];
+            [fakes addObjectsFromArray:self.fakeDatasource];
             for (NSInteger i = 0; i < fakes.count; i ++) {
                 StatusModel* statusModel = [StatusModel modelWithJSON:fakes[i]];
                 LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
@@ -416,7 +420,29 @@ const CGFloat kRefreshBoundary = 170.0f;
     if (_fakeDatasource) {
         return _fakeDatasource;
     }
-    _fakeDatasource = @[@{@"type":@"image",
+    _fakeDatasource = @[
+                        @{@"type":@"image",
+                          @"name":@"型格志style",
+                          @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
+                          @"content":@"春天卫衣的正确打开方式~",
+                          @"date":@"1459668442",
+                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jeloxwhnj30fu0g0ta5.jpg",
+                                    @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelpn9bdj30b40gkgmh.jpg",
+                                    @"http://ww1.sinaimg.cn/mw690/006gWxKPgw1f2jelriw1bj30fz0g175g.jpg",
+                                    @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelt1kh5j30b10gmt9o.jpg",
+                                    @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jeluxjcrj30fw0fz0tx.jpg",
+                                    @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelzxngwj30b20godgn.jpg",
+                                    @"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jelwmsoej30fx0fywfq.jpg",
+                                    @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jem32ccrj30xm0sdwjt.jpg",
+                                    @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jelyhutwj30fz0fxwfr.jpg",],
+                          @"statusID":@"8",
+                          @"commentList":@[@{@"from":@"SIZE潮流生活",
+                                             @"to":@"waynezxcv",
+                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                          @"isLike":@(NO),
+                          @"likeList":@[@"waynezxcv"]},
+
+                        @{@"type":@"image",
                           @"name":@"SIZE潮流生活",
                           @"avatar":@"http://tp2.sinaimg.cn/1829483361/50/5753078359/1",
                           @"content":@"近日[心][心][心][心][心][心][face]，adidas Originals为经典鞋款Stan Smith打造Primeknit版本，并带来全新的“OG”系列。简约的鞋身采用白色透气Primeknit针织材质制作，再将Stan Smith代表性的绿、红、深蓝三个元年色调融入到鞋舌和后跟点缀，最后搭载上米白色大底来保留其复古风味。据悉该鞋款将在今月登陆全球各大adidas Originals指定店舖。",
@@ -555,27 +581,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                           @"likeList":@[@"waynezxcv"]},
 
 
-
-                        @{@"type":@"image",
-                          @"name":@"型格志style",
-                          @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
-                          @"content":@"春天卫衣的正确打开方式~",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jeloxwhnj30fu0g0ta5.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelpn9bdj30b40gkgmh.jpg",
-                                    @"http://ww1.sinaimg.cn/mw690/006gWxKPgw1f2jelriw1bj30fz0g175g.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelt1kh5j30b10gmt9o.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jeluxjcrj30fw0fz0tx.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelzxngwj30b20godgn.jpg",
-                                    @"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jelwmsoej30fx0fywfq.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jem32ccrj30xm0sdwjt.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jelyhutwj30fz0fxwfr.jpg",],
-                          @"statusID":@"8",
-                          @"commentList":@[@{@"from":@"SIZE潮流生活",
-                                             @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv"]},
 
 
 

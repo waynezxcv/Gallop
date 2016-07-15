@@ -22,19 +22,24 @@
  THE SOFTWARE.
  */
 
-#ifndef Gallop_h
-#define Gallop_h
+#import <UIKit/UIKit.h>
 
-#import "LWAsyncDisplayView.h"
-#import "LWHTMLDisplayView.h"
-#import "LWTextLayout.h"
-#import "GallopUtils.h"
-#import "NSMutableAttributedString+Gallop.h"
-#import "LWConstraintManager.h"
-#import "LWStorage+Constraint.h"
-#import "LWStorageBuilder.h"
-#import "LWHTMLLayout.h"
-#import "CALayer+WebCache.h"
+static const NSString* LWCornerRadiusPrefixKey = @"LWCornerRadiusPrefixKey";
+
+@interface LWCornerRadiusHelper : NSObject
 
 
-#endif /* Gallop_h */
+/**
+ *  将绘制信息保存到key中
+ */
++ (NSString *)lw_imageTransformCacheKeyForURL:(NSURL *)url
+                                 cornerRadius:(CGFloat)cornerRadius
+                                         size:(CGSize)size;
+
+/**
+ *  绘制圆角半径图片
+ *
+ */
++ (UIImage *)lw_cornerRadiusImageWithImage:(UIImage*)image withKey:(NSString *)key;
+
+@end

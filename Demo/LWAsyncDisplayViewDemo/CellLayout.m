@@ -24,15 +24,12 @@
     self = [super init];
     if (self) {
         self.statusModel = statusModel;
-        /****************************生成Storage 相当于模型*************************************/
-        /*********Gallop用将所有文本跟图片的模型都抽象成LWStorage，方便你能预先将所有的需要计算的布局内容直接缓存起来***/
-        /*******而不是在渲染的时候才进行计算*******************************************/
         //头像模型 avatarImageStorage
         LWImageStorage* avatarStorage = [[LWImageStorage alloc] initWithIdentifier:@"avatar"];
         avatarStorage.contents = statusModel.avatar;
         avatarStorage.cornerRadius = 20.0f;
         avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
-        avatarStorage.backgroundColor = RGB(240, 240, 240, 1);
+        avatarStorage.backgroundColor = [UIColor whiteColor];
         avatarStorage.frame = CGRectMake(10, 20, 40, 40);
         avatarStorage.tag = 9;
         avatarStorage.cornerBorderWidth = 1.0f;
@@ -257,9 +254,7 @@
             commentBgStorage.contents = [UIImage imageNamed:@"comment"];
             [commentBgStorage stretchableImageWithLeftCapWidth:40 topCapHeight:15];
         }
-        /**************************将要在同一个LWAsyncDisplayView上显示的Storage要全部放入同一个LWLayout中***************************************/
-        /**************************我们将尽量通过合并绘制的方式将所有在同一个View显示的内容全都异步绘制在同一个AsyncDisplayView上**************************/
-        /**************************这样的做法能最大限度的节省系统的开销**************************/
+
         [self addStorage:nameTextStorage];
         [self addStorage:contentTextStorage];
         [self addStorage:dateTextStorage];
@@ -278,9 +273,6 @@
         self.statusModel = statusModel;
         //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
         self.cellHeight = [self suggestHeightWithBottomMargin:15.0f];
-        /********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
-        /***************  https://github.com/waynezxcv/Gallop 持续更新完善，如果觉得有帮助，给个Star~[]***************************/
-        /******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
     }
     return self;
 }

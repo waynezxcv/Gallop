@@ -2,7 +2,7 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# Gallop v0.3.0
+# Gallop v0.3.2
 Gallop --- 强大、快速地图文混排框架。
 A framework for build a smooth asynchronous iOS APP.
 
@@ -28,8 +28,12 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 ![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
 
 
+***
 
 # Modifications
+
+v0.3.2
+* 更改了圆角网络图片的处理方式,消除了内存消耗过大的问题。
 
 v0.3.1
 * 解析HTML渲染生成原生iOS页面时，图片可以按照原图比例自适应高度了。
@@ -48,11 +52,27 @@ v0.2.3
 
 v0.2.2 
 * 增加了一个方法 
-“- (void)lw_addLinkForWholeTextStorageWithData:(id)data linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor;”
-* 废弃了方法“- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)maxCount;"
+
+
+```
+- (void)lw_addLinkForWholeTextStorageWithData:(id)data linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor;
+
+```
+
+
+废弃了方法
+
+```
+- (id)initWithFrame:(CGRect)frame maxImageStorageCount:(NSInteger)maxCount;
+
+```
+
 现在，LWAsyncDisplayView内部将自动维护一个复用池，可以为LWStorage设置一个NSString*类型的Identifier，
 来复用内部的相关UIView,简化API。
+
 * 修复了对文字添加链接重叠而发生冲突的bug.
+
+***
 
 
 # Requirements

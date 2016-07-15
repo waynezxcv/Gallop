@@ -32,6 +32,7 @@
 
 
 
+
 static CGSize _LWSizeFillWithAspectRatio(CGFloat sizeToScaleAspectRatio, CGSize destinationSize) {
     CGFloat destinationAspectRatio = destinationSize.width / destinationSize.height;
     if (sizeToScaleAspectRatio > destinationAspectRatio) {
@@ -230,7 +231,6 @@ static const void* URLKey;
     objc_setAssociatedObject(self, &URLKey, URL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage resizeBlock:(void(^)(LWImageStorage*imageStorage, CGFloat delta))resizeBlock {
     if ([imageStorage.contents isKindOfClass:[UIImage class]]) {
         return;
@@ -248,10 +248,13 @@ static const void* URLKey;
         [self layoutWithStorage:imageStorage];
     }
     __weak typeof(self) weakSelf = self;
-    [self.layer sd_setImageWithURL:(NSURL *)imageStorage.contents
+    [self.layer lw_setImageWithURL:(NSURL *)imageStorage.contents
                   placeholderImage:imageStorage.placeholder
-                           options:SDWebImageAvoidAutoSetImage
-                         completed:^(UIImage *image, NSError *error,
+                      cornerRadius:imageStorage.cornerRadius
+                              size:imageStorage.frame.size
+                           options:SDWebImageAvoidAutoSetImage progress:nil
+                         completed:^(UIImage *image,
+                                     NSError *error,
                                      SDImageCacheType cacheType,
                                      NSURL *imageURL) {
                              if (!image) {
@@ -270,23 +273,14 @@ static const void* URLKey;
                                  [self layoutWithStorage:imageStorage];
                                  resizeBlock(imageStorage,delta);
                              }
-                             if (imageStorage.needRerendering) {
-                                 [weakSelf _rerenderingImage:image
-                                                imageStorage:imageStorage
-                                                  completion:^{
-                                                      if (imageStorage.fadeShow) {
-                                                          [weakSelf fadeShowAnimation];
-                                                      }
-                                                  }];
-                             } else {
-                                 [weakSelf _setContentsImage:image
-                                                imageStorage:imageStorage
-                                                  completion:^{
-                                                      if (imageStorage.fadeShow) {
-                                                          [weakSelf fadeShowAnimation];
-                                                      }
-                                                  }];
-                             }
+                             [weakSelf _setContentsImage:image
+                                            imageStorage:imageStorage
+                                              completion:^{
+                                                  if (imageStorage.fadeShow) {
+                                                      [weakSelf fadeShowAnimation];
+                                                  }
+                                              }];
+
                          }];
 }
 
@@ -362,12 +356,10 @@ static const void* URLKey;
                                                           &backingSize,
                                                           &imageDrawRect);
         }
-
         if (backingSize.width <= 0.0f || backingSize.height <= 0.0f ||
             imageDrawRect.size.width <= 0.0f || imageDrawRect.size.height <= 0.0f) {
             return;
         }
-
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             UIGraphicsBeginImageContextWithOptions(backingSize,isOpaque,contentsScale);
             if (nil == UIGraphicsGetCurrentContext()) {

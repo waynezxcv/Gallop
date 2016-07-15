@@ -24,7 +24,6 @@
 
 
 
-
 #import "CALayer+WebCache.h"
 #import "CALayer+WebCacheOperation.h"
 #import "objc/runtime.h"
@@ -32,7 +31,6 @@
 #import "LWTransaction.h"
 #import "CALayer+LWTransaction.h"
 #import "LWAsyncDisplayLayer.h"
-
 
 static char imageURLKey;
 
@@ -65,8 +63,6 @@ static char imageURLKey;
 }
 
 
-#pragma mark -
-
 - (void)sd_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholder
                    options:(SDWebImageOptions)options
@@ -81,31 +77,94 @@ static char imageURLKey;
     }
     if (url) {
         __weak __typeof(self)wself = self;
-        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager
-                                              downloadImageWithURL:url
-                                              options:options
-                                              progress:progressBlock
-                                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                                                  if (!wself) return;
-                                                  dispatch_main_sync_safe(^{
-                                                      if (!wself) return;
-                                                      if (image && (options & SDWebImageAvoidAutoSetImage) && completedBlock) {
-                                                          completedBlock(image, error, cacheType, url);
-                                                          return;
-                                                      } else if (image) {
-                                                          wself.contents = (__bridge id)image.CGImage;
-                                                          [wself setNeedsLayout];
-                                                      } else {
-                                                          if ((options & SDWebImageDelayPlaceholder)) {
-                                                              wself.contents = (__bridge id)placeholder.CGImage;
-                                                              [wself setNeedsLayout];
-                                                          }
-                                                      }
-                                                      if (completedBlock && finished) {
-                                                          completedBlock(image, error, cacheType, url);
-                                                      }
-                                                  });
-                                              }];
+        id <SDWebImageOperation> operation =
+        [[SDWebImageManager sharedManager] downloadImageWithURL:url
+                                                        options:options
+                                                       progress:progressBlock
+                                                      completed:^(UIImage *image,
+                                                                  NSError *error,
+                                                                  SDImageCacheType cacheType,
+                                                                  BOOL finished,
+                                                                  NSURL *imageURL) {
+                                                          if (!wself) return;
+                                                          dispatch_main_sync_safe(^{
+                                                              if (!wself) return;
+                                                              if (image && (options & SDWebImageAvoidAutoSetImage) && completedBlock) {
+                                                                  completedBlock(image, error, cacheType, url);
+                                                                  return;
+                                                              } else if (image) {
+                                                                  wself.contents = (__bridge id)image.CGImage;
+                                                                  [wself setNeedsLayout];
+                                                              } else {
+                                                                  if ((options & SDWebImageDelayPlaceholder)) {
+                                                                      wself.contents = (__bridge id)placeholder.CGImage;
+                                                                      [wself setNeedsLayout];
+                                                                  }
+                                                              }
+                                                              if (completedBlock && finished) {
+                                                                  completedBlock(image, error, cacheType, url);
+                                                              }
+                                                          });
+                                                      }];
+        [self sd_setImageLoadOperation:operation forKey:@"CALayerImageLoad"];
+    } else {
+        dispatch_main_async_safe(^{
+            NSError *error = [NSError errorWithDomain:SDWebImageErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey : @"Trying to load a nil url"}];
+            if (completedBlock) {
+                completedBlock(nil, error, SDImageCacheTypeNone, url);
+            }
+        });
+    }
+}
+
+- (void)lw_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholder
+              cornerRadius:(CGFloat)cornerRadius
+                      size:(CGSize)size
+                   options:(SDWebImageOptions)options
+                  progress:(SDWebImageDownloaderProgressBlock)progressBlock
+                 completed:(SDWebImageCompletionBlock)completedBlock {
+    [self sd_cancelCurrentImageLoad];
+    objc_setAssociatedObject(self, &imageURLKey, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (!(options & SDWebImageDelayPlaceholder)) {
+        dispatch_main_async_safe(^{
+            [self setContents:(__bridge id)placeholder.CGImage];
+        });
+    }
+    if (url) {
+        __weak __typeof(self)wself = self;
+        id <SDWebImageOperation> operation =
+        [[SDWebImageManager sharedManager]
+         lw_downloadImageWithURL:url
+         cornerRadius:cornerRadius
+         size:size
+         options:options
+         progress:progressBlock
+         completed:^(UIImage *image,
+                     NSError *error,
+                     SDImageCacheType cacheType,
+                     BOOL finished,
+                     NSURL *imageURL) {
+             if (!wself) return;
+             dispatch_main_sync_safe(^{
+                 if (!wself) return;
+                 if (image && (options & SDWebImageAvoidAutoSetImage) && completedBlock) {
+                     completedBlock(image, error, cacheType, url);
+                     return;
+                 } else if (image) {
+                     wself.contents = (__bridge id)image.CGImage;
+                     [wself setNeedsLayout];
+                 } else {
+                     if ((options & SDWebImageDelayPlaceholder)) {
+                         wself.contents = (__bridge id)placeholder.CGImage;
+                         [wself setNeedsLayout];
+                     }
+                 }
+                 if (completedBlock && finished) {
+                     completedBlock(image, error, cacheType, url);
+                 }
+             });
+         }];
         [self sd_setImageLoadOperation:operation forKey:@"CALayerImageLoad"];
     } else {
         dispatch_main_async_safe(^{

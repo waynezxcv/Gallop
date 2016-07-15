@@ -151,6 +151,48 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  */
 @interface SDWebImageManager : NSObject
 
+
+/*******************************************************************************************************/
+
+/**
+ *  Downloads the image at the given URL if not present in cache or return the cached version otherwise.
+ *
+ 
+
+ *  @param cornerRadius 圆角半径值
+ *  @param cornerBackgroundColor 圆角半径的背景颜色
+ *  @param cornerBorderColor 圆角半径的描边颜色
+ *  @param cornerBorderWidth 圆角半径的描边宽度
+ 
+
+ *  @param url            The URL to the image
+ *  @param options        A mask to specify options to use for this request
+ *  @param progressBlock  A block called while image is downloading
+ *  @param size A block called when operation has been completed.
+ *   This parameter is required.
+ *
+ *   This block has no return value and takes the requested UIImage as first parameter.
+ *   In case of error the image parameter is nil and the second parameter may contain an NSError.
+ *
+ *   The third parameter is an `SDImageCacheType` enum indicating if the image was retrieved from the local cache
+ *   or from the memory cache or from the network.
+ *
+ *   The last parameter is set to NO when the SDWebImageProgressiveDownload option is used and the image is
+ *   downloading. This block is thus called repeatedly with a partial image. When image is fully downloaded, the
+ *   block is called a last time with the full image and the last parameter set to YES.
+ *
+ * @return Returns an NSObject conforming to SDWebImageOperation. Should be an instance of SDWebImageDownloaderOperation
+ */
+- (id <SDWebImageOperation>)lw_downloadImageWithURL:(NSURL *)url
+                                       cornerRadius:(CGFloat)cornerRadius
+                                               size:(CGSize)size
+                                            options:(SDWebImageOptions)options
+                                           progress:(SDWebImageDownloaderProgressBlock)progressBlock
+                                          completed:(SDWebImageCompletionWithFinishedBlock)completedBlock;
+
+/*******************************************************************************************************/
+
+
 @property (weak, nonatomic) id <SDWebImageManagerDelegate> delegate;
 
 @property (strong, nonatomic, readonly) SDImageCache *imageCache;
@@ -186,6 +228,8 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  * @return new instance of `SDWebImageManager` with specified cache and downloader.
  */
 - (instancetype)initWithCache:(SDImageCache *)cache downloader:(SDWebImageDownloader *)downloader;
+
+
 
 /**
  * Downloads the image at the given URL if not present in cache or return the cached version otherwise.
