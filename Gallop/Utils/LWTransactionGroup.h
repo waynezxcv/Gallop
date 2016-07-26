@@ -26,11 +26,29 @@
 #import <UIKit/UIKit.h>
 #import "LWTransaction.h"
 
-
+/**
+ *  一个全局的对象，用于管理当前所有的LWTransaction,对CFRunLoopObserverRef的封装
+ */
 @interface LWTransactionGroup : NSObject
 
+/**
+ *  获取主线程CFRunLoopObserverRef，注册观察时间点并返回封装后的LWTransactionGroup对象
+ *
+ *  @return 一个LWTransactionGroup对象
+ */
 + (id)mainTransactionGroup;
+
+/**
+ *  一个LWTransaction的CALayer容器添加到LWTransactionGroup
+ *
+ *  @param containerLayer CALayer容器
+ */
 - (void)addTransactionContainer:(CALayer *)containerLayer;
+
+/**
+ *  提交mainTransactionGroup当中所有容器中的所有任务的操作
+ *  mainTransactionGroup->containerLayer->LWTrasactions->LWTrasaction->operaiton
+ */
 + (void)commit;
 
 @end

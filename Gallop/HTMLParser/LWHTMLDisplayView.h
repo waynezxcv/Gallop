@@ -35,25 +35,48 @@
 
 @optional
 
-/***  点击链接 ***/
+/**
+ *  点击链接时可以在这个代理方法里收到回调。
+ *
+ *  @param asyncDisplayView LWTextStorage所处的LWAsyncDisplayView
+ *  @param textStorage      点击的那个LWTextStorage对象
+ *  @param data             添加点击链接时所附带的信息。
+ */
 - (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
    didCilickedTextStorage:(LWTextStorage *)textStorage
                  linkdata:(id)data;
 
-/***  点击LWImageStorage ***/
+/**
+ *  点击LWImageStorage时，可以在这个代理方法里收到回调
+ *
+ *  @param asyncDisplayView LWImageStorage所处的LWAsyncDisplayView
+ *  @param imageStorage     点击的那个LWImageStorage对象
+ */
 - (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
   didCilickedImageStorage:(LWImageStorage *)imageStorage;
 
 @end
 
+
+/**
+ *  HTML解析视图
+ */
 @interface LWHTMLDisplayView : UITableView
 
-@property (nonatomic,strong) LWHTMLLayout* layout;
-@property (nonatomic,weak) id <LWHTMLDisplayViewDelegate> displayDelegate;
-@property (nonatomic,strong,readonly) LWStorageBuilder* storageBuilder;
-@property (nonatomic,strong) NSData* data;
+@property (nonatomic,strong) LWHTMLLayout* layout;//布局模型
+@property (nonatomic,weak) id <LWHTMLDisplayViewDelegate> displayDelegate;//代理对象
+@property (nonatomic,strong,readonly) LWStorageBuilder* storageBuilder;//用于解析HTML创建LWStorage
+@property (nonatomic,strong) NSData* data;//HTML文件
 @property (nonatomic,weak) UIViewController* parentVC;//如果要使用图片浏览器，需要设置parentVC
 
+/**
+ *  构造方法
+ *
+ *  @param frame    html在父视图中所处的位置CGRect
+ *  @param parentVC html所处的ViewController
+ *
+ *  @return LWHTMLDisplayView对象
+ */
 - (id)initWithFrame:(CGRect)frame parentVC:(UIViewController *)parentVC;
 
 @end

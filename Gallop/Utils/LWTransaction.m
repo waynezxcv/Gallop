@@ -72,14 +72,12 @@
 @property (nonatomic,strong) dispatch_queue_t callbackQueue;
 @property (nonatomic,copy) LWAsyncTransactionCompletionBlock completionBlock;
 @property (nonatomic,assign) LWAsyncTransactionState state;
-
 @property (nonatomic,strong) NSMutableArray* operations;
 
 @end
 
 
 @implementation LWTransaction
-
 
 #pragma mark - LifeCycle
 
@@ -97,6 +95,7 @@
 }
 
 #pragma mark - Methods
+
 - (void)addAsyncOperationWithTarget:(id)target
                            selector:(SEL)selector
                              object:(id)object
@@ -130,6 +129,7 @@
         for (LWAsyncDisplayTransactionOperation* operation in self.operations) {
             [operation callAndReleaseCompletionBlock:isCanceled];
         }
+        /* remove */
         self.state = LWAsyncTransactionStateComplete;
         if (_completionBlock) {
             _completionBlock(self, isCanceled);
@@ -138,7 +138,6 @@
 }
 
 #pragma mark - Getter
-
 - (NSMutableArray *)operations {
     if (_operations) {
         return _operations;

@@ -27,9 +27,16 @@
 #import "LWStorage.h"
 #import "LWConstraint.h"
 
-
+/**
+ *  给LWStorage扩展一个LWConstraint对象
+ */
 @interface LWStorage(Constraint)
 
+/**
+ *  获取一个LWStorage对象的LWConstraint关联对象
+ *
+ *  @return  LWStorage对象的LWConstraint关联对象
+ */
 - (LWConstraint *)constraint;
 
 @end

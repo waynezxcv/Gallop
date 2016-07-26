@@ -14,7 +14,7 @@
 
 
 #import "Menu.h"
-#import "GallopUtils.h"
+#import "Gallop.h"
 
 @interface Menu ()
 

@@ -25,11 +25,16 @@
 #import "LWImageStorage.h"
 #import "CALayer+WebCache.h"
 #import <objc/runtime.h>
-#import "GallopUtils.h"
+#import "GallopDefine.h"
 #import "LWTransaction.h"
 #import "CALayer+LWTransaction.h"
 #import "LWAsyncDisplayLayer.h"
 
+
+@interface LWImageStorage()
+@property (nonatomic,assign) BOOL needRerendering;//是否需要重新绘制
+
+@end
 
 
 

@@ -24,6 +24,9 @@
 
 #import "SDImageCache.h"
 
+/**
+ *  Gallop对SDImageCache的扩展，通过methodSwizzling来实现圆角半径图片的缓存
+ */
 @interface SDImageCache (Gallop)
 
 @end

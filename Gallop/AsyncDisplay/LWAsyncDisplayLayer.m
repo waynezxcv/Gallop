@@ -164,6 +164,7 @@
                 });
                 return;
             }
+
             UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
             if (isCancelledBlock()) {
@@ -174,6 +175,7 @@
                 });
                 return;
             }
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 __weak typeof(self) weakSelf = self;
                 LWTransaction* layerAsyncTransaction = self.lw_asyncTransaction;

@@ -26,7 +26,7 @@
 #import "LWActionSheetView.h"
 #import "UIImage+ImageEffects.h"
 #import "LWActionSheetTableViewCell.h"
-#import "GallopUtils.h"
+#import "GallopDefine.h"
 
 
 const CGFloat cellHeight = 60.0f;

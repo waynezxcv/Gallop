@@ -27,22 +27,27 @@
 
 @interface LWHTMLTextConfig : NSObject
 
-@property (nonatomic,strong) UIColor* textColor;
-@property (nonatomic,strong) UIColor* textBackgroundColor;
-@property (nonatomic,strong) UIFont* font;
-@property (nonatomic,assign) CGFloat linespacing;
-@property (nonatomic,assign) unichar characterSpacing;
-@property (nonatomic,assign) NSTextAlignment textAlignment;
-@property (nonatomic,assign) NSUnderlineStyle underlineStyle;
-@property (nonatomic,strong) UIColor* underlineColor;
-@property (nonatomic,assign) NSLineBreakMode lineBreakMode;
-@property (nonatomic,assign) LWTextDrawMode textDrawMode;
-@property (nonatomic,strong) UIColor* strokeColor;
-@property (nonatomic,assign) CGFloat strokeWidth;
-@property (nonatomic,strong) UIColor* linkColor;
-@property (nonatomic,strong) UIColor* linkHighlightColor;
-@property (nonatomic,assign) CGFloat paragraphSpacing;
+@property (nonatomic,strong) UIColor* textColor;//文本颜色
+@property (nonatomic,strong) UIColor* textBackgroundColor;//文本背景颜色
+@property (nonatomic,strong) UIFont* font;//文本字体
+@property (nonatomic,assign) CGFloat linespacing;//行间距
+@property (nonatomic,assign) unichar characterSpacing;//字间距
+@property (nonatomic,assign) NSTextAlignment textAlignment;//文本水平对齐方式
+@property (nonatomic,assign) NSUnderlineStyle underlineStyle;//下划线样式
+@property (nonatomic,strong) UIColor* underlineColor;//下滑线颜色
+@property (nonatomic,assign) NSLineBreakMode lineBreakMode;//换行方式
+@property (nonatomic,assign) LWTextDrawMode textDrawMode;//绘制模式
+@property (nonatomic,strong) UIColor* strokeColor;//描边颜色
+@property (nonatomic,assign) CGFloat strokeWidth;//描边宽度
+@property (nonatomic,strong) UIColor* linkColor;//链接颜色
+@property (nonatomic,strong) UIColor* linkHighlightColor;//链接点击时高亮颜色
+@property (nonatomic,assign) CGFloat paragraphSpacing;//段落间距
 
+/**
+ *  获取一个默认的样式设置
+ *
+ *  @return 一个默认样式的LWHTMTextCofing对象
+ */
 + (LWHTMLTextConfig *)defaultsTextConfig;
 
 @end

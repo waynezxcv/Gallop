@@ -36,8 +36,7 @@
         UIImage* image2 = [UIImage imageNamed:@"[face].png"];
         UIImage* image3 = [UIImage imageNamed:@"pic.jpeg"];
         UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
-        
-        
+
         [textStorage1 lw_replaceTextWithImage:image1
                                   contentMode:UIViewContentModeScaleAspectFill
                                     imageSize:image1.size
@@ -107,8 +106,7 @@
         [attributedString setTextBackgroundColor:[UIColor blackColor] range:NSMakeRange(78, 21)];
         [attributedString setFont:[UIFont systemFontOfSize:25]range:NSMakeRange(78, 21)];
         [attributedString setUnderlineStyle:NSUnderlineStyleDouble underlineColor:[UIColor whiteColor] range:NSMakeRange(77, 21)];
-        
-        
+
         LWTextStorage* textStorage3 = [LWTextStorage lw_textStrageWithText:attributedString
                                                                      frame:CGRectMake(textStorage1.left, textStorage2.bottom + 50.0f, textStorage1.width, CGFLOAT_MAX)];
         [layout addStorage:textStorage1];

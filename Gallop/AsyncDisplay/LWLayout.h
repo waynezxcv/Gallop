@@ -28,18 +28,53 @@
 #import "LWTextStorage.h"
 #import "LWImageStorage.h"
 
-@interface LWLayout : NSObject<NSCopying,NSCoding>
 
-@property (nonatomic,strong,readonly) NSMutableArray<LWTextStorage *>* textStorages;
-@property (nonatomic,strong,readonly) NSMutableArray<LWImageStorage *>* imageStorages;
-@property (nonatomic,strong,readonly) NSMutableArray<LWStorage *>* totalStorages;
+/**
+ *  Gallop的布局模型。其中包含了LWStorage及其子类的对象。
+ */
 
+@interface LWLayout : NSObject <NSCopying,NSCoding>
+
+@property (nonatomic,strong,readonly) NSMutableArray<LWTextStorage *>* textStorages;//包含LWTextStorage的数组
+@property (nonatomic,strong,readonly) NSMutableArray<LWImageStorage *>* imageStorages;//包含LWImageStorage的数组
+@property (nonatomic,strong,readonly) NSMutableArray<LWStorage *>* totalStorages;//包含所有LWStorage子类的数组
+
+/**
+ *  添加一个LWStorage对象
+ *
+ *  @param storage 一个LWStorage对象
+ */
 - (void)addStorage:(LWStorage *)storage;
+
+/**
+ *  添加一个包含LWStorage对象的数组的所有元素到LWLayout
+ *
+ *  @param storages 一个包含LWStorage对象的数组
+ */
 - (void)addStorages:(NSArray <LWStorage *> *)storages;
+
+/**
+ *  移除一个LWStorage对象
+ *
+ *  @param storage 一个LWStorage对象
+ */
 - (void)removeStorage:(LWStorage *)storage;
+
+/**
+ *  移除一个包含LWStorage对象的数组的所有元素
+ *
+ *  @param storages 一个包含LWStorage对象的数组
+ */
 - (void)removeStorages:(NSArray <LWStorage *> *)storages;
 
-//*** 指定一个底部间距，计算LWAsncDisplayView的高度 ****//
+/**
+ *  获取到一个建议的高度，主要用于UITabelViewCell的高度设定。
+ *  你可以在UITableVeiw的代理方法中直接返回这个高度，来方便的动态设定Cell高度
+ *
+ *  @param bottomMargin 距离底部的间距
+ *
+ *  @return 建议的高度
+ */
 - (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin;
 
 

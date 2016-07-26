@@ -31,7 +31,6 @@
 #import "LWLayout.h"
 
 
-
 @interface LWAsyncDisplayView ()<LWAsyncDisplayLayerDelegate>
 
 @property (nonatomic,strong) NSMutableArray* reusePool;
@@ -113,6 +112,7 @@
     }
     return nil;
 }
+
 
 #pragma mark - Display
 
@@ -275,9 +275,11 @@
                 if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedTextStorage:linkdata:)]) {
                     [self.delegate lwAsyncDisplayView:self didCilickedTextStorage:textStorage linkdata:_highlight.content];
                 }
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self _removeHightlight];
-                });
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                             (int64_t)(0.1f * NSEC_PER_SEC)),
+                               dispatch_get_main_queue(), ^{
+                                   [self _removeHightlight];
+                               });
                 break;
             }
         }
@@ -349,19 +351,22 @@
     [self _cleanAddToReusePool];
     LWLayout* oldLayout = _layout;
     NSArray* oldImageStorages = _imageStorages;
-    NSArray* oldTextStorage = _textStorages;
+    NSArray* oldTextStorages = _textStorages;
     _layout = nil;
     _imageStorages = nil;
     _textStorages = nil;
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [oldLayout class];
-        [oldTextStorage class];
+        [oldTextStorages class];
         [oldImageStorages class];
     });
+
     _layout = layout;
     _imageStorages = self.layout.imageStorages;
     _textStorages = self.layout.textStorages;
     [self.layer setNeedsDisplay];
+
     __weak typeof(self) weakSelf = self;
     [self setImageStoragesResizeBlock:^(LWImageStorage* imageStorage,CGFloat delta) {
         __strong typeof(weakSelf) swself = weakSelf;

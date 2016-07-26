@@ -26,9 +26,9 @@
 #import <CoreText/CoreText.h>
 
 
-
-//** 对CTRunDelegateRef的封装 **//
-
+/**
+ *  对CTRunDelegateRef的封装
+ */
 @interface LWTextRunDelegate : NSObject<NSCoding,NSCopying>
 
 @property (nullable,nonatomic,assign) CTRunDelegateRef CTRunDelegate;//CoreText中的CTRunDelegateRef

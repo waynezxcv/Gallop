@@ -25,6 +25,7 @@
 #import "LWAlertView.h"
 #import "LWAlertContentView.h"
 #import "GallopUtils.h"
+#import "GallopDefine.h"
 
 
 @interface LWAlertView ()

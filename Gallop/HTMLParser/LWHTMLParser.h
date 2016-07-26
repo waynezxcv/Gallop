@@ -24,7 +24,14 @@
 
 #import <Foundation/Foundation.h>
 
+
+
+/**
+ *  这个类是对libxml的封装，用于解析HTML
+ */
+
 @class LWHTMLParser;
+
 
 @protocol LWHTMLParserDelegate  <NSObject>
 
@@ -51,6 +58,7 @@
 @property (nonatomic,readonly) NSString* publicID;
 @property (nonatomic,readonly) NSString* systemID;
 @property (nonatomic,strong,readonly) NSError* parserError;
+
 
 - (id)initWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
 - (BOOL)startSearchWithXPathQuery:(NSString *)xpath;

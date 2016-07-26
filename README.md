@@ -32,6 +32,7 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 
 # Modifications
 
+
 v0.3.2
 * 现在，设置了圆角半径的网络图片将额外缓存一份，解决了内存消耗过大的问题。
 
@@ -84,6 +85,7 @@ v0.2.2
 1. 将Gallop文件夹下的.h及.m文件添加到你的工程当中。
 2. 在XCode的Build Phases-> Link Binary With Libraries中添加libxml2.tbd库
 3. 在XCode的Build Setting->Header Search Paths中添加‘/usr/include/libxml2’
+4. 安装SDWebImage，并且将原来SDWebImage中的SDWebImageManager.h和SDWebImageManager.m替换为Gallop文件夹下的同名文件。
 4. #import "Gallop.h"
 
 

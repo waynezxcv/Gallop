@@ -32,24 +32,26 @@
 @interface CALayer(WebCacheOperation)
 
 /**
- *  Set the image load operation (storage in a UIView based dictionary)
+ *  通过Key给CALayer对象设置下载的NSOperation对象
  *
- *  @param operation the operation
- *  @param key       key for storing the operation
+ *  @param operation NSOperation对象
+ *  @param key       NSOperation对象对应的Key
  */
 - (void)sd_setImageLoadOperation:(id)operation forKey:(NSString *)key;
 
+
 /**
- *  Cancel all operations for the current UIView and key
+ *  通过Key来取消这个CALayer对象上的NSOperation
  *
- *  @param key key for identifying the operations
+ *  @param key NSOperation对象对应的Key
  */
 - (void)sd_cancelImageLoadOperationWithKey:(NSString *)key;
 
+
 /**
- *  Just remove the operations corresponding to the current UIView and key without cancelling them
+ *  通过Key来移除这个CALayer对象上的NSOperation
  *
- *  @param key key for identifying the operations
+ *  @param key NSOperation对象对应的Key
  */
 - (void)sd_removeImageLoadOperationWithKey:(NSString *)key;
 

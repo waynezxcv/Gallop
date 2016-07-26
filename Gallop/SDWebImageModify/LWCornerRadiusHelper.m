@@ -28,9 +28,7 @@
 
 @implementation LWCornerRadiusHelper
 
-/**
- *  将绘制信息保存到key中
- */
+
 + (NSString *)lw_imageTransformCacheKeyForURL:(NSURL *)url
                                  cornerRadius:(CGFloat)cornerRadius
                                          size:(CGSize)size {
@@ -46,10 +44,6 @@
     return imageStransformCacheKey;
 }
 
-/**
- *  绘制圆角半径图片
- *
- */
 + (UIImage *)lw_cornerRadiusImageWithImage:(UIImage*)image withKey:(NSString *)key {
     if (key && [key hasPrefix:[NSString stringWithFormat:@"%@",LWCornerRadiusPrefixKey]]) {
         NSString* infoString = [key substringFromIndex:LWCornerRadiusPrefixKey.length];

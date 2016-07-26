@@ -26,7 +26,7 @@
 #import "LWStorageBuilder.h"
 #import "LWHTMLParser.h"
 #import "NSMutableAttributedString+Gallop.h"
-
+#import "GallopDefine.h"
 
 
 typedef NS_ENUM(NSUInteger, LWElementType) {

@@ -25,16 +25,45 @@
 #import <Foundation/Foundation.h>
 #import "LWStorage.h"
 
+
+/**
+ *  HTML渲染布局模型
+ */
 @interface LWHTMLLayout : NSObject
 
-
+/**
+ *  添加一个LWStorage对象
+ *
+ *  @param storage 一个LWStorage对象
+ */
 - (void)addStorage:(LWStorage *)storage;
+
+/**
+ *  从一个数组中添加LWStorage对象
+ *
+ *  @param storages 一个包含LWStorage对象的数组
+ */
 - (void)addStorages:(NSArray <LWStorage *>*)storages;
 
+/**
+ *  在当前所添加的LWStorage对象的后面拼接一个LWStorage对象
+ *
+ *  @param storage 一个LWStorage对象
+ */
 - (void)appendStorage:(LWStorage *)storage;
+
+/**
+ *  在当前所添加的LWStorage对象的后面拼接若干个LWStorage对象，它们被顺序地放在数组中
+ *
+ *  @param storage 一个LWStorage对象
+ */
 - (void)appendStorages:(NSArray <LWStorage *>*)storages;
 
-
+/**
+ *  获取所有的LWStorage对象
+ *
+ *  @return 当前包含的所有LWStorage对象
+ */
 - (NSArray *)allItems;
 
 

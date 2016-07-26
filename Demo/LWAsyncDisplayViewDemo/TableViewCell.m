@@ -160,7 +160,6 @@
     if (_menu) {
         return _menu;
     }
-
     _menu = [[Menu alloc] initWithFrame:CGRectZero];
     _menu.backgroundColor = [UIColor whiteColor];
     _menu.opaque = YES;

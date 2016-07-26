@@ -166,7 +166,6 @@
     } else {
         key = [self cacheKeyForURL:url];
     }
-
     operation.cacheOperation = [self.imageCache
                                 queryDiskCacheForKey:key
                                 done:^(UIImage *image, SDImageCacheType cacheType) {
@@ -177,7 +176,6 @@
 
                                         return;
                                     }
-
                                     if ((!image || options & SDWebImageRefreshCached) && (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] || [self.delegate imageManager:self shouldDownloadImageForURL:url])) {
                                         if (image && options & SDWebImageRefreshCached) {
                                             dispatch_main_sync_safe(^{
@@ -234,9 +232,7 @@
                                                         [self.failedURLs removeObject:url];
                                                     }
                                                 }
-
                                                 BOOL cacheOnDisk = !(options & SDWebImageCacheMemoryOnly);
-
                                                 if (options & SDWebImageRefreshCached && image && !downloadedImage) {
                                                     // Image refresh hit the NSURLCache cache, do not call the completion block
                                                 }
@@ -262,7 +258,6 @@
                                                     }
                                                     dispatch_main_sync_safe(^{
                                                         if (strongOperation && !strongOperation.isCancelled) {
-
                                                             /**
                                                              *  读取指定的绘制的缓存
                                                              */
@@ -271,7 +266,6 @@
                                                             }else{
                                                                 completedBlock(downloadedImage, nil, SDImageCacheTypeNone, finished, url);
                                                             }
-
                                                         }
                                                     });
                                                 }
@@ -460,9 +454,7 @@
                         if (downloadedImage && finished) {
                             [self.imageCache storeImage:downloadedImage recalculateFromImage:NO imageData:data forKey:key toDisk:cacheOnDisk];
                         }
-
                         dispatch_main_sync_safe(^{
-
                             /**
                              *  读取指定的绘制的缓存
                              */
@@ -472,14 +464,10 @@
                                 }else{
                                     completedBlock(downloadedImage, nil, SDImageCacheTypeNone, finished, url);
                                 }
-
-
-
                             }
                         });
                     }
                 }
-
                 if (finished) {
                     @synchronized (self.runningOperations) {
                         if (strongOperation) {

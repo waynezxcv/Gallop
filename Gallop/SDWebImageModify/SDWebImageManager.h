@@ -11,6 +11,9 @@
 #import "SDWebImageDownloader.h"
 #import "SDImageCache.h"
 
+
+
+
 typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
     /**
      * By default, when a URL fail to be downloaded, the URL is blacklisted so the library won't keep trying.
@@ -68,7 +71,7 @@ typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
      * the front of the queue.
      */
     SDWebImageHighPriority = 1 << 8,
-    
+
     /**
      * By default, placeholder images are loaded while the image is loading. This flag will delay the loading
      * of the placeholder image until after the image has finished loading.
@@ -81,7 +84,7 @@ typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
      * Use this flag to transform them anyway.
      */
     SDWebImageTransformAnimatedImage = 1 << 10,
-    
+
     /**
      * By default, image is added to the imageView after download. But in some cases, we want to
      * have the hand before setting the image (apply a filter or add it with cross-fade animation for instance)
@@ -137,15 +140,15 @@ typedef NSString *(^SDWebImageCacheKeyFilterBlock)(NSURL *url);
  *
  * @code
 
-SDWebImageManager *manager = [SDWebImageManager sharedManager];
-[manager downloadImageWithURL:imageURL
-                      options:0
-                     progress:nil
-                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                        if (image) {
-                            // do something with image
-                        }
-                    }];
+ SDWebImageManager *manager = [SDWebImageManager sharedManager];
+ [manager downloadImageWithURL:imageURL
+ options:0
+ progress:nil
+ completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+ if (image) {
+ // do something with image
+ }
+ }];
 
  * @endcode
  */
@@ -157,13 +160,13 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
 /**
  *  Downloads the image at the given URL if not present in cache or return the cached version otherwise.
  *
- 
+
 
  *  @param cornerRadius 圆角半径值
  *  @param cornerBackgroundColor 圆角半径的背景颜色
  *  @param cornerBorderColor 圆角半径的描边颜色
  *  @param cornerBorderWidth 圆角半径的描边宽度
- 
+
 
  *  @param url            The URL to the image
  *  @param options        A mask to specify options to use for this request
@@ -207,10 +210,10 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  *
  * @code
 
-[[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL *url) {
-    url = [[NSURL alloc] initWithScheme:url.scheme host:url.host path:url.path];
-    return [url absoluteString];
-}];
+ [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL *url) {
+ url = [[NSURL alloc] initWithScheme:url.scheme host:url.host path:url.path];
+ return [url absoluteString];
+ }];
 
  * @endcode
  */
@@ -240,14 +243,14 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  * @param completedBlock A block called when operation has been completed.
  *
  *   This parameter is required.
- * 
+ *
  *   This block has no return value and takes the requested UIImage as first parameter.
  *   In case of error the image parameter is nil and the second parameter may contain an NSError.
  *
  *   The third parameter is an `SDImageCacheType` enum indicating if the image was retrieved from the local cache
  *   or from the memory cache or from the network.
  *
- *   The last parameter is set to NO when the SDWebImageProgressiveDownload option is used and the image is 
+ *   The last parameter is set to NO when the SDWebImageProgressiveDownload option is used and the image is
  *   downloading. This block is thus called repeatedly with a partial image. When image is fully downloaded, the
  *   block is called a last time with the full image and the last parameter set to YES.
  *
@@ -301,7 +304,7 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  *
  *  @param url              image url
  *  @param completionBlock  the block to be executed when the check is finished
- *  
+ *
  *  @note the completion block is always executed on the main queue
  */
 - (void)cachedImageExistsForURL:(NSURL *)url
@@ -325,7 +328,6 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
 - (NSString *)cacheKeyForURL:(NSURL *)url;
 
 @end
-
 
 #pragma mark - Deprecated
 

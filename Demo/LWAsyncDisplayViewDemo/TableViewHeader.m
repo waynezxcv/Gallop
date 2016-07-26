@@ -9,6 +9,7 @@
 #import "TableViewHeader.h"
 #import "GallopUtils.h"
 #import "UIImageView+WebCache.h"
+#import "GallopDefine.h"
 
 
 @interface TableViewHeader ()

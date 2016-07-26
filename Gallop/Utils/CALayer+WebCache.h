@@ -30,8 +30,15 @@
 @interface CALayer(WebCache)
 
 /**
+ *  通过URL设置一个CAlayer的图片，同时设置占位图、圆角半径相关属性
  *
- *   设置圆角半径并缓存
+ *  @param url            图片的URL
+ *  @param placeholder    占位图
+ *  @param cornerRadius   圆角半径值
+ *  @param size           图片的大小
+ *  @param options        图片设置选项
+ *  @param progressBlock  一个下载进度回调Block
+ *  @param completedBlock 一个下载完毕回调Block
  */
 - (void)lw_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholder
@@ -41,106 +48,72 @@
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock;
 
-
-
 /**
- * Get the current image URL.
+ *  获取当前图片的URL
  *
- * Note that because of the limitations of categories this property can get out of sync
- * if you use sd_setImage: directly.
  */
 - (NSURL *)sd_imageURL;
 
 /**
- * Set the imageView `image` with an `url`.
+ *  通过URL设置一个CALayer对象的图片
  *
- * The download is asynchronous and cached.
- *
- * @param url The url for the image.
+ *  @param url 图片的URL
  */
 - (void)sd_setImageWithURL:(NSURL *)url;
 
 /**
- * Set the imageView `image` with an `url` and a placeholder.
+ *  通过URL设置一个CALayer对象的图片，并设置一个占位图
  *
- * The download is asynchronous and cached.
- *
- * @param url         The url for the image.
- * @param placeholder The image to be set initially, until the image request finishes.
- * @see sd_setImageWithURL:placeholderImage:options:
+ *  @param url         图片的URL
+ *  @param placeholder 占位图
  */
 - (void)sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder;
 
 /**
- * Set the imageView `image` with an `url`, placeholder and custom options.
+ *  通过URL设置一个CALayer对象的图片，并设置一个占位图和一个图片设置选项
  *
- * The download is asynchronous and cached.
- *
- * @param url         The url for the image.
- * @param placeholder The image to be set initially, until the image request finishes.
- * @param options     The options to use when downloading the image. @see SDWebImageOptions for the possible values.
+ *  @param url         图片URL
+ *  @param placeholder 占位图
+ *  @param options     图片设置选项
  */
 - (void)sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options;
 
+
 /**
- * Set the imageView `image` with an `url`.
+ *  通过设置URL来设置一个CALayer对象的图片
  *
- * The download is asynchronous and cached.
- *
- * @param url            The url for the image.
- * @param completedBlock A block called when operation has been completed. This block has no return value
- *                       and takes the requested UIImage as first parameter. In case of error the image parameter
- *                       is nil and the second parameter may contain an NSError. The third parameter is a Boolean
- *                       indicating if the image was retrieved from the local cache or from the network.
- *                       The fourth parameter is the original image url.
+ *  @param url            图片的URL
+ *  @param completedBlock 当图片下载完成时回调Block
  */
 - (void)sd_setImageWithURL:(NSURL *)url completed:(SDWebImageCompletionBlock)completedBlock;
 
 /**
- * Set the imageView `image` with an `url`, placeholder.
+ *  通过设置URL来设置一个CALayer对象的图片
  *
- * The download is asynchronous and cached.
- *
- * @param url            The url for the image.
- * @param placeholder    The image to be set initially, until the image request finishes.
- * @param completedBlock A block called when operation has been completed. This block has no return value
- *                       and takes the requested UIImage as first parameter. In case of error the image parameter
- *                       is nil and the second parameter may contain an NSError. The third parameter is a Boolean
- *                       indicating if the image was retrieved from the local cache or from the network.
- *                       The fourth parameter is the original image url.
+ *  @param url            图片的URL
+ *  @param placeholder    占位图
+ *  @param completedBlock 当图片下载完成时回调Block
  */
 - (void)sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder completed:(SDWebImageCompletionBlock)completedBlock;
 
 /**
- * Set the imageView `image` with an `url`, placeholder and custom options.
+ *  通过设置URL来设置一个CALayer对象的图片
  *
- * The download is asynchronous and cached.
- *
- * @param url            The url for the image.
- * @param placeholder    The image to be set initially, until the image request finishes.
- * @param options        The options to use when downloading the image. @see SDWebImageOptions for the possible values.
- * @param completedBlock A block called when operation has been completed. This block has no return value
- *                       and takes the requested UIImage as first parameter. In case of error the image parameter
- *                       is nil and the second parameter may contain an NSError. The third parameter is a Boolean
- *                       indicating if the image was retrieved from the local cache or from the network.
- *                       The fourth parameter is the original image url.
+ *  @param url            图片的URL
+ *  @param placeholder    占位图
+ *  @param options        图片设置选项
+ *  @param completedBlock 当图片下载完成时回调Block
  */
 - (void)sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options completed:(SDWebImageCompletionBlock)completedBlock;
 
 /**
- * Set the imageView `image` with an `url`, placeholder and custom options.
+ *  通过设置URL来设置一个CALayer对象的图片
  *
- * The download is asynchronous and cached.
- *
- * @param url            The url for the image.
- * @param placeholder    The image to be set initially, until the image request finishes.
- * @param options        The options to use when downloading the image. @see SDWebImageOptions for the possible values.
- * @param progressBlock  A block called while image is downloading
- * @param completedBlock A block called when operation has been completed. This block has no return value
- *                       and takes the requested UIImage as first parameter. In case of error the image parameter
- *                       is nil and the second parameter may contain an NSError. The third parameter is a Boolean
- *                       indicating if the image was retrieved from the local cache or from the network.
- *                       The fourth parameter is the original image url.
+ *  @param url            图片的URL
+ *  @param placeholder    占位图
+ *  @param options        图片设置选项
+ *  @param progressBlock  图片现在进度回调Block
+ *  @param completedBlock 当图片下载完成时回调Block
  */
 - (void)sd_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholder
@@ -148,20 +121,15 @@
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock;
 
+
 /**
- * Set the imageView `image` with an `url` and optionally a placeholder image.
+ *  通过设置URL来设置一个CALayer对象的图片，这个下载是异步，会先取到先前缓存的图片用来占位
  *
- * The download is asynchronous and cached.
- *
- * @param url            The url for the image.
- * @param placeholder    The image to be set initially, until the image request finishes.
- * @param options        The options to use when downloading the image. @see SDWebImageOptions for the possible values.
- * @param progressBlock  A block called while image is downloading
- * @param completedBlock A block called when operation has been completed. This block has no return value
- *                       and takes the requested UIImage as first parameter. In case of error the image parameter
- *                       is nil and the second parameter may contain an NSError. The third parameter is a Boolean
- *                       indicating if the image was retrieved from the local cache or from the network.
- *                       The fourth parameter is the original image url.
+ *  @param url            图片的URL
+ *  @param placeholder    占位图
+ *  @param options        图片设置选项
+ *  @param progressBlock  图片现在进度回调Block
+ *  @param completedBlock 当图片下载完成时回调Block
  */
 - (void)sd_setImageWithPreviousCachedImageWithURL:(NSURL *)url
                                  placeholderImage:(UIImage *)placeholder
@@ -171,7 +139,7 @@
 
 
 /**
- * Cancel the current download
+ *  取消当前的图片下载
  */
 - (void)sd_cancelCurrentImageLoad;
 

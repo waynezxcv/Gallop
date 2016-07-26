@@ -21,7 +21,6 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 
-
     UIView* view1 = [[UIImageView alloc] initWithFrame:CGRectMake(40.0f, 84.0f, SCREEN_WIDTH - 80.0f, SCREEN_WIDTH - 80.0f)];
     view1.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view1];

@@ -35,6 +35,7 @@
 #import "LWStorageBuilder.h"
 #import "LWHTMLLayout.h"
 #import "CALayer+WebCache.h"
-
+#import "LWTextParser.h"
+#import "GallopDefine.h"
 
 #endif /* Gallop_h */

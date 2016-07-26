@@ -25,6 +25,9 @@
 #import "LWTextAttachment.h"
 #import <objc/runtime.h>
 #import "GallopUtils.h"
+#import "GallopDefine.h"
+
+
 
 @implementation LWTextAttachment
 

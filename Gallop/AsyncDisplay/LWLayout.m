@@ -25,6 +25,8 @@
 
 #import "LWLayout.h"
 #import <objc/runtime.h>
+#import "GallopDefine.h"
+
 
 @interface LWLayout ()
 
@@ -89,7 +91,7 @@ LWSERIALIZE_COPY_WITH_ZONE()
     } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
         if ([self.imageStorages containsObject:(LWImageStorage *)storage]) {
             [self.imageStorages removeObject:(LWImageStorage *)storage];
-            [self.totalStorages removeObject:(LWTextStorage *)storage];
+            [self.totalStorages removeObject:(LWImageStorage *)storage];
         }
     }
 }
@@ -146,5 +148,7 @@ LWSERIALIZE_COPY_WITH_ZONE()
     _totalStorages = [[NSMutableArray alloc] init];
     return _totalStorages;
 }
+
+
 
 @end

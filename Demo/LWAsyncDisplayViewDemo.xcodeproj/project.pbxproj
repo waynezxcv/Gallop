@@ -109,6 +109,8 @@
 		B0E7F39A1D210CE300877644 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E7F3991D210CE300877644 /* WebViewController.m */; };
 		B0E7F3A01D212BA500877644 /* LWLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E7F39D1D212BA500877644 /* LWLoadingView.m */; };
 		B0E7F3A11D212BA500877644 /* LWLoadingAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E7F39F1D212BA500877644 /* LWLoadingAnimationView.m */; };
+		B0F423171D476C0D007E8FD0 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B0F423161D476C0D007E8FD0 /* README.md */; };
+		B0F423191D476C19007E8FD0 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B0F423181D476C19007E8FD0 /* LICENSE */; };
 		B0F767941CF2BF4C00050EAE /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F767901CF2BF4C00050EAE /* CALayer+WebCache.m */; };
 		B0F767951CF2BF4C00050EAE /* CALayer+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F767921CF2BF4C00050EAE /* CALayer+WebCacheOperation.m */; };
 /* End PBXBuildFile section */
@@ -301,6 +303,9 @@
 		B0E7F39D1D212BA500877644 /* LWLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWLoadingView.m; path = ../LWLoadingView/LWLoadingView.m; sourceTree = "<group>"; };
 		B0E7F39E1D212BA500877644 /* LWLoadingAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWLoadingAnimationView.h; path = ../LWLoadingView/LWLoadingAnimationView.h; sourceTree = "<group>"; };
 		B0E7F39F1D212BA500877644 /* LWLoadingAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWLoadingAnimationView.m; path = ../LWLoadingView/LWLoadingAnimationView.m; sourceTree = "<group>"; };
+		B0F4230C1D474B62007E8FD0 /* GallopDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GallopDefine.h; path = ../Gallop/Utils/GallopDefine.h; sourceTree = "<group>"; };
+		B0F423161D476C0D007E8FD0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		B0F423181D476C19007E8FD0 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		B0F7678F1CF2BF4C00050EAE /* CALayer+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+WebCache.h"; path = "../Gallop/Utils/CALayer+WebCache.h"; sourceTree = "<group>"; };
 		B0F767901CF2BF4C00050EAE /* CALayer+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+WebCache.m"; path = "../Gallop/Utils/CALayer+WebCache.m"; sourceTree = "<group>"; };
 		B0F767911CF2BF4C00050EAE /* CALayer+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+WebCacheOperation.h"; path = "../Gallop/Utils/CALayer+WebCacheOperation.h"; sourceTree = "<group>"; };
@@ -369,17 +374,23 @@
 		011DFA341C987DF6000410D7 /* Gallop */ = {
 			isa = PBXGroup;
 			children = (
+				B0F423181D476C19007E8FD0 /* LICENSE */,
+				B0F423161D476C0D007E8FD0 /* README.md */,
 				015FC0E31CDFA48800B4DF82 /* Gallop.h */,
-				B085B3421CB68CF500087739 /* AsyncDisplay */,
+				B085B3421CB68CF500087739 /* AsyncDisplayView */,
+				0130235C1D43B061005EAE25 /* Model */,
+				B08CFE2B1D02CD4100A8B70D /* _Transactions */,
+				B079C2841CD8C58F003B15D3 /* _CoreText */,
 				01D5B32D1D37F630007C5CB1 /* SDWebImageModify */,
-				B085B3431CB68D1000087739 /* Utils */,
-				B079C2841CD8C58F003B15D3 /* CoreText */,
+				01E2107D1D0451ED0006E7D5 /* TextParser */,
+				01E2107B1D0451BC0006E7D5 /* Constraint */,
 				0134D11C1D16A12F00FB91FF /* HTMLParser */,
+				B085B3431CB68D1000087739 /* Utils */,
 			);
 			name = Gallop;
 			sourceTree = "<group>";
 		};
-		011DFA351C987DF8000410D7 /* LWImageBrowser */ = {
+		011DFA351C987DF8000410D7 /* _LWImageBrowser */ = {
 			isa = PBXGroup;
 			children = (
 				B095D6271D22A86A003821F9 /* LWActionSheetTableViewCell.h */,
@@ -401,7 +412,7 @@
 				B095D6371D22A86A003821F9 /* UIImage+ImageEffects.h */,
 				B095D6381D22A86A003821F9 /* UIImage+ImageEffects.m */,
 			);
-			name = LWImageBrowser;
+			name = _LWImageBrowser;
 			sourceTree = "<group>";
 		};
 		011DFA361C987DFC000410D7 /* LWAlchemy */ = {
@@ -458,11 +469,24 @@
 			name = SDWebImage;
 			sourceTree = "<group>";
 		};
+		0130235C1D43B061005EAE25 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B0A523021CEA1BD800DC2D15 /* LWLayout.h */,
+				B0A523031CEA1BD800DC2D15 /* LWLayout.m */,
+				B0A522FE1CEA1B6600DC2D15 /* LWStorage.h */,
+				B0A522FF1CEA1B6600DC2D15 /* LWStorage.m */,
+				B0A522F51CEA1ABB00DC2D15 /* LWTextStorage.h */,
+				B0A522F61CEA1ABB00DC2D15 /* LWTextStorage.m */,
+				B0A522F81CEA1AD200DC2D15 /* LWImageStorage.h */,
+				B0A522F91CEA1AD200DC2D15 /* LWImageStorage.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		0134D11C1D16A12F00FB91FF /* HTMLParser */ = {
 			isa = PBXGroup;
 			children = (
-				B0ACEBE51CEDB1320019074F /* LWAlertView */,
-				011DFA351C987DF8000410D7 /* LWImageBrowser */,
 				B0C616821D20C40000150211 /* LWHTMLDisplayView.h */,
 				B0C616831D20C40000150211 /* LWHTMLDisplayView.m */,
 				019A86121D2AEAA300980175 /* LWHTMLLayout.h */,
@@ -550,7 +574,7 @@
 			name = TextParser;
 			sourceTree = "<group>";
 		};
-		B079C2841CD8C58F003B15D3 /* CoreText */ = {
+		B079C2841CD8C58F003B15D3 /* _CoreText */ = {
 			isa = PBXGroup;
 			children = (
 				01D14EB71CDCF8A00028714A /* LWTextLine.h */,
@@ -566,36 +590,28 @@
 				01D14F011CDD42ED0028714A /* NSMutableAttributedString+Gallop.h */,
 				01D14F021CDD42ED0028714A /* NSMutableAttributedString+Gallop.m */,
 			);
-			name = CoreText;
+			name = _CoreText;
 			sourceTree = "<group>";
 		};
-		B085B3421CB68CF500087739 /* AsyncDisplay */ = {
+		B085B3421CB68CF500087739 /* AsyncDisplayView */ = {
 			isa = PBXGroup;
 			children = (
-				B08CFE2B1D02CD4100A8B70D /* Transactions */,
-				B0A523021CEA1BD800DC2D15 /* LWLayout.h */,
-				B0A523031CEA1BD800DC2D15 /* LWLayout.m */,
-				B0A522FE1CEA1B6600DC2D15 /* LWStorage.h */,
-				B0A522FF1CEA1B6600DC2D15 /* LWStorage.m */,
-				B0A522F51CEA1ABB00DC2D15 /* LWTextStorage.h */,
-				B0A522F61CEA1ABB00DC2D15 /* LWTextStorage.m */,
-				B0A522F81CEA1AD200DC2D15 /* LWImageStorage.h */,
-				B0A522F91CEA1AD200DC2D15 /* LWImageStorage.m */,
 				B0A522E81CEA18B000DC2D15 /* LWAsyncDisplayView.h */,
 				B0A522E91CEA18B000DC2D15 /* LWAsyncDisplayView.m */,
 				B054E1101CF0F15000E6FC53 /* LWAsyncDisplayLayer.h */,
 				B054E1111CF0F15000E6FC53 /* LWAsyncDisplayLayer.m */,
 			);
-			name = AsyncDisplay;
+			name = AsyncDisplayView;
 			sourceTree = "<group>";
 		};
 		B085B3431CB68D1000087739 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				01E2107D1D0451ED0006E7D5 /* TextParser */,
-				01E2107B1D0451BC0006E7D5 /* Constraint */,
+				B0F4230C1D474B62007E8FD0 /* GallopDefine.h */,
 				B0A522E31CEA189000DC2D15 /* GallopUtils.h */,
 				B0A522E41CEA189000DC2D15 /* GallopUtils.m */,
+				B0ACEBE51CEDB1320019074F /* _LWAlertView */,
+				011DFA351C987DF8000410D7 /* _LWImageBrowser */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -611,20 +627,20 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
-		B08CFE2B1D02CD4100A8B70D /* Transactions */ = {
+		B08CFE2B1D02CD4100A8B70D /* _Transactions */ = {
 			isa = PBXGroup;
 			children = (
+				01D9F70B1D04275B00AEF174 /* CALayer+LWTransaction.h */,
+				01D9F70C1D04275B00AEF174 /* CALayer+LWTransaction.m */,
 				01D9F70D1D04275B00AEF174 /* LWTransaction.h */,
 				01D9F70E1D04275B00AEF174 /* LWTransaction.m */,
 				B08CFE2C1D02CD6800A8B70D /* LWTransactionGroup.h */,
 				B08CFE2D1D02CD6800A8B70D /* LWTransactionGroup.m */,
-				01D9F70B1D04275B00AEF174 /* CALayer+LWTransaction.h */,
-				01D9F70C1D04275B00AEF174 /* CALayer+LWTransaction.m */,
 			);
-			name = Transactions;
+			name = _Transactions;
 			sourceTree = "<group>";
 		};
-		B0ACEBE51CEDB1320019074F /* LWAlertView */ = {
+		B0ACEBE51CEDB1320019074F /* _LWAlertView */ = {
 			isa = PBXGroup;
 			children = (
 				B095D6211D22A857003821F9 /* LWAlertContentView.h */,
@@ -632,7 +648,7 @@
 				B095D6231D22A857003821F9 /* LWAlertView.h */,
 				B095D6241D22A857003821F9 /* LWAlertView.m */,
 			);
-			name = LWAlertView;
+			name = _LWAlertView;
 			sourceTree = "<group>";
 		};
 		B0ACEBED1CEDC9530019074F /* WechatMomentsDemo */ = {
@@ -767,7 +783,7 @@
 				TargetAttributes = {
 					011DFA191C987CD6000410D7 = {
 						CreatedOnToolsVersion = 7.2.1;
-						DevelopmentTeam = N29J3PPND9;
+						DevelopmentTeam = 48NPNTSQK4;
 					};
 				};
 			};
@@ -805,6 +821,7 @@
 				B0ACEC131CEDCD780019074F /* [心].png in Resources */,
 				B0C7191F1CEB64FB00B2A8D9 /* 001.png in Resources */,
 				B0C719231CEB651800B2A8D9 /* 003.png in Resources */,
+				B0F423191D476C19007E8FD0 /* LICENSE in Resources */,
 				B0C7191D1CEB5ACA00B2A8D9 /* pic.jpeg in Resources */,
 				01AFD9851CF4D11700BF46D0 /* likewhite@2x.png in Resources */,
 				011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */,
@@ -884,6 +901,7 @@
 				019A86141D2AEAA300980175 /* LWHTMLLayout.m in Sources */,
 				B05F7A221D38E1EE00C3D4C9 /* SDImageCache+Gallop.m in Sources */,
 				0134D1201D16B64A00FB91FF /* HTMLParsingViewController.m in Sources */,
+				B0F423171D476C0D007E8FD0 /* README.md in Sources */,
 				01D5B2F51D37D548007C5CB1 /* CornerRadiusViewController.m in Sources */,
 				B0ACEC0A1CEDC9A50019074F /* TableViewHeader.m in Sources */,
 				B095D6401D22A86A003821F9 /* LWImageItem.m in Sources */,

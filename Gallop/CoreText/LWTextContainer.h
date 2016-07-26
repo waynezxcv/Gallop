@@ -25,20 +25,40 @@
 #import <UIKit/UIKit.h>
 
 
-//*** Text容器 ***//
 
+/**
+ *  文本容器，包含文本绘制的范围大小、路径、会edgeInsets等信息
+ */
 @interface LWTextContainer : NSObject<NSCopying,NSCoding>
 
-@property (nonatomic,assign,readonly) CGSize size;
-@property (nonatomic,strong,readonly) UIBezierPath* path;
-@property (nonatomic,assign,readonly) UIEdgeInsets edgeInsets;
+@property (nonatomic,assign,readonly) CGSize size;//容器的大小
+@property (nonatomic,strong,readonly) UIBezierPath* path;//容器的路径
+@property (nonatomic,assign,readonly) UIEdgeInsets edgeInsets;//边缘内嵌大小
 
 /**
  *  构造方法
+ *
+ *  @param size 容器大小
+ *
+ *  @return 一个LWTextContrainer对象
  */
 + (id)lw_textContainerWithSize:(CGSize)size;
+
+/**
+ *  构造方法
+ *
+ *  @param size       容器大小
+ *  @param edgeInsets 边缘内嵌大小
+ *
+ *  @return 一个LWTextContrainer对象
+ */
 + (id)lw_textContainerWithSize:(CGSize)size edgeInsets:(UIEdgeInsets)edgeInsets;
 
+/**
+ *  容器路径的行宽
+ *
+ *  @return 路径的行宽
+ */
 - (CGFloat)pathLineWidth;
 
 

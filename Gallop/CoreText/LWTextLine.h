@@ -27,8 +27,9 @@
 
 @class LWTextAttachment;
 
-//** 对CTLineRef的封装 **//
-
+/**
+ *  对CTLineRef的封装
+ */
 @interface LWTextLine : NSObject<NSCopying,NSCoding>
 
 @property (nonatomic,assign,readonly) CTLineRef CTLine; //CoreText中的CTlineRef
@@ -41,23 +42,25 @@
 @property (nonatomic,assign,readonly) CGFloat bottom;//frame.origin.y + frame.size.height
 @property (nonatomic,assign,readonly) CGFloat left;//frame.origin.x
 @property (nonatomic,assign,readonly) CGFloat right;//frame.origin.x + frame.size.width
-
 @property (nonatomic,assign,readonly) CGPoint lineOrigin;//CTLine的原点位置,UIKit坐标系
 @property (nonatomic,assign,readonly) CGFloat ascent; //line ascent 上部距离
 @property (nonatomic,assign,readonly) CGFloat descent;//line descent 下部距离
 @property (nonatomic,assign,readonly) CGFloat leading;// line leading 行距
 @property (nonatomic,assign,readonly) CGFloat lineWidth;// line width 行宽
 @property (nonatomic,assign,readonly) CGFloat trailingWhitespaceWidth;//尾部空白的宽度
-
+@property (nonatomic,strong,readonly) NSMutableArray<LWTextAttachment *>* attachments;//包含文本附件的数组
+@property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRanges;//包含文本附件在文本中位置信息的数组
+@property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRects;//包含文本附件在LWAsyncDisplayView上位置CGRect信息的数组
 @property (nonatomic) NSUInteger index;//ctline在CTFrameGetLines数组中的index
 @property (nonatomic) NSUInteger row;//行数
 
-@property (nonatomic,strong,readonly) NSMutableArray<LWTextAttachment *>* attachments;
-@property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRanges;
-@property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRects;
-
 /**
  *  构造方法
+ *
+ *  @param CTLine     CoreText中的CTLineRef对象
+ *  @param lineOrigin CTLineRef对象的起始位置CGPoint对象
+ *
+ *  @return 一个LWTextLine对象
  */
 + (id)lw_textLineWithCTlineRef:(CTLineRef)CTLine lineOrigin:(CGPoint)lineOrigin;
 

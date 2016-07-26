@@ -24,6 +24,7 @@
 
 #import "LWImageItem.h"
 #import "GallopUtils.h"
+#import "GallopDefine.h"
 
 
 const CGFloat kMaximumZoomScale = 3.0f;

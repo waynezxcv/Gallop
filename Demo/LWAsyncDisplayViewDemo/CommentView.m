@@ -15,7 +15,7 @@
 
 
 #import "CommentView.h"
-#import "GallopUtils.h"
+#import "GallopDefine.h"
 
 @interface CommentView ()<UITextViewDelegate>
 

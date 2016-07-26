@@ -26,6 +26,7 @@
 #import "LWTextAttachment.h"
 #import <objc/runtime.h>
 #import "GallopUtils.h"
+#import "GallopDefine.h"
 
 @interface LWTextLine ()
 
@@ -102,6 +103,7 @@
             CGFloat ascent;
             CGFloat descent;
             CGFloat leading;
+            
             self.lineWidth = CTLineGetTypographicBounds(_CTLine, &ascent, &descent, &leading);
             self.ascent = ascent;
             self.descent = descent;

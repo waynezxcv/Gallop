@@ -29,7 +29,6 @@
 
 @property (nonatomic,copy) NSString* title;
 
-
 - (void)show;
 
 @end

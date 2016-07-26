@@ -30,6 +30,7 @@
 #import "LWActionSheetView.h"
 #import "LWAlertView.h"
 #import "GallopUtils.h"
+#import "GallopDefine.h"
 
 #define kPageControlHeight 40.0f
 #define kImageBrowserWidth ([UIScreen mainScreen].bounds.size.width + 10.0f)

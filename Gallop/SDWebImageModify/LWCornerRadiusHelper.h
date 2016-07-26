@@ -26,19 +26,33 @@
 
 static const NSString* LWCornerRadiusPrefixKey = @"LWCornerRadiusPrefixKey";
 
+/**
+ *  这个类用于下载和缓存圆角半径图片，设置圆角半径时，会额外缓存一份
+ */
+
 @interface LWCornerRadiusHelper : NSObject
 
 
 /**
- *  将绘制信息保存到key中
+ *  将绘制圆角半径图片信息保存到key中
+ *
+ *  @param url          图片的URL
+ *  @param cornerRadius 圆角半径值
+ *  @param size         图片的大小
+ *
+ *  @return 包含了用于绘制圆角半径图片信息的字符串
  */
 + (NSString *)lw_imageTransformCacheKeyForURL:(NSURL *)url
                                  cornerRadius:(CGFloat)cornerRadius
                                          size:(CGSize)size;
 
 /**
- *  绘制圆角半径图片
+ *  通过Key来返回一个圆角半径图片
  *
+ *  @param image 原始图片
+ *  @param key   包含了用于绘制圆角半径图片信息的字符串
+ *
+ *  @return 经过圆角半径绘制后的图片
  */
 + (UIImage *)lw_cornerRadiusImageWithImage:(UIImage*)image withKey:(NSString *)key;
 

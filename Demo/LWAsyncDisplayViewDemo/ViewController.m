@@ -113,7 +113,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     });
 
 
-
     CellLayout* layout = [self.dataSource objectAtIndex:indexPath.row];
     if (isLike) {
         NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
@@ -137,7 +136,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                               withRowAnimation:UITableViewRowAnimationAutomatic];
 
     }
-
 }
 
 

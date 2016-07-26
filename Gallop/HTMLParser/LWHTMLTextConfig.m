@@ -24,6 +24,7 @@
 
 
 #import "LWHTMLTextConfig.h"
+#import "GallopDefine.h"
 
 @implementation LWHTMLTextConfig
 

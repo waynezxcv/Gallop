@@ -25,6 +25,7 @@
 #import "LWTextStorage.h"
 #import "NSMutableAttributedString+Gallop.h"
 #import <objc/runtime.h>
+#import "GallopDefine.h"
 
 @interface LWTextStorage ()
 

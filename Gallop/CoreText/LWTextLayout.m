@@ -25,10 +25,10 @@
 
 #import "LWTextLayout.h"
 #import "LWTextLine.h"
-#import "GallopUtils.h"
 #import "CALayer+WebCache.h"
 #import <objc/runtime.h>
 #import "GallopUtils.h"
+#import "GallopDefine.h"
 
 
 @interface LWTextLayout ()
