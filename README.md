@@ -234,8 +234,9 @@ XPath教程: http://www.w3school.com.cn/xpath/index.asp
 
 * **如果需要更加详细的内容，请看各个头文件和Demo，有详细的注释**
 
+
 # 正在不断完善中...
-# 有任何问题请联系我 liuweiself@126.com
+# 有任何问题请添加一个new issue，或者联系我liuweiself@126.com
 
 # License
 
