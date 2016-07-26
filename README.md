@@ -77,7 +77,7 @@ v0.2.2
 
 
 # Requirements
-* 使用Gallop实现网络图片加载部分依赖于SDWebImage（https://github.com/rs/SDWebImage）'SDWebImage', '~>3.7'
+* 使用Gallop实现网络图片加载部分依赖于[SDWebImage（https://github.com/rs/SDWebImage） 'SDWebImage', '~>3.7'
 * HTML解析依赖libxml2库
 
 
