@@ -82,11 +82,12 @@ v0.2.2
 
 
 # Installation
-1. 将Gallop文件夹下的.h及.m文件添加到你的工程当中。
-2. 在XCode的Build Phases-> Link Binary With Libraries中添加libxml2.tbd库
-3. 在XCode的Build Setting->Header Search Paths中添加‘/usr/include/libxml2’
-4. 安装SDWebImage，并且将原来SDWebImage中的SDWebImageManager.h和SDWebImageManager.m替换为Gallop文件夹下的同名文件。
-4. #import "Gallop.h"
+
+1. 在XCode的Build Phases-> Link Binary With Libraries中添加libxml2.tbd库
+2. 在XCode的Build Setting->Header Search Paths中添加‘/usr/include/libxml2’
+3. 安装[SDWebImage](https://github.com/rs/SDWebImage)
+4. 将Gallop文件夹下的.h及.m文件添加到你的工程当中，并且将原来SDWebImage中的SDWebImageManager.h和SDWebImageManager.m替换为Gallop文件夹下的同名文件。
+5. #import "Gallop.h"
 
 
 # Usage
