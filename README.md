@@ -2,7 +2,7 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# Gallop v0.3.2
+# Gallop v0.3.3
 Gallop --- 强大、快速地图文混排框架。
 A framework for build a smooth asynchronous iOS APP.
 
@@ -30,8 +30,12 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 
 ***
 
-# Modifications
 
+
+# Modifications
+v0.3.3
+
+* 更改了集成方式，解决了与SDWebImage部分文件冲突的问题。
 
 v0.3.2
 * 现在，设置了圆角半径的网络图片将额外缓存一份，解决了内存消耗过大的问题。
@@ -76,6 +80,14 @@ v0.2.2
 ***
 
 
+# TODO
+* 对视频、音频的支持。
+* cocoapods安装。
+
+*** 
+
+
+
 # Requirements
 * 使用Gallop实现网络图片加载部分依赖于[SDWebImage](https://github.com/rs/SDWebImage) 'SDWebImage', '~>3.7'
 * HTML解析依赖libxml2库
@@ -86,7 +98,7 @@ v0.2.2
 1. 在XCode的Build Phases-> Link Binary With Libraries中添加libxml2.tbd库
 2. 在XCode的Build Setting->Header Search Paths中添加‘/usr/include/libxml2’
 3. 安装[SDWebImage](https://github.com/rs/SDWebImage)
-4. 将Gallop文件夹下的.h及.m文件添加到你的工程当中，并且将原来SDWebImage中的SDWebImageManager.h和SDWebImageManager.m替换为Gallop文件夹下的同名文件。
+4. 将Gallop文件夹下的.h及.m文件添加到你的工程当中
 5. #import "Gallop.h"
 
 

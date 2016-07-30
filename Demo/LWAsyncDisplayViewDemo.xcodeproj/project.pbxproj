@@ -15,6 +15,8 @@
 		0134D1261D16B9D100FB91FF /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0134D1251D16B9D100FB91FF /* libxml2.tbd */; };
 		0134D12D1D16C6A800FB91FF /* LWStorageBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0134D12C1D16C6A800FB91FF /* LWStorageBuilder.m */; };
 		014871821CDBC12500CE43C4 /* LWTextContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 014871811CDBC12500CE43C4 /* LWTextContainer.m */; };
+		01580C101D4D52CF00778B30 /* SDWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 01580C0F1D4D52CF00778B30 /* SDWebImageManager.m */; };
+		01580C131D4D533800778B30 /* LWWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 01580C121D4D533800778B30 /* LWWebImageManager.m */; };
 		01590F861CF2C5AC00F0CBA8 /* LWConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 01590F811CF2C5AC00F0CBA8 /* LWConstraint.m */; };
 		01590F871CF2C5AC00F0CBA8 /* LWConstraintManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 01590F831CF2C5AC00F0CBA8 /* LWConstraintManager.m */; };
 		01590F881CF2C5AC00F0CBA8 /* LWStorage+Constraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 01590F851CF2C5AC00F0CBA8 /* LWStorage+Constraint.m */; };
@@ -59,7 +61,6 @@
 		B054E1121CF0F15000E6FC53 /* LWAsyncDisplayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B054E1111CF0F15000E6FC53 /* LWAsyncDisplayLayer.m */; };
 		B05F7A211D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B05F7A1C1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m */; };
 		B05F7A221D38E1EE00C3D4C9 /* SDImageCache+Gallop.m in Sources */ = {isa = PBXBuildFile; fileRef = B05F7A1E1D38E1EE00C3D4C9 /* SDImageCache+Gallop.m */; };
-		B05F7A231D38E1EE00C3D4C9 /* SDWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B05F7A201D38E1EE00C3D4C9 /* SDWebImageManager.m */; };
 		B074BB541CEE0CF9003464B4 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B074BB531CEE0CF9003464B4 /* comment@2x.png */; };
 		B074BB571CEE151A003464B4 /* LWTextParser.m in Sources */ = {isa = PBXBuildFile; fileRef = B074BB561CEE151A003464B4 /* LWTextParser.m */; };
 		B08CFE2E1D02CD6800A8B70D /* LWTransactionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B08CFE2D1D02CD6800A8B70D /* LWTransactionGroup.m */; };
@@ -131,6 +132,10 @@
 		0134D12C1D16C6A800FB91FF /* LWStorageBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWStorageBuilder.m; path = ../Gallop/HTMLParser/LWStorageBuilder.m; sourceTree = "<group>"; };
 		014871801CDBC12500CE43C4 /* LWTextContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextContainer.h; path = ../Gallop/CoreText/LWTextContainer.h; sourceTree = "<group>"; };
 		014871811CDBC12500CE43C4 /* LWTextContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextContainer.m; path = ../Gallop/CoreText/LWTextContainer.m; sourceTree = "<group>"; };
+		01580C0E1D4D52CF00778B30 /* SDWebImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDWebImageManager.h; path = ../SDWebImage/SDWebImageManager.h; sourceTree = "<group>"; };
+		01580C0F1D4D52CF00778B30 /* SDWebImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDWebImageManager.m; path = ../SDWebImage/SDWebImageManager.m; sourceTree = "<group>"; };
+		01580C111D4D533800778B30 /* LWWebImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWWebImageManager.h; path = ../Gallop/SDWebImageModify/LWWebImageManager.h; sourceTree = "<group>"; };
+		01580C121D4D533800778B30 /* LWWebImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWWebImageManager.m; path = ../Gallop/SDWebImageModify/LWWebImageManager.m; sourceTree = "<group>"; };
 		01590F801CF2C5AC00F0CBA8 /* LWConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWConstraint.h; path = ../Gallop/Constraint/LWConstraint.h; sourceTree = "<group>"; };
 		01590F811CF2C5AC00F0CBA8 /* LWConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWConstraint.m; path = ../Gallop/Constraint/LWConstraint.m; sourceTree = "<group>"; };
 		01590F821CF2C5AC00F0CBA8 /* LWConstraintManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWConstraintManager.h; path = ../Gallop/Constraint/LWConstraintManager.h; sourceTree = "<group>"; };
@@ -214,8 +219,6 @@
 		B05F7A1C1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWCornerRadiusHelper.m; path = ../Gallop/SDWebImageModify/LWCornerRadiusHelper.m; sourceTree = "<group>"; };
 		B05F7A1D1D38E1EE00C3D4C9 /* SDImageCache+Gallop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SDImageCache+Gallop.h"; path = "../Gallop/SDWebImageModify/SDImageCache+Gallop.h"; sourceTree = "<group>"; };
 		B05F7A1E1D38E1EE00C3D4C9 /* SDImageCache+Gallop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SDImageCache+Gallop.m"; path = "../Gallop/SDWebImageModify/SDImageCache+Gallop.m"; sourceTree = "<group>"; };
-		B05F7A1F1D38E1EE00C3D4C9 /* SDWebImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDWebImageManager.h; path = ../Gallop/SDWebImageModify/SDWebImageManager.h; sourceTree = "<group>"; };
-		B05F7A201D38E1EE00C3D4C9 /* SDWebImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDWebImageManager.m; path = ../Gallop/SDWebImageModify/SDWebImageManager.m; sourceTree = "<group>"; };
 		B074BB531CEE0CF9003464B4 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
 		B074BB551CEE151A003464B4 /* LWTextParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextParser.h; path = ../Gallop/Utils/LWTextParser.h; sourceTree = "<group>"; };
 		B074BB561CEE151A003464B4 /* LWTextParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextParser.m; path = ../Gallop/Utils/LWTextParser.m; sourceTree = "<group>"; };
@@ -381,7 +384,7 @@
 				0130235C1D43B061005EAE25 /* Model */,
 				B08CFE2B1D02CD4100A8B70D /* _Transactions */,
 				B079C2841CD8C58F003B15D3 /* _CoreText */,
-				01D5B32D1D37F630007C5CB1 /* SDWebImageModify */,
+				01D5B32D1D37F630007C5CB1 /* LWWebImage */,
 				01E2107D1D0451ED0006E7D5 /* TextParser */,
 				01E2107B1D0451BC0006E7D5 /* Constraint */,
 				0134D11C1D16A12F00FB91FF /* HTMLParser */,
@@ -434,6 +437,8 @@
 		011DFA681C9881AE000410D7 /* SDWebImage */ = {
 			isa = PBXGroup;
 			children = (
+				01580C0E1D4D52CF00778B30 /* SDWebImageManager.h */,
+				01580C0F1D4D52CF00778B30 /* SDWebImageManager.m */,
 				B053A1521D2A4AAD0062BEAC /* MKAnnotationView+WebCache.h */,
 				B053A1531D2A4AAD0062BEAC /* MKAnnotationView+WebCache.m */,
 				B053A1541D2A4AAD0062BEAC /* NSData+ImageContentType.h */,
@@ -535,21 +540,21 @@
 			name = "CornerRaius Demo";
 			sourceTree = "<group>";
 		};
-		01D5B32D1D37F630007C5CB1 /* SDWebImageModify */ = {
+		01D5B32D1D37F630007C5CB1 /* LWWebImage */ = {
 			isa = PBXGroup;
 			children = (
 				B0F7678F1CF2BF4C00050EAE /* CALayer+WebCache.h */,
 				B0F767901CF2BF4C00050EAE /* CALayer+WebCache.m */,
+				01580C111D4D533800778B30 /* LWWebImageManager.h */,
+				01580C121D4D533800778B30 /* LWWebImageManager.m */,
 				B0F767911CF2BF4C00050EAE /* CALayer+WebCacheOperation.h */,
 				B0F767921CF2BF4C00050EAE /* CALayer+WebCacheOperation.m */,
-				B05F7A1B1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.h */,
-				B05F7A1C1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m */,
 				B05F7A1D1D38E1EE00C3D4C9 /* SDImageCache+Gallop.h */,
 				B05F7A1E1D38E1EE00C3D4C9 /* SDImageCache+Gallop.m */,
-				B05F7A1F1D38E1EE00C3D4C9 /* SDWebImageManager.h */,
-				B05F7A201D38E1EE00C3D4C9 /* SDWebImageManager.m */,
+				B05F7A1B1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.h */,
+				B05F7A1C1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m */,
 			);
-			name = SDWebImageModify;
+			name = LWWebImage;
 			sourceTree = "<group>";
 		};
 		01E2107B1D0451BC0006E7D5 /* Constraint */ = {
@@ -783,7 +788,7 @@
 				TargetAttributes = {
 					011DFA191C987CD6000410D7 = {
 						CreatedOnToolsVersion = 7.2.1;
-						DevelopmentTeam = 48NPNTSQK4;
+						DevelopmentTeam = N29J3PPND9;
 					};
 				};
 			};
@@ -876,6 +881,7 @@
 				B0C9A92E1D2272DD00DFAA44 /* ArticleListTableViewCell.m in Sources */,
 				B053A17F1D2A4AAD0062BEAC /* UIImage+WebP.m in Sources */,
 				B095D63E1D22A86A003821F9 /* LWImageBrowserFlowLayout.m in Sources */,
+				01580C101D4D52CF00778B30 /* SDWebImageManager.m in Sources */,
 				B0ACEC041CEDC9A50019074F /* CommentModel.m in Sources */,
 				B053A17B1D2A4AAD0062BEAC /* SDWebImagePrefetcher.m in Sources */,
 				B05F7A211D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m in Sources */,
@@ -896,7 +902,6 @@
 				B074BB571CEE151A003464B4 /* LWTextParser.m in Sources */,
 				01D14EB91CDCF8A00028714A /* LWTextLayout.m in Sources */,
 				01D14F041CDD42ED0028714A /* NSMutableAttributedString+Gallop.m in Sources */,
-				B05F7A231D38E1EE00C3D4C9 /* SDWebImageManager.m in Sources */,
 				01590F861CF2C5AC00F0CBA8 /* LWConstraint.m in Sources */,
 				019A86141D2AEAA300980175 /* LWHTMLLayout.m in Sources */,
 				B05F7A221D38E1EE00C3D4C9 /* SDImageCache+Gallop.m in Sources */,
@@ -924,6 +929,7 @@
 				01590F881CF2C5AC00F0CBA8 /* LWStorage+Constraint.m in Sources */,
 				B053A1791D2A4AAD0062BEAC /* SDWebImageDownloaderOperation.m in Sources */,
 				B0E7F3A11D212BA500877644 /* LWLoadingAnimationView.m in Sources */,
+				01580C131D4D533800778B30 /* LWWebImageManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

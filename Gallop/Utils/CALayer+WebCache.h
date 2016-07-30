@@ -24,7 +24,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "SDWebImageCompat.h"
-#import "SDWebImageManager.h"
+#import "LWWebImageManager.h"
 
 
 @interface CALayer(WebCache)
