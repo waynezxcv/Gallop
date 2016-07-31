@@ -482,7 +482,13 @@
                 if ([view isKindOfClass:[UIImageView class]]) {
                     if (attachment.userInfo) {
                         if (attachment.userInfo[@"URL"]) {
-                            [view.layer sd_setImageWithURL:attachment.userInfo[@"URL"]];
+                            [view.layer lw_setImageWithURL:attachment.userInfo[@"URL"]
+                                          placeholderImage:nil
+                                              cornerRadius:0
+                                                      size:CGSizeZero
+                                                   options:0
+                                                  progress:nil
+                                                 completed:nil];
                         }
                     }
                 }

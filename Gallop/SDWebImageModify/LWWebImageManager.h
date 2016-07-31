@@ -29,14 +29,7 @@
 #import "SDWebImageManager.h"
 
 
-@interface LWWebImageManager : NSObject
-
-
-@property (weak, nonatomic) id <SDWebImageManagerDelegate> delegate;
-@property (strong, nonatomic, readonly) SDImageCache *imageCache;
-@property (strong, nonatomic, readonly) SDWebImageDownloader *imageDownloader;
-@property (nonatomic, copy) SDWebImageCacheKeyFilterBlock cacheKeyFilter;
-
+@interface LWWebImageManager : SDWebImageManager
 
 /**
  *  创建单例对象
@@ -44,7 +37,6 @@
  *  @return LWWebImageManager单例对象
  */
 + (id)sharedManager;
-
 
 
 /*******************************************************************************************************/

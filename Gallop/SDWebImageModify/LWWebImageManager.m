@@ -48,6 +48,11 @@
 
 @implementation LWWebImageManager
 
+
+@synthesize imageCache = _imageCache;
+@synthesize imageDownloader = _imageDownloader;
+
+
 + (id)sharedManager {
     static dispatch_once_t once;
     static id instance;
@@ -64,7 +69,7 @@
 }
 
 - (instancetype)initWithCache:(SDImageCache *)cache downloader:(SDWebImageDownloader *)downloader {
-    if ((self = [super init])) {
+    if ((self = [super initWithCache:cache downloader:downloader])) {
         _imageCache = cache;
         _imageDownloader = downloader;
         _failedURLs = [NSMutableSet new];
@@ -72,65 +77,6 @@
     }
     return self;
 }
-
-- (NSString *)cacheKeyForURL:(NSURL *)url {
-    if (!url) {
-        return @"";
-    }
-    if (self.cacheKeyFilter) {
-        return self.cacheKeyFilter(url);
-    } else {
-        return [url absoluteString];
-    }
-}
-
-- (BOOL)cachedImageExistsForURL:(NSURL *)url {
-    NSString *key = [self cacheKeyForURL:url];
-    if ([self.imageCache imageFromMemoryCacheForKey:key] != nil) return YES;
-    return [self.imageCache diskImageExistsWithKey:key];
-}
-
-- (BOOL)diskImageExistsForURL:(NSURL *)url {
-    NSString *key = [self cacheKeyForURL:url];
-    return [self.imageCache diskImageExistsWithKey:key];
-}
-
-- (void)cachedImageExistsForURL:(NSURL *)url
-                     completion:(SDWebImageCheckCacheCompletionBlock)completionBlock {
-    NSString *key = [self cacheKeyForURL:url];
-    
-    BOOL isInMemoryCache = ([self.imageCache imageFromMemoryCacheForKey:key] != nil);
-    
-    if (isInMemoryCache) {
-        // making sure we call the completion block on the main queue
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completionBlock) {
-                completionBlock(YES);
-            }
-        });
-        return;
-    }
-    
-    [self.imageCache diskImageExistsWithKey:key completion:^(BOOL isInDiskCache) {
-        // the completion block of checkDiskCacheForImageWithKey:completion: is always called on the main queue, no need to further dispatch
-        if (completionBlock) {
-            completionBlock(isInDiskCache);
-        }
-    }];
-}
-
-- (void)diskImageExistsForURL:(NSURL *)url
-                   completion:(SDWebImageCheckCacheCompletionBlock)completionBlock {
-    NSString *key = [self cacheKeyForURL:url];
-    
-    [self.imageCache diskImageExistsWithKey:key completion:^(BOOL isInDiskCache) {
-        // the completion block of checkDiskCacheForImageWithKey:completion: is always called on the main queue, no need to further dispatch
-        if (completionBlock) {
-            completionBlock(isInDiskCache);
-        }
-    }];
-}
-
 
 - (id <SDWebImageOperation>)lw_downloadImageWithURL:(NSURL *)url
                                        cornerRadius:(CGFloat)cornerRadius
@@ -336,29 +282,6 @@
                                 }];
     
     return operation;
-}
-
-- (void)saveImageToCache:(UIImage *)image forURL:(NSURL *)url {
-    if (image && url) {
-        NSString *key = [self cacheKeyForURL:url];
-        [self.imageCache storeImage:image forKey:key toDisk:YES];
-    }
-}
-
-- (void)cancelAll {
-    @synchronized (self.runningOperations) {
-        NSArray *copiedOperations = [self.runningOperations copy];
-        [copiedOperations makeObjectsPerformSelector:@selector(cancel)];
-        [self.runningOperations removeObjectsInArray:copiedOperations];
-    }
-}
-
-- (BOOL)isRunning {
-    BOOL isRunning = NO;
-    @synchronized(self.runningOperations) {
-        isRunning = (self.runningOperations.count > 0);
-    }
-    return isRunning;
 }
 
 @end
