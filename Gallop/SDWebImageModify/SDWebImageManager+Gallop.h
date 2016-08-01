@@ -22,24 +22,12 @@
  THE SOFTWARE.
  */
 
-#import "SDWebImageCompat.h"
-#import "SDWebImageOperation.h"
-#import "SDWebImageDownloader.h"
-#import "SDImageCache.h"
 #import "SDWebImageManager.h"
 
+@interface  SDWebImageManager(Gallop)
 
-@interface LWWebImageManager : SDWebImageManager
-
-/**
- *  创建单例对象
- *
- *  @return LWWebImageManager单例对象
- */
-+ (id)sharedManager;
-
-
-/*******************************************************************************************************/
+@property (strong, nonatomic) NSMutableSet *failedURLs;
+@property (strong, nonatomic) NSMutableArray *runningOperations;
 
 /**
  *  通过一个URL下载图片并缓存，如果缓存已经存在，则直接读取缓存的图片
@@ -62,7 +50,5 @@
                                             options:(SDWebImageOptions)options
                                            progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                           completed:(SDWebImageCompletionWithFinishedBlock)completedBlock;
-
-/*******************************************************************************************************/
 
 @end

@@ -134,7 +134,7 @@ static char imageURLKey;
     if (url) {
         __weak __typeof(self)wself = self;
         id <SDWebImageOperation> operation =
-        [[LWWebImageManager sharedManager]
+        [[SDWebImageManager sharedManager]
          lw_downloadImageWithURL:url
          cornerRadius:cornerRadius
          size:size

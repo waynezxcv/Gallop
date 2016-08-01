@@ -22,62 +22,27 @@
  THE SOFTWARE.
  */
 
-#import "LWWebImageManager.h"
+
+#import "SDWebImageManager+Gallop.h"
 #import <objc/message.h>
 #import "LWCornerRadiusHelper.h"
 #import "SDImageCache+Gallop.h"
 
 
-@interface LWWebImageCombinedOperation : NSObject <SDWebImageOperation>
+
+@interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
 
 @property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
 @property (copy, nonatomic) SDWebImageNoParamsBlock cancelBlock;
 @property (strong, nonatomic) NSOperation *cacheOperation;
 
-
-@end
-
-@interface LWWebImageManager ()
-
-@property (strong, nonatomic, readwrite) SDImageCache *imageCache;
-@property (strong, nonatomic, readwrite) SDWebImageDownloader *imageDownloader;
-@property (strong, nonatomic) NSMutableSet *failedURLs;
-@property (strong, nonatomic) NSMutableArray *runningOperations;
-
 @end
 
 
-@implementation LWWebImageManager
+@implementation SDWebImageManager(Gallop)
 
-
-@synthesize imageCache = _imageCache;
-@synthesize imageDownloader = _imageDownloader;
-
-
-+ (id)sharedManager {
-    static dispatch_once_t once;
-    static id instance;
-    dispatch_once(&once, ^{
-        instance = [self new];
-    });
-    return instance;
-}
-
-- (instancetype)init {
-    SDImageCache *cache = [SDImageCache sharedImageCache];
-    SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
-    return [self initWithCache:cache downloader:downloader];
-}
-
-- (instancetype)initWithCache:(SDImageCache *)cache downloader:(SDWebImageDownloader *)downloader {
-    if ((self = [super initWithCache:cache downloader:downloader])) {
-        _imageCache = cache;
-        _imageDownloader = downloader;
-        _failedURLs = [NSMutableSet new];
-        _runningOperations = [NSMutableArray new];
-    }
-    return self;
-}
+@dynamic runningOperations;
+@dynamic failedURLs;
 
 - (id <SDWebImageOperation>)lw_downloadImageWithURL:(NSURL *)url
                                        cornerRadius:(CGFloat)cornerRadius
@@ -100,8 +65,8 @@
         url = nil;
     }
     
-    __block LWWebImageCombinedOperation *operation = [LWWebImageCombinedOperation new];
-    __weak LWWebImageCombinedOperation *weakOperation = operation;
+    __block SDWebImageCombinedOperation *operation = [SDWebImageCombinedOperation new];
+    __weak SDWebImageCombinedOperation *weakOperation = operation;
     
     BOOL isFailedUrl = NO;
     @synchronized (self.failedURLs) {
@@ -283,39 +248,6 @@
                                 }];
     
     return operation;
-}
-
-@end
-
-
-@implementation LWWebImageCombinedOperation
-
-- (void)setCancelBlock:(SDWebImageNoParamsBlock)cancelBlock {
-    // check if the operation is already cancelled, then we just call the cancelBlock
-    if (self.isCancelled) {
-        if (cancelBlock) {
-            cancelBlock();
-        }
-        _cancelBlock = nil; // don't forget to nil the cancelBlock, otherwise we will get crashes
-    } else {
-        _cancelBlock = [cancelBlock copy];
-    }
-}
-
-- (void)cancel {
-    self.cancelled = YES;
-    if (self.cacheOperation) {
-        [self.cacheOperation cancel];
-        self.cacheOperation = nil;
-    }
-    if (self.cancelBlock) {
-        self.cancelBlock();
-        
-        // TODO: this is a temporary fix to #809.
-        // Until we can figure the exact cause of the crash, going with the ivar instead of the setter
-        //        self.cancelBlock = nil;
-        _cancelBlock = nil;
-    }
 }
 
 @end
