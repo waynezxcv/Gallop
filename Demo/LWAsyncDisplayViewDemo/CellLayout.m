@@ -34,7 +34,7 @@
         avatarStorage.tag = 9;
         avatarStorage.cornerBorderWidth = 1.0f;
         avatarStorage.cornerBorderColor = RGB(113, 129, 161, 1);
-        
+
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
         nameTextStorage.text = statusModel.name;
@@ -44,7 +44,7 @@
                                       range:NSMakeRange(0,statusModel.name.length)
                                   linkColor:RGB(113, 129, 161, 1)
                              highLightColor:RGB(0, 0, 0, 0.15)];
-        
+
         //正文内容模型 contentTextStorage
         LWTextStorage* contentTextStorage = [[LWTextStorage alloc] init];
         contentTextStorage.text = statusModel.content;
@@ -78,6 +78,7 @@
                 NSString* URLString = [statusModel.imgs objectAtIndex:0];
                 imageStorage.contents = [NSURL URLWithString:URLString];
                 [imageStorageArray addObject:imageStorage];
+
             } else {
                 for (NSInteger i = 0; i < imageCount; i ++) {
                     CGRect imageRect = CGRectMake(nameTextStorage.left + (column * (imageWidth + 5.0f)),
@@ -101,7 +102,7 @@
                     }
                 }
             }
-            
+
         }
         else if ([self.statusModel.type isEqualToString:@"website"]) {
             self.websiteRect = CGRectMake(nameTextStorage.left,contentTextStorage.bottom + 5.0f,SCREEN_WIDTH - 80.0f,60.0f);
@@ -111,7 +112,7 @@
             imageStorage.clipsToBounds = YES;
             imageStorage.frame = CGRectMake(nameTextStorage.left + 5.0f, contentTextStorage.bottom + 10.0f , 50.0f, 50.0f);
             [imageStorageArray addObject:imageStorage];
-            
+
             LWTextStorage* detailTextStorage = [[LWTextStorage alloc] init];
             detailTextStorage.text = statusModel.detail;
             detailTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:12.0f];
@@ -136,7 +137,7 @@
         if (![self.statusModel.type isEqualToString:@"video"]) {
             menuPosition = CGRectMake(SCREEN_WIDTH - 54.0f,10.0f + contentTextStorage.bottom  - 14.5f ,44,44);
             dateTextStorage.frame = CGRectMake(nameTextStorage.left, contentTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
-            
+
             if (lastImageStorage) {
                 menuPosition = CGRectMake(SCREEN_WIDTH - 54.0f,10.0f + lastImageStorage.bottom - 14.5f,44,44);
                 dateTextStorage.frame = CGRectMake(nameTextStorage.left, lastImageStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
@@ -198,17 +199,17 @@
                     commentTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
                     commentTextStorage.textColor = RGB(40, 40, 40, 1);
                     commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, CGFLOAT_MAX);
-                    
+
                     CommentModel* commentModel1 = [[CommentModel alloc] init];
                     commentModel1.to = commentDict[@"from"];
                     commentModel1.index = index;
                     [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentModel1 linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
-                    
+
                     [commentTextStorage lw_addLinkWithData:commentModel1
                                                      range:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
-                    
+
                     CommentModel* commentModel2 = [[CommentModel alloc] init];
                     commentModel2.to = [NSString stringWithFormat:@"%@",commentDict[@"to"]];
                     commentModel2.index = index;
@@ -216,7 +217,7 @@
                                                      range:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
-                    
+
                     [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                     linkColor:RGB(113, 129, 161, 1)
                                                highlightColor:RGB(0, 0, 0, 0.15)];
@@ -232,7 +233,7 @@
                     commentTextStorage.linespacing = 2.0f;
                     commentTextStorage.textColor = RGB(40, 40, 40, 1);
                     commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f, rect.origin.y + 10.0f + offsetY,SCREEN_WIDTH - 95.0f, CGFLOAT_MAX);
-                    
+
                     CommentModel* commentModel = [[CommentModel alloc] init];
                     commentModel.to = commentDict[@"from"];
                     commentModel.index = index;
@@ -241,7 +242,7 @@
                                                      range:NSMakeRange(0,[(NSString *)commentDict[@"from"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
-                    
+
                     [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                     linkColor:RGB(113, 129, 161, 1)
                                                highlightColor:RGB(0, 0, 0, 0.15)];

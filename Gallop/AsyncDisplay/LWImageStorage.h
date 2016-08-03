@@ -29,11 +29,26 @@
 
 
 /**
+ *  如果是本地图片，可以选择是直接绘制在LWAsyncDisplayView上还是新建一个UIView并add到LWAsyncDisplayView上
+ */
+typedef NS_ENUM(NSUInteger, LWLocalImageType){
+    /**
+     *  直接绘制在LWAsyncDisplayView上
+     */
+    LWLocalImageDrawInLWAsyncDisplayView,
+    /**
+     *  新建一个UIView并add到LWAsyncDisplayView上
+     */
+    LWLocalImageTypeDrawInSubView,
+};
+
+/**
  *   图片绘制的数据模型
  */
 @interface LWImageStorage : LWStorage <NSCopying,NSCoding>
 
 @property (nonatomic,strong) id contents;//内容（UIImage or NSURL）
+@property (nonatomic,assign) LWLocalImageType localImageType;//本地图片的种类，默认是LWLocalImageDrawInLWAsyncDisplayView
 @property (nonatomic,strong) UIImage* placeholder;//占位图
 @property (nonatomic,assign,getter=isFadeShow) BOOL fadeShow;//加载完成是否渐隐出现
 @property (nonatomic,assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;//是否响应用户事件，默认是YES

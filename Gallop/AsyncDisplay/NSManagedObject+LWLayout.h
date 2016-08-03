@@ -25,9 +25,7 @@
 #import <CoreData/CoreData.h>
 #import "LWLayout.h"
 
-/**
- *  如果要使用CoreData可以让实体继承这个类，已经实现了LWLayoutProtocol的相关方法
- */
+
 @interface NSManagedObject(LWLayout)<LWLayoutProtocol>
 
 @end

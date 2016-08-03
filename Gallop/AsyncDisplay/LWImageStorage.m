@@ -140,6 +140,7 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
         self.contentsScale = [GallopUtils contentsScale];
         self.needRerendering = NO;
         self.needResize = NO;
+        self.localImageType = LWLocalImageDrawInLWAsyncDisplayView;
     }
     return self;
 }
@@ -166,7 +167,8 @@ LWSERIALIZE_COPY_WITH_ZONE()
 #pragma mark - Methods
 
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight {
-    if ([self.contents isKindOfClass:[UIImage class]]) {
+    if ([self.contents isKindOfClass:[UIImage class]] &&
+        self.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
         self.contents = [(UIImage *)self.contents stretchableImageWithLeftCapWidth:leftCapWidth topCapHeight:topCapHeight];
     }
 }
@@ -178,7 +180,9 @@ LWSERIALIZE_COPY_WITH_ZONE()
     if ([self.contents isKindOfClass:[NSURL class]]) {
         return;
     }
-    if ([self.contents isKindOfClass:[UIImage class]]) {
+    if ([self.contents isKindOfClass:[UIImage class]] &&
+        self.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
+
         UIImage* image = (UIImage *)self.contents;
         BOOL isOpaque = self.opaque;
         UIColor* backgroundColor = self.backgroundColor;
@@ -236,16 +240,55 @@ static const void* URLKey;
     objc_setAssociatedObject(self, &URLKey, URL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage resizeBlock:(void(^)(LWImageStorage*imageStorage, CGFloat delta))resizeBlock {
+- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage
+                       resizeBlock:(void(^)(LWImageStorage*imageStorage, CGFloat delta))resizeBlock {
+
     if ([imageStorage.contents isKindOfClass:[UIImage class]]) {
-        return;
+        switch (imageStorage.localImageType) {
+            case LWLocalImageDrawInLWAsyncDisplayView: {
+                return;
+            }
+            case LWLocalImageTypeDrawInSubView: {
+                UIImage* image = (UIImage *)imageStorage.contents;
+                self.backgroundColor = imageStorage.backgroundColor;
+                self.clipsToBounds = imageStorage.clipsToBounds;
+                if (!imageStorage.needResize) {
+                    [self layoutWithStorage:imageStorage];
+                } else {
+                    CGSize imageSize = image.size;
+                    CGFloat imageScale = imageSize.height/imageSize.width;
+                    CGSize reSize = CGSizeMake(imageStorage.bounds.size.width,
+                                               imageStorage.bounds.size.width * imageScale);
+                    CGFloat delta = reSize.height - imageStorage.frame.size.height;
+                    imageStorage.frame = CGRectMake(imageStorage.frame.origin.x,
+                                                    imageStorage.frame.origin.y,
+                                                    imageStorage.frame.size.width,
+                                                    imageStorage.frame.size.height + delta);
+                    [self layoutWithStorage:imageStorage];
+                    resizeBlock(imageStorage,delta);
+                }
+                __weak typeof(self)weakSelf = self;
+                [self _setContentsImage:image
+                           imageStorage:imageStorage
+                             completion:^{
+                                 __strong typeof(weakSelf) swself = weakSelf;
+                                 if (imageStorage.fadeShow) {
+                                     [swself fadeShowAnimation];
+                                 }
+                             }];
+                return;
+            }
+        }
     }
+
     if ([imageStorage.contents isKindOfClass:[NSString class]]) {
         imageStorage.contents = [NSURL URLWithString:imageStorage.contents];
     }
+
     if ([[(NSURL *)imageStorage.contents absoluteString] isEqualToString:self.URL.absoluteString]) {
         return;
     }
+
     self.URL = imageStorage.contents;
     self.backgroundColor = imageStorage.backgroundColor;
     self.clipsToBounds = imageStorage.clipsToBounds;
@@ -285,7 +328,6 @@ static const void* URLKey;
                                                       [weakSelf fadeShowAnimation];
                                                   }
                                               }];
-
                          }];
 }
 

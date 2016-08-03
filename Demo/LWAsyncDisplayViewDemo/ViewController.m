@@ -303,14 +303,9 @@ const CGFloat kRefreshBoundary = 170.0f;
         if (self.needRefresh) {
             [self.dataSource removeAllObjects];
             NSMutableArray* fakes = [[NSMutableArray alloc] init];
-            [fakes addObjectsFromArray:self.fakeDatasource];
-            [fakes addObjectsFromArray:self.fakeDatasource];
-            [fakes addObjectsFromArray:self.fakeDatasource];
-            [fakes addObjectsFromArray:self.fakeDatasource];
-            [fakes addObjectsFromArray:self.fakeDatasource];
-            [fakes addObjectsFromArray:self.fakeDatasource];
-            [fakes addObjectsFromArray:self.fakeDatasource];
-            [fakes addObjectsFromArray:self.fakeDatasource];
+            for (NSInteger i = 0; i < 10; i ++) {
+                [fakes addObjectsFromArray:self.fakeDatasource];
+            }
             for (NSInteger i = 0; i < fakes.count; i ++) {
                 StatusModel* statusModel = [StatusModel modelWithJSON:fakes[i]];
                 LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
