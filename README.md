@@ -2,7 +2,7 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# Gallop v0.3.3
+# Gallop v0.3.4
 Gallop --- 强大、快速地图文混排框架。
 A framework for build a smooth asynchronous iOS APP.
 
@@ -35,6 +35,12 @@ Gallop是一个功能强大、性能优秀的图文混排框架。
 
 
 # Modifications
+
+v0.3.4
+
+* 支持CoreData来缓存布局模型
+
+
 v0.3.3
 
 * 更改了集成方式，解决了与SDWebImage部分文件冲突的问题。

@@ -29,15 +29,9 @@
 #import "LWImageStorage.h"
 
 
-/**
- *  Gallop的布局模型。其中包含了LWStorage及其子类的对象。
- */
 
-@interface LWLayout : NSObject <NSCopying,NSCoding>
 
-@property (nonatomic,strong,readonly) NSMutableArray<LWTextStorage *>* textStorages;//包含LWTextStorage的数组
-@property (nonatomic,strong,readonly) NSMutableArray<LWImageStorage *>* imageStorages;//包含LWImageStorage的数组
-@property (nonatomic,strong,readonly) NSMutableArray<LWStorage *>* totalStorages;//包含所有LWStorage子类的数组
+@protocol LWLayoutProtocol <NSObject>
 
 /**
  *  添加一个LWStorage对象
@@ -77,6 +71,35 @@
  */
 - (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin;
 
+
+/**
+ *  获取包含LWTextStorage的数组
+ *
+ */
+- (NSMutableArray<LWTextStorage *>*)textStorages;
+
+/**
+ *  获取包含LWImageStorage的数组
+ *
+ */
+- (NSMutableArray<LWImageStorage *>*)imageStorages;
+
+
+/**
+ *  获取包含所有的LWStorage的数组
+ *
+ */
+- (NSMutableArray<LWStorage *>*) totalStorages;
+
+
+@end
+
+
+/**
+ *  Gallop的布局模型。其中包含了LWStorage及其子类的对象。
+ */
+
+@interface LWLayout : NSObject <NSCopying,NSCoding,LWLayoutProtocol>
 
 
 @end

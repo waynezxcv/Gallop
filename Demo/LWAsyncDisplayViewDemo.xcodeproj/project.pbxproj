@@ -107,6 +107,7 @@
 		B0C9A92B1D2270C000DFAA44 /* ArticleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C9A92A1D2270C000DFAA44 /* ArticleListViewController.m */; };
 		B0C9A92E1D2272DD00DFAA44 /* ArticleListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C9A92D1D2272DD00DFAA44 /* ArticleListTableViewCell.m */; };
 		B0C9A9321D2273EF00DFAA44 /* ArticleListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C9A9311D2273EF00DFAA44 /* ArticleListModel.m */; };
+		B0CC499D1D5189CF0049C71A /* NSManagedObject+LWLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B0CC499C1D5189CF0049C71A /* NSManagedObject+LWLayout.m */; };
 		B0E7F39A1D210CE300877644 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E7F3991D210CE300877644 /* WebViewController.m */; };
 		B0E7F3A01D212BA500877644 /* LWLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E7F39D1D212BA500877644 /* LWLoadingView.m */; };
 		B0E7F3A11D212BA500877644 /* LWLoadingAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0E7F39F1D212BA500877644 /* LWLoadingAnimationView.m */; };
@@ -300,6 +301,8 @@
 		B0C9A92D1D2272DD00DFAA44 /* ArticleListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleListTableViewCell.m; sourceTree = "<group>"; };
 		B0C9A9301D2273EF00DFAA44 /* ArticleListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleListModel.h; sourceTree = "<group>"; };
 		B0C9A9311D2273EF00DFAA44 /* ArticleListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleListModel.m; sourceTree = "<group>"; };
+		B0CC499B1D5189CF0049C71A /* NSManagedObject+LWLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSManagedObject+LWLayout.h"; path = "../Gallop/AsyncDisplay/NSManagedObject+LWLayout.h"; sourceTree = "<group>"; };
+		B0CC499C1D5189CF0049C71A /* NSManagedObject+LWLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSManagedObject+LWLayout.m"; path = "../Gallop/AsyncDisplay/NSManagedObject+LWLayout.m"; sourceTree = "<group>"; };
 		B0E7F3981D210CE300877644 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		B0E7F3991D210CE300877644 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		B0E7F39C1D212BA500877644 /* LWLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWLoadingView.h; path = ../LWLoadingView/LWLoadingView.h; sourceTree = "<group>"; };
@@ -485,6 +488,8 @@
 				B0A522F61CEA1ABB00DC2D15 /* LWTextStorage.m */,
 				B0A522F81CEA1AD200DC2D15 /* LWImageStorage.h */,
 				B0A522F91CEA1AD200DC2D15 /* LWImageStorage.m */,
+				B0CC499B1D5189CF0049C71A /* NSManagedObject+LWLayout.h */,
+				B0CC499C1D5189CF0049C71A /* NSManagedObject+LWLayout.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -920,6 +925,7 @@
 				B095D6391D22A86A003821F9 /* LWActionSheetTableViewCell.m in Sources */,
 				B053A17D1D2A4AAD0062BEAC /* UIImage+GIF.m in Sources */,
 				01D9F70F1D04275B00AEF174 /* CALayer+LWTransaction.m in Sources */,
+				B0CC499D1D5189CF0049C71A /* NSManagedObject+LWLayout.m in Sources */,
 				B0ACEC021CEDC9A50019074F /* AutoFitSizeTextView.m in Sources */,
 				B0F767941CF2BF4C00050EAE /* CALayer+WebCache.m in Sources */,
 				B0C503EC1CAE4FC300B6D3FB /* LWAlchemyManager.m in Sources */,

@@ -28,7 +28,6 @@
 #import "LWTransaction.h"
 #import "LWTransactionGroup.h"
 #import "CALayer+LWTransaction.h"
-#import "LWLayout.h"
 
 
 @interface LWAsyncDisplayView ()<LWAsyncDisplayLayerDelegate>
@@ -349,7 +348,7 @@
         return;
     }
     [self _cleanAddToReusePool];
-    LWLayout* oldLayout = _layout;
+    id oldLayout = _layout;
     NSArray* oldImageStorages = _imageStorages;
     NSArray* oldTextStorages = _textStorages;
     _layout = nil;
