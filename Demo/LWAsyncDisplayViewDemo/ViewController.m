@@ -209,11 +209,44 @@ const CGFloat kRefreshBoundary = 170.0f;
         self.postComment.from = @"waynezxcv的粉丝";
         self.postComment.to = commentModel.to;
         self.postComment.index = commentModel.index;
-    } else {
+    }
+
+    else {
         if ([data isKindOfClass:[NSString class]]) {
             [LWAlertView shoWithMessage:data];
         }
     }
+}
+
+/**
+ *  点击展开
+ */
+- (void)tableViewCellDidClickedOpenAtIndexPath:(NSIndexPath *)indexPath {
+    CellLayout* layout =  [self.dataSource objectAtIndex:indexPath.row];
+    StatusModel* model = layout.statusModel;
+    CellLayout* newLayout = [[CellLayout alloc] initContentOpendLayoutWithStatusModel:model
+                                                                                    index:indexPath.row
+                                                                            dateFormatter:self.dateFormatter];
+    [self.dataSource replaceObjectAtIndex:indexPath.row withObject:newLayout];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
+}
+
+/**
+ *  点击关闭
+ */
+- (void)tableViewCellDidClickedCloseAtIndexPath:(NSIndexPath *)indexPath {
+    CellLayout* layout =  [self.dataSource objectAtIndex:indexPath.row];
+    StatusModel* model = layout.statusModel;
+    CellLayout* newLayout = [[CellLayout alloc] initWithStatusModel:model
+                                                              index:indexPath.row
+                                                      dateFormatter:self.dateFormatter];
+    
+    [self.dataSource replaceObjectAtIndex:indexPath.row withObject:newLayout];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
 }
 
 - (void)refreshComplete {
@@ -417,7 +450,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                         @{@"type":@"image",
                           @"name":@"型格志style",
                           @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
-                          @"content":@"春天卫衣的正确打开方式~",
+                          @"content":@"春天卫衣的正确打开方式~\n\n\n\n哈哈哈哈,oops~",
                           @"date":@"1459668442",
                           @"imgs":@[@"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jeloxwhnj30fu0g0ta5.jpg",
                                     @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelpn9bdj30b40gkgmh.jpg",

@@ -103,6 +103,17 @@
         }
         return;
     }
+    
+    CGImageRef imageRef = (__bridge_retained CGImageRef)(self.contents);
+    id contents = self.contents;
+    self.contents = nil;
+    if (imageRef) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            [contents class];
+            CFRelease(imageRef);
+        });
+    }
+    
     if (asynchronously) {
         if (transaction.willDisplayBlock) {
             transaction.willDisplayBlock(self);

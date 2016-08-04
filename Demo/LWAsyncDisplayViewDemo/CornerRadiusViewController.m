@@ -21,7 +21,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 
-    UIView* view1 = [[UIImageView alloc] initWithFrame:CGRectMake(40.0f, 84.0f, SCREEN_WIDTH - 80.0f, SCREEN_WIDTH - 80.0f)];
+    UIView* view1 = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 50, 84.0f,100,100)];
     view1.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view1];
     /**
@@ -31,14 +31,14 @@
     [view1.layer lw_setImageWithURL:
      [NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"]
                    placeholderImage:nil
-                       cornerRadius:(SCREEN_WIDTH - 80.0f)/2
-                               size:CGSizeMake(SCREEN_WIDTH - 80.0f, SCREEN_WIDTH - 80.0f)
+                       cornerRadius:50
+                               size:CGSizeMake(100, 100)
                             options:0
                            progress:nil
                           completed:nil];
 
 
-    UIView* view2 = [[UIImageView alloc] initWithFrame:CGRectMake(40.0f,100.0f + (SCREEN_WIDTH - 80.0f), SCREEN_WIDTH - 80.0f, SCREEN_WIDTH - 80.0f)];
+    UIView* view2 = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 50,200, 100,100)];
     view2.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view2];
     [view2.layer sd_setImageWithURL:[NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"]];

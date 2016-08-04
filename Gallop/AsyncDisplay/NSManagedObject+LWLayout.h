@@ -28,4 +28,65 @@
 
 @interface NSManagedObject(LWLayout)<LWLayoutProtocol>
 
+
+/**
+ *  添加一个LWStorage对象
+ *
+ *  @param storage 一个LWStorage对象
+ */
+- (void)addStorage:(LWStorage *)storage;
+
+/**
+ *  添加一个包含LWStorage对象的数组的所有元素到LWLayout
+ *
+ *  @param storages 一个包含LWStorage对象的数组
+ */
+- (void)addStorages:(NSArray <LWStorage *> *)storages;
+
+/**
+ *  移除一个LWStorage对象
+ *
+ *  @param storage 一个LWStorage对象
+ */
+- (void)removeStorage:(LWStorage *)storage;
+
+/**
+ *  移除一个包含LWStorage对象的数组的所有元素
+ *
+ *  @param storages 一个包含LWStorage对象的数组
+ */
+- (void)removeStorages:(NSArray <LWStorage *> *)storages;
+
+/**
+ *  获取到一个建议的高度，主要用于UITabelViewCell的高度设定。
+ *  你可以在UITableVeiw的代理方法中直接返回这个高度，来方便的动态设定Cell高度
+ *
+ *  @param bottomMargin 距离底部的间距
+ *
+ *  @return 建议的高度
+ */
+- (CGFloat)suggestHeightWithBottomMargin:(CGFloat)bottomMargin;
+
+
+/**
+ *  获取包含LWTextStorage的数组
+ *
+ */
+- (NSMutableArray<LWTextStorage *>*)textStorages;
+
+/**
+ *  获取包含LWImageStorage的数组
+ *
+ */
+- (NSMutableArray<LWImageStorage *>*)imageStorages;
+
+
+/**
+ *  获取包含所有的LWStorage的数组
+ *
+ */
+- (NSMutableArray<LWStorage *>*) totalStorages;
+
+
+
 @end

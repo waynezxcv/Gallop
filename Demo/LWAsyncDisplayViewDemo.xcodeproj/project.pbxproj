@@ -694,12 +694,12 @@
 		B0ACEC0D1CEDCC530019074F /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B0ACEBFA1CEDC9A50019074F /* StatusModel.h */,
+				B0ACEBFB1CEDC9A50019074F /* StatusModel.m */,
 				B0ACEBF01CEDC9A50019074F /* CellLayout.h */,
 				B0ACEBF11CEDC9A50019074F /* CellLayout.m */,
 				B0ACEBF21CEDC9A50019074F /* CommentModel.h */,
 				B0ACEBF31CEDC9A50019074F /* CommentModel.m */,
-				B0ACEBFA1CEDC9A50019074F /* StatusModel.h */,
-				B0ACEBFB1CEDC9A50019074F /* StatusModel.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";

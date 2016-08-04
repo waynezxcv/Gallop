@@ -32,7 +32,12 @@
 - (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
               atIndexPath:(NSIndexPath *)indexPath;
 
-- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike atIndexPath:(NSIndexPath *)indexPath;
+- (void)tableViewCell:(TableViewCell *)cell
+didClickedLikeButtonWithIsLike:(BOOL)isLike
+          atIndexPath:(NSIndexPath *)indexPath;
+
+- (void)tableViewCellDidClickedOpenAtIndexPath:(NSIndexPath *)indexPath;
+- (void)tableViewCellDidClickedCloseAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 

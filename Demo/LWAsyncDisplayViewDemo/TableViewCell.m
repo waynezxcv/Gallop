@@ -68,6 +68,14 @@
 
 /***  点击文本链接 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
+    if ([data isEqualToString:@"close"]) {
+        [self.delegate tableViewCellDidClickedCloseAtIndexPath:self.indexPath];
+        return;
+    }
+    if ([data isEqualToString:@"open"]) {
+        [self.delegate tableViewCellDidClickedOpenAtIndexPath:self.indexPath];
+        return;
+    }
     NSLog(@"tag:%ld",textStorage.tag);//这里可以通过判断Tag来执行相应的回调。
     if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLinkWithData:)] &&
         [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
