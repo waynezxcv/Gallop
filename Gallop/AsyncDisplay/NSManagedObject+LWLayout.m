@@ -39,7 +39,8 @@ static void* LWTotalStoragesKey = &LWTotalStoragesKey;
     }
     if ([storage isMemberOfClass:[LWTextStorage class]]) {
         [self.textStorages addObject:(LWTextStorage *)storage];
-    } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
+    }
+    else if ([storage isMemberOfClass:[LWImageStorage class]]) {
         [self.imageStorages addObject:(LWImageStorage *)storage];
     }
     [self.totalStorages addObject:storage];
@@ -52,7 +53,8 @@ static void* LWTotalStoragesKey = &LWTotalStoragesKey;
     for (LWStorage* storage in storages) {
         if ([storage isMemberOfClass:[LWTextStorage class]]) {
             [self.textStorages addObject:(LWTextStorage *)storage];
-        } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
+        }
+        else if ([storage isMemberOfClass:[LWImageStorage class]]) {
             [self.imageStorages addObject:(LWImageStorage *)storage];
         }
     }
@@ -72,7 +74,7 @@ static void* LWTotalStoragesKey = &LWTotalStoragesKey;
     } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
         if ([self.imageStorages containsObject:(LWImageStorage *)storage]) {
             [self.imageStorages removeObject:(LWImageStorage *)storage];
-            [self.totalStorages removeObject:(LWTextStorage *)storage];
+            [self.totalStorages removeObject:(LWImageStorage *)storage];
         }
     }
 }
@@ -90,7 +92,7 @@ static void* LWTotalStoragesKey = &LWTotalStoragesKey;
         } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
             if ([self.imageStorages containsObject:(LWImageStorage *)storage]) {
                 [self.imageStorages removeObject:(LWImageStorage *)storage];
-                [self.totalStorages removeObject:(LWTextStorage *)storage];
+                [self.totalStorages removeObject:(LWImageStorage *)storage];
             }
         }
     }

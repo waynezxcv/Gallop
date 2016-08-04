@@ -58,7 +58,8 @@ LWSERIALIZE_COPY_WITH_ZONE()
     }
     if ([storage isMemberOfClass:[LWTextStorage class]]) {
         [self.textStorages addObject:(LWTextStorage *)storage];
-    } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
+    }
+    else if ([storage isMemberOfClass:[LWImageStorage class]]) {
         [self.imageStorages addObject:(LWImageStorage *)storage];
     }
     [self.totalStorages addObject:storage];
@@ -71,7 +72,8 @@ LWSERIALIZE_COPY_WITH_ZONE()
     for (LWStorage* storage in storages) {
         if ([storage isMemberOfClass:[LWTextStorage class]]) {
             [self.textStorages addObject:(LWTextStorage *)storage];
-        } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
+        }
+        else if ([storage isMemberOfClass:[LWImageStorage class]]) {
             [self.imageStorages addObject:(LWImageStorage *)storage];
         }
     }
@@ -88,7 +90,8 @@ LWSERIALIZE_COPY_WITH_ZONE()
             [self.textStorages removeObject:(LWTextStorage *)storage];
             [self.totalStorages removeObject:(LWTextStorage *)storage];
         }
-    } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
+    }
+    else if ([storage isMemberOfClass:[LWImageStorage class]]) {
         if ([self.imageStorages containsObject:(LWImageStorage *)storage]) {
             [self.imageStorages removeObject:(LWImageStorage *)storage];
             [self.totalStorages removeObject:(LWImageStorage *)storage];
@@ -109,7 +112,7 @@ LWSERIALIZE_COPY_WITH_ZONE()
         } else if ([storage isMemberOfClass:[LWImageStorage class]]) {
             if ([self.imageStorages containsObject:(LWImageStorage *)storage]) {
                 [self.imageStorages removeObject:(LWImageStorage *)storage];
-                [self.totalStorages removeObject:(LWTextStorage *)storage];
+                [self.totalStorages removeObject:(LWImageStorage *)storage];
             }
         }
     }
