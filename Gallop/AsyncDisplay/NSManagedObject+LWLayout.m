@@ -27,10 +27,9 @@
 #import <objc/runtime.h>
 
 
-void* LWTextStoragesKey = &LWTextStoragesKey ;
-void* LWImageStoragesKey = &LWImageStoragesKey;
-void* LWTotalStoragesKey = &LWTotalStoragesKey;
-
+static void* LWTextStoragesKey = &LWTextStoragesKey ;
+static void* LWImageStoragesKey = &LWImageStoragesKey;
+static void* LWTotalStoragesKey = &LWTotalStoragesKey;
 
 @implementation  NSManagedObject(LWLayout)
 
