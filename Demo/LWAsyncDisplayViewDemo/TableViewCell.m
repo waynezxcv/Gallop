@@ -19,6 +19,7 @@
 #import "GallopUtils.h"
 #import "LWImageStorage.h"
 #import "Menu.h"
+#import "LWAlertView.h"
 
 
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate>
@@ -68,18 +69,22 @@
 
 /***  点击文本链接 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
-    if ([data isEqualToString:@"close"]) {
-        [self.delegate tableViewCellDidClickedCloseAtIndexPath:self.indexPath];
-        return;
+    if ([data isKindOfClass:[NSString class]]) {
+        if ([data isEqualToString:@"close"]) {
+            [self.delegate tableViewCellDidClickedCloseAtIndexPath:self.indexPath];
+        }
+        else if ([data isEqualToString:@"open"]) {
+            [self.delegate tableViewCellDidClickedOpenAtIndexPath:self.indexPath];
+        }
+        else {
+            [LWAlertView shoWithMessage:data];
+        }
     }
-    if ([data isEqualToString:@"open"]) {
-        [self.delegate tableViewCellDidClickedOpenAtIndexPath:self.indexPath];
-        return;
-    }
-    NSLog(@"tag:%ld",textStorage.tag);//这里可以通过判断Tag来执行相应的回调。
-    if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLinkWithData:)] &&
-        [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-        [self.delegate tableViewCell:self didClickedLinkWithData:data];
+    else {
+        if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLinkWithData:)] &&
+            [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
+            [self.delegate tableViewCell:self didClickedLinkWithData:data];
+        }
     }
 }
 

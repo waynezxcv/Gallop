@@ -210,12 +210,6 @@ const CGFloat kRefreshBoundary = 170.0f;
         self.postComment.to = commentModel.to;
         self.postComment.index = commentModel.index;
     }
-
-    else {
-        if ([data isKindOfClass:[NSString class]]) {
-            [LWAlertView shoWithMessage:data];
-        }
-    }
 }
 
 /**
