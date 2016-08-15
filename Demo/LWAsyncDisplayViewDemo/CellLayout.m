@@ -34,8 +34,9 @@
         avatarStorage.backgroundColor = [UIColor whiteColor];
         avatarStorage.frame = CGRectMake(10, 20, 40, 40);
         avatarStorage.tag = 9;
-        avatarStorage.cornerBorderWidth = 1.0f;
-        avatarStorage.cornerBorderColor = RGB(113, 129, 161, 1);
+        avatarStorage.cornerBorderWidth = 5.0f;
+        avatarStorage.cornerBorderColor = [UIColor blackColor];
+        
 
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
@@ -413,8 +414,8 @@
         avatarStorage.backgroundColor = [UIColor whiteColor];
         avatarStorage.frame = CGRectMake(10, 20, 40, 40);
         avatarStorage.tag = 9;
-        avatarStorage.cornerBorderWidth = 1.0f;
-        avatarStorage.cornerBorderColor = RGB(113, 129, 161, 1);
+        avatarStorage.cornerBorderWidth = 5.0f;
+        avatarStorage.cornerBorderColor = [UIColor blackColor];
 
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
@@ -746,7 +747,7 @@
             [commentBgStorage stretchableImageWithLeftCapWidth:40
                                                   topCapHeight:15];
         }
-
+        
         [self addStorage:nameTextStorage];//将Storage添加到遵循LWLayoutProtocol协议的类
         [self addStorage:contentTextStorage];
         [self addStorage:dateTextStorage];
@@ -755,11 +756,11 @@
         [self addStorage:commentBgStorage];
         [self addStorage:likeImageSotrage];
         [self addStorages:imageStorageArray];//通过一个数组来添加storage，使用这个方法
-
+        
         if (likeTextStorage) {
             [self addStorage:likeTextStorage];
         }
-
+        
         self.menuPosition = menuPosition;//右下角菜单按钮的位置
         self.commentBgPosition = commentBgPosition;//评论灰色背景位置
         self.imagePostionArray = imagePositionArray;//保存图片位置的数组

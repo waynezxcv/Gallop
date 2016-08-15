@@ -32,7 +32,7 @@
 
 
 @interface LWImageStorage()
-@property (nonatomic,assign) BOOL needRerendering;//是否需要重新绘制
+@property (nonatomic,assign) BOOL needRerendering;
 
 @end
 
@@ -299,8 +299,12 @@ static const void* URLKey;
     [self.layer lw_setImageWithURL:(NSURL *)imageStorage.contents
                   placeholderImage:imageStorage.placeholder
                       cornerRadius:imageStorage.cornerRadius
+             cornerBackgroundColor:imageStorage.cornerBackgroundColor
+                       borderColor:imageStorage.cornerBorderColor
+                       borderWidth:imageStorage.cornerBorderWidth
                               size:imageStorage.frame.size
-                           options:SDWebImageAvoidAutoSetImage progress:nil
+                           options:SDWebImageAvoidAutoSetImage
+                          progress:nil
                          completed:^(UIImage *image,
                                      NSError *error,
                                      SDImageCacheType cacheType,
