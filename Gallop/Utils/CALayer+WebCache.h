@@ -48,6 +48,32 @@
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock;
 
+
+/**
+ *  通过URL设置一个CAlayer的图片，同时设置占位图、圆角半径相关属性
+ *
+ *  @param url                   图片的URL
+ *  @param placeholder           占位图
+ *  @param cornerRadius          圆角半径值
+ *  @param cornerBackgroundColor 圆角背景颜色
+ *  @param borderColor           圆角描边颜色
+ *  @param borderWidth           圆角描边宽度
+ *  @param size                  图片的大小
+ *  @param options               图片设置选项
+ *  @param progressBlock         一个下载进度回调Block
+ *  @param completedBlock        一个下载完毕回调Block
+ */
+- (void)lw_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholder
+              cornerRadius:(CGFloat)cornerRadius
+     cornerBackgroundColor:(UIColor *)cornerBackgroundColor
+               borderColor:(UIColor *)borderColor
+               borderWidth:(CGFloat)borderWidth
+                      size:(CGSize)size
+                   options:(SDWebImageOptions)options
+                  progress:(SDWebImageDownloaderProgressBlock)progressBlock
+                 completed:(SDWebImageCompletionBlock)completedBlock;
+
 /**
  *  获取当前图片的URL
  *

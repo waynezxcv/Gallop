@@ -283,7 +283,11 @@
             for (NSDictionary* commentDict in statusModel.commentList) {
                 NSString* to = commentDict[@"to"];
                 if (to.length != 0) {
-                    NSString* commentString = [NSString stringWithFormat:@"%@回复%@:%@",commentDict[@"from"],commentDict[@"to"],commentDict[@"content"]];
+                    NSString* commentString = [NSString stringWithFormat:@"%@回复%@:%@",
+                                               commentDict[@"from"],
+                                               commentDict[@"to"],
+                                               commentDict[@"content"]];
+
                     LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
                     commentTextStorage.text = commentString;
                     commentTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
@@ -309,7 +313,8 @@
                     commentModel2.to = [NSString stringWithFormat:@"%@",commentDict[@"to"]];
                     commentModel2.index = index;
                     [commentTextStorage lw_addLinkWithData:commentModel2
-                                                     range:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
+                                                     range:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,
+                                                                       [(NSString *)commentDict[@"to"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
 
@@ -321,7 +326,10 @@
                     [tmp addObject:commentTextStorage];
                     offsetY += commentTextStorage.height;
                 } else {
-                    NSString* commentString = [NSString stringWithFormat:@"%@:%@",commentDict[@"from"],commentDict[@"content"]];
+                    NSString* commentString = [NSString stringWithFormat:@"%@:%@",
+                                               commentDict[@"from"],
+                                               commentDict[@"content"]];
+
                     LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
                     commentTextStorage.text = commentString;
                     commentTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
@@ -647,7 +655,11 @@
             for (NSDictionary* commentDict in statusModel.commentList) {
                 NSString* to = commentDict[@"to"];
                 if (to.length != 0) {
-                    NSString* commentString = [NSString stringWithFormat:@"%@回复%@:%@",commentDict[@"from"],commentDict[@"to"],commentDict[@"content"]];
+                    NSString* commentString = [NSString stringWithFormat:@"%@回复%@:%@",
+                                               commentDict[@"from"],
+                                               commentDict[@"to"],
+                                               commentDict[@"content"]];
+
                     LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
                     commentTextStorage.text = commentString;
                     commentTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
@@ -673,7 +685,8 @@
                     commentModel2.to = [NSString stringWithFormat:@"%@",commentDict[@"to"]];
                     commentModel2.index = index;
                     [commentTextStorage lw_addLinkWithData:commentModel2
-                                                     range:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,[(NSString *)commentDict[@"to"] length])
+                                                     range:NSMakeRange([(NSString *)commentDict[@"from"] length] + 2,
+                                                                       [(NSString *)commentDict[@"to"] length])
                                                  linkColor:RGB(113, 129, 161, 1)
                                             highLightColor:RGB(0, 0, 0, 0.15)];
 
@@ -685,13 +698,17 @@
                     [tmp addObject:commentTextStorage];
                     offsetY += commentTextStorage.height;
                 } else {
-                    NSString* commentString = [NSString stringWithFormat:@"%@:%@",commentDict[@"from"],commentDict[@"content"]];
+                    NSString* commentString = [NSString stringWithFormat:@"%@:%@",
+                                               commentDict[@"from"],
+                                               commentDict[@"content"]];
+
                     LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
                     commentTextStorage.text = commentString;
                     commentTextStorage.font = [UIFont fontWithName:@"Heiti SC" size:14.0f];
                     commentTextStorage.textAlignment = NSTextAlignmentLeft;
                     commentTextStorage.linespacing = 2.0f;
                     commentTextStorage.textColor = RGB(40, 40, 40, 1);
+
                     commentTextStorage.frame = CGRectMake(rect.origin.x + 10.0f,
                                                           rect.origin.y + 10.0f + offsetY,
                                                           SCREEN_WIDTH - 95.0f,

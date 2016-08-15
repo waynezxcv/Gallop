@@ -46,6 +46,9 @@
  */
 - (id <SDWebImageOperation>)lw_downloadImageWithURL:(NSURL *)url
                                        cornerRadius:(CGFloat)cornerRadius
+                              cornerBackgroundColor:(UIColor *)cornerBackgroundColor
+                                        borderColor:(UIColor *)borderColor
+                                        borderWidth:(CGFloat)borderWidth
                                                size:(CGSize)size
                                             options:(SDWebImageOptions)options
                                            progress:(SDWebImageDownloaderProgressBlock)progressBlock

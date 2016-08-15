@@ -21,7 +21,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 
-    UIView* view1 = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 50, 84.0f,100,100)];
+    UIView* view1 = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 50.0f, 84.0f,100.0f,100)];
     view1.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view1];
     /**
@@ -31,11 +31,15 @@
     [view1.layer lw_setImageWithURL:
      [NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"]
                    placeholderImage:nil
-                       cornerRadius:50
-                               size:CGSizeMake(100, 100)
+                       cornerRadius:50.0f
+              cornerBackgroundColor:RGB(255, 255, 255, 1.0f)
+                        borderColor:[UIColor orangeColor]
+                        borderWidth:10.0f
+                               size:CGSizeMake(100.0f, 100)
                             options:0
                            progress:nil
                           completed:nil];
+
 
 
     UIView* view2 = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 50,200, 100,100)];

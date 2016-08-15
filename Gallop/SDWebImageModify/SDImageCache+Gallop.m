@@ -30,14 +30,27 @@
 
 + (void)load {
     [super load];
-    Method originMethod = class_getInstanceMethod([self class],NSSelectorFromString(@"storeImage:recalculateFromImage:imageData:forKey:toDisk:"));
-    Method newMethod = class_getInstanceMethod([self class], NSSelectorFromString(@"lw_storeImage:recalculateFromImage:imageData:forKey:toDisk:"));
-    if (!class_addMethod([self class], @selector(lw_storeImage:recalculateFromImage:imageData:forKey:toDisk:), method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
+
+    Method originMethod = class_getInstanceMethod([self class],
+                                                  NSSelectorFromString(@"storeImage:recalculateFromImage:imageData:forKey:toDisk:"));
+
+    Method newMethod = class_getInstanceMethod([self class],
+                                               NSSelectorFromString(@"lw_storeImage:recalculateFromImage:imageData:forKey:toDisk:"));
+
+    if (!class_addMethod([self class],
+                         @selector(lw_storeImage:recalculateFromImage:imageData:forKey:toDisk:),
+                         method_getImplementation(newMethod),
+                         method_getTypeEncoding(newMethod))) {
+
         method_exchangeImplementations(newMethod, originMethod);
     }
 }
 
-- (void)lw_storeImage:(UIImage *)image recalculateFromImage:(BOOL)recalculate imageData:(NSData *)imageData forKey:(NSString *)key toDisk:(BOOL)toDisk {
+- (void)lw_storeImage:(UIImage *)image
+ recalculateFromImage:(BOOL)recalculate
+            imageData:(NSData *)imageData
+               forKey:(NSString *)key
+               toDisk:(BOOL)toDisk {
     image = [LWCornerRadiusHelper lw_cornerRadiusImageWithImage:image withKey:key];
     if (key && [key hasPrefix:[NSString stringWithFormat:@"%@",LWCornerRadiusPrefixKey]]) {
         imageData = UIImagePNGRepresentation(image);

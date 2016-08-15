@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,7 +34,7 @@
 
 @property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
 @property (copy, nonatomic) SDWebImageNoParamsBlock cancelBlock;
-@property (strong, nonatomic) NSOperation *cacheOperation;
+@property (strong, nonatomic) NSOperation* cacheOperation;
 
 @end
 
@@ -46,33 +46,36 @@
 
 - (id <SDWebImageOperation>)lw_downloadImageWithURL:(NSURL *)url
                                        cornerRadius:(CGFloat)cornerRadius
+                              cornerBackgroundColor:(UIColor *)cornerBackgroundColor
+                                        borderColor:(UIColor *)borderColor
+                                        borderWidth:(CGFloat)borderWidth
                                                size:(CGSize)size
                                             options:(SDWebImageOptions)options
                                            progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                           completed:(SDWebImageCompletionWithFinishedBlock)completedBlock {
-    
+
     // Invoking this method without a completedBlock is pointless
     NSAssert(completedBlock != nil, @"If you mean to prefetch the image, use -[SDWebImagePrefetcher prefetchURLs] instead");
-    
+
     // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
     // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
     if ([url isKindOfClass:NSString.class]) {
         url = [NSURL URLWithString:(NSString *)url];
     }
-    
+
     // Prevents app crashing on argument type error like sending NSNull instead of NSURL
     if (![url isKindOfClass:NSURL.class]) {
         url = nil;
     }
-    
+
     __block SDWebImageCombinedOperation *operation = [SDWebImageCombinedOperation new];
     __weak SDWebImageCombinedOperation *weakOperation = operation;
-    
+
     BOOL isFailedUrl = NO;
     @synchronized (self.failedURLs) {
         isFailedUrl = [self.failedURLs containsObject:url];
     }
-    
+
     if (url.absoluteString.length == 0 || (!(options & SDWebImageRetryFailed) && isFailedUrl)) {
         dispatch_main_sync_safe(^{
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorFileDoesNotExist userInfo:nil];
@@ -80,7 +83,7 @@
         });
         return operation;
     }
-    
+
     @synchronized (self.runningOperations) {
         [self.runningOperations addObject:operation];
     }
@@ -91,10 +94,14 @@
     if (cornerRadius != 0) {
         key = [LWCornerRadiusHelper lw_imageTransformCacheKeyForURL:url
                                                        cornerRadius:cornerRadius
-                                                               size:size];
+                                                               size:size
+                                              cornerBackgroundColor:cornerBackgroundColor
+                                                        borderColor:borderColor
+                                                        borderWidth:borderWidth];
     } else {
         key = [self cacheKeyForURL:url];
     }
+
     operation.cacheOperation = [self.imageCache
                                 queryDiskCacheForKey:key
                                 done:^(UIImage *image, SDImageCacheType cacheType) {
@@ -102,7 +109,7 @@
                                         @synchronized (self.runningOperations) {
                                             [self.runningOperations removeObject:operation];
                                         }
-                                        
+
                                         return;
                                     }
                                     if ((!image || options & SDWebImageRefreshCached) && (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] || [self.delegate imageManager:self shouldDownloadImageForURL:url])) {
@@ -113,7 +120,7 @@
                                                 completedBlock(image, nil, cacheType, YES, url);
                                             });
                                         }
-                                        
+
                                         // download if no image or requested to refresh anyway, and download allowed by delegate
                                         SDWebImageDownloaderOptions downloaderOptions = 0;
                                         if (options & SDWebImageLowPriority) downloaderOptions |= SDWebImageDownloaderLowPriority;
@@ -142,7 +149,7 @@
                                                         completedBlock(nil, error, SDImageCacheTypeNone, finished, url);
                                                     }
                                                 });
-                                                
+
                                                 if (   error.code != NSURLErrorNotConnectedToInternet
                                                     && error.code != NSURLErrorCancelled
                                                     && error.code != NSURLErrorTimedOut
@@ -168,12 +175,12 @@
                                                 else if (downloadedImage && (!downloadedImage.images || (options & SDWebImageTransformAnimatedImage)) && [self.delegate respondsToSelector:@selector(imageManager:transformDownloadedImage:withURL:)]) {
                                                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                                                         UIImage *transformedImage = [self.delegate imageManager:self transformDownloadedImage:downloadedImage withURL:url];
-                                                        
+
                                                         if (transformedImage && finished) {
                                                             BOOL imageWasTransformed = ![transformedImage isEqual:downloadedImage];
                                                             [self.imageCache storeImage:transformedImage recalculateFromImage:imageWasTransformed imageData:(imageWasTransformed ? nil : data) forKey:key toDisk:cacheOnDisk];
                                                         }
-                                                        
+
                                                         dispatch_main_sync_safe(^{
                                                             if (strongOperation && !strongOperation.isCancelled) {
                                                                 completedBlock(transformedImage, nil, SDImageCacheTypeNone, finished, url);
@@ -199,7 +206,7 @@
                                                     });
                                                 }
                                             }
-                                            
+
                                             if (finished) {
                                                 @synchronized (self.runningOperations) {
                                                     if (strongOperation) {
@@ -210,7 +217,7 @@
                                         }];
                                         operation.cancelBlock = ^{
                                             [subOperation cancel];
-                                            
+
                                             @synchronized (self.runningOperations) {
                                                 __strong __typeof(weakOperation) strongOperation = weakOperation;
                                                 if (strongOperation) {
@@ -219,11 +226,11 @@
                                             }
                                         };
                                     }
-                                    
+
                                     else if (image) {
-                                        
+
                                         dispatch_main_sync_safe(^{
-                                            
+
                                             __strong __typeof(weakOperation) strongOperation = weakOperation;
                                             if (strongOperation && !strongOperation.isCancelled) {
                                                 completedBlock(image, nil, cacheType, YES, url);
@@ -246,7 +253,7 @@
                                         }
                                     }
                                 }];
-    
+
     return operation;
 }
 

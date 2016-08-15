@@ -419,6 +419,7 @@ static const void* URLKey;
 
             UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:imageDrawRect
                                                                   cornerRadius:cornerRadius * contentsScale];
+
             UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:imageDrawRect];
             if (cornerBackgroundColor) {
                 [cornerBackgroundColor setFill];
@@ -431,6 +432,7 @@ static const void* URLKey;
             }
             [cornerPath stroke];
             [cornerPath setLineWidth:cornerBorderWidth];
+
             CGImageRef processedImageRef = (UIGraphicsGetImageFromCurrentImageContext().CGImage);
             UIGraphicsEndImageContext();
             dispatch_sync(dispatch_get_main_queue(), ^{

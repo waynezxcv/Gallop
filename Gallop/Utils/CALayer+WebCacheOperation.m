@@ -36,7 +36,10 @@ static char loadOperationKey;
         return operations;
     }
     operations = [NSMutableDictionary dictionary];
-    objc_setAssociatedObject(self, &loadOperationKey, operations, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self,
+                             &loadOperationKey,
+                             operations,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return operations;
 }
 
