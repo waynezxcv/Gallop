@@ -3,7 +3,7 @@
 
 
 # Gallop v0.3.4
-Gallop --- 强大、快速地图文混排框架。
+Gallop --- 构建高性能、顺滑的iOS应用。
 A framework for build a smooth asynchronous iOS APP.
 
 # About Gallop
