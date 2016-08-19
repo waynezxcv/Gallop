@@ -3,7 +3,7 @@
 
 
 # Gallop v0.3.4
-Gallop --- 构建高性能、顺滑的iOS应用。
+Gallop --- 高性能、强大的异步绘制图文混排框架，构建顺滑的iOS应用。
 A framework for build a smooth asynchronous iOS APP.
 
 # About Gallop
