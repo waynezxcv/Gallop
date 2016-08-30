@@ -39,6 +39,7 @@
  *  @param url            图片的URL
  *  @param options        图片设置选项
  *  @param size           图片大小
+ *  @param isBlur         是否模糊处理
  *  @param progressBlock  进度
  *  @param completedBlock 处理完成回调
  *
@@ -50,6 +51,7 @@
                                         borderColor:(UIColor *)borderColor
                                         borderWidth:(CGFloat)borderWidth
                                                size:(CGSize)size
+                                             isBlur:(BOOL)isBlur
                                             options:(SDWebImageOptions)options
                                            progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                           completed:(SDWebImageCompletionWithFinishedBlock)completedBlock;

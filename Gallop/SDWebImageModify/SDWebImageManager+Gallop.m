@@ -50,6 +50,7 @@
                                         borderColor:(UIColor *)borderColor
                                         borderWidth:(CGFloat)borderWidth
                                                size:(CGSize)size
+                                             isBlur:(BOOL)isBlur
                                             options:(SDWebImageOptions)options
                                            progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                           completed:(SDWebImageCompletionWithFinishedBlock)completedBlock {
@@ -91,13 +92,14 @@
      *  将绘制信息保存到key中
      */
     NSString* key;
-    if (cornerRadius != 0) {
+    if (cornerRadius != 0 || isBlur) {
         key = [LWCornerRadiusHelper lw_imageTransformCacheKeyForURL:url
                                                        cornerRadius:cornerRadius
                                                                size:size
                                               cornerBackgroundColor:cornerBackgroundColor
                                                         borderColor:borderColor
-                                                        borderWidth:borderWidth];
+                                                        borderWidth:borderWidth
+                                                             isBlur:isBlur];
     } else {
         key = [self cacheKeyForURL:url];
     }
@@ -253,7 +255,7 @@
                                         }
                                     }
                                 }];
-
+    
     return operation;
 }
 

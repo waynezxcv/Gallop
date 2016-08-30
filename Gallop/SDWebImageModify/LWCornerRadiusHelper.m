@@ -26,6 +26,10 @@
 #import "LWCornerRadiusHelper.h"
 #import "GallopUtils.h"
 #import "GallopDefine.h"
+#import "UIImage+BlurEffects.h"
+
+
+
 
 @implementation LWCornerRadiusHelper
 
@@ -55,7 +59,8 @@
                                          size:(CGSize)size
                         cornerBackgroundColor:(UIColor *)cornerBackgroundColor
                                   borderColor:(UIColor *)borderColor
-                                  borderWidth:(CGFloat)borderWidth {
+                                  borderWidth:(CGFloat)borderWidth
+                                       isBlur:(BOOL)isBlur {
     if (!url) {
         return nil;
     }
@@ -88,7 +93,13 @@
         ba = borderCompnents[3];
     }
 
-    NSString* imageStransformCacheKey = [NSString stringWithFormat:@"%@%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%@",
+
+    int blur = 0;
+    if (isBlur) {
+        blur = 1;
+    }
+
+    NSString* imageStransformCacheKey = [NSString stringWithFormat:@"%@%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%@",
                                          LWCornerRadiusPrefixKey,
                                          cornerRadius,
                                          size.width,
@@ -102,6 +113,7 @@
                                          bb,
                                          ba,
                                          borderWidth,
+                                         blur,
                                          url.absoluteString];
     return imageStransformCacheKey;
 }
@@ -119,7 +131,8 @@
         CGFloat cornerRadius;
         UIColor* cornerBackgroundColor = nil;
         UIColor* borderColor = nil;
-        CGFloat borderWidth = 0.0f;;
+        CGFloat borderWidth = 0.0f;
+
 
         CGFloat cr;
         CGFloat cg;
@@ -130,6 +143,8 @@
         CGFloat bg;
         CGFloat bb;
         CGFloat ba;
+
+        int blur = 0;
 
         cornerRadius = [arr[0] floatValue];
         width = [arr[1] floatValue];
@@ -143,6 +158,7 @@
         bb = [arr[9] floatValue];
         ba = [arr[10] floatValue];
         borderWidth = [arr[11] floatValue];
+        blur = [arr[12] intValue];
 
         if (cr != -1 && cg != -1 && cb != -1 && ca != -1) {
             CGFloat alpha = ca/255.0f;
@@ -175,6 +191,14 @@
         int bw = borderWidth * [GallopUtils contentsScale];
 
         UIImage* img = image;
+
+        if (blur) {
+            img = [img applyBlurWithRadius:20
+                                 tintColor:RGB(0, 0, 0, 0.15f)
+                     saturationDeltaFactor:1.4
+                                 maskImage:nil];
+        }
+
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = CGBitmapContextCreate(NULL,
                                                      w,
@@ -208,6 +232,10 @@
             CGContextStrokePath(context);
             CGContextRestoreGState(context);
         }
+
+
+
+
 
         //draw cornerRadius image
         CGContextBeginPath(context);

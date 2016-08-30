@@ -44,6 +44,7 @@
           placeholderImage:(UIImage *)placeholder
               cornerRadius:(CGFloat)cornerRadius
                       size:(CGSize)size
+                    isBlur:(BOOL)isBlur
                    options:(SDWebImageOptions)options
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock;
@@ -70,6 +71,7 @@
                borderColor:(UIColor *)borderColor
                borderWidth:(CGFloat)borderWidth
                       size:(CGSize)size
+                    isBlur:(BOOL)isBlur
                    options:(SDWebImageOptions)options
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock;

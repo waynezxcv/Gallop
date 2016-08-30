@@ -29,6 +29,8 @@
 #import "LWTransaction.h"
 #import "CALayer+LWTransaction.h"
 #import "LWAsyncDisplayLayer.h"
+#import "UIImage+BlurEffects.h"
+
 
 
 @interface LWImageStorage()
@@ -141,6 +143,7 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
         self.needRerendering = NO;
         self.needResize = NO;
         self.localImageType = LWLocalImageDrawInLWAsyncDisplayView;
+        self.isBlur = NO;
     }
     return self;
 }
@@ -194,6 +197,14 @@ LWSERIALIZE_COPY_WITH_ZONE()
         if (!image) {
             return;
         }
+
+        if (self.isBlur) {
+            image = [image applyBlurWithRadius:20
+                                     tintColor:RGB(0, 0, 0, 0.15f)
+                         saturationDeltaFactor:1.4
+                                     maskImage:nil];
+        }
+
         CGContextSaveGState(context);
         if (isOpaque && backgroundColor) {
             [backgroundColor setFill];
@@ -303,6 +314,7 @@ static const void* URLKey;
                        borderColor:imageStorage.cornerBorderColor
                        borderWidth:imageStorage.cornerBorderWidth
                               size:imageStorage.frame.size
+                            isBlur:imageStorage.isBlur
                            options:SDWebImageAvoidAutoSetImage
                           progress:nil
                          completed:^(UIImage *image,
@@ -351,14 +363,40 @@ static const void* URLKey;
         self.contentMode = UIViewContentModeScaleAspectFill;
         self.layer.contentsRect = CGRectMake(0, 0, 1, (float)width / height);
     }
-    LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
-    [layerAsyncTransaction
-     addAsyncOperationWithTarget:self.layer
-     selector:@selector(setContents:)
-     object:(__bridge id _Nullable)image.CGImage
-     completion:^(BOOL canceled) {
-         completion();
-     }];
+
+
+    if (imageStorage.isBlur && [imageStorage.contents isKindOfClass:[UIImage class]]) {
+
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            UIImage* blurImage = [image applyBlurWithRadius:20
+                                                  tintColor:RGB(0, 0, 0, 0.15f)
+                                      saturationDeltaFactor:1.4
+                                                  maskImage:nil];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+
+                LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
+                [layerAsyncTransaction
+                 addAsyncOperationWithTarget:self.layer
+                 selector:@selector(setContents:)
+                 object:(__bridge id _Nullable)blurImage.CGImage
+                 completion:^(BOOL canceled) {
+                     completion();
+                 }];
+
+            });
+        });
+
+    } else {
+        LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
+        [layerAsyncTransaction
+         addAsyncOperationWithTarget:self.layer
+         selector:@selector(setContents:)
+         object:(__bridge id _Nullable)image.CGImage
+         completion:^(BOOL canceled) {
+             completion();
+         }];
+    }
 }
 
 - (void)_rerenderingImage:(UIImage *)image

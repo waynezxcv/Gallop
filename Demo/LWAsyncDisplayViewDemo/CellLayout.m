@@ -36,7 +36,7 @@
         avatarStorage.tag = 9;
         avatarStorage.cornerBorderWidth = 1.0f;
         avatarStorage.cornerBorderColor = [UIColor blackColor];
-        
+
 
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
@@ -111,6 +111,11 @@
                 imageStorage.clipsToBounds = YES;
                 imageStorage.frame = imageRect;
                 imageStorage.backgroundColor = RGB(240, 240, 240, 1);
+
+                //可以直接缓存经模糊处理的图片
+                imageStorage.isBlur = YES;
+
+
                 NSString* URLString = [statusModel.imgs objectAtIndex:0];
                 imageStorage.contents = [NSURL URLWithString:URLString];
                 [imageStorageArray addObject:imageStorage];

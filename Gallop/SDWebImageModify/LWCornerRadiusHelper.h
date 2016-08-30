@@ -47,7 +47,8 @@ static const NSString* LWCornerRadiusPrefixKey = @"LWCornerRadiusPrefixKey";
                                          size:(CGSize)size
                         cornerBackgroundColor:(UIColor *)cornerBackgroundColor
                                   borderColor:(UIColor *)borderColor
-                                  borderWidth:(CGFloat)borderWidth;
+                                  borderWidth:(CGFloat)borderWidth
+                                       isBlur:(BOOL)isBlur;
 
 /**
  *  通过Key来返回一个圆角半径图片

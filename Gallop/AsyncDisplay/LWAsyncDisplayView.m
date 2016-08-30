@@ -87,6 +87,7 @@
     for (NSInteger i = 0; i < self.imageStorages.count; i ++) {
         @autoreleasepool {
             LWImageStorage* imageStorage = _imageStorages[i];
+
             if ([imageStorage.contents isKindOfClass:[UIImage class]] &&
                 imageStorage.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
                 continue;
@@ -98,6 +99,7 @@
                 container.identifier = imageStorage.identifier;
                 [self addSubview:container];
             }
+
             [self.imageContainers addObject:container];
             [container setContentWithImageStorage:imageStorage resizeBlock:resizeBlock];
         }

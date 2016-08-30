@@ -121,6 +121,7 @@ static char imageURLKey;
           placeholderImage:(UIImage *)placeholder
               cornerRadius:(CGFloat)cornerRadius
                       size:(CGSize)size
+                    isBlur:(BOOL)isBlur
                    options:(SDWebImageOptions)options
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock {
@@ -141,6 +142,7 @@ static char imageURLKey;
          borderColor:nil
          borderWidth:0
          size:size
+         isBlur:isBlur
          options:options
          progress:progressBlock
          completed:^(UIImage *image,
@@ -189,6 +191,7 @@ static char imageURLKey;
                borderColor:(UIColor *)borderColor
                borderWidth:(CGFloat)borderWidth
                       size:(CGSize)size
+                    isBlur:(BOOL)isBlur
                    options:(SDWebImageOptions)options
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock {
@@ -209,6 +212,7 @@ static char imageURLKey;
          borderColor:borderColor
          borderWidth:borderWidth
          size:size
+         isBlur:isBlur
          options:options
          progress:progressBlock
          completed:^(UIImage *image,
@@ -247,8 +251,6 @@ static char imageURLKey;
             }
         });
     }
-
-
 }
 
 

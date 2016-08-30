@@ -124,6 +124,7 @@
         LWAsyncDisplayIsCanclledBlock isCancelledBlock = ^BOOL() {
             return value != displayFlag.value;
         };
+
         CGSize size = self.bounds.size;
         BOOL opaque = self.opaque;
         CGFloat scale = self.contentsScale;

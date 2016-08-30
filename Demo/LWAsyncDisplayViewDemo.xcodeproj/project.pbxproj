@@ -61,6 +61,7 @@
 		B054E1121CF0F15000E6FC53 /* LWAsyncDisplayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B054E1111CF0F15000E6FC53 /* LWAsyncDisplayLayer.m */; };
 		B05F7A211D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B05F7A1C1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m */; };
 		B05F7A221D38E1EE00C3D4C9 /* SDImageCache+Gallop.m in Sources */ = {isa = PBXBuildFile; fileRef = B05F7A1E1D38E1EE00C3D4C9 /* SDImageCache+Gallop.m */; };
+		B062A5D61D758E27008F3D74 /* UIImage+BlurEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = B062A5D51D758E27008F3D74 /* UIImage+BlurEffects.m */; };
 		B074BB541CEE0CF9003464B4 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B074BB531CEE0CF9003464B4 /* comment@2x.png */; };
 		B074BB571CEE151A003464B4 /* LWTextParser.m in Sources */ = {isa = PBXBuildFile; fileRef = B074BB561CEE151A003464B4 /* LWTextParser.m */; };
 		B08CFE2E1D02CD6800A8B70D /* LWTransactionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B08CFE2D1D02CD6800A8B70D /* LWTransactionGroup.m */; };
@@ -220,6 +221,8 @@
 		B05F7A1C1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWCornerRadiusHelper.m; path = ../Gallop/SDWebImageModify/LWCornerRadiusHelper.m; sourceTree = "<group>"; };
 		B05F7A1D1D38E1EE00C3D4C9 /* SDImageCache+Gallop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SDImageCache+Gallop.h"; path = "../Gallop/SDWebImageModify/SDImageCache+Gallop.h"; sourceTree = "<group>"; };
 		B05F7A1E1D38E1EE00C3D4C9 /* SDImageCache+Gallop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SDImageCache+Gallop.m"; path = "../Gallop/SDWebImageModify/SDImageCache+Gallop.m"; sourceTree = "<group>"; };
+		B062A5D41D758E27008F3D74 /* UIImage+BlurEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+BlurEffects.h"; path = "../Gallop/Utils/UIImage+BlurEffects.h"; sourceTree = "<group>"; };
+		B062A5D51D758E27008F3D74 /* UIImage+BlurEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+BlurEffects.m"; path = "../Gallop/Utils/UIImage+BlurEffects.m"; sourceTree = "<group>"; };
 		B074BB531CEE0CF9003464B4 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
 		B074BB551CEE151A003464B4 /* LWTextParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextParser.h; path = ../Gallop/Utils/LWTextParser.h; sourceTree = "<group>"; };
 		B074BB561CEE151A003464B4 /* LWTextParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextParser.m; path = ../Gallop/Utils/LWTextParser.m; sourceTree = "<group>"; };
@@ -558,6 +561,8 @@
 				B05F7A1E1D38E1EE00C3D4C9 /* SDImageCache+Gallop.m */,
 				B05F7A1B1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.h */,
 				B05F7A1C1D38E1EE00C3D4C9 /* LWCornerRadiusHelper.m */,
+				B062A5D41D758E27008F3D74 /* UIImage+BlurEffects.h */,
+				B062A5D51D758E27008F3D74 /* UIImage+BlurEffects.m */,
 			);
 			name = LWWebImage;
 			sourceTree = "<group>";
@@ -793,6 +798,7 @@
 				TargetAttributes = {
 					011DFA191C987CD6000410D7 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 48NPNTSQK4;
 					};
 				};
 			};
@@ -881,6 +887,7 @@
 				B0A522E51CEA189000DC2D15 /* GallopUtils.m in Sources */,
 				B095D6261D22A857003821F9 /* LWAlertView.m in Sources */,
 				B053A1771D2A4AAD0062BEAC /* SDWebImageDecoder.m in Sources */,
+				B062A5D61D758E27008F3D74 /* UIImage+BlurEffects.m in Sources */,
 				01D9F7101D04275B00AEF174 /* LWTransaction.m in Sources */,
 				B0C9A92E1D2272DD00DFAA44 /* ArticleListTableViewCell.m in Sources */,
 				B053A17F1D2A4AAD0062BEAC /* UIImage+WebP.m in Sources */,

@@ -53,6 +53,7 @@ typedef NS_ENUM(NSUInteger, LWLocalImageType){
 @property (nonatomic,assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;//是否响应用户事件，默认是YES
 @property (nonatomic,assign,readonly) BOOL needRerendering;//是否需要重新绘制
 @property (nonatomic,assign) BOOL needResize;//是否需要重新设置大小,不要去设置这个值，这个用于LWHTMLDisplayView重新调整图片大小比例
+@property (nonatomic,assign) BOOL isBlur;//是否模糊处理
 
 /**
  *  绘制图片
