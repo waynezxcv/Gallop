@@ -4,6 +4,7 @@
 
 # Gallop v0.3.5
 Gallop --- 强大、快速地图文混排框架。
+
 A framework for build a smooth asynchronous iOS APP.
 
 # About Gallop
