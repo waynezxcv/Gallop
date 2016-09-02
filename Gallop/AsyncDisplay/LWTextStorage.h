@@ -62,6 +62,7 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 @property (nonatomic,assign) LWTextDrawMode textDrawMode;//绘制模式
 @property (nonatomic,strong) UIColor* strokeColor;//描边颜色
 @property (nonatomic,assign) CGFloat strokeWidth;//描边宽度
+@property (nonatomic,assign,readonly) CGSize suggestSize;//建议的绘制大小
 
 
 /**

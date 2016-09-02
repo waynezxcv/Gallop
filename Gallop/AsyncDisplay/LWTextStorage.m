@@ -420,5 +420,8 @@ LWSERIALIZE_COPY_WITH_ZONE()
                        self.textLayout.cgPathBox.origin.y + + self.position.y + self.textLayout.cgPathBox.size.height * 0.5f);
 }
 
+- (CGSize)suggestSize {
+    return self.textLayout.suggestSize;
+}
 
 @end
