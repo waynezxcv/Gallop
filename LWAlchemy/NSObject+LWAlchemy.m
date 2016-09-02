@@ -1,27 +1,18 @@
-/*
- https://github.com/waynezxcv/LWAlchemy
-
- Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
- */
-
+//
+//  The MIT License (MIT)
+//  Copyright (c) 2016 Wayne Liu <liuweiself@126.com>
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//　　The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+//
+//
+//
+//  Copyright © 2016年 Wayne Liu. All rights reserved.
+//  https://github.com/waynezxcv/LWAlchemy
+//  See LICENSE for this sample’s licensing information
+//
 
 #import "NSObject+LWAlchemy.h"
 #import "LWAlchemyPropertyInfo.h"
@@ -77,7 +68,8 @@ static void* LWAlechmyMapDictionaryKey = &LWAlechmyMapDictionaryKey;
             if (![json isKindOfClass:[NSDictionary class]]) {
                 NSDictionary* dic = [model dictionaryWithJSON:json];
                 model = [model entity:model modelWithDictionary:dic context:context];
-            } else {
+            }
+            else {
                 model = [model entity:model modelWithDictionary:json context:context];
             }
         }
@@ -85,6 +77,7 @@ static void* LWAlechmyMapDictionaryKey = &LWAlechmyMapDictionaryKey;
     }
     return [self modelWithJSON:json];
 }
+
 
 - (instancetype)modelWithDictionary:(NSDictionary *)dictionary {
     if (!dictionary || dictionary == (id)kCFNull) return nil;
@@ -133,7 +126,6 @@ static void* LWAlechmyMapDictionaryKey = &LWAlechmyMapDictionaryKey;
     return self;
 }
 
-
 - (NSDictionary *)dictionaryWithJSON:(id)json {
     if (!json || json == (id)kCFNull) return nil;
     NSDictionary* dic = nil;
@@ -150,6 +142,25 @@ static void* LWAlechmyMapDictionaryKey = &LWAlechmyMapDictionaryKey;
         if (![dic isKindOfClass:[NSDictionary class]]) dic = nil;
     }
     return dic;
+}
+
+- (NSDictionary *)dictionaryFromModel {
+    NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
+    NSSet* propertysSet = self.class.propertysSet;
+    for (LWAlchemyPropertyInfo* propertyInfo in propertysSet) {
+        NSString* key = propertyInfo.propertyName;
+        id value;
+        if (propertyInfo.isNumberType) {
+            value = _GetNumberPropertyValue(self, propertyInfo);
+        }
+        else {
+            value = _GetObjectTypePropertyValue(self,propertyInfo);
+        }
+        if (value) {
+            [dict setObject:value forKey:key];
+        }
+    }
+    return dict.copy;
 }
 
 #pragma mark - Private Methods
@@ -172,12 +183,14 @@ static void* LWAlechmyMapDictionaryKey = &LWAlechmyMapDictionaryKey;
     }
 }
 
+
 static void _SetPropertyValue(__unsafe_unretained id model,
                               __unsafe_unretained LWAlchemyPropertyInfo* propertyInfo,
                               __unsafe_unretained id value) {
     if (propertyInfo.isReadonly || propertyInfo.isDynamic) {
         return;
     }
+
     if (propertyInfo.isNumberType) {
         _SetNumberPropertyValue(model, propertyInfo, value);
     }
@@ -190,6 +203,7 @@ static void _SetPropertyValue(__unsafe_unretained id model,
 }
 
 
+
 static void _SetNumberPropertyValue(__unsafe_unretained id model,
                                     __unsafe_unretained LWAlchemyPropertyInfo* propertyInfo,
                                     __unsafe_unretained id value) {
@@ -199,84 +213,153 @@ static void _SetNumberPropertyValue(__unsafe_unretained id model,
     SEL setterSelector = NSSelectorFromString(propertyInfo.setter);
     switch (propertyInfo.type) {
         case LWPropertyTypeBool: {
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             void (*objc_msgSendToSetter)(id, SEL, bool) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, num.boolValue);
         }break;
         case LWPropertyTypeInt8:{
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             void (*objc_msgSendToSetter)(id, SEL, int8_t) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, (int8_t)num.charValue);
         }break;
         case LWPropertyTypeUInt8: {
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             void (*objc_msgSendToSetter)(id, SEL, uint8_t) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, (uint8_t)num.unsignedCharValue);
         }break;
         case LWPropertyTypeInt16: {
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             void (*objc_msgSendToSetter)(id, SEL, int16_t) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, (int16_t)num.shortValue);
         }break;
         case LWPropertyTypeUInt16: {
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             void (*objc_msgSendToSetter)(id, SEL, uint16_t) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, (uint16_t)num.unsignedShortValue);
         }break;
         case LWPropertyTypeInt32: {
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             void (*objc_msgSendToSetter)(id, SEL, int32_t) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, (int32_t)num.intValue);
         }break;
         case LWPropertyTypeUInt32: {
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             void (*objc_msgSendToSetter)(id, SEL, uint32_t) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, (uint32_t)num.unsignedIntValue);
         }break;
         case LWPropertyTypeInt64: {
             if ([value isKindOfClass:[NSDecimalNumber class]]) {
-                NSNumber* num = (NSDecimalNumber *)value;
+                NSNumber* num = NSNumberCreateFromIDType(value);
                 void (*objc_msgSendToSetter)(id, SEL, int64_t) = (void*)objc_msgSend;
                 objc_msgSendToSetter((id)model, setterSelector, (int64_t)num.stringValue.longLongValue);
             } else {
-                NSNumber* num = (NSNumber *)value;
+                NSNumber* num = NSNumberCreateFromIDType(value);
                 void (*objc_msgSendToSetter)(id, SEL, int64_t) = (void*)objc_msgSend;
                 objc_msgSendToSetter((id)model, setterSelector, (int64_t)num.longLongValue);
             }
         }break;
         case LWPropertyTypeUInt64:{
             if ([value isKindOfClass:[NSDecimalNumber class]]) {
-                NSNumber* num = (NSDecimalNumber *)value;
+                NSNumber* num = NSNumberCreateFromIDType(value);
                 void (*objc_msgSendToSetter)(id, SEL, uint64_t) = (void*)objc_msgSend;
                 objc_msgSendToSetter((id)model, setterSelector, (uint64_t)num.stringValue.longLongValue);
             } else {
-                NSNumber* num = (NSNumber *)value;
+                NSNumber* num = NSNumberCreateFromIDType(value);
                 void (*objc_msgSendToSetter)(id, SEL, uint64_t) = (void*)objc_msgSend;
                 objc_msgSendToSetter((id)model, setterSelector, (uint64_t)num.longLongValue);
             }
         }break;
         case LWPropertyTypeFloat: {
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             float f = num.floatValue;
             if (isnan(f) || isinf(f)) f = 0;
             void (*objc_msgSendToSetter)(id, SEL, float) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, f);
         }break;
         case LWPropertyTypeDouble:{
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             double d = num.doubleValue;
             if (isnan(d) || isinf(d)) d = 0;
             void (*objc_msgSendToSetter)(id, SEL, double) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, d);
         }break;
         case LWPropertyTypeLongDouble: {
-            NSNumber* num = (NSNumber *)value;
+            NSNumber* num = NSNumberCreateFromIDType(value);
             long double d = num.doubleValue;
             if (isnan(d) || isinf(d)) d = 0;
             void (*objc_msgSendToSetter)(id, SEL, long double) = (void*)objc_msgSend;
             objc_msgSendToSetter((id)model, setterSelector, d);
         }break;
         default:break;
+    }
+}
+
+
+static NSNumber *_GetNumberPropertyValue(__unsafe_unretained id model,
+                                         __unsafe_unretained LWAlchemyPropertyInfo* propertyInfo) {
+    if (!propertyInfo.getter) {
+        return nil;
+    }
+    SEL getterSeclector = NSSelectorFromString(propertyInfo.getter);
+    switch (propertyInfo.type) {
+        case LWPropertyTypeBool: {
+            bool (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            return @(objc_msgSendToGetter(model,getterSeclector));
+        }
+        case LWPropertyTypeInt8:{
+            int8_t (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            return @(objc_msgSendToGetter(model,getterSeclector));
+        }
+        case LWPropertyTypeUInt8: {
+            uint8_t (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            return @(objc_msgSendToGetter(model,getterSeclector));
+        }
+        case LWPropertyTypeInt16: {
+            int16_t (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            return @(objc_msgSendToGetter(model,getterSeclector));
+        }
+        case LWPropertyTypeUInt16: {
+            uint16_t (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            return @(objc_msgSendToGetter(model,getterSeclector));
+        }
+        case LWPropertyTypeInt32: {
+            int32_t (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            return @(objc_msgSendToGetter(model,getterSeclector));
+        }
+        case LWPropertyTypeUInt32: {
+            uint32_t (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            return @(objc_msgSendToGetter(model,getterSeclector));
+        }
+        case LWPropertyTypeInt64: {
+            int64_t (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            return @(objc_msgSendToGetter(model,getterSeclector));
+        }
+        case LWPropertyTypeFloat: {
+            float (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            float number = objc_msgSendToGetter(model,getterSeclector);
+            if (isnan(number)) {
+                return nil;
+            }
+            return @(number);
+        }
+        case LWPropertyTypeDouble:{
+            double (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            double number = objc_msgSendToGetter(model,getterSeclector);
+            if (isnan(number)) {
+                return nil;
+            }
+            return @(number);
+        }
+        case LWPropertyTypeLongDouble: {
+            double (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+            double number = objc_msgSendToGetter(model,getterSeclector);
+            if (isnan(number)) {
+                return nil;
+            }
+            return @(number);
+        }
+        default:
+            return nil;
     }
 }
 
@@ -415,8 +498,7 @@ static void _SetObjectTypePropertyValue(__unsafe_unretained id model,
                     void (*objc_msgSendToSetter)(id, SEL,id) = (void*)objc_msgSend;
                     objc_msgSendToSetter((id)model,setterSelector,child);
                 }
-            }
-            else {
+            } else {
                 //id type
                 void (*objc_msgSendToSetter)(id, SEL,id) = (void*)objc_msgSend;
                 objc_msgSendToSetter((id)model, setterSelector,(id)value);
@@ -425,6 +507,18 @@ static void _SetObjectTypePropertyValue(__unsafe_unretained id model,
             break;
     }
 }
+
+
+static id _GetObjectTypePropertyValue(__unsafe_unretained id model,
+                                      __unsafe_unretained LWAlchemyPropertyInfo* propertyInfo) {
+    if (!propertyInfo.getter) {
+        return nil;
+    }
+    SEL getterSelector = NSSelectorFromString(propertyInfo.getter);
+    id (*objc_msgSendToGetter)(id, SEL) = (void*)objc_msgSend;
+    return objc_msgSendToGetter(model,getterSelector);
+}
+
 
 static void _SetOtherTypePropertyValue(__unsafe_unretained id model,
                                        __unsafe_unretained LWAlchemyPropertyInfo* propertyInfo,

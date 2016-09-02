@@ -23,7 +23,6 @@
  */
 
 
-
 #import "LWAlchemyValueTransformer.h"
 
 @interface LWAlchemyValueTransformer ()
@@ -55,7 +54,6 @@
     _reverseBlock = [reverseBlock copy];
     return self;
 }
-
 
 #pragma mark - Transformer
 

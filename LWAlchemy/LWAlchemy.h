@@ -22,12 +22,11 @@
  THE SOFTWARE.
  */
 
-
 #ifndef LWAlchemy_h
 #define LWAlchemy_h
 
-#import "NSObject+LWAlchemy.h"
 #import "LWAlchemyManager.h"
+#import "NSObject+LWAlchemy.h"
 #import "LWAlchemyValueTransformer.h"
 
 #endif /* LWAlchemy_h */

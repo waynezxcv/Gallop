@@ -32,21 +32,76 @@
 @class NSManagedObject;
 @class NSFetchRequest;
 
+
+
+/**
+ *  无参数的回调Block
+ */
 typedef void(^Completion)(void);
+
+
+/**
+ *  查询结果Block
+ *
+ *  @param results 查询结果，包含NSManagedObject对象的数组
+ *  @param error   NSError对象
+ */
 typedef void(^FetchResults)(NSArray* results, NSError *error);
-typedef void(^ExistingObject)(NSManagedObject* existedObject);
+
+/**
+ *  更新结果Block
+ *
+ *
+ */
+typedef void(^UpdatedResults)(id updatedEnity,NSError *error);
+
+
+/**
+ *  用于CoreData管理。CoreData的结构使用的是三层结构。
+ *
+ *
+ */
+/******************************************************************************
+
+
+ ------------------
+ |                  |
+ |     writeMOC     | background thread ➡︎ NSPersistentStoreCoordinator
+ |                  |
+ ------------------
+
+ ⬆︎ parent
+
+ ------------------
+ |                  |
+ |     mainMOC      | main thread ➡︎ NSFetchResultsController
+ |                  |
+ ------------------
+
+ ⬆︎ parent
+
+ ------------------
+ |                  |
+ |   temporaryMOC   | background thread
+ |                  |
+ ------------------
+
+
+ ******************************************************************************/
 
 
 @interface LWAlchemyManager : NSObject
 
 @property (readonly, strong, nonatomic) NSManagedObjectModel* managedObjectModel;
-@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator* persistentStoreCoordinator;
-@property (readonly, strong, nonatomic) NSManagedObjectContext* managedObjectContext;//主线程Context，用户增，改，删（在内存中操作）。
-@property (readonly, strong, nonatomic) NSManagedObjectContext* parentContext;//用来写入数据到SQLite的Context，在一个后台线程中操作。
+@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator* persistentStoreCoordinator;//PSC
+@property (readonly, strong, nonatomic) NSManagedObjectContext* mainMOC;//主线程Context
+@property (readonly, strong, nonatomic) NSManagedObjectContext* writeMOC;//用来写入数据到本地的Context，mainMOC的parent
 
-
-
-
+/**
+ *  获取LWAlchemyManager单例对象
+ *
+ *  @return LWAlchemyManager单例对象
+ */
 + (LWAlchemyManager *)sharedManager;
 
 
@@ -54,67 +109,101 @@ typedef void(^ExistingObject)(NSManagedObject* existedObject);
  *  批量插入数据，并指定UniqueAttributesName，
  *  若存在则重复插入，改为更新数据（总共新开一个线程）
  *
- *  @param cls                  Entity的类(如：[Student Class])
+ *  @param cls                  Entity的所属的类(如：[Student Class])
  *  @param jsonArray            包含JSON的数组
  *  @param uniqueAttributesName unique约束的属性名
- *  @param isSave               是否保存
  *  @param completeBlock        完成回调
  */
-- (void)insertEntitysWithClass:(Class)cls
-                    JSONsArray:(NSArray *)jsonArray
-           uiqueAttributesName:(NSString *)uniqueAttributesName
-                          save:(BOOL)isSave
-                    completion:(Completion)completeBlock;
+- (void)lw_insertEntitysWithClass:(Class)objectClass
+                       JSONsArray:(NSArray *)jsonArray
+              uiqueAttributesName:(NSString *)uniqueAttributesName
+                       completion:(Completion)completeBlock;
 
 
 /**
- *  增入一条数据。
+ *  异步查询,需要iOS8.0及以上
  *
+ *  @param objectClass     查询的实例所属的类
+ *  @param predicate       NSPredicate对象，指定过滤方式
+ *  @param sortDescriptors 排序方式
+ *  @param offset          偏移量
+ *  @param limit           最大量
+ *  @param resultsBlock    查询结果
  */
-- (void)insertEntityWithClass:(Class)cls
-                         JSON:(id)json
-                         save:(BOOL)isSave
-                   completion:(Completion)completeBlock;
-
+- (void)lw_asyncFetchEntityWithClass:(Class)objectClass
+                           predicate:(NSPredicate *)predicate
+                      sortDescriptor:(NSArray<NSSortDescriptor*> *)sortDescriptors
+                         fetchOffset:(NSInteger)offset
+                          fetchLimit:(NSInteger)limit
+                         fetchReults:(FetchResults)resultsBlock NS_AVAILABLE(10_10, 8_0);
 
 /**
- *  批量插入数据。
+ *  查询
  *
+ *  @param objectClass     查询的实例所属的类
+ *  @param predicate       NSPredicate对象，指定过滤方式
+ *  @param sortDescriptors 排序方式
+ *  @param offset          偏移量
+ *  @param limit           最大量
+ *  @param resultsBlock    查询结果
  */
-- (void)insertEntitysWithClass:(Class)cls
-                    JSONsArray:(NSArray *)jsonArray
-                          save:(BOOL)isSave
-                    completion:(Completion)completeBlock;
+- (void)lw_fetchEntityWithClass:(Class)objectClass
+                      predicate:(NSPredicate *)predicate
+                 sortDescriptor:(NSArray<NSSortDescriptor*> *)sortDescriptors
+                    fetchOffset:(NSInteger)offset
+                     fetchLimit:(NSInteger)limit
+                    fetchReults:(FetchResults)resultsBlock;
+
 
 
 /**
- *  查
- */
-- (void)fetchNSManagedObjectWithObjectClass:(Class)objectClass
-                                  predicate:(NSPredicate *)predicate
-                             sortDescriptor:(NSArray<NSSortDescriptor *> *)sortDescriptors
-                                fetchOffset:(NSInteger)offset
-                                 fetchLimit:(NSInteger)limit
-                                fetchReults:(FetchResults)resultsBlock;
-/**
- *  删
- */
-- (void)deleteNSManagedObjectWithObjectWithObjectIdsArray:(NSArray<NSManagedObjectID *> *)objectIDs;
-
-
-/**
- *  改
+ *  批量更新，需要iOS8.0以上
  *
+ *  @param objectClass        查询的实例所属的类
+ *  @param propertiesToUpdate 属性更新字典,格式：@{@"属性名称":更新的值};
+ *
+ *  @return 更新的数据条数
  */
-- (void)updateNSManagedObjectWithObjectID:(NSManagedObjectID *)objectID JSON:(id)json;
+- (NSInteger)lw_batchUpdateWithEntityWithClass:(Class)objectClass
+                            propertiesToUpdate:(NSDictionary *)propertiesToUpdate NS_AVAILABLE(10_10, 8_0);
 
 
 /**
- *  保存
+ *  更新
  *
+ *  @param objectID 要更新的实例的NSManagedObjectID
+ *  @param json     需要更新的数据JSON字典
  */
-- (void)saveContext:(Completion)completionBlock;
+- (void)lw_updateEntityWithObjectID:(NSManagedObjectID *)objectID
+                               JSON:(id)json
+                         completion:(UpdatedResults)updateResults;
 
+
+
+/**
+ *  批量删除,需要iOS8.0以上
+ *
+ *  @param objectClass 查询的实例所属的类
+ *  @param predicate   NSPredicate对象，指定过滤方式
+ *
+ *  @return 删除的条数
+ */
+- (NSInteger)lw_batchDeleteEntityWithClass:(Class)objectClass
+                                 predicate:(NSPredicate *)predicate NS_AVAILABLE(10_10, 8_0);
+
+/**
+ *  删除
+ *
+ *  @param objectIDs 存放需要删除实例的NSManagedObjectID的数组
+ *  @return 是否删除成功
+ */
+- (BOOL)lw_deleteNSManagedObjectWithObjectWithObjectIdsArray:(NSArray<NSManagedObjectID *> *)objectIDs;
+
+
+/**
+ *  保存到Sqlite
+ */
+- (void)saveToSqlite;
 
 
 @end

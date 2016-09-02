@@ -24,7 +24,6 @@
 
 
 
-
 #import <Foundation/Foundation.h>
 
 typedef id (^LWAlchemyValueTransformerBlock)(id value, BOOL* success, NSError **error);
