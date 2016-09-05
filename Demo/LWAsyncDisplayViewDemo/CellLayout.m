@@ -111,15 +111,9 @@
                 imageStorage.clipsToBounds = YES;
                 imageStorage.frame = imageRect;
                 imageStorage.backgroundColor = RGB(240, 240, 240, 1);
-
-                //可以直接缓存经模糊处理的图片
-                imageStorage.isBlur = YES;
-
-
                 NSString* URLString = [statusModel.imgs objectAtIndex:0];
                 imageStorage.contents = [NSURL URLWithString:URLString];
                 [imageStorageArray addObject:imageStorage];
-
             } else {
                 for (NSInteger i = 0; i < imageCount; i ++) {
                     CGRect imageRect = CGRectMake(nameTextStorage.left + (column * (imageWidth + 5.0f)),

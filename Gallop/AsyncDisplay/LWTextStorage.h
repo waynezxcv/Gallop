@@ -64,7 +64,6 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 @property (nonatomic,assign) CGFloat strokeWidth;//描边宽度
 @property (nonatomic,assign,readonly) CGSize suggestSize;//建议的绘制大小
 
-
 /**
  *  构造方法
  *

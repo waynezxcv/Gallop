@@ -119,36 +119,31 @@
 }
 
 
-+ (UIImage *)lw_cornerRadiusImageWithImage:(UIImage*)image withKey:(NSString *)key {
++ (UIImage *)lw_cornerRadiusImageWithImage:(UIImage*)img withKey:(NSString *)key {
 
     if (key && [key hasPrefix:[NSString stringWithFormat:@"%@",LWCornerRadiusPrefixKey]]) {
         NSString* infoString = [key substringFromIndex:LWCornerRadiusPrefixKey.length];
         NSArray* arr = [infoString componentsSeparatedByString:@","];
-
-        CGSize imageSize;
-        CGFloat width;
-        CGFloat height;
-        CGFloat cornerRadius;
-        UIColor* cornerBackgroundColor = nil;
-        UIColor* borderColor = nil;
-        CGFloat borderWidth = 0.0f;
-
-
+        CGFloat w;
+        CGFloat h;
+        CGFloat bw;
         CGFloat cr;
         CGFloat cg;
         CGFloat cb;
         CGFloat ca;
-
         CGFloat br;
         CGFloat bg;
         CGFloat bb;
         CGFloat ba;
 
+        UIColor* cornerBackgroundColor = nil;
+        UIColor* borderColor = nil;
+
         int blur = 0;
 
-        cornerRadius = [arr[0] floatValue];
-        width = [arr[1] floatValue];
-        height = [arr[2] floatValue];
+        CGFloat r = [arr[0] floatValue];
+        w = [arr[1] floatValue];
+        h = [arr[2] floatValue];
         cr = [arr[3] floatValue];
         cg = [arr[4] floatValue];
         cb = [arr[5] floatValue];
@@ -157,7 +152,7 @@
         bg = [arr[8] floatValue];
         bb = [arr[9] floatValue];
         ba = [arr[10] floatValue];
-        borderWidth = [arr[11] floatValue];
+        bw = [arr[11] floatValue];
         blur = [arr[12] intValue];
 
         if (cr != -1 && cg != -1 && cb != -1 && ca != -1) {
@@ -170,50 +165,39 @@
             CGFloat alpha = ba/255.0f;
             borderColor = RGB(br, bg, bb, alpha);
         }
-
-        if (width < 0 || height < 0) {
+        if (w < 0 || h < 0) {
             return nil;
         }
-
-        if (width > height) {
-            imageSize = CGSizeMake(width * [GallopUtils contentsScale],
-                                   width * [GallopUtils contentsScale]);
-        }
-
-        else {
-            imageSize = CGSizeMake(height * [GallopUtils contentsScale],
-                                   height * [GallopUtils contentsScale]);
-        }
-
-        int w = imageSize.width;
-        int h = imageSize.height;
-        int radius = cornerRadius * [GallopUtils contentsScale];
-        int bw = borderWidth * [GallopUtils contentsScale];
-
-        UIImage* img = image;
+        UIImage* image = img;
+        CGFloat width = w * [GallopUtils contentsScale];
+        CGFloat height = h * [GallopUtils contentsScale];
+        CGFloat cornerRadius = r * [GallopUtils contentsScale];
+        CGFloat borderWidth = bw * [GallopUtils contentsScale];
 
         if (blur) {
-            img = [img applyBlurWithRadius:20
-                                 tintColor:RGB(0, 0, 0, 0.15f)
-                     saturationDeltaFactor:1.4
-                                 maskImage:nil];
+            image = [image applyBlurWithRadius:20
+                                     tintColor:RGB(0, 0, 0, 0.15f)
+                         saturationDeltaFactor:1.4
+                                     maskImage:nil];
         }
-
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = CGBitmapContextCreate(NULL,
-                                                     w,
-                                                     h,
+                                                     (int)width,
+                                                     (int)height,
                                                      8,
-                                                     4 * w,
+                                                     4 * (int)width,
                                                      colorSpace,
                                                      kCGImageAlphaPremultipliedFirst);
-        //rect
-        CGRect rect = CGRectMake(0, 0, w, h);
-        CGRect imgRect = CGRectMake(bw,
-                                    bw,
-                                    w - 2 * bw,
-                                    h - 2 * bw);
-
+        //total rect
+        CGRect rect = {
+            {0,0},
+            {width,height}
+        };
+        //image rect
+        CGRect imgRect = {
+            {borderWidth,borderWidth},
+            {width - 2 * borderWidth,height - 2 * borderWidth}
+        };
         //draw cornerBackground
         if (cornerBackgroundColor) {
             CGContextSaveGState(context);
@@ -222,63 +206,40 @@
             CGContextFillPath(context);
             CGContextRestoreGState(context);
         }
-
         //draw border
-        if (borderColor && bw != 0) {
+        if (borderColor && borderWidth != 0) {
             CGContextSaveGState(context);
-            CGContextAddEllipseInRect(context, imgRect);
+            UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:imgRect
+                                                                  cornerRadius:cornerRadius];
+            CGContextAddPath(context, bezierPath.CGPath);
             CGContextSetStrokeColorWithColor(context, borderColor.CGColor);
-            CGContextSetLineWidth(context, bw);
+            CGContextSetLineWidth(context, borderWidth);
             CGContextStrokePath(context);
             CGContextRestoreGState(context);
         }
-
-
-
-
-
         //draw cornerRadius image
-        CGContextBeginPath(context);
-        _addRadiusdRectToPath(context, imgRect, radius - bw, radius - bw);
-        CGContextClosePath(context);
-        CGContextClip(context);
-
-        CGContextDrawImage(context,
-                           imgRect,
-                           img.CGImage);
-
-        CGImageRef imageMasked = CGBitmapContextCreateImage(context);
-        img = [UIImage imageWithCGImage:imageMasked];
+        if (cornerRadius) {
+            UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:imgRect
+                                                                  cornerRadius:cornerRadius];
+            CGContextAddPath(context, bezierPath.CGPath);
+            CGContextClip(context);
+            CGContextDrawTiledImage(context, imgRect, image.CGImage);
+            CGImageRef imageMasked = CGBitmapContextCreateImage(context);
+            image = [UIImage imageWithCGImage:imageMasked];
+            CGImageRelease(imageMasked);
+        }
+        else {
+            //draw cornerRadius image
+            CGContextDrawTiledImage(context, imgRect, image.CGImage);
+            CGImageRef imageMasked = CGBitmapContextCreateImage(context);
+            image = [UIImage imageWithCGImage:imageMasked];
+            CGImageRelease(imageMasked);
+        }
         CGContextRelease(context);
         CGColorSpaceRelease(colorSpace);
-        CGImageRelease(imageMasked);
-        return img;
+        return image;
     }
-    return image;
+    return img;
 }
-
-static void _addRadiusdRectToPath(CGContextRef context, CGRect rect, float ovalWidth,float ovalHeight) {
-    float fw, fh;
-    if (ovalWidth == 0 || ovalHeight == 0) {
-        CGContextAddRect(context, rect);
-        return;
-    }
-    CGContextSaveGState(context);
-    CGContextTranslateCTM(context, CGRectGetMinX(rect), CGRectGetMinY(rect));
-    CGContextScaleCTM(context, ovalWidth, ovalHeight);
-    fw = CGRectGetWidth(rect) / ovalWidth;
-    fh = CGRectGetHeight(rect) / ovalHeight;
-
-    CGContextMoveToPoint(context, fw, fh/2);
-    CGContextAddArcToPoint(context, fw, fh, fw/2, fh, 1);
-    CGContextAddArcToPoint(context, 0, fh, 0, fh/2, 1);
-    CGContextAddArcToPoint(context, 0, 0, fw/2, 0, 1);
-    CGContextAddArcToPoint(context, fw, 0, fw, fh/2, 1);
-    
-    CGContextClosePath(context);
-    CGContextRestoreGState(context);
-}
-
-
 
 @end
