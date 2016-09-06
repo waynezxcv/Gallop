@@ -97,6 +97,21 @@ LWSERIALIZE_COPY_WITH_ZONE()
 
 
 #pragma mark - Getter & Setter
+
+- (void)setCenter:(CGPoint)center {
+    CGRect frame = self.frame;
+    frame.origin.x = center.x - frame.size.width * 0.5f;
+    frame.origin.y = center.y - frame.size.height * 0.5f;
+    self.frame = frame;
+}
+
+- (void)setBounds:(CGRect)bounds {
+    CGRect frame = self.frame;
+    frame = CGRectMake(frame.origin.x, frame.origin.y, bounds.size.width, bounds.size.height);
+    self.frame = frame;
+}
+
+
 - (CGRect)bounds {
     return CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
 }
@@ -130,17 +145,5 @@ LWSERIALIZE_COPY_WITH_ZONE()
                        self.frame.origin.y + self.frame.size.height * 0.5f);
 }
 
-- (void)setCenter:(CGPoint)center {
-    CGRect frame = self.frame;
-    frame.origin.x = center.x - frame.size.width * 0.5f;
-    frame.origin.y = center.y - frame.size.height * 0.5f;
-    self.frame = frame;
-}
-
-- (void)setBounds:(CGRect)bounds {
-    CGRect frame = self.frame;
-    frame = CGRectMake(frame.origin.x, frame.origin.y, bounds.size.width, bounds.size.height);
-    self.frame = frame;
-}
 
 @end
