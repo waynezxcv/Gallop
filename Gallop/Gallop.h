@@ -30,8 +30,6 @@
 #import "LWTextLayout.h"
 #import "GallopUtils.h"
 #import "NSMutableAttributedString+Gallop.h"
-#import "LWConstraintManager.h"
-#import "LWStorage+Constraint.h"
 #import "LWStorageBuilder.h"
 #import "LWHTMLLayout.h"
 #import "CALayer+WebCache.h"
