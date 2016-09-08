@@ -6,7 +6,7 @@
 
 # About Gallop
 
-Gallop是一个功能强大、性能优秀的图文混排界面构造框架。
+Gallop是一个功能强大、性能优秀的异步绘制、图文混排框架。你只需要使用框架中抽象的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIIamgeView）模型来方便、快速地构建图文混排界面，Gallop将为你通过各种优化手段，来确保你的应用的流畅性。
 
 ## Features
 
