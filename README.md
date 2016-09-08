@@ -257,7 +257,7 @@ XPath教程: http://www.w3school.com.cn/xpath/index.asp
 
 
 # 正在不断完善中...
-# 有任何问题请添加一个new issue，或者联系我liuweiself@126.com
+# 有任何问题请添加issue
 
 # License
 
