@@ -143,7 +143,9 @@ const CGFloat kRefreshBoundary = 170.0f;
 - (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
           atIndexPath:(NSIndexPath *)indexPath {
     self.commentView.placeHolder = @"评论";
-    [self.commentView.textView becomeFirstResponder];
+    if (![self.commentView.textView isFirstResponder]) {
+        [self.commentView.textView becomeFirstResponder];
+    }
     self.postComment.from = @"Waynezxcv的粉丝";
     self.postComment.to = @"";
     self.postComment.index = indexPath.row;
@@ -200,12 +202,17 @@ const CGFloat kRefreshBoundary = 170.0f;
     [imageBrowser show];
 }
 
-/***  点击链接 ***/
+
+/**
+ *  点击链接
+ */
 - (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
     if ([data isKindOfClass:[CommentModel class]]) {
         CommentModel* commentModel = (CommentModel *)data;
         self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",commentModel.to];
-        [self.commentView.textView becomeFirstResponder];
+        if (![self.commentView.textView isFirstResponder]) {
+            [self.commentView.textView becomeFirstResponder];
+        }
         self.postComment.from = @"waynezxcv的粉丝";
         self.postComment.to = commentModel.to;
         self.postComment.index = commentModel.index;
@@ -261,7 +268,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 - (void)keyboardDidAppearNotifications:(NSNotification *)notifications {
     NSDictionary *userInfo = [notifications userInfo];
-    CGSize keyboardSize = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize keyboardSize = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     CGFloat keyboardHeight = keyboardSize.height;
     self.commentView.frame = CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f - keyboardHeight, SCREEN_WIDTH, 44.0f);
 }
