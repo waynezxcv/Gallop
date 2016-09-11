@@ -6,9 +6,10 @@
 
 
 #import "RootViewController.h"
-#import "ViewController.h"
+#import "RichTextDemo1ViewController.h"
+#import "RichTextDemo2ViewController.h"
 #import "CornerRadiusViewController.h"
-#import "CoreTextDemoViewController.h"
+#import "MomentsViewController.h"
 #import "ArticleListViewController.h"
 
 
@@ -41,7 +42,7 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -51,16 +52,19 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"CoreText Demo";
+        cell.textLabel.text = @"LWTextStorage-图文混排和添加点击事件Demo";
     }
     else if (indexPath.row == 1) {
-        cell.textLabel.text = @"Corner Radius Demo";
+        cell.textLabel.text = @"LWTextStorage-富文本Demo";
     }
     else if (indexPath.row == 2) {
-        cell.textLabel.text = @"Wechat moment Demo";
+        cell.textLabel.text = @"LWImageStorage-图片设置圆角半径和模糊效果Demo";
     }
     else if (indexPath.row == 3) {
-        cell.textLabel.text = @"Zhihu Daily(HTML Parsing) Demo";
+        cell.textLabel.text = @"使用Gallop构建的顺滑的朋友圈Demo";
+    }
+    else if (indexPath.row == 4) {
+        cell.textLabel.text = @"使用Gallop进行HTML解析的知乎日报Demo";
     }
     return cell;
 }
@@ -68,18 +72,22 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 0) {
-        CoreTextDemoViewController* vc = [[CoreTextDemoViewController alloc] init];
+        RichTextDemo1ViewController* vc = [[RichTextDemo1ViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (indexPath.row == 1) {
-        CornerRadiusViewController* vc = [[CornerRadiusViewController alloc] init];
+        RichTextDemo2ViewController* vc = [[RichTextDemo2ViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (indexPath.row == 2) {
-        ViewController* vc = [[ViewController alloc] init];
+        CornerRadiusViewController* vc = [[CornerRadiusViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (indexPath.row == 3) {
+        MomentsViewController* vc = [[MomentsViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if (indexPath.row == 4) {
         ArticleListViewController* vc = [[ArticleListViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }

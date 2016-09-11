@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -88,6 +88,7 @@
     self.textDrawMode = LWTextDrawModeFill;
     self.strokeColor = [UIColor blackColor];
     self.strokeWidth = 1.0f;
+    self.textBoundingStrokeColor = nil;
 }
 
 #pragma mark - NSCoding
@@ -313,6 +314,15 @@ LWSERIALIZE_COPY_WITH_ZONE()
     }
     NSRange range = NSMakeRange(0, self.attributedText.length);
     [self.attributedText setTextBackgroundColor:self.textBackgroundColor range:range];
+    [self _creatTextLayout];
+}
+
+- (void)setTextBoundingStrokeColor:(UIColor *)textBoundingStrokeColor {
+    if (_textBoundingStrokeColor != textBoundingStrokeColor) {
+        _textBoundingStrokeColor = textBoundingStrokeColor;
+    }
+    NSRange range = NSMakeRange(0, self.attributedText.length);
+    [self.attributedText setTextBoundingStrokeColor:self.textBoundingStrokeColor range:range];
     [self _creatTextLayout];
 }
 

@@ -29,7 +29,7 @@
 #define LWTextLinkAttributedName @"LWTextLinkAttributedName"
 #define LWTextBackgroundColorAttributedName @"LWTextBackgroundColorAttributedName"
 #define LWTextStrokeAttributedName @"LWTextStrokeAttributedName"
-
+#define LWTextBoundingStrokeAttributedName @"LWTextBoundingStrokeAttributedName"
 
 /**
  *  文本的附件的封装，可以是图片或是UIView对象、CALayer对象
@@ -74,7 +74,7 @@
 
 
 /**
- *  文本背景颜色的封装，因在CoreText中无法直接设置文本背景颜色，（用来代替NSBackgroundColor）
+ *  文本背景颜色的封装
  */
 @interface LWTextBackgroundColor : NSObject  <NSCopying,NSCoding>
 
@@ -95,6 +95,21 @@
 @property (nonatomic,strong) UIColor* strokeColor;//描边颜色
 @property (nonatomic,assign) CGFloat strokeWidth;//描边的宽度
 @property (nonatomic,strong) NSDictionary* userInfo;//自定义的一些信息
+
+@end
+
+/**
+ *  文本边框
+ */
+
+@interface LWTextBoundingStroke : NSObject  <NSCopying,NSCoding>
+
+
+@property (nonatomic,assign) NSRange range;//在字符串的range
+@property (nonatomic,strong) UIColor* strokeColor;//描边颜色
+@property (nonatomic,copy) NSArray<NSValue *>* positions;//位置数组
+@property (nonatomic,strong) NSDictionary* userInfo;//自定义的一些信息
+
 
 @end
 

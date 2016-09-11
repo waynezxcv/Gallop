@@ -115,97 +115,196 @@ v0.2.2
 
 ## API Quickstart
 
-```objc
-#import "Gallop.h"
-```
-
-1.生成一个文本模型
-
-
-```objc
-LWTextStorage* textStorage = [[LWTextStorage alloc] init];
-textStorage.text = @"waynezxcv";
-textStorage.font = [UIFont systemFontOfSize:15.0f];
-textStorage.textColor = RGB(113, 129, 161, 1);
-
-/***  为文本添加点击链接事件  ***/
-[textStorage addLinkWithData:data
-inRange:NSMakeRange(0,statusModel.name.length)
-linkColor:RGB(113, 129, 161, 1)
-highLightColor:RGB(0, 0, 0, 0.15)];
-
-/***  点击链接回调  ***/
-- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedLinkWithfData:(id)data;
-
-/***  用本地图片替换掉指定位置的文字  ***/
-[textStorage lw_replaceTextWithImage:[UIImage imageNamed:@"img"]
-contentMode:UIViewContentModeScaleAspectFill
-imageSize:CGSizeMake(60, 60)
-alignment:LWTextAttachAlignmentTop
-range:NSMakeRange(webImageTextStorage.text.length - 7, 0)];
-
-
-/***  用网络图片替换掉指定位置的文字  ***/
-[textStorage lw_replaceTextWithImageURL:[NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"]
-contentMode:UIViewContentModeScaleAspectFill
-imageSize:CGSizeMake(60, 60)
-alignment:LWTextAttachAlignmentTop
-range:NSMakeRange(webImageTextStorage.text.length - 7, 0)];
-
-/***  用UIView替换掉指定位置的文字  ***/
-[textStorage lw_replaceTextWithView:[[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60.0f, 30.0f)]
-contentMode:UIViewContentModeScaleAspectFill
-size:CGSizeMake(60.0f, 30.0f)
-alignment:LWTextAttachAlignmentTop
-range:NSMakeRange(1,0)];
+1.使用LWTextStorage在文本中插入图片、添加点击事件
 
 ```
+//创建LWAsyncDisplayView对象
+    LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,                                                                     64.0,SCREEN_WIDTH,SCREEN_HEIGHT - 64.0f)];
+    //设置代理
+    view.delegate = self;
+    [self.view addSubview:view];
+    
+    //创建LWTextStorage对象
+    LWTextStorage* ts = [[LWTextStorage alloc] init];
+    ts.frame = CGRectMake(20, 50.0f,SCREEN_WIDTH - 40.0f, ts.suggestSize.height);
+    ts.text = @"Gallop支持图文混排,可以在文字中插入本地图片→和网络图片→UIView的子类→.给指定位置文字添加链接.快来试试吧。";
+    ts.font = [UIFont fontWithName:@"Heiti SC" size:16.0f];
+    
+    UIImage* image = [UIImage imageNamed:@"pic.jpeg"];
+    UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
+    
+    //在文字中插入本地图片
+    [ts lw_replaceTextWithImage:image
+                    contentMode:UIViewContentModeScaleAspectFill
+                      imageSize:CGSizeMake(40, 40)
+                      alignment:LWTextAttachAlignmentTop
+                          range:NSMakeRange(26, 0)];
+    
+    //在文字中插入网络图片
+    [ts lw_replaceTextWithImageURL:[NSURL URLWithString:@"http://joymepic.joyme.com/article/uploads/20163/81460101559518330.jpeg?imageView2/1"]
+                       contentMode:UIViewContentModeScaleAspectFill
+                         imageSize:CGSizeMake(80, 40)
+                         alignment:LWTextAttachAlignmentTop
+                             range:NSMakeRange(33, 0)];
+    //在文字中插入UIView的子类
+    [ts lw_replaceTextWithView:switchView
+                   contentMode:UIViewContentModeScaleAspectFill
+                          size:switchView.frame.size
+                     alignment:LWTextAttachAlignmentTop
+                         range:NSMakeRange(44, 0)];
+    
+    //给某位置的文字添加点击事件
+    [ts lw_addLinkWithData:@"链接 ：）"
+                     range:NSMakeRange(53,4)
+                 linkColor:[UIColor blueColor]
+            highLightColor:RGB(0, 0, 0, 0.15)];
+    
+    //给整段文字添加点击事件
+    [ts lw_addLinkForWholeTextStorageWithData:@"整段文字"
+                                    linkColor:nil
+                               highLightColor:RGB(0, 0, 0, 0.15)];
+    
+    //创建LWLayout对象
+    LWLayout* layout = [[LWLayout alloc] init];
+    //将LWTextStorage对象添加到LWLayout对象中
+    [layout addStorage:ts];
+    //将LWLayout对象赋值给LWAsyncDisplayView对象
+    view.layout = layout;
 
-2.生成一个图片模型
-```objc
+//给文字添加点击事件后，若触发事件，会在这个代理方法中收到回调
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
+    didCilickedTextStorage:(LWTextStorage *)textStorage
+                  linkdata:(id)data {
+    if ([data isKindOfClass:[NSString class]]) {
+        [LWAlertView shoWithMessage:data];
+    }
+}
 
-/***  本地图片  ***/
-LWImageStorage* imamgeStorage = [[LWImageStorage alloc] init];
-imamgeStorage.contents = [UIImage imageNamed:@"pic.jpeg"];
-imamgeStorage.frame = CGRectMake(textStorage.left, textStorage.bottom + 20.0f, 80, 80);
-imamgeStorage.cornerRadius = 40.0f;//设置圆角半径
-
-
-/***  网络图片  ***/
-LWImageStorage* imamgeStorage = [[LWImageStorage alloc] init];
-imamgeStorage.contents = [NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"];
-imamgeStorage.frame = CGRectMake(textStorage.left, textStorage.bottom + 20.0f, 80, 80);
-imamgeStorage.cornerRadius = 40.0f;
-
-/***  点击图片回调  ***/
-- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedImageStorage:(LWImageStorage *)imageStorage touch:(UITouch *)touch;
-
-```
-
-3.生成布局模型
-```objc
-LWLayout* layout = [[LWLayout alloc] init];
-
-/***  将LWstorage实例添加到layout当中  ***/
-[layout addStorage:textStorage];
-[layout addStorage:imamgeStorage];
-```
-
-4.创建LWAsyncDisplayView，并将LWLayout实例赋值给创建LWAsyncDisplayView对象
-
-```objc
-LWAsyncDisplayView* asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero];
-asyncDisplayView.layout = layout;
-[self.view addSubview:asyncDisplayView];
 
 
 ```
 
+2.LWTextStorage的更多用法
 
-5.解析HTML生成iOS原生页面
+```
+    //设置空心文字和文本外边框颜色
+    LWTextStorage* ts1 = [[LWTextStorage alloc] init];
+    ts1.text = @"世界对着它的爱人，把它浩翰的面具揭下了。它变小了，小如一首歌，小如一回永恒的接吻。The world puts off its mask of vastness to its lover.It becomes small as one song, as one kiss of the eternal. ";
+    ts1.textDrawMode = LWTextDrawModeStroke;
+    ts1.font = [UIFont fontWithName:@"Heiti SC" size:18.0f];
+    ts1.strokeColor = [UIColor redColor];
+    ts1.textBoundingStrokeColor = [UIColor grayColor];
+    ts1.frame = CGRectMake(20.0f,20.0f,SCREEN_WIDTH - 40.0f,CGFLOAT_MAX);
+    ts1.linespacing = 10.0f;
+    
+    //创建属性字符串，并设置各种样式
+    NSMutableAttributedString* as1 = [[NSMutableAttributedString alloc] initWithString:@"世界对着它的爱人，把它浩翰的面具揭下了。它变小了，小如一首歌，小如一回永恒的接吻。The world puts off its mask of vastness to its lover.It becomes small as one song, as one kiss of the eternal."];
+    [as1 setLineSpacing:7.0f range:NSMakeRange(0, as1.length)];
+    [as1 setFont:[UIFont systemFontOfSize:15.0f] range:NSMakeRange(0, as1.length)];
+    [as1 setTextColor:[UIColor yellowColor] range:NSMakeRange(0, 11)];
+    [as1 setTextBackgroundColor:[UIColor orangeColor] range:NSMakeRange(12, 19)];
+    [as1 setUnderlineStyle:NSUnderlineStyleSingle underlineColor:[UIColor greenColor] range:NSMakeRange(31, 26)];
+    [as1 setFont:[UIFont systemFontOfSize:20.0f] range:NSMakeRange(31, 26)];
+    [as1 setCharacterSpacing:10 range:NSMakeRange(62, 3)];
+    [as1 setFont:[UIFont systemFontOfSize:20.0f] range:NSMakeRange(62, 3)];
+    [as1 setTextColor:[UIColor redColor] range:NSMakeRange(62, 3)];
+    [as1 setStrokeColor:[UIColor blueColor] strokeWidth:2.0f range:NSMakeRange(66, 11)];
+    [as1 setFont:[UIFont systemFontOfSize:18.0f] range:NSMakeRange(66, 11)];
+    [as1 setTextColor:[UIColor whiteColor] range:NSMakeRange(78, 21)];
+    [as1 setTextBackgroundColor:[UIColor blackColor] range:NSMakeRange(78, 21)];
+    [as1 setFont:[UIFont systemFontOfSize:25]range:NSMakeRange(78, 21)];
+    [as1 setUnderlineStyle:NSUnderlineStyleDouble underlineColor:[UIColor whiteColor] range:NSMakeRange(77, 21)];
+    
+    //通过属性字符串个来创建LWTextStorage对象
+    LWTextStorage* ts2 = [LWTextStorage
+                          lw_textStrageWithText:as1
+                          frame:CGRectMake(ts1.left,
+                                           ts1.bottom + 20.0f,
+                                           ts1.width,
+                                           CGFLOAT_MAX)];
+    
+    
+    //在一个LWTextStorage对象后拼接一个LWTextStorage对象
+    LWTextStorage* ts3 = [[LWTextStorage alloc] init];
+    ts3.text = @"^_^ 我是那个尾巴~";
+    ts3.textColor = [UIColor redColor];
+    ts3.font = [UIFont systemFontOfSize:20];
+    [ts2 lw_appendTextStorage:ts3];
+    
+    //将图片装换成属性字符串拼接到LWTextStorage对象后
+    UIImage* image = [UIImage imageNamed:@"pic.jpeg"];
+    NSMutableAttributedString* as2 = [NSMutableAttributedString
+                                      lw_textAttachmentStringWithContent:image
+                                      contentMode:UIViewContentModeScaleAspectFill
+                                      ascent:50.0f
+                                      descent:0.0f
+                                      width:50.0f];
+    LWTextStorage* ts4 = [LWTextStorage lw_textStrageWithText:as2 frame:CGRectZero];
+    [ts2 lw_appendTextStorage:ts4];
+    
+    
+    //创建LWLayout对象
+    LWLayout* layout = [[LWLayout alloc] init];
+    //将LWStorage对象添加到LWLayout对象
+    [layout addStorages:@[ts1,ts2]];
+    //对LWAsyncDisplayView对象赋值
+    view.layout = layout;
 
-```objc
 
+```
+
+3.LWImageStorage的使用方法
+
+```
+    //普通的加载网络图片
+    LWImageStorage* is1 = [[LWImageStorage alloc] init];
+    is1.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, ts.bottom + 10.0f, 100.0f, 100.0f);
+    is1.clipsToBounds = YES;
+    is1.contents = [NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"];
+    
+    //设置圆角半径和模糊效果
+    LWImageStorage* is2 = [[LWImageStorage alloc] init];
+    is2.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, is1.bottom + 10.0f, 100.0f, 100.0f);
+    is2.contents = [NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"];
+    is2.cornerRadius = 50.0f;
+    is2.cornerBorderWidth = 10.0f;
+    is2.cornerBorderColor = [UIColor orangeColor];
+    is2.isBlur = YES;
+    
+    LWLayout* layout = [[LWLayout alloc] init];
+    [layout addStorages:@[ts,is1,is2]];
+    view.layout = layout;
+    
+    //也可以直接对CALayer对象使用
+    UIView* view2 = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 50,
+                                                                  64.0f + is2.bottom + 10 ,
+                                                                  100,
+                                                                  100)];
+    [self.view addSubview:view2];
+    /**
+     *  指定一个圆角半径、是否模糊处理和描边颜色和宽度，SDWebImage将额外缓存一份圆角半径版本的图片
+     *
+     */
+    [view2.layer lw_setImageWithURL:
+     [NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"]
+                   placeholderImage:nil
+                       cornerRadius:10.0f
+              cornerBackgroundColor:RGB(255, 255, 255, 1.0f)
+                        borderColor:[UIColor yellowColor]
+                        borderWidth:10.0f
+                               size:CGSizeMake(100.0f, 100)
+                             isBlur:NO
+                            options:0
+                           progress:nil
+                          completed:nil];
+
+
+
+```
+
+4.使用Gallop来进行HTML解析
+
+```
 /*** 创建LWHTMLDisplayView  ***/
 LWHTMLDisplayView* htmlView = [[LWHTMLDisplayView alloc] initWithFrame:self.view.bounds];
 htmlView.parentVC = self;

@@ -51,10 +51,11 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 @property (nonatomic,strong) NSMutableAttributedString* attributedText;//属性文本
 @property (nonatomic,strong) UIColor* textColor;//文本颜色
 @property (nonatomic,strong) UIColor* textBackgroundColor;//文本的背景颜色
+@property (nonatomic,strong) UIColor* textBoundingStrokeColor;//文本外边框描边
 @property (nonatomic,strong) UIFont* font;//字体
 @property (nonatomic,assign) CGFloat linespacing;//行间距
 @property (nonatomic,assign) unichar characterSpacing;//字间距
-@property (nonatomic,assign) NSTextAlignment textAlignment;//水平对齐方式
+@property (nonatomic,assign) NSTextAlignment textAlignment;//水平对齐方式，默认是NSTextAlignmentLeft
 @property (nonatomic,assign) NSUnderlineStyle underlineStyle;//下划线样式
 @property (nonatomic,strong) UIColor* underlineColor;//下划线颜色
 @property (nonatomic,assign) NSLineBreakMode lineBreakMode;//换行模式

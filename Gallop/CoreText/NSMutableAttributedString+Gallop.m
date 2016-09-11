@@ -42,6 +42,13 @@
     [self setAttribute:LWTextBackgroundColorAttributedName value:textBackground range:range];
 }
 
+- (void)setTextBoundingStrokeColor:(UIColor *)boundingStrokeColor range:(NSRange)range {
+    LWTextBoundingStroke* boundingStroke = [[LWTextBoundingStroke alloc] init];
+    boundingStroke.strokeColor = boundingStrokeColor;
+    boundingStroke.range = range;
+    [self setAttribute:LWTextBoundingStrokeAttributedName value:boundingStroke range:range];
+}
+
 - (void)setFont:(UIFont *)font range:(NSRange)range {
     [self setAttribute:NSFontAttributeName value:font range:range];
 }

@@ -32,7 +32,6 @@
 
 @class LWTextLine;
 
-
 /**
  *  文本布局模型，对CoreText的封装
  */
@@ -56,10 +55,12 @@
 @property (nonatomic,strong,readonly) NSMutableSet<id>* attachmentContentsSet;//附件内容的集合
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextHighlight *>* textHighlights;//一个包含文本链接的信息的数组
 @property (nonatomic,strong,readonly) NSMutableArray<LWTextBackgroundColor *>* backgroundColors;//一个包含文本背景颜色的信息的数组
+@property (nonatomic,strong,readonly) NSMutableArray<LWTextBoundingStroke *>* boudingStrokes;//一个包含文本边框描边信息的数组
 @property (nonatomic,assign,getter = isNeedDebugDraw) BOOL needDebugDraw;//是否开启调试绘制模式,默认是NO
 @property (nonatomic,assign,getter = isNeedAttachmentDraw) BOOL needAttachmentDraw;//是否需要绘制附件
 @property (nonatomic,assign,getter = isNeedTextBackgroundColorDraw) BOOL needTextBackgroundColorDraw;//是否需要绘制文本背景颜色
 @property (nonatomic,assign,getter = isNeedStrokeDraw) BOOL needStrokeDraw;//是否需要描边绘制
+@property (nonatomic,assign,getter = isNeedBoudingStrokeDraw) BOOL needBoudingStrokeDraw;//是否需要绘制文本边框描边
 
 /**
  *  构造方法

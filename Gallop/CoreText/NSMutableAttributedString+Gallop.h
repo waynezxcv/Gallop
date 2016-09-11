@@ -49,6 +49,15 @@
  */
 - (void)setTextBackgroundColor:(UIColor *)backgroundColor range:(NSRange)range;
 
+
+/**
+ *  设置文本边框描边颜色
+ *
+ *  @param boundingStrokeColor 文本边框描边颜色
+ *  @param range               范围
+ */
+- (void)setTextBoundingStrokeColor:(UIColor *)boundingStrokeColor range:(NSRange)range;
+
 /**
  *  设置文本字体
  *

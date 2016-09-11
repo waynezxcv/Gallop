@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,7 +49,7 @@
 @property (nonatomic,strong) NSMutableSet<id>* attachmentContentsSet;
 @property (nonatomic,strong) NSMutableArray<LWTextHighlight *>* textHighlights;
 @property (nonatomic,strong) NSMutableArray<LWTextBackgroundColor *>* backgroundColors;
-
+@property (nonatomic,strong) NSMutableArray<LWTextBoundingStroke *>* boudingStrokes;//一个包含文本边框描边信息的数组
 
 @end
 
@@ -103,6 +103,7 @@
     NSUInteger lineCurrentIndex = 0;
     NSMutableArray* highlights = [[NSMutableArray alloc] init];
     NSMutableArray* backgroundColors = [[NSMutableArray alloc] init];
+    NSMutableArray* boundingStrokes = [[NSMutableArray alloc] init];
     BOOL isNeedStroke = NO;
     for (NSUInteger i = 0; i < lineCount; i++) {
         CTLineRef ctLine = CFArrayGetValueAtIndex(ctLines, i);
@@ -146,7 +147,15 @@
                     [backgroundColors addObject:color];
                 }
             }
-
+            
+            LWTextBoundingStroke* boundingStroke = [attributes objectForKey:LWTextBoundingStrokeAttributedName];
+            if (boundingStroke) {
+                NSArray* boundingStrokePositions = [self _highlightPositionsWithCtFrame:ctFrame range:color.range];
+                boundingStroke.positions = boundingStrokePositions;
+                if (![boundingStrokes containsObject:boundingStroke]) {
+                    [boundingStrokes addObject:boundingStroke];
+                }
+            }
             LWTextStroke* textStroke = [attributes objectForKey:LWTextStrokeAttributedName];
             if (textStroke) {
                 isNeedStroke = YES;
@@ -194,6 +203,7 @@
     cgPath = [UIBezierPath bezierPathWithRect:cgPathBox].CGPath;
     layout.needTextBackgroundColorDraw = NO;
     layout.needAttachmentDraw = NO;
+    layout.needBoudingStrokeDraw = NO;
     layout.needStrokeDraw = isNeedStroke;
     layout.container = container;
     layout.text = mutableAtrributedText;
@@ -207,9 +217,16 @@
     layout.textBoundingSize = textBoundingSize;
     [layout.textHighlights addObjectsFromArray:highlights];
     [layout.backgroundColors addObjectsFromArray:backgroundColors];
+    [layout.boudingStrokes addObjectsFromArray:boundingStrokes];
+    
     if (layout.backgroundColors.count > 0) {
         layout.needTextBackgroundColorDraw = YES;
     }
+    
+    if (layout.boudingStrokes.count > 0) {
+        layout.needBoudingStrokeDraw = YES;
+    }
+    
     //******* attachments ********//
     for (NSUInteger i = 0; i < layout.linesArray.count; i ++) {
         LWTextLine* line = lines[i];
@@ -244,6 +261,7 @@
         self.attachmentContentsSet = [[NSMutableSet alloc] init];
         self.textHighlights = [[NSMutableArray alloc] init];
         self.backgroundColors = [[NSMutableArray alloc] init];
+        self.boudingStrokes = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -271,7 +289,14 @@
                                           point:point
                                     isCancelled:isCancelld];
     }
-
+    
+    if (self.isNeedBoudingStrokeDraw) {
+        [self _drawTextBoudingStrokeInContext:context
+                                   textLayout:self
+                                         size:size
+                                        point:point
+                                  isCancelled:isCancelld];
+    }
     if (self.isNeedDebugDraw) {
         [self _drawDebugInContext:context
                        textLayout:self
@@ -284,7 +309,7 @@
                         size:size
                        point:point
                  isCancelled:isCancelld];
-
+    
     if (self.isNeedAttachmentDraw) {
         [self _drawAttachmentsIncontext:context
                               textLayou:self
@@ -298,9 +323,10 @@
 
 - (void)_drawTextBackgroundColorInContext:(CGContextRef)context
                                textLayout:(LWTextLayout *)textLayout
-                                     size:(CGSize)size point:(CGPoint)point
+                                     size:(CGSize)size
+                                    point:(CGPoint)point
                               isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld  {
-
+    
     [textLayout.backgroundColors enumerateObjectsUsingBlock:^(LWTextBackgroundColor * _Nonnull background, NSUInteger idx, BOOL * _Nonnull stop) {
         if (isCancelld()) {
             return ;
@@ -314,6 +340,30 @@
             UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect cornerRadius:2.0f];
             [background.backgroundColor setFill];
             [beizerPath fill];
+        }
+    }];
+}
+
+- (void)_drawTextBoudingStrokeInContext:(CGContextRef)context
+                             textLayout:(LWTextLayout *)textLayout
+                                   size:(CGSize)size
+                                  point:(CGPoint)point
+                            isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld  {
+    [textLayout.boudingStrokes enumerateObjectsUsingBlock:^(LWTextBoundingStroke * _Nonnull boundingStroke, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (isCancelld()) {
+            return ;
+        }
+        for (NSValue* value in boundingStroke.positions) {
+            if (isCancelld()) {
+                break;
+            }
+            CGRect rect = [value CGRectValue];
+            CGRect adjustRect = CGRectMake(point.x + rect.origin.x, point.y + rect.origin.y, rect.size.width, rect.size.height);
+            
+            UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect cornerRadius:2.0f];
+            [boundingStroke.strokeColor setStroke];
+            [beizerPath setLineWidth:1.0f];
+            [beizerPath stroke];
         }
     }];
 }

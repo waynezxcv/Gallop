@@ -160,3 +160,32 @@ LWSERIALIZE_COPY_WITH_ZONE()
 @end
 
 
+/**
+ *  文本边框
+ */
+
+@implementation LWTextBoundingStroke
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.range = NSMakeRange(0, 0);
+        self.strokeColor = [UIColor clearColor];
+        self.userInfo = @{};
+    }
+    return self;
+}
+
+#pragma mark - NSCoding
+
+LWSERIALIZE_CODER_DECODER();
+
+
+#pragma mark - NSCopying
+
+LWSERIALIZE_COPY_WITH_ZONE()
+
+
+@end
+
+

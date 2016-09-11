@@ -16,7 +16,7 @@
 
 
 
-#import "ViewController.h"
+#import "MomentsViewController.h"
 #import "LWImageBrowser.h"
 #import "TableViewCell.h"
 #import "TableViewHeader.h"
@@ -28,7 +28,7 @@
 #import "CommentModel.h"
 #import "LWAlertView.h"
 
-@interface ViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
+@interface MomentsViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
 
 @property (nonatomic,strong) NSArray* fakeDatasource;
 @property (nonatomic,strong) TableViewHeader* tableViewHeader;
@@ -42,7 +42,7 @@
 
 const CGFloat kRefreshBoundary = 170.0f;
 
-@implementation ViewController
+@implementation MomentsViewController
 
 #pragma mark - ViewControllerLifeCycle
 
