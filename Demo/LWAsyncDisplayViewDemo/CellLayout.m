@@ -17,6 +17,10 @@
 
 
 #define MAX_TEXT_HEIGHT 100.0f
+#define MESSAGE_TYPE_IMAGE @"image"
+#define MESSAGE_TYPE_WEBSITE @"website"
+#define MESSAGE_TYPE_VIDEO @"video"
+#define AVATAR_IDENTIFIER @"avatar"
 
 @implementation CellLayout
 
@@ -27,7 +31,7 @@
     if (self) {
         self.statusModel = statusModel;
         //头像模型 avatarImageStorage
-        LWImageStorage* avatarStorage = [[LWImageStorage alloc] initWithIdentifier:@"avatar"];
+        LWImageStorage* avatarStorage = [[LWImageStorage alloc] initWithIdentifier:AVATAR_IDENTIFIER];
         avatarStorage.contents = statusModel.avatar;
         avatarStorage.cornerRadius = 20.0f;
         avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
@@ -96,7 +100,7 @@
         NSMutableArray* imagePositionArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
 
         //图片类型
-        if ([self.statusModel.type isEqualToString:@"image"]) {
+        if ([self.statusModel.type isEqualToString:MESSAGE_TYPE_IMAGE]) {
             NSInteger row = 0;
             NSInteger column = 0;
             if (imageCount == 1) {
@@ -141,7 +145,7 @@
         }
 
         //网页链接类型
-        else if ([self.statusModel.type isEqualToString:@"website"]) {
+        else if ([self.statusModel.type isEqualToString:MESSAGE_TYPE_WEBSITE]) {
             //这个CGRect用来绘制背景颜色
             self.websiteRect = CGRectMake(nameTextStorage.left,
                                           contentBottom + 5.0f,
@@ -177,7 +181,7 @@
         }
 
         //视频类型
-        else if ([self.statusModel.type isEqualToString:@"video"]) {
+        else if ([self.statusModel.type isEqualToString:MESSAGE_TYPE_VIDEO]) {
             //TODO：
 
         }
@@ -192,7 +196,7 @@
 
         //菜单按钮
         CGRect menuPosition = CGRectZero;
-        if (![self.statusModel.type isEqualToString:@"video"]) {
+        if (![self.statusModel.type isEqualToString:MESSAGE_TYPE_VIDEO]) {
             menuPosition = CGRectMake(SCREEN_WIDTH - 54.0f,
                                       10.0f + contentTextStorage.bottom - 14.5f,
                                       44.0f,
@@ -406,7 +410,7 @@
 
         self.statusModel = statusModel;
         //头像模型 avatarImageStorage
-        LWImageStorage* avatarStorage = [[LWImageStorage alloc] initWithIdentifier:@"avatar"];
+        LWImageStorage* avatarStorage = [[LWImageStorage alloc] initWithIdentifier:AVATAR_IDENTIFIER];
         avatarStorage.contents = statusModel.avatar;
         avatarStorage.cornerRadius = 20.0f;
         avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
@@ -467,7 +471,7 @@
         NSMutableArray* imagePositionArray = [[NSMutableArray alloc] initWithCapacity:imageCount];
 
         //图片类型
-        if ([self.statusModel.type isEqualToString:@"image"]) {
+        if ([self.statusModel.type isEqualToString:MESSAGE_TYPE_IMAGE]) {
             NSInteger row = 0;
             NSInteger column = 0;
             if (imageCount == 1) {
@@ -513,7 +517,7 @@
         }
 
         //网页链接类型
-        else if ([self.statusModel.type isEqualToString:@"website"]) {
+        else if ([self.statusModel.type isEqualToString:MESSAGE_TYPE_WEBSITE]) {
             //这个CGRect用来绘制背景颜色
             self.websiteRect = CGRectMake(nameTextStorage.left,
                                           contentBottom + 5.0f,
@@ -549,7 +553,7 @@
         }
 
         //视频类型
-        else if ([self.statusModel.type isEqualToString:@"video"]) {
+        else if ([self.statusModel.type isEqualToString:MESSAGE_TYPE_VIDEO]) {
             //TODO：
 
         }
@@ -643,7 +647,8 @@
             }
             offsetY += likeTextStorage.height + 5.0f;
         }
-        if (statusModel.commentList.count != 0 && statusModel.commentList != nil) {
+        if (statusModel.commentList.count != 0 &&
+            statusModel.commentList != nil) {
             if (self.statusModel.likeList.count != 0) {
                 self.lineRect = CGRectMake(nameTextStorage.left,
                                            likeTextStorage.bottom + 2.5f,
