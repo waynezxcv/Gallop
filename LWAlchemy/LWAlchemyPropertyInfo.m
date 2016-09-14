@@ -32,47 +32,35 @@
 @property (nonatomic,strong) NSString* propertyName;
 @property (nonatomic,strong) NSArray* mapperName;
 @property (nonatomic,strong) NSString* ivarName;
-@property (nonatomic,assign) LWPropertyType type;
-@property (nonatomic,assign) LWPropertyNSObjectType nsType;
+@property (nonatomic,assign) Ivar ivar;
 @property (nonatomic,assign) Class cls;
 @property (nonatomic,strong) NSString* getter;
 @property (nonatomic,strong) NSString* setter;
-@property (nonatomic,assign,getter=isReadonly) BOOL readonly;
-@property (nonatomic,assign,getter=isDynamic) BOOL dynamic;
-@property (nonatomic,assign,getter=isIdType) BOOL idType;
-@property (nonatomic,assign,getter=isNumberType) BOOL numberType;
-@property (nonatomic,assign,getter=isObjectType) BOOL objectType;
-@property (nonatomic,assign,getter=isFoundationType) BOOL foundationType;
-@property (nonatomic,copy) NSString* typeEncoding;
+
+@property (nonatomic,assign) LWTypeKind typeKind;
+@property (nonatomic,assign) LWTypeProperty typeProperty;
+@property (nonatomic,assign) LWType type;
+@property (nonatomic,assign) LWNSType nsType;
+
 
 @end
 
 @implementation LWAlchemyPropertyInfo
 
+#pragma mark - Initial
+
 - (id)initWithProperty:(objc_property_t)property customMapper:(NSDictionary *)mapper {
     self = [super init];
     if (self) {
-        self.readonly = NO;
-        self.dynamic = NO;
-        self.idType = NO;
-        self.numberType = NO;
-        self.objectType = NO;
-        self.foundationType = NO;
         self.property = property;
+        self.typeProperty = LWTypePropertyPlaceholder;
         unsigned int attrCount;
         objc_property_attribute_t* attributes = property_copyAttributeList(property, &attrCount);
         for (unsigned int i = 0; i < attrCount; i++) {
             switch (attributes[i].name[0]) {
                 case 'T': {
                     if (attributes[i].value) {
-                        self.type = _GetPropertyInfoType(self, attributes[i].value);
-                        if (self.type == LWPropertyTypeObject) {
-                            self.cls = _GetPropertyInfoClass(attributes[i].value);
-                            self.nsType = _GetObjectNSType(self.cls);
-                            if (self.nsType != LWPropertyNSObjectTypeNSUnknown) {
-                                self.foundationType = YES;
-                            }
-                        }
+                        _setTypeAndTypeKind(self,attributes[i].value);
                     }
                 } break;
                 case 'V': {
@@ -91,10 +79,22 @@
                     }
                 }break;
                 case 'R': {
-                    self.readonly = YES;
+                    self.typeProperty |= LWTypePropertyReadonly;
                 } break;
                 case 'D': {
-                    self.dynamic = YES;
+                    self.typeProperty |= LWTypePropertyDynamic;
+                }break;
+                case 'C': {
+                    self.typeProperty |= LWTypePropertyCopy;
+                } break;
+                case '&': {
+                    self.typeProperty |= LWTypePropertyRetain;
+                } break;
+                case 'N': {
+                    self.typeProperty |= LWTypePropertyNonatomic;
+                } break;
+                case 'W': {
+                    self.typeProperty |= LWTypePropertyWeak;
                 } break;
                 default:break;
             }
@@ -131,98 +131,143 @@
     return self;
 }
 
-- (void)setType:(LWPropertyType)type {
-    _type = type;
-    switch (_type) {
-        case LWPropertyTypeBool:
-        case LWPropertyTypeInt8:
-        case LWPropertyTypeUInt8:
-        case LWPropertyTypeInt16:
-        case LWPropertyTypeUInt16:
-        case LWPropertyTypeInt32:
-        case LWPropertyTypeUInt32:
-        case LWPropertyTypeInt64:
-        case LWPropertyTypeUInt64:
-        case LWPropertyTypeFloat:
-        case LWPropertyTypeDouble:
-        case LWPropertyTypeLongDouble:self.numberType = YES;break;
-        case LWPropertyTypeObject:self.objectType = YES;break;
-        case LWPropertyTypeBlock:break;
-        case LWPropertyTypeClass:break;
-        case LWPropertyTypeUnkonw:break;
-        case LWPropertyTypeVoid:break;
-        case LWPropertyTypeCFString:break;
-        case LWPropertyTypeCFArray:break;
-        case LWPropertyTypeUnion:break;
-        case LWPropertyTypeStruct:break;
-        case LWPropertyTypePointer:break;
-        case LWPropertyTypeSEL:break;
-        default:break;
-    }
-}
+#pragma mark - Type
 
-static inline LWPropertyNSObjectType _GetObjectNSType(Class cls) {
-    if (!cls) return LWPropertyNSObjectTypeNSUnknown;
-    if ([cls isSubclassOfClass:[NSString class]]) return LWPropertyNSObjectTypeNSString;
-    if ([cls isSubclassOfClass:[NSMutableString class]]) return LWPropertyNSObjectTypeNSMutableString;
-    if ([cls isSubclassOfClass:[NSDecimalNumber class]]) return LWPropertyNSObjectTypeNSDecimalNumber;
-    if ([cls isSubclassOfClass:[NSNumber class]]) return LWPropertyNSObjectTypeNSNumber;
-    if ([cls isSubclassOfClass:[NSValue class]]) return LWPropertyNSObjectTypeNSValue;
-    if ([cls isSubclassOfClass:[NSMutableData class]]) return LWPropertyNSObjectTypeNSMutableData;
-    if ([cls isSubclassOfClass:[NSData class]]) return LWPropertyNSObjectTypeNSData;
-    if ([cls isSubclassOfClass:[NSDate class]]) return LWPropertyNSObjectTypeNSDate;
-    if ([cls isSubclassOfClass:[NSURL class]]) return LWPropertyNSObjectTypeNSURL;
-    if ([cls isSubclassOfClass:[NSMutableArray class]]) return LWPropertyNSObjectTypeNSMutableArray;
-    if ([cls isSubclassOfClass:[NSArray class]]) return LWPropertyNSObjectTypeNSArray;
-    if ([cls isSubclassOfClass:[NSMutableDictionary class]]) return LWPropertyNSObjectTypeNSMutableDictionary;
-    if ([cls isSubclassOfClass:[NSDictionary class]]) return LWPropertyNSObjectTypeNSDictionary;
-    if ([cls isSubclassOfClass:[NSMutableSet class]]) return LWPropertyNSObjectTypeNSMutableSet;
-    if ([cls isSubclassOfClass:[NSSet class]]) return LWPropertyNSObjectTypeNSSet;
-    return LWPropertyNSObjectTypeNSUnknown;
-}
-
-
-static LWPropertyType _GetPropertyInfoType(LWAlchemyPropertyInfo* propertyInfo, const char* value) {
+static inline void _setTypeAndTypeKind(LWAlchemyPropertyInfo* propertyInfo,const char *value) {
     size_t len = strlen(value);
-    if (len == 0) return LWPropertyTypeUnkonw;
-    switch (* value) {
-        case 'v': {return LWPropertyTypeVoid;}
-        case 'B': {return LWPropertyTypeBool;}
-        case 'c': {return LWPropertyTypeInt8;}
-        case 'C': {return LWPropertyTypeUInt8;}
-        case 's': {return LWPropertyTypeInt16;}
-        case 'S': {return LWPropertyTypeUInt16;}
-        case 'i': {return LWPropertyTypeInt32;}
-        case 'I': {return LWPropertyTypeUInt32;}
-        case 'l': {return LWPropertyTypeInt32;}
-        case 'L': {return LWPropertyTypeUInt32;}
-        case 'q': {return LWPropertyTypeInt64;}
-        case 'Q': {return LWPropertyTypeUInt64;}
-        case 'f': {return LWPropertyTypeFloat;}
-        case 'd': {return LWPropertyTypeDouble;}
-        case 'D': {return LWPropertyTypeLongDouble;}
-        case '#': {return LWPropertyTypeClass;}
-        case ':': {return LWPropertyTypeSEL;}
-        case '*': {return LWPropertyTypeCFString;}
-        case '^': {return LWPropertyTypePointer;}
-        case '[': {return LWPropertyTypeCFArray;}
-        case '(': {return LWPropertyTypeUnion;}
-        case '{': {return LWPropertyTypeStruct;}
+    if (len == 0) {
+        propertyInfo.typeKind = LWTypeKindUnknow;
+    }
+    switch (*value) {
+        case 'v': {
+            propertyInfo.typeKind = LWTypeKindCFObject;
+            propertyInfo.type = LWTypeVoid;
+        }break;
+        case 'B': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeBool;
+        }break;
+        case 'c': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeInt8;
+        }break;
+        case 'C': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeUInt8;
+        }break;
+        case 's': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeInt16;
+        }break;
+        case 'S': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeUInt16;
+        }break;
+        case 'i': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeInt32;
+        }break;
+        case 'I': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeUInt32;
+        }break;
+        case 'l': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeInt32;
+        }break;
+        case 'L': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeUInt32;
+        }break;
+        case 'q': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeInt64;
+        }break;
+        case 'Q': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeUInt64;
+        }break;
+        case 'f': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeFloat;
+        }break;
+        case 'd': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeDouble;
+        }break;
+        case 'D': {
+            propertyInfo.typeKind = LWTypeKindNumber;
+            propertyInfo.type = LWTypeLongDouble;
+        }break;
+        case '#': {
+            propertyInfo.typeKind = LWTypeKindCFObject;
+            propertyInfo.type = LWTypeClass;
+        }break;
+        case ':': {
+            propertyInfo.typeKind = LWTypeKindCFObject;
+            propertyInfo.type = LWTypeSEL;
+        }break;
+        case '*': {
+            propertyInfo.typeKind = LWTypeKindCFObject;
+            propertyInfo.type = LWTypeCFString;
+        }break;
+        case '^': {
+            propertyInfo.typeKind = LWTypeKindCFObject;
+            propertyInfo.type = LWTypePointer;
+        }break;
+        case '[': {
+            propertyInfo.typeKind = LWTypeKindCFObject;
+            propertyInfo.type = LWTypeCFArray;
+        }break;
+        case '(': {
+            propertyInfo.typeKind = LWTypeKindCFObject;
+            propertyInfo.type = LWTypeUnion;
+        }break;
+        case '{': {
+            propertyInfo.typeKind = LWTypeKindCFObject;
+            propertyInfo.type = LWTypeStruct;
+        }break;
         case '@': {
             if (len == 2 && *(value + 1) == '?'){
-                return LWPropertyTypeBlock;
+                propertyInfo.typeKind = LWTypeKindCFObject;
+                propertyInfo.type = LWTypeBlock;
             } else {
+                propertyInfo.typeKind = LWTypeKindNSOrCustomObject;
                 if (len == 1) {
-                    propertyInfo.idType = YES;
+                    propertyInfo.nsType = LWNSTypeId;
+                } else {
+                    propertyInfo.cls = _getPropertyInfoClass(value);
+                    propertyInfo.nsType = _getObjectNSType(propertyInfo.cls);
                 }
-                return LWPropertyTypeObject;
             }
-        }
-        default:{return LWPropertyTypeUnkonw;}
+        }break;
+        default:{
+            propertyInfo.typeKind = LWTypeKindUnknow;
+        }break;
     }
 }
 
-static Class _GetPropertyInfoClass(const char* value) {
+static inline LWNSType _getObjectNSType(Class cls) {
+    if (!cls) return LWNSTypeNSUnknown;
+    if ([cls isSubclassOfClass:[NSString class]]) return LWNSTypeNSString;
+    if ([cls isSubclassOfClass:[NSMutableString class]]) return LWNSTypeNSMutableString;
+    if ([cls isSubclassOfClass:[NSDecimalNumber class]]) return LWNSTypeNSDecimalNumber;
+    if ([cls isSubclassOfClass:[NSNumber class]]) return LWNSTypeNSNumber;
+    if ([cls isSubclassOfClass:[NSValue class]]) return LWNSTypeNSValue;
+    if ([cls isSubclassOfClass:[NSMutableData class]]) return LWNSTypeNSMutableData;
+    if ([cls isSubclassOfClass:[NSData class]]) return LWNSTypeNSData;
+    if ([cls isSubclassOfClass:[NSDate class]]) return LWNSTypeNSDate;
+    if ([cls isSubclassOfClass:[NSURL class]]) return LWNSTypeNSURL;
+    if ([cls isSubclassOfClass:[NSMutableArray class]]) return LWNSTypeNSMutableArray;
+    if ([cls isSubclassOfClass:[NSArray class]]) return LWNSTypeNSArray;
+    if ([cls isSubclassOfClass:[NSMutableDictionary class]]) return LWNSTypeNSMutableDictionary;
+    if ([cls isSubclassOfClass:[NSDictionary class]]) return LWNSTypeNSDictionary;
+    if ([cls isSubclassOfClass:[NSMutableSet class]]) return LWNSTypeNSMutableSet;
+    if ([cls isSubclassOfClass:[NSSet class]]) return LWNSTypeNSSet;
+    return LWNSTypeNSUnknown;
+}
+
+static inline Class _getPropertyInfoClass(const char* value) {
     size_t len = strlen(value);
     if (len > 3) {
         char name[len - 2];

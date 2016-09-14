@@ -41,7 +41,7 @@
 - (instancetype)modelWithDictionary:(NSDictionary *)dictionary;
 
 /**
- *  由NSDictionary生成Entity（CoreData）
+ *  由NSDictionary生成Entity（NSManagedObject的子类）
  *
  */
 - (instancetype)entity:(NSManagedObject *)object

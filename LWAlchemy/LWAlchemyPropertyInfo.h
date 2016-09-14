@@ -26,53 +26,72 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-typedef NS_ENUM(NSUInteger, LWPropertyType) {
-    LWPropertyTypeUnkonw        = 0,
-    LWPropertyTypeVoid          = 1,
-    LWPropertyTypeBool          = 2,
-    LWPropertyTypeInt8          = 3,
-    LWPropertyTypeUInt8         = 4,
-    LWPropertyTypeInt16         = 5,
-    LWPropertyTypeUInt16        = 6,
-    LWPropertyTypeInt32         = 7,
-    LWPropertyTypeUInt32        = 8,
-    LWPropertyTypeInt64         = 9,
-    LWPropertyTypeUInt64        = 10,
-    LWPropertyTypeFloat         = 11,
-    LWPropertyTypeDouble        = 12,
-    LWPropertyTypeLongDouble    = 13,
-    LWPropertyTypeClass         = 14,
-    LWPropertyTypeSEL           = 15,
-    LWPropertyTypeCFString      = 16,
-    LWPropertyTypePointer       = 17,
-    LWPropertyTypeCFArray       = 18,
-    LWPropertyTypeUnion         = 19,
-    LWPropertyTypeStruct        = 20,
-    LWPropertyTypeObject        = 21,
-    LWPropertyTypeBlock         = 22
+
+
+typedef NS_ENUM(NSUInteger, LWTypeKind) {
+    LWTypeKindUnknow                = 1,
+    LWTypeKindNumber                = 2,
+    LWTypeKindCFObject              = 3,
+    LWTypeKindNSOrCustomObject      = 4,
 };
 
-
-typedef NS_ENUM (NSUInteger, LWPropertyNSObjectType) {
-    LWPropertyNSObjectTypeNSUnknown             = 0,
-    LWPropertyNSObjectTypeNSString              = 1,
-    LWPropertyNSObjectTypeNSMutableString       = 2,
-    LWPropertyNSObjectTypeNSValue               = 3,
-    LWPropertyNSObjectTypeNSNumber              = 4,
-    LWPropertyNSObjectTypeNSDecimalNumber       = 5,
-    LWPropertyNSObjectTypeNSData                = 6,
-    LWPropertyNSObjectTypeNSMutableData         = 7,
-    LWPropertyNSObjectTypeNSDate                = 8,
-    LWPropertyNSObjectTypeNSURL                 = 9,
-    LWPropertyNSObjectTypeNSArray               = 10,
-    LWPropertyNSObjectTypeNSMutableArray        = 11,
-    LWPropertyNSObjectTypeNSDictionary          = 12,
-    LWPropertyNSObjectTypeNSMutableDictionary   = 13,
-    LWPropertyNSObjectTypeNSSet                 = 14,
-    LWPropertyNSObjectTypeNSMutableSet          = 15
+typedef NS_OPTIONS(NSUInteger, LWTypeProperty) {
+    LWTypePropertyPlaceholder    = 1 << 1,
+    LWTypePropertyReadonly       = 1 << 2,
+    LWTypePropertyDynamic        = 1 << 3,
+    LWTypePropertyCopy           = 1 << 4,
+    LWTypePropertyRetain         = 1 << 5,
+    LWTypePropertyWeak           = 1 << 6,
+    LWTypePropertyNonatomic      = 1 << 7,
 };
 
+typedef NS_ENUM(NSUInteger, LWType) {
+    LWTypeVoid,
+    LWTypeBool,
+    LWTypeInt8,
+    LWTypeUInt8,
+    LWTypeInt16,
+    LWTypeUInt16,
+    LWTypeInt32,
+    LWTypeUInt32,
+    LWTypeInt64,
+    LWTypeUInt64,
+    LWTypeFloat,
+    LWTypeDouble,
+    LWTypeLongDouble,
+    LWTypeClass,
+    LWTypeSEL,
+    LWTypeCFString,
+    LWTypePointer,
+    LWTypeCFArray,
+    LWTypeUnion,
+    LWTypeStruct,
+    LWTypeBlock,
+};
 
+typedef NS_ENUM(NSUInteger, LWNSType) {
+    LWNSTypeNSUnknown,
+    LWNSTypeId,
+    LWNSTypeNSString,
+    LWNSTypeNSMutableString,
+    LWNSTypeNSValue,
+    LWNSTypeNSNumber,
+    LWNSTypeNSDecimalNumber,
+    LWNSTypeNSData,
+    LWNSTypeNSMutableData,
+    LWNSTypeNSDate,
+    LWNSTypeNSURL,
+    LWNSTypeNSArray,
+    LWNSTypeNSMutableArray,
+    LWNSTypeNSDictionary,
+    LWNSTypeNSMutableDictionary,
+    LWNSTypeNSSet,
+    LWNSTypeNSMutableSet,
+};
+
+/**
+ *  对objc_property_t的封装
+ */
 @interface LWAlchemyPropertyInfo : NSObject
 
 @property (nonatomic,assign,readonly) objc_property_t property;
@@ -80,19 +99,16 @@ typedef NS_ENUM (NSUInteger, LWPropertyNSObjectType) {
 @property (nonatomic,strong,readonly) NSArray* mapperName;
 @property (nonatomic,strong,readonly) NSString* ivarName;
 @property (nonatomic,assign,readonly) Ivar ivar;
-@property (nonatomic,assign,readonly) LWPropertyType type;
-@property (nonatomic,assign,readonly) LWPropertyNSObjectType nsType;
-@property (nonatomic,copy,readonly) NSString* typeEncoding;
 @property (nonatomic,assign,readonly) Class cls;
 @property (nonatomic,strong,readonly) NSString* getter;
 @property (nonatomic,strong,readonly) NSString* setter;
-@property (nonatomic,assign,readonly,getter=isReadonly) BOOL readonly;
-@property (nonatomic,assign,readonly,getter=isDynamic) BOOL dynamic;
-@property (nonatomic,assign,readonly,getter=isNumberType) BOOL numberType;
-@property (nonatomic,assign,readonly,getter=isObjectType) BOOL objectType;
-@property (nonatomic,assign,readonly,getter=isIdType) BOOL idType;
-@property (nonatomic,assign,readonly,getter=isFoundationType) BOOL foundationType;
+@property (nonatomic,assign,readonly) LWTypeKind typeKind;
+@property (nonatomic,assign,readonly) LWTypeProperty typeProperty;
+@property (nonatomic,assign,readonly) LWType type;
+@property (nonatomic,assign,readonly) LWNSType nsType;
+
 
 - (id)initWithProperty:(objc_property_t)property customMapper:(NSDictionary *)mapper;
+
 
 @end
