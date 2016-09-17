@@ -385,7 +385,7 @@
 				0130235C1D43B061005EAE25 /* Model */,
 				B08CFE2B1D02CD4100A8B70D /* _Transactions */,
 				B079C2841CD8C58F003B15D3 /* _CoreText */,
-				01D5B32D1D37F630007C5CB1 /* LWWebImage */,
+				01D5B32D1D37F630007C5CB1 /* WebImage */,
 				01E2107D1D0451ED0006E7D5 /* TextParser */,
 				0134D11C1D16A12F00FB91FF /* HTMLParser */,
 				B085B3431CB68D1000087739 /* Utils */,
@@ -542,7 +542,7 @@
 			name = "CornerRaius Demo";
 			sourceTree = "<group>";
 		};
-		01D5B32D1D37F630007C5CB1 /* LWWebImage */ = {
+		01D5B32D1D37F630007C5CB1 /* WebImage */ = {
 			isa = PBXGroup;
 			children = (
 				B0F7678F1CF2BF4C00050EAE /* CALayer+WebCache.h */,
@@ -558,7 +558,7 @@
 				B062A5D41D758E27008F3D74 /* UIImage+BlurEffects.h */,
 				B062A5D51D758E27008F3D74 /* UIImage+BlurEffects.m */,
 			);
-			name = LWWebImage;
+			name = WebImage;
 			sourceTree = "<group>";
 		};
 		01E2107D1D0451ED0006E7D5 /* TextParser */ = {

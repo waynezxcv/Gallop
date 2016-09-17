@@ -91,16 +91,6 @@
     self.textBoundingStrokeColor = nil;
 }
 
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
-
-#pragma mark - NSCopying
-
-LWSERIALIZE_COPY_WITH_ZONE()
-
-
 #pragma mark - Methods
 /***  为整个文本添加链接  ***/
 - (void)lw_addLinkForWholeTextStorageWithData:(id)data

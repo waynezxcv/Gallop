@@ -25,15 +25,16 @@
 #ifndef Gallop_h
 #define Gallop_h
 
+
+#import "NSMutableAttributedString+Gallop.h"
 #import "LWAsyncDisplayView.h"
 #import "LWHTMLDisplayView.h"
 #import "LWTextLayout.h"
-#import "GallopUtils.h"
-#import "NSMutableAttributedString+Gallop.h"
 #import "LWStorageBuilder.h"
 #import "LWHTMLLayout.h"
 #import "CALayer+WebCache.h"
 #import "LWTextParser.h"
 #import "GallopDefine.h"
+#import "GallopUtils.h"
 
 #endif /* Gallop_h */

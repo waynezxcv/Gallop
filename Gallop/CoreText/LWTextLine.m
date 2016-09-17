@@ -227,14 +227,4 @@
     return CGRectGetMaxX(self.frame);
 }
 
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
-
-#pragma mark - NSCopying
-
-LWSERIALIZE_COPY_WITH_ZONE()
-
-
 @end

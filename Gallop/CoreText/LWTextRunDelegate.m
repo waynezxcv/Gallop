@@ -62,13 +62,33 @@ static CGFloat LWTextWidthCallback(void *ref) {
 
 #pragma mark - NSCoding
 
-LWSERIALIZE_CODER_DECODER();
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.CTRunDelegate = (__bridge CTRunDelegateRef _Nullable)([aDecoder decodeObjectForKey:@"CTRunDelegate"]);
+        self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"];
+        self.ascent = [aDecoder decodeFloatForKey:@"ascent"];
+        self.descent = [aDecoder decodeFloatForKey:@"descent"];
+        self.width = [aDecoder decodeFloatForKey:@"width"];
+        self.height = [aDecoder decodeFloatForKey:@"height"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.CTRunDelegate forKey:@"CTRunDelegate"];
+    [aCoder encodeObject:self.userInfo forKey:@"userInfo"];
+    [aCoder encodeFloat:self.ascent forKey:@"ascent"];
+    [aCoder encodeFloat:self.descent forKey:@"descent"];
+    [aCoder encodeFloat:self.width forKey:@"width"];
+    [aCoder encodeFloat:self.height forKey:@"height"];
+}
 
 
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(nullable NSZone *)zone {
-    LWTextRunDelegate* delegate = [[[self class] allocWithZone:zone] init];
+    LWTextRunDelegate* delegate = [[[self class] alloc] init];
     delegate.ascent = self.ascent;
     delegate.descent = self.descent;
     delegate.width = self.width;

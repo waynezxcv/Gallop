@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 /**
  *  文本绘制的数据模型
  */
-@interface LWTextStorage : LWStorage<NSCopying,NSCoding>
+@interface LWTextStorage : LWStorage
 
 @property (nonatomic,strong,readonly) LWTextLayout* textLayout;//文本布局模型
 @property (nonatomic,copy) NSString* text;//文本

@@ -43,13 +43,13 @@
 @property (nonatomic,strong) NSArray<LWTextLine *>* linesArray;
 @property (nonatomic,assign) CGRect textBoundingRect;
 @property (nonatomic,assign) CGSize textBoundingSize;
-@property (nonatomic,strong) NSMutableArray<LWTextAttachment *>* attachments;
-@property (nonatomic,strong) NSMutableArray<NSValue *>* attachmentRanges;
-@property (nonatomic,strong) NSMutableArray<NSValue *>* attachmentRects;
-@property (nonatomic,strong) NSMutableSet<id>* attachmentContentsSet;
-@property (nonatomic,strong) NSMutableArray<LWTextHighlight *>* textHighlights;
-@property (nonatomic,strong) NSMutableArray<LWTextBackgroundColor *>* backgroundColors;
-@property (nonatomic,strong) NSMutableArray<LWTextBoundingStroke *>* boudingStrokes;//一个包含文本边框描边信息的数组
+@property (nonatomic,strong) NSArray<LWTextAttachment *>* attachments;
+@property (nonatomic,strong) NSArray<NSValue *>* attachmentRanges;
+@property (nonatomic,strong) NSArray<NSValue *>* attachmentRects;
+@property (nonatomic,strong) NSSet<id>* attachmentContentsSet;
+@property (nonatomic,strong) NSArray<LWTextHighlight *>* textHighlights;
+@property (nonatomic,strong) NSArray<LWTextBackgroundColor *>* backgroundColors;
+@property (nonatomic,strong) NSArray<LWTextBoundingStroke *>* boudingStrokes;
 
 @end
 
@@ -215,10 +215,9 @@
     layout.linesArray = lines;
     layout.textBoundingRect = textBoundingRect;
     layout.textBoundingSize = textBoundingSize;
-    [layout.textHighlights addObjectsFromArray:highlights];
-    [layout.backgroundColors addObjectsFromArray:backgroundColors];
-    [layout.boudingStrokes addObjectsFromArray:boundingStrokes];
-    
+    layout.textHighlights = [highlights copy];
+    layout.backgroundColors = [backgroundColors copy];
+    layout.boudingStrokes = [boundingStrokes copy];
     if (layout.backgroundColors.count > 0) {
         layout.needTextBackgroundColorDraw = YES;
     }
@@ -228,19 +227,30 @@
     }
     
     //******* attachments ********//
+    NSMutableArray* tmpAttachments = [[NSMutableArray alloc] init];
+    NSMutableArray* tmpAttachmentRanges = [[NSMutableArray alloc] init];
+    NSMutableArray* tmpAttachmentRects = [[NSMutableArray alloc] init];
+    NSMutableArray* tmpcontentsSet = [[NSMutableArray alloc] init];
+    
     for (NSUInteger i = 0; i < layout.linesArray.count; i ++) {
         LWTextLine* line = lines[i];
         if (line.attachments.count > 0) {
-            [layout.attachments addObjectsFromArray:line.attachments];
-            [layout.attachmentRanges addObjectsFromArray:line.attachmentRanges];
-            [layout.attachmentRects addObjectsFromArray:line.attachmentRects];
+            [tmpAttachments addObjectsFromArray:line.attachments];
+            [tmpAttachmentRanges addObjectsFromArray:line.attachmentRanges];
+            [tmpAttachmentRects addObjectsFromArray:line.attachmentRects];
             for (LWTextAttachment* attachment in line.attachments) {
                 if (attachment.content) {
-                    [layout.attachmentContentsSet addObject:attachment.content];
+                    [tmpcontentsSet addObject:attachment.content];
                 }
             }
         }
     }
+    
+    layout.attachments = [tmpAttachments copy];
+    layout.attachmentRanges = [tmpAttachmentRanges copy];
+    layout.attachmentRects = [tmpAttachmentRects copy];
+    layout.attachmentContentsSet = [tmpcontentsSet copy];
+
     if (layout.attachments.count > 0) {
         layout.needAttachmentDraw = YES;
     }
@@ -255,13 +265,6 @@
     if (self) {
         self.sizeToFit = YES;
         self.needDebugDraw = NO;
-        self.attachments = [[NSMutableArray alloc] init];
-        self.attachmentRanges = [[NSMutableArray alloc] init];
-        self.attachmentRects = [[NSMutableArray alloc] init];
-        self.attachmentContentsSet = [[NSMutableSet alloc] init];
-        self.textHighlights = [[NSMutableArray alloc] init];
-        self.backgroundColors = [[NSMutableArray alloc] init];
-        self.boudingStrokes = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -491,6 +494,7 @@
             break;
         }
         LWTextAttachment* attachment = textLayout.attachments[i];
+        
         if (!attachment.content) {
             continue;
         }
@@ -504,11 +508,13 @@
         } else if ([attachment.content isKindOfClass:[CALayer class]]) {
             layer = attachment.content;
         }
+        
         if ((!image && !view && !layer) || (!image && !view && !layer) ||
             (image && !context) || (view && !containerView)
             || (layer && !containerLayer)) {
             continue;
         }
+        
         CGSize asize = image ? image.size : view ? view.frame.size : layer.frame.size;
         CGRect rect = ((NSValue *)textLayout.attachmentRects[i]).CGRectValue;
         rect = UIEdgeInsetsInsetRect(rect,attachment.contentEdgeInsets);
@@ -733,15 +739,5 @@ static CGRect LWCGRectFitWithContentMode(CGRect rect, CGSize size, UIViewContent
     }
     return rect;
 }
-
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
-
-#pragma mark - NSCopying
-
-LWSERIALIZE_COPY_WITH_ZONE()
-
 
 @end

@@ -48,15 +48,25 @@
     return self;
 }
 
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
-
 #pragma mark - NSCopying
 
-LWSERIALIZE_COPY_WITH_ZONE()
-
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextAttachment* attachment = [[LWTextAttachment alloc] init];
+    
+    if ([self.content conformsToProtocol:@protocol(NSCopying)]) {
+        attachment.content = [self.content copy];
+    }
+    else {
+        attachment.content = self.content;
+    }
+    attachment.range = self.range;
+    attachment.frame = self.frame;
+    attachment.URL = [self.URL copy];
+    attachment.contentMode = self.contentMode;
+    attachment.contentEdgeInsets = self.contentEdgeInsets;
+    attachment.userInfo = [self.userInfo copy];
+    return attachment;
+}
 
 @end
 
@@ -93,14 +103,23 @@ LWSERIALIZE_COPY_WITH_ZONE()
     return other.content == _content && [NSValue valueWithRange:other.range] == [NSValue valueWithRange:self.range];
 }
 
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
-
 #pragma mark - NSCopying
 
-LWSERIALIZE_COPY_WITH_ZONE()
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextHighlight* highlight = [[LWTextHighlight alloc] init];
+    if ([self.content conformsToProtocol:@protocol(NSCopying)]) {
+        highlight.content = [self.content copy];
+    }
+    else {
+        highlight.content = self.content;
+    }
+    highlight.range = self.range;
+    highlight.linkColor = [self.linkColor copy];
+    highlight.hightlightColor = [self.hightlightColor copy];
+    highlight.positions = [self.positions copy];
+    highlight.userInfo = [self.userInfo copy];
+    return highlight;
+}
 
 
 @end
@@ -114,20 +133,22 @@ LWSERIALIZE_COPY_WITH_ZONE()
         self.backgroundColor = [UIColor clearColor];
         self.range = NSMakeRange(0, 0);
         self.userInfo = @{};
+        self.positions = @[];
     }
     return self;
 }
 
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
 
 #pragma mark - NSCopying
 
-LWSERIALIZE_COPY_WITH_ZONE()
-
-
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextBackgroundColor* bgColor = [[LWTextBackgroundColor alloc] init];
+    bgColor.backgroundColor = [self.backgroundColor copy];
+    bgColor.range = self.range;
+    bgColor.userInfo = [self.userInfo copy];
+    bgColor.positions = [self.positions copy];
+    return bgColor;
+}
 
 @end
 
@@ -146,16 +167,16 @@ LWSERIALIZE_COPY_WITH_ZONE()
     return self;
 }
 
-
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
-
 #pragma mark - NSCopying
 
-LWSERIALIZE_COPY_WITH_ZONE()
-
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextStroke* stroke = [[LWTextStroke alloc] init];
+    stroke.strokeColor = [self.strokeColor copy];
+    stroke.range = self.range;
+    stroke.userInfo = [self.userInfo copy];
+    stroke.strokeWidth = self.strokeWidth;
+    return stroke;
+}
 
 @end
 
@@ -176,15 +197,16 @@ LWSERIALIZE_COPY_WITH_ZONE()
     return self;
 }
 
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
-
 #pragma mark - NSCopying
 
-LWSERIALIZE_COPY_WITH_ZONE()
-
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextBoundingStroke* stroke = [[LWTextBoundingStroke alloc] init];
+    stroke.strokeColor = [self.strokeColor copy];
+    stroke.range = self.range;
+    stroke.userInfo = [self.userInfo copy];
+    stroke.positions = [self.positions copy];
+    return stroke;
+}
 
 @end
 

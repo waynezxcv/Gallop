@@ -157,16 +157,6 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
     }
 }
 
-#pragma mark - NSCoding
-
-LWSERIALIZE_CODER_DECODER();
-
-
-#pragma mark - NSCopying
-
-LWSERIALIZE_COPY_WITH_ZONE()
-
-
 #pragma mark - Methods
 
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight {

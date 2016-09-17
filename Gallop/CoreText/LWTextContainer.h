@@ -29,7 +29,7 @@
 /**
  *  文本容器，包含文本绘制的范围大小、路径、会edgeInsets等信息
  */
-@interface LWTextContainer : NSObject<NSCopying,NSCoding>
+@interface LWTextContainer : NSObject
 
 @property (nonatomic,assign,readonly) CGSize size;//容器的大小
 @property (nonatomic,strong,readonly) UIBezierPath* path;//容器的路径
