@@ -93,7 +93,7 @@
  5/3/2013
  */
 
-#import "UIImage+ImageEffects.h"
+#import "UIImage+BlurEffects.h"
 #import <float.h>
 @import Accelerate;
 

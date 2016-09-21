@@ -29,9 +29,8 @@
 #import "GallopDefine.h"
 
 
-#define kImageBrowserWidth ([UIScreen mainScreen].bounds.size.width + 10.0f)
-#define kImageBrowserHeight [UIScreen mainScreen].bounds.size.height
-
+#define kImageBrowserWidth (SCREEN_WIDTH + 10.0f)
+#define kImageBrowserHeight SCREEN_HEIGHT
 
 
 @interface LWImageBrowserModel ()

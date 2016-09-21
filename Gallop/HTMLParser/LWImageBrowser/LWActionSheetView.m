@@ -24,7 +24,7 @@
 
 
 #import "LWActionSheetView.h"
-#import "UIImage+ImageEffects.h"
+#import "UIImage+BlurEffects.h"
 #import "LWActionSheetTableViewCell.h"
 #import "GallopDefine.h"
 
@@ -137,7 +137,10 @@ const CGFloat cellHeight = 60.0f;
 - (void)_hide {
     __weak typeof(self) weakSelf = self;
     [UIView animateWithDuration:0.2f animations:^{
-        weakSelf.tableView.frame = CGRectMake(0.0f, SCREEN_HEIGHT, SCREEN_WIDTH,cellHeight * self.titlesCount);
+        weakSelf.tableView.frame = CGRectMake(0.0f,
+                                              SCREEN_HEIGHT,
+                                              SCREEN_WIDTH,
+                                              cellHeight * self.titlesCount);
         weakSelf.screenshotImageView.alpha = 0.0f;
     } completion:^(BOOL finished) {
         [weakSelf removeFromSuperview];

@@ -14,4 +14,7 @@
 #define SCREEN_BOUNDS [UIScreen mainScreen].bounds
 #define RGB(A,B,C,D) [UIColor colorWithRed:A/255.0f green:B/255.0f blue:C/255.0f alpha:D]
 
+
+
+
 #endif /* GallopDefine_h */

@@ -29,40 +29,28 @@
 #import "GallopDefine.h"
 
 
-typedef NS_ENUM(NSUInteger, LWElementType) {
-    LWHTMLElementTypeText = 0,
-    LWHTMLElementTypeImage,
-    LWElementTypeLink
-};
-
 @interface LWStorageBuilder ()<LWHTMLParserDelegate>
 
 @property (nonatomic,strong) LWHTMLParser* parser;
-@property (nonatomic,copy) NSString* xpath;
-@property (nonatomic,copy) NSArray<LWStorage *>* storages;
-@property (nonatomic,assign) CGFloat offsetY;
-@property (nonatomic,copy) NSDictionary* configDict;
-@property (nonatomic,assign) UIEdgeInsets edgeInsets;
-
-@property (nonatomic,assign) BOOL isTagEnd;
-@property (nonatomic,copy) NSString* parentTag;
-@property (nonatomic,assign) LWElementType currentType;
-@property (nonatomic,strong) _LWHTMLLink* currentLink;
-@property (nonatomic,strong) _LWHTMLTag* currentTag;
-
+@property (nonatomic,strong) LWHTMLNode* tagElement;
+@property (nonatomic,strong) LWHTMLNode* currentNode;
+@property (nonatomic,copy) NSString* xpathTag;
 @property (nonatomic,strong) NSMutableString* contentString;
+@property (nonatomic,strong) NSMutableArray* imageCallbacksArray;
 @property (nonatomic,strong) NSMutableArray* tmpStorages;
 @property (nonatomic,strong) NSMutableString* tmpString;
-@property (nonatomic,strong) NSMutableArray* tmpLinks;
-@property (nonatomic,strong) NSMutableArray* tmpTags;
-@property (nonatomic,strong) NSMutableArray* imageCallbacksArray;
+@property (nonatomic,assign) CGFloat offsetY;
+@property (nonatomic,assign) UIEdgeInsets edgeInsets;
+@property (nonatomic,copy) NSDictionary* configDict;
+@property (nonatomic,copy) NSString* xpath;
+@property (nonatomic,strong) LWHTMLNode* tree;
 
 @end
 
 
 @implementation LWStorageBuilder
 
-#pragma mark - Init
+#pragma mark - Initial
 
 - (id)initWithData:(NSData *)data encoding:(NSStringEncoding)encoding {
     if (!data) {
@@ -70,11 +58,8 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     }
     self = [super init];
     if (self) {
-        self.isTagEnd = YES;
-        self.offsetY = 0.0f;
         self.parser = [[LWHTMLParser alloc] initWithData:data encoding:encoding];
         self.parser.delegate = self;
-        self.imageCallbacksArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -85,168 +70,172 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
                       edgeInsets:(UIEdgeInsets)edgeInsets
                 configDictionary:(NSDictionary *)dict {
     self.xpath = [xpath copy];
+    self.configDict = [dict copy];
     self.edgeInsets = edgeInsets;
     self.offsetY = self.edgeInsets.top;
-    self.configDict = [dict copy];
+    self.imageCallbacksArray = [[NSMutableArray alloc] init];
     [self.parser startSearchWithXPathQuery:xpath];
 }
 
 - (void)createLWStorageWithXPath:(NSString *)xpath {
     self.xpath = [xpath copy];
-    self.edgeInsets = UIEdgeInsetsZero;
-    self.offsetY = self.edgeInsets.top;
-    self.configDict = nil;
     [self.parser startSearchWithXPathQuery:xpath];
-}
-
-#pragma mark - Getter
-- (NSArray<LWStorage *>*)storages {
-    return [self.tmpStorages copy];
-}
-
-- (LWStorage *)firstStorage {
-    if (self.tmpStorages.count) {
-        return [self.tmpStorages objectAtIndex:0];
-    }
-    return nil;
-}
-
-- (LWStorage *)lastStorage {
-    return [self.tmpStorages lastObject];
-}
-
-- (NSString *)contents {
-    return [self.contentString copy];
-}
-
-- (NSArray<LWImageStorage *>*)imageCallbacks {
-    return self.imageCallbacksArray;
 }
 
 #pragma mark - ParserDelegate
 
 - (void)parserDidStartDocument:(LWHTMLParser *)parser {
     self.contentString = [[NSMutableString alloc] init];
-    [self.tmpStorages removeAllObjects];
+    self.tmpStorages = [[NSMutableArray alloc] init];
+    self.tagElement = nil;
 }
 
-- (void)parser:(LWHTMLParser *)parser didStartElement:(NSString *)elementName attributes:(NSDictionary *)attributeDict {
-    if ([elementName isEqualToString:@"html"] || [elementName isEqualToString:@"body"]) {
-        return;
+- (void)parser:(LWHTMLParser *)parser didStartElement:(NSString *)elementName
+    attributes:(NSDictionary *)attributeDict {
+    
+    LWHTMLNode* node = [[LWHTMLNode alloc] initWithElementName:elementName
+                                                 attributeDict:attributeDict];
+    if (self.currentNode) {
+        [self.currentNode.children addObject:node];
+        node.parent = self.currentNode;
     }
-    if (self.isTagEnd) {
-        self.isTagEnd = NO  ;
-        self.parentTag = elementName;
+    
+    self.currentNode = node;
+    if ([elementName isEqualToString:self.xpathTag]) {
+        self.tagElement = self.currentNode;
         self.tmpString = [[NSMutableString alloc] init];
-        self.tmpLinks = [[NSMutableArray alloc] init];
-        self.tmpTags = [[NSMutableArray alloc] init];
-    }
-    LWElementType type = [self _elementTypeWithElementName:elementName];
-    switch (type) {
-        case LWHTMLElementTypeText: {
-            self.currentType = LWHTMLElementTypeText;
-            self.currentTag = [[_LWHTMLTag alloc] init];
-            self.currentTag.tagName = elementName;
-            self.currentTag.isParent = NO;
-            if ([self.parentTag isEqualToString:elementName]) {
-                self.currentTag.isParent = YES;
-            }
-        }break;
-        case LWHTMLElementTypeImage: {
-            self.currentType = LWHTMLElementTypeImage;
-            if (attributeDict[@"src"]) {
-                LWHTMLImageConfig* imageConfig = [LWHTMLImageConfig defaultsConfig];
-                if (self.configDict[@"img"] && [self.configDict[@"img"] isKindOfClass:[LWHTMLImageConfig class]]) {
-                    imageConfig = self.configDict[@"img"];
-                }
-                LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
-                imageStorage.contents = [NSURL URLWithString:[NSString stringWithFormat:@"%@",(NSString *)attributeDict[@"src"]]];
-                CGFloat width = (imageConfig.size.width >= SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right) ?
-                SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right : imageConfig.size.width;
-                imageStorage.frame = CGRectMake(self.edgeInsets.left,
-                                                self.edgeInsets.top,
-                                                width,
-                                                imageConfig.size.height);
-                imageStorage.clipsToBounds = YES;
-                imageStorage.placeholder = imageConfig.placeholder;
-                imageStorage.htmlLayoutEdgeInsets = self.edgeInsets;
-                
-                if (imageConfig.autolayoutHeight) {
-                    imageStorage.needResize = YES;
-                }
-                
-                imageStorage.userInteractionEnabled = imageConfig.userInteractionEnabled;
-                self.offsetY += (imageStorage.height + imageConfig.paragraphSpacing);
-                [self.tmpStorages addObject:imageStorage];
-                if (imageConfig.needAddToImageBrowser && ![self.imageCallbacksArray containsObject:imageStorage]) {
-                    [self.imageCallbacksArray addObject:imageStorage];
-                }
-            }
-        }break;
-        case LWElementTypeLink: {
-            self.currentType = LWElementTypeLink;
-            if (!self.currentLink) {
-                self.currentLink = [[_LWHTMLLink alloc] init];
-                self.currentLink.URL = attributeDict[@"href"];
-            }
-        }break;
     }
 }
 
 - (void)parser:(LWHTMLParser *)parser foundCharacters:(NSString *)string {
-    if (!string || !string.length) {
-        return;
+    if (self.tmpString && self.tagElement != self.currentNode) {
+        NSRange range = NSMakeRange(self.tmpString.length, string.length);
+        self.currentNode.range = range;
     }
+    [self.tmpString appendString:string];
     [self.contentString appendString:string];
-    switch (self.currentType) {
-        case LWHTMLElementTypeText: {
-            if (self.tmpString) {
-                if (self.currentTag) {
-                    self.currentTag.range =  NSMakeRange(self.tmpString.length, string.length);
-                }
-                [self.tmpString appendString:string];
-                if (![self.currentTag.tagName isEqualToString:self.parentTag]) {
-                    _LWHTMLTag* aTag = [[_LWHTMLTag alloc] init];
-                    aTag.range = self.currentTag.range;
-                    aTag.tagName = [self.currentTag.tagName copy];
-                    aTag.isParent = self.currentTag.isParent;
-                    if (aTag.tagName) {
-                        [self.tmpTags addObject:aTag];
-                    }
-                }
-                self.currentTag = nil;
-            }
-        } break;
-        case LWElementTypeLink: {
-            if (self.currentLink) {
-                self.currentLink.range = NSMakeRange(self.tmpString.length, string.length);
-                [self.tmpString appendString:string];
-                _LWHTMLLink* aLink = [[_LWHTMLLink alloc] init];
-                aLink.URL = [self.currentLink.URL copy];
-                aLink.range = self.currentLink.range;
-                [self.tmpLinks addObject:aLink];
-                self.currentLink = nil;
-            }
-        } break;
-        case LWHTMLElementTypeImage:
-            break;
-    }
+    self.currentNode.contentString = string;
+    self.tagElement.contentString = [self.tmpString copy];
 }
 
 - (void)parser:(LWHTMLParser *)parser didEndElement:(NSString *)elementName {
-    if (![self.parentTag isEqualToString:elementName]) {
-        self.currentType = [self _elementTypeWithElementName:self.parentTag];
+    if (self.tagElement == self.currentNode) {
+        self.tagElement.isTag = YES;
+        self.tagElement.range = NSMakeRange(0, self.tagElement.contentString.length);
+        self.tmpString = nil;
+        self.tagElement = nil;
+    }
+    if (self.currentNode.parent) {
+        self.currentNode = self.currentNode.parent;
+    }
+}
+
+- (void)parserDidEndDocument:(LWHTMLParser *)parser {
+    self.tree = self.currentNode;
+    [self _preorderTraversing:self.currentNode];
+    self.currentNode = nil;
+    self.xpath = nil;
+    self.configDict = nil;
+}
+
+#pragma mark - Building
+
+- (void)_preorderTraversing:(LWHTMLNode *)node {
+    LWStorage* storage = [self _nodeToStorage:node];
+    if (storage) {
+        [self.tmpStorages addObject:storage];
+    }
+    if (!node.children || !node.children.count) {
         return;
     }
-    self.isTagEnd = YES;
-    NSMutableAttributedString* attributedString = nil;
-    LWHTMLTextConfig* config = [LWHTMLTextConfig defaultsTextConfig];
-    if (self.configDict[elementName] && [self.configDict[elementName] isKindOfClass:[LWHTMLTextConfig class]]) {
-        config = self.configDict[elementName];
+    for (LWHTMLNode* aNode in node.children) {
+        [self _preorderTraversing:aNode];
     }
-    NSString* string = [[self.tmpString stringByNormalizingWhitespace] copy];
-    NSRange range = NSMakeRange(0, string.length);
-    attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+}
+
+- (LWStorage *)_nodeToStorage:(LWHTMLNode *)node {
+    if ([node.elementName isEqualToString:@"img"]) {
+        if (node.attributeDict[@"src"]) {
+            LWHTMLImageConfig* imageConfig = [LWHTMLImageConfig defaultsConfig];
+            if (self.configDict[@"img"] &&
+                [self.configDict[@"img"] isKindOfClass:[LWHTMLImageConfig class]]) {
+                imageConfig = self.configDict[@"img"];
+            }
+            LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+            imageStorage.contents = [NSURL URLWithString:[NSString stringWithFormat:@"%@",
+                                                          (NSString *)node.attributeDict[@"src"]]];
+            
+            CGFloat width = (imageConfig.size.width >= SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right) ?
+            SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right : imageConfig.size.width;
+            
+            imageStorage.frame = CGRectMake(self.edgeInsets.left,
+                                            self.edgeInsets.top,
+                                            width,
+                                            imageConfig.size.height);
+            imageStorage.clipsToBounds = YES;
+            imageStorage.placeholder = imageConfig.placeholder;
+            imageStorage.htmlLayoutEdgeInsets = self.edgeInsets;
+            
+            if (imageConfig.autolayoutHeight) {
+                imageStorage.needResize = YES;
+            }
+            
+            imageStorage.userInteractionEnabled = imageConfig.userInteractionEnabled;
+            self.offsetY += (imageStorage.height + imageConfig.paragraphSpacing);
+            
+            if (imageConfig.needAddToImageBrowser &&
+                ![self.imageCallbacksArray containsObject:imageStorage]) {
+                [self.imageCallbacksArray addObject:imageStorage];
+            }
+            return imageStorage;
+        }
+        return nil;
+    } else {
+        if (!node.isTag) {
+            return nil;
+        }
+        LWHTMLTextConfig* config = [LWHTMLTextConfig defaultsTextConfig];
+        if (self.configDict[node.elementName] &&
+            [self.configDict[node.elementName] isKindOfClass:[LWHTMLTextConfig class]]) {
+            config = self.configDict[node.elementName];
+        }
+        if (!node.contentString) {
+            return nil;
+        }
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc]
+                                                       initWithString:node.contentString];
+        NSRange range = node.range;
+        _setAttribute(attributedString, config,range);
+        for (LWHTMLNode* child in node.children) {
+            if ([child.elementName isEqualToString:@"a"] && child.attributeDict[@"href"]) {
+                [attributedString addLinkWithData:child.attributeDict[@"href"]
+                                            range:child.range
+                                        linkColor:config.linkColor
+                                   highLightColor:config.linkHighlightColor];
+            } else {
+                if (self.configDict[child.elementName] &&
+                    [self.configDict[child.elementName] isKindOfClass:[LWHTMLTextConfig class]]) {
+                    LWHTMLTextConfig* chidConfig = [self.configDict objectForKey:child.elementName];
+                    _setAttribute(attributedString, chidConfig,child.range);
+                }
+            }
+        }
+        CGRect frame = CGRectMake(self.edgeInsets.left,
+                                  self.edgeInsets.top,
+                                  SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right,
+                                  CGFLOAT_MAX);
+        LWTextStorage* textStorage = [LWTextStorage lw_textStrageWithText:attributedString
+                                                                    frame:frame];
+        textStorage.textDrawMode  = config.textDrawMode;
+        textStorage.htmlLayoutEdgeInsets = self.edgeInsets;
+        self.offsetY += (textStorage.height + config.paragraphSpacing);
+        return textStorage;
+    }
+}
+
+static inline void _setAttribute(__unsafe_unretained NSMutableAttributedString* attributedString,
+                                 __unsafe_unretained LWHTMLTextConfig* config,
+                                 NSRange range) {
     [attributedString setTextColor:config.textColor range:range];
     [attributedString setTextBackgroundColor:config.textBackgroundColor range:range];
     [attributedString setFont:config.font range:range];
@@ -255,80 +244,50 @@ typedef NS_ENUM(NSUInteger, LWElementType) {
     [attributedString setTextAlignment:config.textAlignment range:range];
     [attributedString setUnderlineStyle:config.underlineStyle underlineColor:config.underlineColor range:range];
     [attributedString setLineBreakMode:config.lineBreakMode range:range];
-    for (NSInteger i = 0; i < self.tmpTags.count; i ++) {
-        _LWHTMLTag* aTag = self.tmpTags[i];
-        if (!self.configDict[aTag.tagName] || ![self.configDict[aTag.tagName] isKindOfClass:[LWHTMLTextConfig class]]) {
-            continue;
-        }
-        LWHTMLTextConfig* chilredConfig = self.configDict[aTag.tagName];
-        [attributedString setTextColor:chilredConfig.textColor range:aTag.range];
-        [attributedString setTextBackgroundColor:chilredConfig.textBackgroundColor range:aTag.range];
-        [attributedString setFont:chilredConfig.font range:aTag.range];
-        [attributedString setLineSpacing:chilredConfig.linespacing range:aTag.range];
-        [attributedString setCharacterSpacing:chilredConfig.characterSpacing range:aTag.range];
-        [attributedString setTextAlignment:chilredConfig.textAlignment range:aTag.range];
-        [attributedString setUnderlineStyle:chilredConfig.underlineStyle underlineColor:config.underlineColor range:aTag.range];
-        [attributedString setLineBreakMode:chilredConfig.lineBreakMode range:aTag.range];
-    }
-    if (self.tmpLinks && self.tmpLinks.count) {
-        for (_LWHTMLLink* aLink in self.tmpLinks) {
-            [attributedString addLinkWithData:aLink.URL range:aLink.range linkColor:config.linkColor highLightColor:config.linkHighlightColor];
-        }
-    }
-    CGRect frame = CGRectMake(self.edgeInsets.left,self.edgeInsets.top,SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right,CGFLOAT_MAX);
-    if (attributedString.length) {
-        LWTextStorage* textStorage = [LWTextStorage lw_textStrageWithText:attributedString frame:frame];
-        textStorage.textDrawMode  = config.textDrawMode;
-        textStorage.htmlLayoutEdgeInsets = self.edgeInsets;
-        self.offsetY += (textStorage.height + config.paragraphSpacing);
-        [self.tmpStorages addObject:textStorage];
-    }
-    self.tmpString = nil;
-    self.tmpLinks = nil;
-    self.tmpTags = nil;
 }
 
-- (void)parserDidEndDocument:(LWHTMLParser *)parser {
-    self.xpath = nil;
-    self.isTagEnd = YES;
-    self.parentTag = nil;
-    self.currentType = 0;
-    self.currentLink = nil;
-    self.tmpLinks = nil;
-    self.configDict = nil;
-    self.tmpString = nil;
-}
-
-#pragma mark - Private
-
-- (LWElementType)_elementTypeWithElementName:(NSString *)elementName {
-    if ([elementName isEqualToString:@"a"]) {
-        return LWElementTypeLink;
-    }
-    else if ([elementName isEqualToString:@"img"]) {
-        return LWHTMLElementTypeImage;
-    }
-    else {
-        return LWHTMLElementTypeText;
-    }
-}
 
 #pragma mark - Getter
 
-- (NSMutableArray *)tmpStorages {
-    if (_tmpStorages) {
-        return _tmpStorages;
+- (NSString *)xpathTag {
+    NSString* xpathTag = @"";
+    if (self.xpath) {
+        NSArray* mached = [self.xpath componentsSeparatedByString:@"/"];
+        NSString* last = [mached lastObject];
+        if (!last) {
+            return xpathTag;
+        }
+        xpathTag = last;
+        if ([last containsString:@"["]) {
+            NSRange r = [last rangeOfString:@"["];
+            xpathTag = [last substringToIndex:r.location];
+        }
     }
-    _tmpStorages = [[NSMutableArray alloc] init];
-    return _tmpStorages;
+    return xpathTag;
 }
 
-@end
+- (NSString *)contents {
+    return [self.contentString copy];
+}
 
-@implementation _LWHTMLLink
+- (NSArray<LWStorage *>*)storages {
+    return [self.tmpStorages copy];
+}
 
-@end
+- (LWStorage *)firstStorage {
+    return self.storages.firstObject;
+}
 
-@implementation _LWHTMLTag
+- (LWStorage *)lastStorage {
+    return self.storages.lastObject;
+}
+
+- (NSArray<LWImageStorage *>*)imageCallbacks {
+    return [self.imageCallbacksArray copy];
+}
+
+- (LWHTMLNode *)tree {
+    return self.tree;
+}
 
 @end

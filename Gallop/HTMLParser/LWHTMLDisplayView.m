@@ -30,6 +30,9 @@
 #import "SDImageCache.h"
 #import "LWHTMLLayout.h"
 
+
+
+
 /*********** LWHTMLDisplayCellDelegate ****************/
 
 @protocol LWHTMLDisplayCellDelegate <NSObject>
@@ -196,6 +199,7 @@
                                                                                 imageModels:tmp
                                                                                currentIndex:index];
         imageBrowser.isScalingToHide = NO ;
+        imageBrowser.isShowPageControl = NO;
         [imageBrowser show];
     }
     if ([self.displayDelegate respondsToSelector:@selector(lwhtmlDisplayView:didCilickedImageStorage:)] &&

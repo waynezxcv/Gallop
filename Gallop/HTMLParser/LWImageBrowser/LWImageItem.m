@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,6 +25,7 @@
 #import "LWImageItem.h"
 #import "GallopUtils.h"
 #import "GallopDefine.h"
+#import "LWProgeressHUD.h"
 
 
 const CGFloat kMaximumZoomScale = 3.0f;
@@ -123,7 +124,7 @@ const CGFloat kDuration = 0.3f;
     }
     //已经下载的图片
     else {
-
+        
         if (animated) {
             self.imageView.frame = self.imageModel.originPosition;
             [self.imageView sd_setImageWithURL:self.imageModel.HDURL];
@@ -134,7 +135,7 @@ const CGFloat kDuration = 0.3f;
                                 options:0 animations:^{
                                     weakSelf.imageView.frame = destinationRect;
                                 } completion:^(BOOL finished) {
-
+                                    
                                 }];
         } else {
             [self.imageView sd_setImageWithURL:self.imageModel.HDURL];
@@ -145,32 +146,31 @@ const CGFloat kDuration = 0.3f;
 
 - (void)downloadImageWithDestinationRect:(CGRect)destinationRect {
     __weak typeof(self) weakSelf = self;
-    //    MBProgressHUD* progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-    //    progressHUD.mode = MBProgressHUDModeAnnularDeterminate;
-    //    progressHUD.animationType = MBProgressHUDAnimationFade;
+    LWProgeressHUD* progressHUD = [LWProgeressHUD showHUDAddedTo:self];
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [manager downloadImageWithURL:self.imageModel.HDURL
                               options:options
                              progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                 //                                 progressHUD.progress = [[NSNumber numberWithInteger:receivedSize] floatValue] / [[NSNumber numberWithInteger:expectedSize] floatValue];
+                                 progressHUD.progress = (float)receivedSize/expectedSize;
                              } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                                 __strong typeof(weakSelf) sself = weakSelf;
                                  if (finished && image) {
-                                     //                                     [MBProgressHUD hideAllHUDsForView:weakSelf animated:NO];
-                                     weakSelf.imageView.image = image;
-                                     weakSelf.imageModel.thumbnailImage = image;
-                                     if ([self.eventDelegate respondsToSelector:@selector(didFinishRefreshThumbnailImageIfNeed)]) {
-                                         [self.eventDelegate didFinishRefreshThumbnailImageIfNeed];
+                                     [LWProgeressHUD hideAllHUDForView:sself];
+                                     sself.imageView.image = image;
+                                     sself.imageModel.thumbnailImage = image;
+                                     if ([sself.eventDelegate respondsToSelector:@selector(didFinishRefreshThumbnailImageIfNeed)]) {
+                                         [sself.eventDelegate didFinishRefreshThumbnailImageIfNeed];
                                      }
                                      [UIView animateWithDuration:kDuration
                                                            delay:0.0f
                                           usingSpringWithDamping:0.7
                                            initialSpringVelocity:0.0f
                                                          options:0 animations:^{
-                                                             weakSelf.imageView.frame = destinationRect;
+                                                             sself.imageView.frame = destinationRect;
                                                          } completion:^(BOOL finished) {
-
+                                                             
                                                          }];
                                  }
                              }];

@@ -42,7 +42,8 @@
 
 @property (nonatomic,weak) id <LWImageBrowserDelegate> delegate;
 
-@property (nonatomic,assign) BOOL isScalingToHide;
+@property (nonatomic,assign) BOOL isScalingToHide;//消失的时候是否启动缩放动画
+@property (nonatomic,assign) BOOL isShowPageControl;//是否显示页码
 
 /**
  *  存放图片模型的数组

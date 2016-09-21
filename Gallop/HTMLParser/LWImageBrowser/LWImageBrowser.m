@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,19 +25,22 @@
 #import "LWImageBrowser.h"
 #import "LWImageBrowserFlowLayout.h"
 #import "LWImageBrowserCell.h"
-#import "UIImage+ImageEffects.h"
+#import "UIImage+BlurEffects.h"
 #import "LWImageBrowserButton.h"
 #import "LWActionSheetView.h"
 #import "LWAlertView.h"
 #import "GallopUtils.h"
 #import "GallopDefine.h"
 
+
 #define kPageControlHeight 40.0f
-#define kImageBrowserWidth ([UIScreen mainScreen].bounds.size.width + 10.0f)
-#define kImageBrowserHeight [UIScreen mainScreen].bounds.size.height
+#define kImageBrowserWidth (SCREEN_WIDTH + 10.0f)
+#define kImageBrowserHeight SCREEN_HEIGHT
 #define kCellIdentifier @"LWImageBroserCellIdentifier"
 
 @interface LWImageBrowser ()
+
+
 <UICollectionViewDataSource,
 UICollectionViewDelegate,
 UIScrollViewDelegate,
@@ -47,10 +50,8 @@ LWActionSheetViewDelegate>
 
 @property (nonatomic,strong) UIImageView* screenshotImageView;
 @property (nonatomic,strong) UIImageView* blurImageView;
-
 @property (nonatomic,strong) UIImage* screenshot;
 @property (nonatomic,strong) UIImage* blurImage;
-
 @property (nonatomic,strong) LWImageBrowserFlowLayout* flowLayout;
 @property (nonatomic,strong) UICollectionView* collectionView;
 @property (nonatomic,strong) UIPageControl* pageControl;
@@ -71,7 +72,8 @@ LWActionSheetViewDelegate>
     [self.view addSubview:self.collectionView];
     [self.view addSubview:self.pageControl];
     [self.view addSubview:self.button];
-    [self.collectionView setContentOffset:CGPointMake(self.currentIndex * (SCREEN_WIDTH + 10.0f), 0.0f) animated:NO];
+    [self.collectionView setContentOffset:
+     CGPointMake(self.currentIndex * (SCREEN_WIDTH + 10.0f), 0.0f) animated:NO];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -85,7 +87,7 @@ LWActionSheetViewDelegate>
     [UIView animateWithDuration:0.2f animations:^{
         self.screenshotImageView.alpha = 0.0f;
     } completion:^(BOOL finished) {
-
+        
     }];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [self _setCurrentItem];
@@ -110,7 +112,8 @@ LWActionSheetViewDelegate>
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    LWImageBrowserCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
+    LWImageBrowserCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier
+                                                                         forIndexPath:indexPath];
     cell.imageItem.firstShow = self.isFirstShow;
     cell.imageModel = [self.imageModels objectAtIndex:indexPath.row];
     cell.imageItem.eventDelegate = self;
@@ -147,7 +150,8 @@ LWActionSheetViewDelegate>
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     switch (buttonIndex) {
         case 1:{
-            NSMutableArray* tmpArray = [[NSMutableArray alloc] initWithArray:[self.imageModels copy]];
+            NSMutableArray* tmpArray = [[NSMutableArray alloc]
+                                        initWithArray:[self.imageModels copy]];
             [tmpArray removeObjectAtIndex:self.currentIndex];
             self.imageModels = tmpArray;
             [self _setCurrentItem];
@@ -165,7 +169,7 @@ LWActionSheetViewDelegate>
 - (void)_hide {
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     __weak typeof(self) weakSelf = self;
-
+    
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     if (self.currentImageItem.zoomScale != 1.0f) {
         self.currentImageItem.zoomScale = 1.0f;
@@ -176,7 +180,8 @@ LWActionSheetViewDelegate>
                      animations:^{
                          weakSelf.screenshotImageView.alpha = 1.0f;
                          if (weakSelf.isScalingToHide) {
-                             weakSelf.currentImageItem.imageView.frame = weakSelf.currentImageItem.imageModel.originPosition;
+                             weakSelf.currentImageItem.imageView.frame =
+                             weakSelf.currentImageItem.imageModel.originPosition;
                          }
                          else {
                              weakSelf.currentImageItem.imageView.alpha = 0.0f;
@@ -192,7 +197,7 @@ LWActionSheetViewDelegate>
     if (self.navigationController.navigationBarHidden == NO) {
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
         [self.navigationController setNavigationBarHidden:YES animated:YES];
-
+        
     } else {
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
         [self.navigationController setNavigationBarHidden:NO animated:YES];
@@ -250,13 +255,16 @@ LWActionSheetViewDelegate>
         //保存图片
         [self saveImageToPhotos:self.currentImageItem.imageView.image];
     }
-
+    
 }
 
 #pragma mark - Save Photo
 
 - (void)saveImageToPhotos:(UIImage*)savedImage {
-    UIImageWriteToSavedPhotosAlbum(savedImage, self,@selector(image:didFinishSavingWithError:contextInfo:), NULL);
+    UIImageWriteToSavedPhotosAlbum(savedImage,
+                                   self,
+                                   @selector(image:didFinishSavingWithError:contextInfo:),
+                                   NULL);
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error
@@ -268,6 +276,11 @@ LWActionSheetViewDelegate>
 
 #pragma mark - Setter & Getter
 
+- (void)setIsShowPageControl:(BOOL)isShowPageControl {
+    _isShowPageControl = isShowPageControl;
+    self.pageControl.hidden = !self.isShowPageControl;
+}
+
 - (LWImageBrowserFlowLayout *)flowLayout {
     if (!_flowLayout) {
         _flowLayout = [[LWImageBrowserFlowLayout alloc] init];
@@ -277,11 +290,12 @@ LWActionSheetViewDelegate>
 
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,
-                                                                             0,
-                                                                             SCREEN_WIDTH + 10.0f,
-                                                                             self.view.bounds.size.height)
-                                             collectionViewLayout:self.flowLayout];
+        _collectionView = [[UICollectionView alloc]
+                           initWithFrame:CGRectMake(0,
+                                                    0,
+                                                    SCREEN_WIDTH + 10.0f,
+                                                    self.view.bounds.size.height)
+                           collectionViewLayout:self.flowLayout];
         _collectionView.backgroundColor = [UIColor clearColor];
         _collectionView.showsHorizontalScrollIndicator = NO;
         _collectionView.showsVerticalScrollIndicator = NO;
@@ -296,10 +310,11 @@ LWActionSheetViewDelegate>
 
 - (UIPageControl *)pageControl {
     if (!_pageControl) {
-        _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0.0f,
-                                                                       SCREEN_HEIGHT - kPageControlHeight - 10.0f,
-                                                                       SCREEN_WIDTH,
-                                                                       kPageControlHeight)];
+        _pageControl = [[UIPageControl alloc]
+                        initWithFrame:CGRectMake(0.0f,
+                                                 SCREEN_HEIGHT - kPageControlHeight - 10.0f,
+                                                 SCREEN_WIDTH,
+                                                 kPageControlHeight)];
         _pageControl.numberOfPages = self.imageModels.count;
         _pageControl.currentPage = self.currentIndex;
         _pageControl.userInteractionEnabled = NO;
@@ -343,7 +358,7 @@ LWActionSheetViewDelegate>
 - (id)initWithParentViewController:(UIViewController *)parentVC
                        imageModels:(NSArray *)imageModels
                       currentIndex:(NSInteger)index {
-
+    
     self  = [super init];
     if (self) {
         self.isScalingToHide = YES;
