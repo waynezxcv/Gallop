@@ -24,7 +24,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LWLoadingView : UIView
+@interface LWActiveIncator : UIView
 
 + (void)showInView:(UIView *)view;
 + (void)showInView:(UIView *)view backgroundColor:(UIColor *)color;

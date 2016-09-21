@@ -23,23 +23,23 @@
  */
 
 
-#import "LWLoadingView.h"
-#import "LWLoadingAnimationView.h"
+#import "LWActiveIncator.h"
+#import "LWActiveIncatorAnimationView.h"
 
 
-@interface LWLoadingView ()
+@interface LWActiveIncator ()
 
-@property (nonatomic,strong) LWLoadingAnimationView* animationView;
+@property (nonatomic,strong) LWActiveIncatorAnimationView* animationView;
 
 @end
 
-@implementation LWLoadingView
+@implementation LWActiveIncator
 
 - (id)init {
     self = [super initWithFrame:SCREEN_BOUNDS];
     if (self) {
         self.backgroundColor = RGB(255, 255, 255, 1);
-        self.animationView = [[LWLoadingAnimationView alloc]
+        self.animationView = [[LWActiveIncatorAnimationView alloc]
                               initWithFrame:CGRectMake(SCREEN_WIDTH/2- 40.0f,
                                                        SCREEN_HEIGHT/2 - 40.0f,
                                                        80.0f,
@@ -54,7 +54,7 @@
     self = [super initWithFrame:SCREEN_BOUNDS];
     if (self) {
         self.backgroundColor = color;
-        self.animationView = [[LWLoadingAnimationView alloc]
+        self.animationView = [[LWActiveIncatorAnimationView alloc]
                               initWithFrame:CGRectMake(SCREEN_WIDTH/2- 40.0f,
                                                        SCREEN_HEIGHT/2 - 40.0f,
                                                        80.0f,
@@ -67,7 +67,7 @@
 
 
 + (void)showInView:(UIView *)view {
-    LWLoadingView* loadingView = [[LWLoadingView alloc] init];
+    LWActiveIncator* loadingView = [[LWActiveIncator alloc] init];
     [view addSubview:loadingView];
     loadingView.hidden = NO;
     [loadingView.animationView animationBegin];
@@ -75,7 +75,7 @@
 
 
 + (void)showInView:(UIView *)view backgroundColor:(UIColor *)color {
-    LWLoadingView* loadingView = [[LWLoadingView alloc] initWithBackgroundColor:color];
+    LWActiveIncator* loadingView = [[LWActiveIncator alloc] initWithBackgroundColor:color];
     [view addSubview:loadingView];
     loadingView.hidden = NO;
     [loadingView.animationView animationBegin];
@@ -83,8 +83,8 @@
 
 + (void)hideInViwe:(UIView *)view {
     for (UIView* aView in view.subviews) {
-        if ([aView isMemberOfClass:[LWLoadingView class]]) {
-            LWLoadingView* loadingView = (LWLoadingView *)aView;
+        if ([aView isMemberOfClass:[LWActiveIncator class]]) {
+            LWActiveIncator* loadingView = (LWActiveIncator *)aView;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [UIView animateWithDuration:0.5 animations:^{
                     loadingView.alpha = 0.0f;

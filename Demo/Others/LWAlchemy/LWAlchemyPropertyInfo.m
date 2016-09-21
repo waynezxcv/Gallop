@@ -49,9 +49,12 @@
 
 #pragma mark - Initial
 
+
 - (id)initWithProperty:(objc_property_t)property customMapper:(NSDictionary *)mapper {
     self = [super init];
     if (self) {
+                
+        
         self.property = property;
         self.typeProperty = LWTypePropertyPlaceholder;
         unsigned int attrCount;

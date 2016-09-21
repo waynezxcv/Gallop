@@ -5,7 +5,7 @@
 
 
 #import "WebViewController.h"
-#import "LWLoadingView.h"
+#import "LWActiveIncator.h"
 
 @interface WebViewController ()<UIWebViewDelegate>
 
@@ -25,10 +25,10 @@
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-    [LWLoadingView showInView:self.view];
+    [LWActiveIncator showInView:self.view];
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [LWLoadingView hideInViwe:self.view];
+    [LWActiveIncator hideInViwe:self.view];
 }
 
 

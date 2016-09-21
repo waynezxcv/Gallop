@@ -8,7 +8,7 @@
 #import "ArticleListViewController.h"
 #import "ArticleListTableViewCell.h"
 #import "HTMLParsingViewController.h"
-#import "LWLoadingView.h"
+#import "LWActiveIncator.h"
 
 @interface ArticleListViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -35,7 +35,7 @@
     [super viewWillAppear:animated];
     if (self.isNeedRefresh) {
         self.isNeedRefresh = NO;
-        [LWLoadingView showInView:self.view];
+        [LWActiveIncator showInView:self.view];
         __weak typeof(self) weakSelf = self;
         [self downloadDataCompletion:^(NSData *data) {
             __strong typeof(weakSelf) swself = weakSelf;
@@ -52,7 +52,7 @@
             }
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [swself.tableView reloadData];
-                [LWLoadingView hideInViwe:swself.view];
+                [LWActiveIncator hideInViwe:swself.view];
             });
         }];
     }

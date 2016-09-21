@@ -23,9 +23,9 @@
  */
 
 
-#import "LWLoadingAnimationView.h"
+#import "LWActiveIncatorAnimationView.h"
 
-@interface LWLoadingAnimationView ()
+@interface LWActiveIncatorAnimationView ()
 
 @property (nonatomic,strong) NSMutableArray* pulsingLayers;
 @property (nonatomic,strong)CALayer* animationLayer;
@@ -33,7 +33,7 @@
 
 @end
 
-@implementation LWLoadingAnimationView
+@implementation LWActiveIncatorAnimationView
 
 - (id)initWithFrame:(CGRect)frame {
     self  = [super initWithFrame:frame];

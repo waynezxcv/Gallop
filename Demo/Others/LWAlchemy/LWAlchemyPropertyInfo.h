@@ -108,6 +108,11 @@ typedef NS_ENUM(NSUInteger, LWNSType) {
 @property (nonatomic,assign,readonly) LWNSType nsType;
 
 
+@property (nonatomic,copy) void(^completionBlock)();
+
+
+
+
 - (id)initWithProperty:(objc_property_t)property customMapper:(NSDictionary *)mapper;
 
 

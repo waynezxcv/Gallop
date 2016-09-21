@@ -157,7 +157,7 @@ typedef void(^UpdatedResults)(id updatedEnity,NSError *error);
 
 
 /**
- *  批量更新，需要iOS8.0以上
+ *  批量更新，需要iOS8.3以上
  *
  *  @param objectClass        查询的实例所属的类
  *  @param propertiesToUpdate 属性更新字典,格式：@{@"属性名称":更新的值};
@@ -165,7 +165,7 @@ typedef void(^UpdatedResults)(id updatedEnity,NSError *error);
  *  @return 更新的数据条数
  */
 - (NSInteger)lw_batchUpdateWithEntityWithClass:(Class)objectClass
-                            propertiesToUpdate:(NSDictionary *)propertiesToUpdate NS_AVAILABLE(10_10, 8_0);
+                            propertiesToUpdate:(NSDictionary *)propertiesToUpdate  NS_AVAILABLE(10_10, 8_3);
 
 
 /**
@@ -181,7 +181,7 @@ typedef void(^UpdatedResults)(id updatedEnity,NSError *error);
 
 
 /**
- *  批量删除,需要iOS8.0以上
+ *  批量删除,需要iOS8.3以上
  *
  *  @param objectClass 查询的实例所属的类
  *  @param predicate   NSPredicate对象，指定过滤方式
@@ -189,16 +189,15 @@ typedef void(^UpdatedResults)(id updatedEnity,NSError *error);
  *  @return 删除的条数
  */
 - (NSInteger)lw_batchDeleteEntityWithClass:(Class)objectClass
-                                 predicate:(NSPredicate *)predicate NS_AVAILABLE(10_10, 8_0);
+                                 predicate:(NSPredicate *)predicate NS_AVAILABLE(10_10, 8_3);
 
 /**
  *  删除
  *
  *  @param objectIDs 存放需要删除实例的NSManagedObjectID的数组
- *  @return 是否删除成功
  */
-- (BOOL)lw_deleteNSManagedObjectWithObjectWithObjectIdsArray:(NSArray<NSManagedObjectID *> *)objectIDs;
-
+- (void)lw_deleteNSManagedObjectWithObjectWithObjectIdsArray:(NSArray<NSManagedObjectID *> *)objectIDs
+                                                  completion:(Completion)completio;
 
 /**
  *  保存到Sqlite

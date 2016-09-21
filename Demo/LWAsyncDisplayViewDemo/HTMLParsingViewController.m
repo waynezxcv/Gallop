@@ -10,7 +10,7 @@
 #import "LWAlertView.h"
 #import "Gallop.h"
 #import "WebViewController.h"
-#import "LWLoadingView.h"
+#import "LWActiveIncator.h"
 #import "LWImageBrowser.h"
 
 
@@ -91,7 +91,7 @@
 
 #pragma mark - Parsing
 - (void)_parsing {
-    [LWLoadingView showInView:self.view];
+    [LWActiveIncator showInView:self.view];
     __weak typeof(self) weakSelf = self;
     [self downloadDataCompletion:^(NSData *data) {
         __strong typeof(weakSelf) swself = weakSelf;
@@ -182,7 +182,7 @@
             swself.htmlView.layout = htmlLayout;
             swself.coverTitleLabel.text = coverTitle;
             swself.coverDesLabel.text = coverDes;
-            [LWLoadingView hideInViwe:swself.view];
+            [LWActiveIncator hideInViwe:swself.view];
         });
     }];
 }

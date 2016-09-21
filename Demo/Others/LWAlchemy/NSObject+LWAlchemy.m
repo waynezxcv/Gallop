@@ -196,39 +196,39 @@ static inline NSNumber* _getNumberTypePropertyValue(__unsafe_unretained id model
     SEL sel = NSSelectorFromString(propertyInfo.getter);
     switch (propertyInfo.type) {
         case LWTypeBool: {
-            bool (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            bool (*msgSend)(id, SEL) = (bool(*)(id,SEL))objc_msgSend;
             return @(msgSend(model,sel));
         }
         case LWTypeInt8:{
-            int8_t (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            int8_t (*msgSend)(id, SEL) = (int8_t(*)(id,SEL))objc_msgSend;
             return @(msgSend(model,sel));
         }
         case LWTypeUInt8: {
-            uint8_t (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            uint8_t (*msgSend)(id, SEL) = (uint8_t (*)(id, SEL))objc_msgSend;
             return @(msgSend(model,sel));
         }
         case LWTypeInt16: {
-            int16_t (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            int16_t (*msgSend)(id, SEL) = (int16_t (*)(id, SEL))objc_msgSend;
             return @(msgSend(model,sel));
         }
         case LWTypeUInt16: {
-            uint16_t (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            uint16_t (*msgSend)(id, SEL) = (uint16_t (*)(id, SEL))objc_msgSend;
             return @(msgSend(model,sel));
         }
         case LWTypeInt32: {
-            int32_t (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            int32_t (*msgSend)(id, SEL) = (int32_t (*)(id, SEL))objc_msgSend;
             return @(msgSend(model,sel));
         }
         case LWTypeUInt32: {
-            uint32_t (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            uint32_t (*msgSend)(id, SEL) = (uint32_t (*)(id, SEL))objc_msgSend;
             return @(msgSend(model,sel));
         }
         case LWTypeInt64: {
-            int64_t (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            int64_t (*msgSend)(id, SEL) = (int64_t (*)(id, SEL))objc_msgSend;
             return @(msgSend(model,sel));
         }
         case LWTypeFloat: {
-            float (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            float (*msgSend)(id, SEL) = (float (*)(id, SEL))objc_msgSend;
             float number = msgSend(model,sel);
             if (isnan(number)) {
                 return nil;
@@ -236,7 +236,7 @@ static inline NSNumber* _getNumberTypePropertyValue(__unsafe_unretained id model
             return @(number);
         }
         case LWTypeDouble:{
-            double (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            double (*msgSend)(id, SEL) = (double (*)(id, SEL))objc_msgSend;
             double number = msgSend(model,sel);
             if (isnan(number)) {
                 return nil;
@@ -244,7 +244,7 @@ static inline NSNumber* _getNumberTypePropertyValue(__unsafe_unretained id model
             return @(number);
         }
         case LWTypeLongDouble: {
-            double (*msgSend)(id, SEL) = (void*)objc_msgSend;
+            double (*msgSend)(id, SEL) = (double (*)(id, SEL))objc_msgSend;
             double number = msgSend(model,sel);
             if (isnan(number)) {
                 return nil;
@@ -262,7 +262,7 @@ static inline id _getObjectTypePropertyValue(__unsafe_unretained id model,
         return nil;
     }
     SEL sel = NSSelectorFromString(propertyInfo.getter);
-    id (*msgSend)(id, SEL) = (void*)objc_msgSend;
+    id (*msgSend)(id, SEL) = (id (*)(id, SEL))objc_msgSend;
     return msgSend(model,sel);
 }
 
@@ -301,58 +301,58 @@ static inline void _setNumberTypePropertyValue(__unsafe_unretained id model,
     switch (propertyInfo.type) {
         case LWTypeBool: {
             NSNumber* num = NSNumberCreateFromIDType(value);
-            void (*msgSend)(id, SEL, bool) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, bool) = (void (*)(id, SEL, bool))objc_msgSend;
             msgSend((id)model, sel, num.boolValue);
         }break;
         case LWTypeInt8:{
             NSNumber* num = NSNumberCreateFromIDType(value);
-            void (*msgSend)(id, SEL, int8_t) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, int8_t) = (void (*)(id, SEL, int8_t))objc_msgSend;
             msgSend((id)model, sel, (int8_t)num.charValue);
         }break;
         case LWTypeUInt8: {
             NSNumber* num = NSNumberCreateFromIDType(value);
-            void (*msgSend)(id, SEL, uint8_t) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, uint8_t) = (void (*)(id, SEL, uint8_t))objc_msgSend;
             msgSend((id)model, sel, (uint8_t)num.unsignedCharValue);
         }break;
         case LWTypeInt16: {
             NSNumber* num = NSNumberCreateFromIDType(value);
-            void (*msgSend)(id, SEL, int16_t) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, int16_t) = (void (*)(id, SEL, int16_t))objc_msgSend;
             msgSend((id)model, sel, (int16_t)num.shortValue);
         }break;
         case LWTypeUInt16: {
             NSNumber* num = NSNumberCreateFromIDType(value);
-            void (*msgSend)(id, SEL, uint16_t) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, uint16_t) = (void (*)(id, SEL, uint16_t) )objc_msgSend;
             msgSend((id)model, sel, (uint16_t)num.unsignedShortValue);
         }break;
         case LWTypeInt32: {
             NSNumber* num = NSNumberCreateFromIDType(value);
-            void (*msgSend)(id, SEL, int32_t) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, int32_t) = (void (*)(id, SEL, int32_t))objc_msgSend;
             msgSend((id)model, sel, (int32_t)num.intValue);
         }break;
         case LWTypeUInt32: {
             NSNumber* num = NSNumberCreateFromIDType(value);
-            void (*msgSend)(id, SEL, uint32_t) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, uint32_t) = (void (*)(id, SEL, uint32_t))objc_msgSend;
             msgSend((id)model, sel, (uint32_t)num.unsignedIntValue);
         }break;
         case LWTypeInt64: {
             if ([value isKindOfClass:[NSDecimalNumber class]]) {
                 NSNumber* num = NSNumberCreateFromIDType(value);
-                void (*msgSend)(id, SEL, int64_t) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL, int64_t) = (void (*)(id, SEL, int64_t))objc_msgSend;
                 msgSend((id)model, sel, (int64_t)num.stringValue.longLongValue);
             } else {
                 NSNumber* num = NSNumberCreateFromIDType(value);
-                void (*msgSend)(id, SEL, int64_t) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL, int64_t) = (void (*)(id, SEL, int64_t))objc_msgSend;
                 msgSend((id)model, sel, (int64_t)num.longLongValue);
             }
         }break;
         case LWTypeUInt64:{
             if ([value isKindOfClass:[NSDecimalNumber class]]) {
                 NSNumber* num = NSNumberCreateFromIDType(value);
-                void (*msgSend)(id, SEL, uint64_t) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL, uint64_t) = (void (*)(id, SEL, uint64_t))objc_msgSend;
                 msgSend((id)model, sel, (uint64_t)num.stringValue.longLongValue);
             } else {
                 NSNumber* num = NSNumberCreateFromIDType(value);
-                void (*msgSend)(id, SEL, uint64_t) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL, uint64_t) = (void (*)(id, SEL, uint64_t))objc_msgSend;
                 msgSend((id)model, sel, (uint64_t)num.longLongValue);
             }
         }break;
@@ -360,21 +360,21 @@ static inline void _setNumberTypePropertyValue(__unsafe_unretained id model,
             NSNumber* num = NSNumberCreateFromIDType(value);
             float f = num.floatValue;
             if (isnan(f) || isinf(f)) f = 0;
-            void (*msgSend)(id, SEL, float) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, float) = (void (*)(id, SEL, float))objc_msgSend;
             msgSend((id)model, sel, f);
         }break;
         case LWTypeDouble:{
             NSNumber* num = NSNumberCreateFromIDType(value);
             double d = num.doubleValue;
             if (isnan(d) || isinf(d)) d = 0;
-            void (*msgSend)(id, SEL, double) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, double) = (void (*)(id, SEL, double))objc_msgSend;
             msgSend((id)model, sel, d);
         }break;
         case LWTypeLongDouble: {
             NSNumber* num = NSNumberCreateFromIDType(value);
             long double d = num.doubleValue;
             if (isnan(d) || isinf(d)) d = 0;
-            void (*msgSend)(id, SEL, long double) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, long double) = (void(*)(id, SEL, long double))objc_msgSend;
             msgSend((id)model, sel, d);
         }break;
         default:break;
@@ -392,112 +392,112 @@ static inline void _setObjectTypePropertyValue(__unsafe_unretained id model,
     switch (propertyInfo.nsType) {
         case LWNSTypeNSString:{
             NSString* string = [NSString stringWithFormat:@"%@",(NSString *)value];
-            void (*msgSend)(id, SEL,NSString*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL,NSString*) = (void (*)(id, SEL,NSString*))objc_msgSend;
             msgSend((id)model, sel, string);
         }break;
         case LWNSTypeNSMutableString:{
             NSMutableString* mutableString = [NSString stringWithFormat:@"%@",value].mutableCopy;
-            void (*msgSend)(id, SEL, NSMutableString*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL, NSMutableString*) = (void (*)(id, SEL, NSMutableString*))objc_msgSend;
             msgSend((id)model, sel, mutableString);
         }break;
         case LWNSTypeNSValue:{
-            void (*msgSend)(id, SEL,NSValue*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL,NSValue*) = (void (*)(id, SEL,NSValue*))objc_msgSend;
             msgSend((id)model, sel, value);
         }break;
         case LWNSTypeNSNumber:{
             if ([value isKindOfClass:[NSNumber class]]) {
                 NSNumber* number = (NSNumber *)value;
-                void (*msgSend)(id, SEL,NSNumber*) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,NSNumber*) = (void (*)(id, SEL,NSNumber*))objc_msgSend;
                 msgSend((id)model, sel, number);
             }
             else {
                 NSNumber* number = NSNumberCreateFromIDType(value);
-                void (*msgSend)(id, SEL,NSNumber*) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,NSNumber*) = (void (*)(id, SEL,NSNumber*))objc_msgSend;
                 msgSend((id)model, sel, number);
             }
         }break;
         case LWNSTypeNSDecimalNumber:{
             if ([value isKindOfClass:[NSDecimalNumber class]]) {
                 NSDecimalNumber* number = (NSDecimalNumber *)value;
-                void (*msgSend)(id, SEL,NSDecimalNumber*) = (void *)objc_msgSend;
+                void (*msgSend)(id, SEL,NSDecimalNumber*) = (void (*)(id, SEL,NSDecimalNumber*))objc_msgSend;
                 msgSend((id)model, sel, number);
             }
         }break;
         case LWNSTypeNSData:{
             if ([value isKindOfClass:[NSData class]]) {
                 NSData* data = ((NSData *)value).copy;
-                void (*msgSend)(id, SEL,NSData*) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,NSData*) = (void (*)(id, SEL,NSData*))objc_msgSend;
                 msgSend((id)model, sel, data);
             } else if ([value isKindOfClass:[NSString class]]) {
                 NSData* data = [(NSString *)value dataUsingEncoding:NSUTF8StringEncoding];
-                void (*msgSend)(id, SEL,NSData*) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,NSData*) = (void (*)(id, SEL,NSData*))objc_msgSend;
                 msgSend((id)model, sel, data);
             }
         }break;
         case LWNSTypeNSMutableData:{
             if ([value isKindOfClass:[NSData class]]) {
                 NSMutableData* data = ((NSData *)value).mutableCopy;
-                void (*msgSend)(id, SEL,NSMutableData*) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,NSMutableData*) = (void (*)(id, SEL,NSMutableData*))objc_msgSend;
                 msgSend((id)model, sel, data);
             } else if ([value isKindOfClass:[NSString class]]) {
                 NSMutableData* data = [(NSString *)value dataUsingEncoding:NSUTF8StringEncoding].mutableCopy;
-                void (*msgSend)(id, SEL,NSMutableData* ) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,NSMutableData*) = (void (*)(id, SEL,NSMutableData* ))objc_msgSend;
                 msgSend((id)model, sel, data);
             }
         }break;
         case LWNSTypeNSDate:{
             if ([value isKindOfClass:[NSDate class]]) {
-                void (*msgSend)(id, SEL,NSDate*) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,NSDate*) = (void (*)(id, SEL,NSDate*))objc_msgSend;
                 msgSend((id)model, sel, value);
             } else if ([value isKindOfClass:[NSString class]]) {
-                void (*msgSend)(id, SEL,NSDate*) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,NSDate*) = (void (*)(id, SEL,NSDate*))objc_msgSend;
                 msgSend((id)model, sel, LWNSDateFromString(value));
             } else {
-                void (*msgSend)(id, SEL,NSDate*) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,NSDate*) = ( void (*)(id, SEL,NSDate*))objc_msgSend;
                 msgSend((id)model, sel,LWNSDateFromString([NSString stringWithFormat:@"%@",value]));
             }
         }break;
         case LWNSTypeNSURL:{
             NSURL* URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@",(NSString *)value]];
-            void (*msgSend)(id, SEL,NSURL*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL,NSURL*) = (void (*)(id, SEL,NSURL*))objc_msgSend;
             msgSend((id)model, sel,URL);
         }break;
         case LWNSTypeNSArray:{
             NSArray* array = (NSArray *)value;
-            void (*msgSend)(id, SEL,NSArray*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL,NSArray*) = (void (*)(id, SEL,NSArray*))objc_msgSend;
             msgSend((id)model, sel,array);
         }break;
         case LWNSTypeNSMutableArray:{
             NSMutableArray* mutableArray = ((NSArray *)value).mutableCopy;
-            void (*msgSend)(id, SEL,NSMutableArray*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL,NSMutableArray*) = (void (*)(id, SEL,NSMutableArray*))objc_msgSend;
             msgSend((id)model, sel,mutableArray);
         }break;
         case LWNSTypeNSDictionary:{
             NSDictionary* dictionary = (NSDictionary *)value;
-            void (*msgSend)(id, SEL,NSDictionary*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL,NSDictionary*) = (void (*)(id, SEL,NSDictionary*))objc_msgSend;
             msgSend((id)model, sel,dictionary);
         }break;
         case LWNSTypeNSMutableDictionary:{
             NSMutableDictionary* mutableDict = ((NSDictionary *)value).mutableCopy;
-            void (*msgSend)(id, SEL,NSMutableDictionary*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL,NSMutableDictionary*) = (void (*)(id, SEL,NSMutableDictionary*))objc_msgSend;
             msgSend((id)model, sel,mutableDict);
         }break;
         case LWNSTypeNSSet:{
             NSSet* set = (NSSet *)value;
-            void (*msgSend)(id, SEL,NSSet*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL,NSSet*) = (void (*)(id, SEL,NSSet*))objc_msgSend;
             msgSend((id)model, sel,set);
         }break;
         case LWNSTypeNSMutableSet:{
             NSMutableSet* mutableSet = ((NSSet *)value).mutableCopy;
-            void (*msgSend)(id, SEL,NSMutableSet*) = (void*)objc_msgSend;
+            void (*msgSend)(id, SEL,NSMutableSet*) = (void (*)(id, SEL,NSMutableSet*))objc_msgSend;
             msgSend((id)model, sel,mutableSet);
         }break;
         default:{
             if (isNull) {
-                void (*msgSend)(id, SEL,id) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,id) = (void (*)(id, SEL,id))objc_msgSend;
                 msgSend((id)model, sel,(id)nil);
             } else if ([value isKindOfClass:propertyInfo.cls]) {
-                void (*msgSend)(id, SEL,id) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,id) = (void(*)(id, SEL,id))objc_msgSend;
                 msgSend((id)model, sel,(id)value);
             }
             else if ([value isKindOfClass:[NSDictionary class]]) {
@@ -513,12 +513,12 @@ static inline void _setObjectTypePropertyValue(__unsafe_unretained id model,
                     child = [cls new];
                     [child modelWithDictionary:value];
                     SEL sel = NSSelectorFromString(propertyInfo.setter);
-                    void (*msgSend)(id, SEL,id) = (void*)objc_msgSend;
+                    void (*msgSend)(id, SEL,id) = (void (*)(id, SEL,id))objc_msgSend;
                     msgSend((id)model,sel,child);
                 }
             } else {
                 //id type
-                void (*msgSend)(id, SEL,id) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,id) = (void (*)(id, SEL,id))objc_msgSend;
                 msgSend((id)model, sel,(id)value);
             }
         }
@@ -537,33 +537,33 @@ static inline void _setCFTypePropertyValue(__unsafe_unretained id model,
     switch (propertyInfo.type) {
         case LWTypeBlock: {
             if (isNull) {
-                void (*msgSend)(id, SEL, void (^)()) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL, void (^)()) = (void (*)(id, SEL, void (^)()))objc_msgSend;
                 msgSend((id)model, sel, (void (^)())NULL);
             } else if ([value isKindOfClass:LWNSBlockClass()]) {
-                void (*msgSend)(id, SEL, void (^)()) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL, void (^)()) = (void (*)(id, SEL, void (^)()))objc_msgSend;
                 msgSend((id)model, sel,(void (^)())value);
             }
         }break;
         case LWTypeClass:{
             if (isNull) {
-                void (*msgSend)(id, SEL,Class) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,Class) = (void (*)(id, SEL,Class))objc_msgSend;
                 msgSend((id)model, sel,(Class)NULL);
             } else {
                 Class cls = nil;
                 if ([value isKindOfClass:[NSString class]]) {
                     cls = NSClassFromString(value);
                     if (cls) {
-                        void (*msgSend)(id, SEL,Class) = (void*)objc_msgSend;
+                        void (*msgSend)(id, SEL,Class) = (void (*)(id, SEL,Class))objc_msgSend;
                         msgSend((id)model, sel,(Class)cls);
                     }
                 } else {
                     cls = object_getClass(value);
                     if (cls) {
                         if (class_isMetaClass(cls)) {
-                            void (*msgSend)(id, SEL,Class) = (void*)objc_msgSend;
+                            void (*msgSend)(id, SEL,Class) = (void (*)(id, SEL,Class))objc_msgSend;
                             msgSend((id)model, sel, (Class)value);
                         } else {
-                            void (*msgSend)(id, SEL,Class) = (void*)objc_msgSend;
+                            void (*msgSend)(id, SEL,Class) = (void (*)(id, SEL,Class))objc_msgSend;
                             msgSend((id)model, sel,(Class)cls);
                         }
                     }
@@ -571,12 +571,12 @@ static inline void _setCFTypePropertyValue(__unsafe_unretained id model,
             }
         case LWTypeSEL: {
             if (isNull) {
-                void (*msgSend)(id, SEL,SEL) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,SEL) = (void (*)(id, SEL,SEL))objc_msgSend;
                 msgSend((id)model, sel,(SEL)NULL);
             } else if ([value isKindOfClass:[NSString class]]) {
                 SEL sel = NSSelectorFromString(value);
                 if (sel) {
-                    void (*msgSend)(id, SEL,SEL) = (void*)objc_msgSend;
+                    void (*msgSend)(id, SEL,SEL) = (void (*)(id, SEL,SEL))objc_msgSend;
                     msgSend((id)model, sel,sel);
                 }
             }
@@ -584,12 +584,12 @@ static inline void _setCFTypePropertyValue(__unsafe_unretained id model,
         case LWTypeCFString:
         case LWTypePointer:{
             if (isNull) {
-                void (*msgSend)(id, SEL,void*) = (void*)objc_msgSend;
+                void (*msgSend)(id, SEL,void*) = (void (*)(id, SEL,void*))objc_msgSend;
                 msgSend((id)model, sel, (void *)NULL);
             } else if ([value isKindOfClass:[NSValue class]]) {
                 NSValue* nsValue = value;
                 if (nsValue.objCType && strcmp(nsValue.objCType, "^v") == 0) {
-                    void (*msgSend)(id, SEL, void* ) = (void*)objc_msgSend;
+                    void (*msgSend)(id, SEL, void*) = (void (*)(id, SEL, void*))objc_msgSend;
                     msgSend((id)model, sel,nsValue.pointerValue);
                 }
             }

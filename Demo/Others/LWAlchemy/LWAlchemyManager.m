@@ -23,9 +23,11 @@
  */
 
 
+
 #import "LWAlchemyManager.h"
 #import <CoreData/CoreData.h>
 #import "NSObject+LWAlchemy.h"
+
 
 @interface LWAlchemyManager ()
 
@@ -33,9 +35,9 @@
 @property (nonatomic,strong) NSPersistentStoreCoordinator* persistentStoreCoordinator;
 @property (strong,nonatomic) NSManagedObjectContext* mainMOC;//主线程Context
 @property (strong,nonatomic) NSManagedObjectContext* writeMOC;//用来写入数据到本地的Context，mainMOC的parent
-
 @property (nonatomic,assign) UIBackgroundTaskIdentifier backgroundTaskId;
 @property (nonatomic,copy) NSString* executableFile;
+
 
 @end
 
@@ -47,6 +49,9 @@
                        JSONsArray:(NSArray *)jsonArray
               uiqueAttributesName:(NSString *)uniqueAttributesName
                        completion:(Completion)completeBlock {
+    if (!objectClass || !jsonArray) {
+        return;
+    }
     NSManagedObjectContext* ctx = [self createTemporaryBackgroundMoc];
     [ctx performBlock:^{
         for (id json in jsonArray) {
@@ -89,9 +94,7 @@
                             abort();
                         }
                     }];
-                }
-
-                else {
+                } else {
                     if (![json isKindOfClass:[NSDictionary class]]) {
                         NSDictionary* dict = [self dictionaryWithJSON:json];
                         object = [object entity:object modelWithDictionary:dict context:ctx];
@@ -132,6 +135,9 @@
                      fetchLimit:(NSInteger)limit
                     fetchReults:(FetchResults)resultsBlock {
 
+    if(!objectClass ) {
+        return;
+    }
     __weak typeof(self) weakSelf = self;
     NSManagedObjectContext* ctx = [self createTemporaryBackgroundMoc];
     [ctx performBlock:^{
@@ -180,6 +186,9 @@
                          fetchOffset:(NSInteger)offset
                           fetchLimit:(NSInteger)limit
                          fetchReults:(FetchResults)resultsBlock  NS_AVAILABLE(10_10, 8_0) {
+    if(!objectClass ) {
+        return;
+    }
 
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
     [fetchRequest setEntity:[NSEntityDescription entityForName:NSStringFromClass(objectClass)
@@ -233,7 +242,7 @@
 
 
 - (NSInteger)lw_batchUpdateWithEntityWithClass:(Class)objectClass
-                            propertiesToUpdate:(NSDictionary *)propertiesToUpdate  NS_AVAILABLE(10_10, 8_0){
+                            propertiesToUpdate:(NSDictionary *)propertiesToUpdate  NS_AVAILABLE(10_10, 8_3){
 
     NSBatchUpdateRequest* updateRequest = [NSBatchUpdateRequest
                                            batchUpdateRequestWithEntityName:NSStringFromClass(objectClass)];
@@ -258,9 +267,17 @@
 - (void)lw_updateEntityWithObjectID:(NSManagedObjectID *)objectID
                                JSON:(id)json
                          completion:(UpdatedResults)updateResults {
+    if (!objectID || !json) {
+        return;
+    }
+
     NSManagedObjectContext* ctx = [self createTemporaryBackgroundMoc];
     [ctx performBlock:^{
         NSManagedObject* object = [ctx objectWithID:objectID];
+        if (!object) {
+            return ;
+        }
+
         if ([json isKindOfClass:[NSDictionary class]]) {
             object = [object entity:object modelWithDictionary:json context:ctx];
         } else {
@@ -286,16 +303,18 @@
                 updateResults(nil,error);
                 abort();
             }
-            NSLog(@"update completion");
             updateResults([self.mainMOC objectWithID:objectID],error);
         }];
     }];
 }
 
 
-- (BOOL)lw_deleteNSManagedObjectWithObjectWithObjectIdsArray:(NSArray<NSManagedObjectID *> *)objectIDs {
+- (void)lw_deleteNSManagedObjectWithObjectWithObjectIdsArray:(NSArray<NSManagedObjectID *> *)objectIDs
+                                                  completion:(Completion)completion {
     NSManagedObjectContext* ctx = [self createTemporaryBackgroundMoc];
+    __weak typeof(self) weakSelf = self;
     [ctx performBlock:^{
+        __strong typeof(weakSelf) sself = weakSelf;
         for (NSManagedObjectID* objectID in objectIDs) {
             @autoreleasepool {
 
@@ -313,7 +332,7 @@
 #endif
             abort();
         }
-        [self.mainMOC performBlock:^{
+        [sself.mainMOC performBlock:^{
             //save main context
             NSError* error = nil;
             if ([self.mainMOC hasChanges] && ![self.mainMOC save:&error]) {
@@ -322,14 +341,14 @@
 #endif
                 abort();
             }
+            completion();
         }];
     }];
-    return YES;
 }
 
 
 - (NSInteger)lw_batchDeleteEntityWithClass:(Class)objectClass
-                                 predicate:(NSPredicate *)predicate  NS_AVAILABLE(10_10, 8_0) {
+                                 predicate:(NSPredicate *)predicate NS_AVAILABLE(10_10, 8_3) {
     NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass(objectClass)];
     if (predicate) {
         fetchRequest.predicate = predicate;
@@ -491,7 +510,6 @@
     }
     return _persistentStoreCoordinator;
 }
-
 
 - (NSManagedObjectContext *)mainMOC {
     if (_mainMOC) {
