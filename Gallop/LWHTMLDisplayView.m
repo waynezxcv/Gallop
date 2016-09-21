@@ -26,7 +26,7 @@
 #import "LWAsyncDisplayView.h"
 #import "LWLayout.h"
 #import "LWStorageBuilder.h"
-#import "LWImageBrowser/LWImageBrowser.h"
+#import "LWImageBrowser.h"
 #import "SDImageCache.h"
 #import "LWHTMLLayout.h"
 

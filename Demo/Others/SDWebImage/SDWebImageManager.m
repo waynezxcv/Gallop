@@ -8,10 +8,6 @@
 
 #import "SDWebImageManager.h"
 #import <objc/message.h>
-#import "LWCornerRadiusHelper.h"
-#import "SDImageCache+Gallop.h"
-
-
 
 @interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
 
@@ -61,6 +57,7 @@
     if (!url) {
         return @"";
     }
+    
     if (self.cacheKeyFilter) {
         return self.cacheKeyFilter(url);
     } else {
@@ -82,9 +79,9 @@
 - (void)cachedImageExistsForURL:(NSURL *)url
                      completion:(SDWebImageCheckCacheCompletionBlock)completionBlock {
     NSString *key = [self cacheKeyForURL:url];
-
+    
     BOOL isInMemoryCache = ([self.imageCache imageFromMemoryCacheForKey:key] != nil);
-
+    
     if (isInMemoryCache) {
         // making sure we call the completion block on the main queue
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -94,7 +91,7 @@
         });
         return;
     }
-
+    
     [self.imageCache diskImageExistsWithKey:key completion:^(BOOL isInDiskCache) {
         // the completion block of checkDiskCacheForImageWithKey:completion: is always called on the main queue, no need to further dispatch
         if (completionBlock) {
@@ -106,7 +103,7 @@
 - (void)diskImageExistsForURL:(NSURL *)url
                    completion:(SDWebImageCheckCacheCompletionBlock)completionBlock {
     NSString *key = [self cacheKeyForURL:url];
-
+    
     [self.imageCache diskImageExistsWithKey:key completion:^(BOOL isInDiskCache) {
         // the completion block of checkDiskCacheForImageWithKey:completion: is always called on the main queue, no need to further dispatch
         if (completionBlock) {
@@ -152,9 +149,6 @@
     @synchronized (self.runningOperations) {
         [self.runningOperations addObject:operation];
     }
-
-
-
     NSString *key = [self cacheKeyForURL:url];
 
     operation.cacheOperation = [self.imageCache queryDiskCacheForKey:key done:^(UIImage *image, SDImageCacheType cacheType) {
@@ -222,7 +216,7 @@
                             [self.failedURLs removeObject:url];
                         }
                     }
-
+                    
                     BOOL cacheOnDisk = !(options & SDWebImageCacheMemoryOnly);
 
                     if (options & SDWebImageRefreshCached && image && !downloadedImage) {
@@ -248,20 +242,15 @@
                         if (downloadedImage && finished) {
                             [self.imageCache storeImage:downloadedImage recalculateFromImage:NO imageData:data forKey:key toDisk:cacheOnDisk];
                         }
+
                         dispatch_main_sync_safe(^{
-                            /**
-                             *  读取指定的绘制的缓存
-                             */
                             if (strongOperation && !strongOperation.isCancelled) {
-                                if ([key hasPrefix:[NSString stringWithFormat:@"%@",LWCornerRadiusPrefixKey]]) {
-                                    completedBlock([self.imageCache imageFromDiskCacheForKey:key], nil, SDImageCacheTypeNone, finished, url);
-                                }else{
-                                    completedBlock(downloadedImage, nil, SDImageCacheTypeNone, finished, url);
-                                }
+                                completedBlock(downloadedImage, nil, SDImageCacheTypeNone, finished, url);
                             }
                         });
                     }
                 }
+
                 if (finished) {
                     @synchronized (self.runningOperations) {
                         if (strongOperation) {
@@ -272,7 +261,7 @@
             }];
             operation.cancelBlock = ^{
                 [subOperation cancel];
-
+                
                 @synchronized (self.runningOperations) {
                     __strong __typeof(weakOperation) strongOperation = weakOperation;
                     if (strongOperation) {
@@ -281,7 +270,6 @@
                 }
             };
         }
-
         else if (image) {
             dispatch_main_sync_safe(^{
                 __strong __typeof(weakOperation) strongOperation = weakOperation;
@@ -361,7 +349,7 @@
         
         // TODO: this is a temporary fix to #809.
         // Until we can figure the exact cause of the crash, going with the ivar instead of the setter
-        //        self.cancelBlock = nil;
+//        self.cancelBlock = nil;
         _cancelBlock = nil;
     }
 }

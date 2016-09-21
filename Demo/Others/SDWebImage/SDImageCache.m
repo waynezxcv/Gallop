@@ -10,7 +10,6 @@
 #import "SDWebImageDecoder.h"
 #import "UIImage+MultiFormat.h"
 #import <CommonCrypto/CommonDigest.h>
-#import "LWCornerRadiusHelper.h"
 
 // See https://github.com/rs/SDWebImage/pull/1141 for discussion
 @interface AutoPurgeCache : NSCache
@@ -30,7 +29,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-    
+
 }
 
 @end
@@ -49,7 +48,7 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
             return YES;
         }
     }
-    
+
     return NO;
 }
 
@@ -92,20 +91,20 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 - (id)initWithNamespace:(NSString *)ns diskCacheDirectory:(NSString *)directory {
     if ((self = [super init])) {
         NSString *fullNamespace = [@"com.hackemist.SDWebImageCache." stringByAppendingString:ns];
-        
+
         // initialise PNG signature data
         kPNGSignatureData = [NSData dataWithBytes:kPNGSignatureBytes length:8];
-        
+
         // Create IO serial queue
         _ioQueue = dispatch_queue_create("com.hackemist.SDWebImageCache", DISPATCH_QUEUE_SERIAL);
-        
+
         // Init default values
         _maxCacheAge = kDefaultCacheMaxCacheAge;
-        
+
         // Init the memory cache
         _memCache = [[AutoPurgeCache alloc] init];
         _memCache.name = fullNamespace;
-        
+
         // Init the disk cache
         if (directory != nil) {
             _diskCachePath = [directory stringByAppendingPathComponent:fullNamespace];
@@ -113,39 +112,39 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
             NSString *path = [self makeDiskCachePath:ns];
             _diskCachePath = path;
         }
-        
+
         // Set decompression to YES
         _shouldDecompressImages = YES;
-        
+
         // memory cache enabled
         _shouldCacheImagesInMemory = YES;
-        
+
         // Disable iCloud
         _shouldDisableiCloud = YES;
-        
+
         dispatch_sync(_ioQueue, ^{
             _fileManager = [NSFileManager new];
         });
-        
+
 #if TARGET_OS_IOS
         // Subscribe to app events
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(clearMemory)
                                                      name:UIApplicationDidReceiveMemoryWarningNotification
                                                    object:nil];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(cleanDisk)
                                                      name:UIApplicationWillTerminateNotification
                                                    object:nil];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(backgroundCleanDisk)
                                                      name:UIApplicationDidEnterBackgroundNotification
                                                    object:nil];
 #endif
     }
-    
+
     return self;
 }
 
@@ -158,7 +157,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     if (!self.customPaths) {
         self.customPaths = [NSMutableArray new];
     }
-    
+
     if (![self.customPaths containsObject:path]) {
         [self.customPaths addObject:path];
     }
@@ -185,7 +184,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     NSString *filename = [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%@",
                           r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10],
                           r[11], r[12], r[13], r[14], r[15], [[key pathExtension] isEqualToString:@""] ? @"" : [NSString stringWithFormat:@".%@", [key pathExtension]]];
-    
+
     return filename;
 }
 
@@ -201,23 +200,23 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     if (!image || !key) {
         return;
     }
-
     // if memory cache is enabled
     if (self.shouldCacheImagesInMemory) {
         NSUInteger cost = SDCacheCostForImage(image);
         [self.memCache setObject:image forKey:key cost:cost];
     }
-    
+
     if (toDisk) {
         dispatch_async(self.ioQueue, ^{
             NSData *data = imageData;
+
             if (image && (recalculate || !data)) {
 #if TARGET_OS_IPHONE
                 // We need to determine if the image is a PNG or a JPEG
                 // PNGs are easier to detect because they have a unique signature (http://www.w3.org/TR/PNG-Structure.html)
                 // The first eight bytes of a PNG file always contain the following (decimal) values:
                 // 137 80 78 71 13 10 26 10
-                
+
                 // If the imageData is nil (i.e. if trying to save a UIImage directly or the image was transformed on download)
                 // and the image has an alpha channel, we will consider it PNG to avoid losing the transparency
                 int alphaInfo = CGImageGetAlphaInfo(image.CGImage);
@@ -225,12 +224,12 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
                                   alphaInfo == kCGImageAlphaNoneSkipFirst ||
                                   alphaInfo == kCGImageAlphaNoneSkipLast);
                 BOOL imageIsPng = hasAlpha;
-                
+
                 // But if we have an image data, we will look at the preffix
                 if ([imageData length] >= [kPNGSignatureData length]) {
                     imageIsPng = ImageDataHasPNGPreffix(imageData);
                 }
-                
+
                 if (imageIsPng) {
                     data = UIImagePNGRepresentation(image);
                 }
@@ -241,7 +240,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
                 data = [NSBitmapImageRep representationOfImageRepsInArray:image.representations usingType: NSJPEGFileType properties:nil];
 #endif
             }
-            
+
             [self storeImageDataToDisk:data forKey:key];
         });
     }
@@ -284,7 +283,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     // this is an exception to access the filemanager on another queue than ioQueue, but we are using the shared instance
     // from apple docs on NSFileManager: The methods of the shared NSFileManager object can be called from multiple threads safely.
     exists = [[NSFileManager defaultManager] fileExistsAtPath:[self defaultCachePathForKey:key]];
-    
+
     // fallback because of https://github.com/rs/SDWebImage/pull/976 that added the extension to the disk file name
     // checking the key with and without the extension
     if (!exists) {
@@ -297,13 +296,13 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 - (void)diskImageExistsWithKey:(NSString *)key completion:(SDWebImageCheckCacheCompletionBlock)completionBlock {
     dispatch_async(_ioQueue, ^{
         BOOL exists = [_fileManager fileExistsAtPath:[self defaultCachePathForKey:key]];
-        
+
         // fallback because of https://github.com/rs/SDWebImage/pull/976 that added the extension to the disk file name
         // checking the key with and without the extension
         if (!exists) {
             exists = [_fileManager fileExistsAtPath:[[self defaultCachePathForKey:key] stringByDeletingPathExtension]];
         }
-        
+
         if (completionBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionBlock(exists);
@@ -317,20 +316,20 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 }
 
 - (UIImage *)imageFromDiskCacheForKey:(NSString *)key {
-    
+
     // First check the in-memory cache...
     UIImage *image = [self imageFromMemoryCacheForKey:key];
     if (image) {
         return image;
     }
-    
+
     // Second check the disk cache...
     UIImage *diskImage = [self diskImageForKey:key];
     if (diskImage && self.shouldCacheImagesInMemory) {
         NSUInteger cost = SDCacheCostForImage(diskImage);
         [self.memCache setObject:diskImage forKey:key cost:cost];
     }
-    
+
     return diskImage;
 }
 
@@ -340,14 +339,14 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     if (data) {
         return data;
     }
-    
+
     // fallback because of https://github.com/rs/SDWebImage/pull/976 that added the extension to the disk file name
     // checking the key with and without the extension
     data = [NSData dataWithContentsOfFile:[defaultPath stringByDeletingPathExtension]];
     if (data) {
         return data;
     }
-    
+
     NSArray *customPaths = [self.customPaths copy];
     for (NSString *path in customPaths) {
         NSString *filePath = [self cachePathForKey:key inPath:path];
@@ -355,7 +354,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         if (imageData) {
             return imageData;
         }
-        
+
         // fallback because of https://github.com/rs/SDWebImage/pull/976 that added the extension to the disk file name
         // checking the key with and without the extension
         imageData = [NSData dataWithContentsOfFile:[filePath stringByDeletingPathExtension]];
@@ -363,7 +362,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
             return imageData;
         }
     }
-    
+
     return nil;
 }
 
@@ -390,38 +389,38 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     if (!doneBlock) {
         return nil;
     }
-    
+
     if (!key) {
         doneBlock(nil, SDImageCacheTypeNone);
         return nil;
     }
-    
+
     // First check the in-memory cache...
     UIImage *image = [self imageFromMemoryCacheForKey:key];
     if (image) {
         doneBlock(image, SDImageCacheTypeMemory);
         return nil;
     }
-    
+
     NSOperation *operation = [NSOperation new];
     dispatch_async(self.ioQueue, ^{
         if (operation.isCancelled) {
             return;
         }
-        
+
         @autoreleasepool {
             UIImage *diskImage = [self diskImageForKey:key];
             if (diskImage && self.shouldCacheImagesInMemory) {
                 NSUInteger cost = SDCacheCostForImage(diskImage);
                 [self.memCache setObject:diskImage forKey:key cost:cost];
             }
-            
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 doneBlock(diskImage, SDImageCacheTypeDisk);
             });
         }
     });
-    
+
     return operation;
 }
 
@@ -442,11 +441,11 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     if (key == nil) {
         return;
     }
-    
+
     if (self.shouldCacheImagesInMemory) {
         [self.memCache removeObjectForKey:key];
     }
-    
+
     if (fromDisk) {
         dispatch_async(self.ioQueue, ^{
             [_fileManager removeItemAtPath:[self defaultCachePathForKey:key] error:nil];
@@ -495,7 +494,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
                 withIntermediateDirectories:YES
                                  attributes:nil
                                       error:NULL];
-        
+
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion();
@@ -512,17 +511,17 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     dispatch_async(self.ioQueue, ^{
         NSURL *diskCacheURL = [NSURL fileURLWithPath:self.diskCachePath isDirectory:YES];
         NSArray *resourceKeys = @[NSURLIsDirectoryKey, NSURLContentModificationDateKey, NSURLTotalFileAllocatedSizeKey];
-        
+
         // This enumerator prefetches useful properties for our cache files.
         NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtURL:diskCacheURL
                                                    includingPropertiesForKeys:resourceKeys
                                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
                                                                  errorHandler:NULL];
-        
+
         NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:-self.maxCacheAge];
         NSMutableDictionary *cacheFiles = [NSMutableDictionary dictionary];
         NSUInteger currentCacheSize = 0;
-        
+
         // Enumerate all of the files in the cache directory.  This loop has two purposes:
         //
         //  1. Removing files that are older than the expiration date.
@@ -530,19 +529,19 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         NSMutableArray *urlsToDelete = [[NSMutableArray alloc] init];
         for (NSURL *fileURL in fileEnumerator) {
             NSDictionary *resourceValues = [fileURL resourceValuesForKeys:resourceKeys error:NULL];
-            
+
             // Skip directories.
             if ([resourceValues[NSURLIsDirectoryKey] boolValue]) {
                 continue;
             }
-            
+
             // Remove files that are older than the expiration date;
             NSDate *modificationDate = resourceValues[NSURLContentModificationDateKey];
             if ([[modificationDate laterDate:expirationDate] isEqualToDate:expirationDate]) {
                 [urlsToDelete addObject:fileURL];
                 continue;
             }
-            
+
             // Store a reference to this file and account for its total size.
             NSNumber *totalAllocatedSize = resourceValues[NSURLTotalFileAllocatedSizeKey];
             currentCacheSize += [totalAllocatedSize unsignedIntegerValue];
@@ -552,26 +551,26 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         for (NSURL *fileURL in urlsToDelete) {
             [_fileManager removeItemAtURL:fileURL error:nil];
         }
-        
+
         // If our remaining disk cache exceeds a configured maximum size, perform a second
         // size-based cleanup pass.  We delete the oldest files first.
         if (self.maxCacheSize > 0 && currentCacheSize > self.maxCacheSize) {
             // Target half of our maximum cache size for this cleanup pass.
             const NSUInteger desiredCacheSize = self.maxCacheSize / 2;
-            
+
             // Sort the remaining cache files by their last modification time (oldest first).
             NSArray *sortedFiles = [cacheFiles keysSortedByValueWithOptions:NSSortConcurrent
                                                             usingComparator:^NSComparisonResult(id obj1, id obj2) {
                                                                 return [obj1[NSURLContentModificationDateKey] compare:obj2[NSURLContentModificationDateKey]];
                                                             }];
-            
+
             // Delete files until we fall below our desired cache size.
             for (NSURL *fileURL in sortedFiles) {
                 if ([_fileManager removeItemAtURL:fileURL error:nil]) {
                     NSDictionary *resourceValues = cacheFiles[fileURL];
                     NSNumber *totalAllocatedSize = resourceValues[NSURLTotalFileAllocatedSizeKey];
                     currentCacheSize -= [totalAllocatedSize unsignedIntegerValue];
-                    
+
                     if (currentCacheSize < desiredCacheSize) {
                         break;
                     }
@@ -598,7 +597,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         [application endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
     }];
-    
+
     // Start the long-running task and return immediately.
     [self cleanDiskWithCompletionBlock:^{
         [application endBackgroundTask:bgTask];
@@ -630,23 +629,23 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
 - (void)calculateSizeWithCompletionBlock:(SDWebImageCalculateSizeBlock)completionBlock {
     NSURL *diskCacheURL = [NSURL fileURLWithPath:self.diskCachePath isDirectory:YES];
-    
+
     dispatch_async(self.ioQueue, ^{
         NSUInteger fileCount = 0;
         NSUInteger totalSize = 0;
-        
+
         NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtURL:diskCacheURL
                                                    includingPropertiesForKeys:@[NSFileSize]
                                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
                                                                  errorHandler:NULL];
-        
+
         for (NSURL *fileURL in fileEnumerator) {
             NSNumber *fileSize;
             [fileURL getResourceValue:&fileSize forKey:NSURLFileSizeKey error:NULL];
             totalSize += [fileSize unsignedIntegerValue];
             fileCount += 1;
         }
-        
+
         if (completionBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionBlock(fileCount, totalSize);
