@@ -28,37 +28,86 @@
 
 @implementation LWHTMLTextConfig
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        [self _setup];
-    }
-    return self;
-}
-
-- (void)_setup {
-    self.textColor = [UIColor blackColor];
-    self.textBackgroundColor = [UIColor clearColor];
-    self.font = [UIFont systemFontOfSize:14.0f];
-    self.textAlignment = NSTextAlignmentLeft;
-    self.lineBreakMode = NSLineBreakByWordWrapping;
-    self.underlineStyle = NSUnderlineStyleNone;
-    self.linespacing = 1.0f;
-    self.characterSpacing = 0.0f;
-    self.textDrawMode = LWTextDrawModeFill;
-    self.strokeColor = nil;
-    self.strokeWidth = 0.0f;
-    self.linkColor = [UIColor blueColor];
-    self.linkHighlightColor = RGB(0, 0, 0, 0.35f);
-    self.paragraphSpacing = 10.0f;
-}
-
 + (LWHTMLTextConfig *)defaultsTextConfig {
     static LWHTMLTextConfig* config;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         config = [[LWHTMLTextConfig alloc] init];
     });
+    return config;
+}
+
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.textColor = [UIColor blackColor];
+        self.textBackgroundColor = [UIColor clearColor];
+        self.font = [UIFont systemFontOfSize:14.0f];
+        self.textAlignment = NSTextAlignmentLeft;
+        self.lineBreakMode = NSLineBreakByWordWrapping;
+        self.underlineStyle = NSUnderlineStyleNone;
+        self.linespacing = 1.0f;
+        self.characterSpacing = 0.0f;
+        self.textDrawMode = LWTextDrawModeFill;
+        self.strokeColor = nil;
+        self.strokeWidth = 0.0f;
+        self.linkColor = [UIColor blueColor];
+        self.linkHighlightColor = RGB(0, 0, 0, 0.35f);
+        self.edgeInsets = UIEdgeInsetsZero;
+    }
+    return self;
+}
+
+
+
++ (LWHTMLTextConfig *)defaultsH1TextConfig {
+    LWHTMLTextConfig* config = [[LWHTMLTextConfig alloc] init];
+    config.font = [UIFont boldSystemFontOfSize:20.0f];
+    return config;
+}
+
++ (LWHTMLTextConfig *)defaultsH2TextConfig {
+    LWHTMLTextConfig* config = [[LWHTMLTextConfig alloc] init];
+    config.font = [UIFont boldSystemFontOfSize:18.0f];
+    return config;
+}
+
+
++ (LWHTMLTextConfig *)defaultsH3TextConfig {
+    LWHTMLTextConfig* config = [[LWHTMLTextConfig alloc] init];
+    config.font = [UIFont boldSystemFontOfSize:16.0f];
+    return config;
+}
+
+
++ (LWHTMLTextConfig *)defaultsH4TextConfig {
+    LWHTMLTextConfig* config = [[LWHTMLTextConfig alloc] init];
+    config.font = [UIFont boldSystemFontOfSize:14.0f];
+    return config;
+}
+
+
++ (LWHTMLTextConfig *)defaultsH5TextConfig {
+    LWHTMLTextConfig* config = [[LWHTMLTextConfig alloc] init];
+    config.font = [UIFont boldSystemFontOfSize:12.0f];
+    return config;
+}
+
++ (LWHTMLTextConfig *)defaultsH6TextConfig {
+    LWHTMLTextConfig* config = [[LWHTMLTextConfig alloc] init];
+    config.font = [UIFont boldSystemFontOfSize:10.0f];
+    return config;
+}
+
++ (LWHTMLTextConfig *)defaultsParagraphTextConfig {
+    LWHTMLTextConfig* config = [[LWHTMLTextConfig alloc] init];
+    return config;
+}
+
++ (LWHTMLTextConfig *)defaultsQuoteTextConfig {
+    LWHTMLTextConfig* config = [[LWHTMLTextConfig alloc] init];
+    config.textColor = [UIColor grayColor];
     return config;
 }
 

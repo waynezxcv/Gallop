@@ -36,8 +36,8 @@
         self.placeholder = nil;
         self.userInteractionEnabled = YES;
         self.size = CGSizeMake(SCREEN_WIDTH, 100.0f);
-        self.paragraphSpacing = 10.0f;
-        self.needAddToImageBrowser = NO;
+        self.needAddToImageCallbacks = NO;
+        self.edgeInsets = UIEdgeInsetsZero;
     }
     return self;
 }

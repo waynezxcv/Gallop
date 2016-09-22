@@ -24,6 +24,9 @@
 
 @end
 
+#define kImageDisplayIdentifier @"imageDisplayIdentifier"
+#define kContentDisplayIdentifier @"contentDisplayIdentifier"
+
 @implementation HTMLParsingViewController
 
 #pragma mark - ViewControllerLifeCycle
@@ -38,25 +41,25 @@
     button.titleLabel.textAlignment = NSTextAlignmentRight;
     [button addTarget:self action:@selector(UIWebView) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-
+    
     self.isNeedRefresh = YES;
     self.title = @"HTML Parsing";
     self.view.backgroundColor = [UIColor whiteColor];
-    self.htmlView = [[LWHTMLDisplayView alloc] initWithFrame:self.view.bounds parentVC:self];
+    self.htmlView = [[LWHTMLDisplayView alloc] initWithFrame:self.view.bounds];
     self.htmlView.displayDelegate = self;
     [self.view addSubview:self.htmlView];
-
+    
     UIView* mskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 250.0f)];
     mskView.backgroundColor = RGB(0, 0, 0, 0.15f);
     [self.htmlView addSubview:mskView];
-
+    
     self.coverTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 150.0f, SCREEN_WIDTH - 20.0f, 80.0f)];
     self.coverTitleLabel.textColor = [UIColor whiteColor];
     self.coverTitleLabel.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:20.0f];
     self.coverTitleLabel.numberOfLines = 0;
     self.coverTitleLabel.textAlignment = NSTextAlignmentLeft;
     [self.htmlView addSubview:self.coverTitleLabel];
-
+    
     self.coverDesLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 230.0f, SCREEN_WIDTH - 20.0f, 20.0f)];
     self.coverDesLabel.textColor = [UIColor whiteColor];
     self.coverDesLabel.font = [UIFont fontWithName:@"Heiti SC" size:10.0f];
@@ -96,88 +99,92 @@
     [self downloadDataCompletion:^(NSData *data) {
         __strong typeof(weakSelf) swself = weakSelf;
         swself.htmlView.data = data;
-
+        
         LWHTMLLayout* htmlLayout = [[LWHTMLLayout alloc] init];
-
+        
         LWStorageBuilder* builder = swself.htmlView.storageBuilder;
         /** cover  **/
         LWHTMLImageConfig* coverConfig = [[LWHTMLImageConfig alloc] init];
         coverConfig.size = CGSizeMake(SCREEN_WIDTH, 250.0f);
         [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/img"
-                               edgeInsets:UIEdgeInsetsMake(0.0f, 0, 5.0f, 0)
+                      paragraphEdgeInsets:UIEdgeInsetsMake(0.0f, 0, 5.0f, 0)
                          configDictionary:@{@"img":coverConfig}];
         [htmlLayout addStorages:builder.storages];
-
+        
         /** cover title **/
         [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/h1"];
         NSString* coverTitle = [builder contents];
-
+        
         /** cover description **/
         [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/span[@class='img-source']"];
         NSString* coverDes = [builder contents];
-
+        
         /** title  **/
         LWHTMLTextConfig* titleConfig = [[LWHTMLTextConfig alloc] init];
         titleConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:18.0];
         titleConfig.textColor = [UIColor blackColor];
         [builder createLWStorageWithXPath:@"//div[@class='question']/h2"
-                               edgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 15.0f, 20.0f)
+                      paragraphEdgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 15.0f, 20.0f)
                          configDictionary:@{@"h2":titleConfig}];
         [htmlLayout addStorages:builder.storages];//使用add方法添加的storage将另起一行
-
+        
         /** avatar  **/
         LWHTMLImageConfig* avatarConfig = [[LWHTMLImageConfig alloc] init];
         avatarConfig.size = CGSizeMake(20.0f, 20.0f);
         [builder createLWStorageWithXPath:@"//div[@class='meta']/img"
-                               edgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 10.0, 20.0f)
+                      paragraphEdgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 10.0, 20.0f)
                          configDictionary:@{@"img":avatarConfig}];
         [htmlLayout addStorages:builder.storages];
-
+        
         /** name  **/
         LWHTMLTextConfig* nameConfig = [[LWHTMLTextConfig alloc] init];
         nameConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:15.0f];
         nameConfig.textColor = [UIColor blackColor];
         [builder createLWStorageWithXPath:@"//div[@class='meta']/span[@class='author']"
-                               edgeInsets:UIEdgeInsetsMake(10.0f, 50.0f, 15.0f, 20.0f)
+                      paragraphEdgeInsets:UIEdgeInsetsMake(10.0f, 50.0f, 15.0f, 20.0f)
                          configDictionary:@{@"span":nameConfig}];
-
+        
         LWTextStorage* nameStorage = (LWTextStorage*)builder.firstStorage;
         /** description  **/
         LWHTMLTextConfig* desConfig = [[LWHTMLTextConfig alloc] init];
         desConfig.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
         desConfig.textColor = [UIColor grayColor];
         [builder createLWStorageWithXPath:@"//div[@class='meta']/span[@class='bio']"
-                               edgeInsets:UIEdgeInsetsMake(10.0f, 50.0f, 15.0f, 20.0f)
+                      paragraphEdgeInsets:UIEdgeInsetsMake(10.0f, 50.0f, 15.0f, 20.0f)
                          configDictionary:@{@"span":desConfig}];
         LWTextStorage* desStorage =(LWTextStorage*)builder.firstStorage;
         [nameStorage lw_appendTextStorage:desStorage];
         [htmlLayout appendStorage:nameStorage];//使用apend方法添加的storage将不会另起一行，而是拼接在上一个storage后面
-
+        
         /** content  **/
         LWHTMLTextConfig* contentConfig = [[LWHTMLTextConfig alloc] init];
         contentConfig.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
         contentConfig.textColor = RGB(50, 50, 50, 1);
         contentConfig.linkColor = RGB(232, 104, 96,1.0f);
         contentConfig.linkHighlightColor = RGB(0, 0, 0, 0.35f);
-
+        contentConfig.edgeInsets = UIEdgeInsetsMake(10.0f, 30.0f, 10.0f, 20.0f);//设置单独的edgeInsets
+        contentConfig.extraDisplayIdentifier = kContentDisplayIdentifier;//设置额外的绘制
+        
         LWHTMLTextConfig* strongConfig = [[LWHTMLTextConfig alloc] init];
         strongConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:15.0f];
         strongConfig.textColor = [UIColor blackColor];
-
+        
         LWHTMLImageConfig* imageConfig = [[LWHTMLImageConfig alloc] init];
         imageConfig.size = CGSizeMake(SCREEN_WIDTH - 20.0f, 240.0f);
-        imageConfig.needAddToImageBrowser = YES;//将这个图片加入照片浏览器
+        imageConfig.needAddToImageCallbacks = YES;//将这个图片加入照片浏览器
         imageConfig.autolayoutHeight = YES;//自动按照图片的大小匹配一个适合的高度
-
+        imageConfig.edgeInsets = UIEdgeInsetsMake(20.0f, 20.0f, 20.0f, 20.0f);//设置单独的edgeInsets
+        imageConfig.extraDisplayIdentifier = kImageDisplayIdentifier;//设置额外的绘制
+        
         [builder createLWStorageWithXPath:@"//div[@class='content']/p"
-                               edgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 10.0, 20.0f)
+                      paragraphEdgeInsets:UIEdgeInsetsMake(10.0f, 20.0f, 10.0, 20.0f)
                          configDictionary:@{@"p":contentConfig,
                                             @"strong":strongConfig,
                                             @"em":strongConfig,
                                             @"img":imageConfig}];
-
+        
         [htmlLayout addStorages:builder.storages];
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             swself.htmlView.layout = htmlLayout;
             swself.coverTitleLabel.text = coverTitle;
@@ -222,17 +229,18 @@
                  superView:(UIView *)superView
        inSuperViewPosition:(CGRect)position
                      index:(NSUInteger)index {
-
+    
     NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:images.count];
     for (NSInteger i = 0; i < images.count; i ++) {
         @autoreleasepool {
             LWImageStorage* imageStorage = [images objectAtIndex:i];
-            LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
-                                                                                  thumbnailURL:(NSURL *)imageStorage.contents
-                                                                                         HDURL:(NSURL *)imageStorage.contents
-                                                                            imageViewSuperView:superView
-                                                                           positionAtSuperView:imageStorage.frame
-                                                                                         index:index];
+            LWImageBrowserModel* imageModel =
+            [[LWImageBrowserModel alloc] initWithplaceholder:nil
+                                                thumbnailURL:(NSURL *)imageStorage.contents
+                                                       HDURL:(NSURL *)imageStorage.contents
+                                          imageViewSuperView:superView
+                                         positionAtSuperView:imageStorage.frame
+                                                       index:index];
             [tmp addObject:imageModel];
         }
     }
@@ -243,6 +251,29 @@
     imageBrowser.isShowPageControl = NO;
     [imageBrowser show];
     
+}
+
+- (void)lw_htmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView extraDisplayIncontext:(CGContextRef)context size:(CGSize)size displayIdentifier:(NSString *)displayIdentifier {
+    if ([displayIdentifier isEqualToString:kImageDisplayIdentifier]) {
+        CGContextAddRect(context, CGRectMake(15.0f, 5.0f, size.width - 30.0f, size.height - 10.0f));
+        CGContextSetLineWidth(context, 0.5f);
+        CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
+        CGContextStrokePath(context);
+        
+        NSMutableParagraphStyle* p = [[NSMutableParagraphStyle alloc] init];
+        [p setAlignment:NSTextAlignmentCenter];
+        NSDictionary* attris = @{NSParagraphStyleAttributeName:p,
+                                 NSFontAttributeName:[UIFont fontWithName:@"Heiti SC" size:8.0f],
+                                 NSForegroundColorAttributeName:[UIColor blackColor]};
+        NSAttributedString* string = [[NSAttributedString alloc] initWithString:@"Gallop" attributes:attris];
+        [string drawInRect:CGRectMake(0.0f, 7.0f, size.width, 10.0f)];
+    }
+    
+    else if ([displayIdentifier isEqualToString:kContentDisplayIdentifier]) {
+        CGContextAddRect(context, CGRectMake(15.0f, 10.0f, 5.0f, size.height - 20.0f));
+        CGContextSetFillColorWithColor(context, RGB(230, 230, 230, 1).CGColor);
+        CGContextFillPath(context);
+    }
 }
 
 @end

@@ -12,7 +12,6 @@
 #import "MomentsViewController.h"
 #import "ArticleListViewController.h"
 
-
 @interface RootViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic,strong) UITableView* tableView;
@@ -61,10 +60,10 @@
         cell.textLabel.text = @"LWImageStorage-图片设置圆角半径和模糊效果Demo";
     }
     else if (indexPath.row == 3) {
-        cell.textLabel.text = @"使用Gallop构建的顺滑的朋友圈Demo";
+        cell.textLabel.text = @"Gallop构建的顺滑的朋友圈Demo";
     }
     else if (indexPath.row == 4) {
-        cell.textLabel.text = @"使用Gallop进行HTML解析的知乎日报Demo";
+        cell.textLabel.text = @"Gallop进行HTML解析的知乎日报Demo";
     }
     return cell;
 }

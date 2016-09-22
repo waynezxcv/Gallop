@@ -61,6 +61,20 @@
                      index:(NSUInteger)index;
 
 
+/**
+ *  当给某个LWHTMLTextConfig对象或LWHTMLImageConfig对象设置了extraDisplayIdentifier时，可以通过比较
+ *  extraDisplayIdentifier字符串进行额外的绘制
+ *
+ *  @param asyncDisplayView  所处的LWAsyncDisplayView
+ *  @param context           CGContextRef
+ *  @param size              绘制区域大小
+ *  @param displayIdentifier extraDisplayIdentifier字符串
+ */
+- (void)lw_htmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
+     extraDisplayIncontext:(CGContextRef)context
+                      size:(CGSize)size
+         displayIdentifier:(NSString *)displayIdentifier;
+
 @end
 
 
@@ -73,17 +87,6 @@
 @property (nonatomic,weak) id <LWHTMLDisplayViewDelegate> displayDelegate;//代理对象
 @property (nonatomic,strong,readonly) LWStorageBuilder* storageBuilder;//用于解析HTML创建LWStorage
 @property (nonatomic,strong) NSData* data;//HTML文件
-@property (nonatomic,weak) UIViewController* parentVC;//如果要使用图片浏览器，需要设置parentVC
-
-/**
- *  构造方法
- *
- *  @param frame    html在父视图中所处的位置CGRect
- *  @param parentVC html所处的ViewController
- *
- *  @return LWHTMLDisplayView对象
- */
-- (id)initWithFrame:(CGRect)frame parentVC:(UIViewController *)parentVC;
 
 @end
 

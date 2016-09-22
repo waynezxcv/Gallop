@@ -62,7 +62,7 @@ typedef void(^LWStorageBuildingCompletion)(NSArray* storages);
  *                    用来设置对应标签的式样。
  */
 - (void)createLWStorageWithXPath:(NSString *)xpath
-                      edgeInsets:(UIEdgeInsets)edgeInsets
+             paragraphEdgeInsets:(UIEdgeInsets)edgeInsets
                 configDictionary:(NSDictionary *)dict;
 
 /**

@@ -64,6 +64,7 @@
 		01571FBC1D93003D002D71A5 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FB81D93003D002D71A5 /* NSObject+LWAlchemy.m */; };
 		01571FC11D93004B002D71A5 /* LWActiveIncatorAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FBE1D93004B002D71A5 /* LWActiveIncatorAnimationView.m */; };
 		01571FC21D93004B002D71A5 /* LWActiveIncator.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FC01D93004B002D71A5 /* LWActiveIncator.m */; };
+		016A10331D9426B400268B4F /* articlelist.plist in Resources */ = {isa = PBXBuildFile; fileRef = 016A10321D9426B400268B4F /* articlelist.plist */; };
 		01AFD9891CF4D32700BF46D0 /* LikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AFD9881CF4D32700BF46D0 /* LikeButton.m */; };
 		01D14EF41CDCFA780028714A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EF31CDCFA780028714A /* RootViewController.m */; };
 		01D5B2F51D37D548007C5CB1 /* CornerRadiusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D5B2F41D37D548007C5CB1 /* CornerRadiusViewController.m */; };
@@ -219,6 +220,7 @@
 		01571FBF1D93004B002D71A5 /* LWActiveIncator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWActiveIncator.h; path = Others/LWActiveIndicator/LWActiveIncator.h; sourceTree = "<group>"; };
 		01571FC01D93004B002D71A5 /* LWActiveIncator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWActiveIncator.m; path = Others/LWActiveIndicator/LWActiveIncator.m; sourceTree = "<group>"; };
 		015FC0E31CDFA48800B4DF82 /* Gallop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Gallop.h; path = ../Gallop/Gallop.h; sourceTree = "<group>"; };
+		016A10321D9426B400268B4F /* articlelist.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = articlelist.plist; sourceTree = "<group>"; };
 		01AFD9871CF4D32700BF46D0 /* LikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeButton.h; sourceTree = "<group>"; };
 		01AFD9881CF4D32700BF46D0 /* LikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeButton.m; sourceTree = "<group>"; };
 		01D14EF21CDCFA780028714A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
@@ -328,7 +330,7 @@
 				01F58BC11D85B1910089DB02 /* RichTextDemo2 */,
 				01D5B2F21D37D525007C5CB1 /* CornerRaius Demo */,
 				B0ACEBED1CEDC9530019074F /* WechatMomentsDemo */,
-				0134D11D1D16B62D00FB91FF /* HTML Parsing Demo */,
+				0134D11D1D16B62D00FB91FF /* HTML Parsing Demo 1 */,
 				011DFA1D1C987CD6000410D7 /* Supporting Files */,
 			);
 			name = Demo;
@@ -458,7 +460,7 @@
 			name = HTMLParser;
 			sourceTree = "<group>";
 		};
-		0134D11D1D16B62D00FB91FF /* HTML Parsing Demo */ = {
+		0134D11D1D16B62D00FB91FF /* HTML Parsing Demo 1 */ = {
 			isa = PBXGroup;
 			children = (
 				B0C9A92F1D2273D300DFAA44 /* ArticleList */,
@@ -467,7 +469,7 @@
 				B0E7F3981D210CE300877644 /* WebViewController.h */,
 				B0E7F3991D210CE300877644 /* WebViewController.m */,
 			);
-			name = "HTML Parsing Demo";
+			name = "HTML Parsing Demo 1";
 			sourceTree = "<group>";
 		};
 		0134D12A1D16BDEE00FB91FF /* Root */ = {
@@ -640,6 +642,7 @@
 		B0C9A92F1D2273D300DFAA44 /* ArticleList */ = {
 			isa = PBXGroup;
 			children = (
+				016A10321D9426B400268B4F /* articlelist.plist */,
 				B0C9A9291D2270C000DFAA44 /* ArticleListViewController.h */,
 				B0C9A92A1D2270C000DFAA44 /* ArticleListViewController.m */,
 				B0C9A92C1D2272DD00DFAA44 /* ArticleListTableViewCell.h */,
@@ -724,7 +727,6 @@
 				TargetAttributes = {
 					011DFA191C987CD6000410D7 = {
 						CreatedOnToolsVersion = 7.2.1;
-						DevelopmentTeam = 48NPNTSQK4;
 					};
 				};
 			};
@@ -751,6 +753,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				016A10331D9426B400268B4F /* articlelist.plist in Resources */,
 				B0F423191D476C19007E8FD0 /* LICENSE in Resources */,
 				011DFA2A1C987CD6000410D7 /* Assets.xcassets in Resources */,
 			);
@@ -947,7 +950,7 @@
 				DEVELOPMENT_TEAM = 48NPNTSQK4;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.WayneInc.Gallop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -965,7 +968,7 @@
 				DEVELOPMENT_TEAM = 48NPNTSQK4;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.WayneInc.Gallop;
 				PRODUCT_NAME = "$(TARGET_NAME)";

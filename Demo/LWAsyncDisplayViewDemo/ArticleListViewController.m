@@ -29,47 +29,18 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
-}
+    
+    NSString* plistPath = [[NSBundle mainBundle] pathForResource:@"articlelist" ofType:@"plist"];
+    NSArray* list = [[NSArray alloc] initWithContentsOfFile:plistPath];
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    if (self.isNeedRefresh) {
-        self.isNeedRefresh = NO;
-        [LWActiveIncator showInView:self.view];
-        __weak typeof(self) weakSelf = self;
-        [self downloadDataCompletion:^(NSData *data) {
-            __strong typeof(weakSelf) swself = weakSelf;
-            NSString* receiveStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-            NSData* d = [receiveStr dataUsingEncoding:NSUTF8StringEncoding];
-            NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:d options:NSJSONReadingMutableLeaves error:nil];
-            NSArray* list = [jsonDict objectForKey:@"stories"];
-            [swself.dataSource removeAllObjects];
-            for (NSDictionary* dict in list) {
-                @autoreleasepool {
-                    ArticleListModel* model = [ArticleListModel modelWithJSON:dict];
-                    [swself.dataSource addObject:model];
-                }
-            }
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [swself.tableView reloadData];
-                [LWActiveIncator hideInViwe:swself.view];
-            });
-        }];
+    for (NSDictionary* dict in list) {
+        @autoreleasepool {
+            ArticleListModel* model = [ArticleListModel modelWithJSON:dict];
+            [self.dataSource addObject:model];
+        }
     }
-}
-
-- (void)downloadDataCompletion:(void(^)(NSData* data))completion {
-    NSURLSession* session = [NSURLSession sessionWithConfiguration:
-                             [NSURLSessionConfiguration defaultSessionConfiguration]];
-    NSURLRequest* request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://news-at.zhihu.com/api/4/news/latest"]];
-    NSURLSessionDataTask* task =
-    [session dataTaskWithRequest:request
-               completionHandler:^(NSData * _Nullable data,
-                                   NSURLResponse * _Nullable response,
-                                   NSError * _Nullable error) {
-                   completion(data);
-               }];
-    [task resume];
+    [self.tableView reloadData];
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -97,7 +68,7 @@
     NSURL* URL = [NSURL URLWithString:[NSString stringWithFormat:@"http://daily.zhihu.com/story/%@",model.idString]];
     HTMLParsingViewController* vc = [[HTMLParsingViewController alloc] init];
     vc.URL = URL;
-    NSLog(@"%@",URL.absoluteString);
+    NSLog(@"%@",URL);
     [self.navigationController pushViewController:vc animated:YES];
 }
 

@@ -36,9 +36,18 @@
 
 @protocol LWHTMLDisplayCellDelegate <NSObject>
 
-- (void)lwhtmlDisplayCellDidCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data atIndexPath:(NSIndexPath *)indexPath;
-- (void)lwhtmlDisplayCellDidCilickedImageStorage:(LWImageStorage *)imageStorage touch:(UITouch *)touch atIndexPath:(NSIndexPath *)indexPath;
+- (void)lwhtmlDisplayCellDidCilickedTextStorage:(LWTextStorage *)textStorage
+                                       linkdata:(id)data
+                                    atIndexPath:(NSIndexPath *)indexPath;
 
+- (void)lwhtmlDisplayCellDidCilickedImageStorage:(LWImageStorage *)imageStorage
+                                           touch:(UITouch *)touch
+                                     atIndexPath:(NSIndexPath *)indexPath;
+
+- (void)lwhtmlDisplayView:(LWStorage *)storage
+     extraDisplayIncontext:(CGContextRef)context
+                      size:(CGSize)size
+         displayIdentifier:(NSString *)displayIdentifier;
 @end
 
 
@@ -92,15 +101,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self _setup];
-    }
-    return self;
-}
-
-- (id)initWithFrame:(CGRect)frame parentVC:(UIViewController *)parentVC {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self _setup];
-        self.parentVC = parentVC;
     }
     return self;
 }
@@ -162,7 +162,7 @@
                         atIndexPath:(NSIndexPath *)indexPath {
     imageStorage.needResize = NO;
     LWHTMLCellLayout* layout = [self.items objectAtIndex:indexPath.row];
-    layout.cellHeight = [layout suggestHeightWithBottomMargin:0.0f];
+    layout.cellHeight = [layout suggestHeightWithBottomMargin:imageStorage.htmlLayoutEdgeInsets.bottom];
     [UIView setAnimationsEnabled:NO];
     [self reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     [UIView setAnimationsEnabled:YES];
@@ -189,6 +189,21 @@
                                  inSuperViewPosition:imageStorage.frame
                                                index:index];
         }
+    }
+}
+
+- (void)lwhtmlDisplayView:(LWStorage *)storage
+    extraDisplayIncontext:(CGContextRef)context
+                     size:(CGSize)size
+        displayIdentifier:(NSString *)displayIdentifier {
+    
+    if ([self.displayDelegate respondsToSelector:@selector(lw_htmlDisplayView:extraDisplayIncontext:size:displayIdentifier:)] &&
+        [self.displayDelegate conformsToProtocol:@protocol(LWHTMLDisplayViewDelegate)]) {
+        
+        [self.displayDelegate lw_htmlDisplayView:self
+                           extraDisplayIncontext:context
+                                            size:size
+                               displayIdentifier:displayIdentifier];
     }
 }
 
@@ -297,6 +312,23 @@
         [self.delegate lwhtmlDisplayCellDidCilickedImageStorage:imageStorage touch:touch atIndexPath:self.indexPath];
     }
 }
+
+- (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
+    if (self.layout.totalStorages.count) {
+        LWStorage* storage = self.layout.totalStorages.firstObject;
+        if (!storage.extraDisplayIdentifier) {
+            return;
+        }
+        if ([self.delegate respondsToSelector:@selector(lwhtmlDisplayView:extraDisplayIncontext:size:displayIdentifier:)] && [self.delegate conformsToProtocol:@protocol(LWHTMLDisplayCellDelegate)]) {
+            [self.delegate lwhtmlDisplayView:storage
+                       extraDisplayIncontext:context
+                                        size:size
+                           displayIdentifier:storage.extraDisplayIdentifier];
+        }
+    }
+}
+
+
 
 @end
 

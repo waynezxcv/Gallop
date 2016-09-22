@@ -57,7 +57,10 @@
 @property (nonatomic,assign) CGFloat contentsScale;//跟CALayer对象的同名属性作用一样
 @property (nonatomic,strong,nullable) UIColor* backgroundColor;//跟UIView对象的同名属性作用一样
 @property (nonatomic,assign) UIViewContentMode contentMode;//跟UIView对象的同名属性作用一样
+
+#pragma mark - HTMLDisplayView
 @property (nonatomic,assign) UIEdgeInsets htmlLayoutEdgeInsets;//私有属性，用于LWHTMLDisplayView设置内容的UIEdgeInsets
+@property (nonatomic,copy,nullable) NSString* extraDisplayIdentifier;//额外绘制的标记字符串
 
 /**
  *  设置一个标示字符串并初始化一个LWStorage对象

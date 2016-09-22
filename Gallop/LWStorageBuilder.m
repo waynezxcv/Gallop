@@ -29,6 +29,7 @@
 #import "GallopDefine.h"
 
 
+
 @interface LWStorageBuilder ()<LWHTMLParserDelegate>
 
 @property (nonatomic,strong) LWHTMLParser* parser;
@@ -39,9 +40,8 @@
 @property (nonatomic,strong) NSMutableArray* imageCallbacksArray;
 @property (nonatomic,strong) NSMutableArray* tmpStorages;
 @property (nonatomic,strong) NSMutableString* tmpString;
-@property (nonatomic,assign) CGFloat offsetY;
 @property (nonatomic,assign) UIEdgeInsets edgeInsets;
-@property (nonatomic,copy) NSDictionary* configDict;
+@property (nonatomic,strong) NSMutableDictionary* configDict;
 @property (nonatomic,copy) NSString* xpath;
 @property (nonatomic,strong) LWHTMLNode* tree;
 
@@ -67,12 +67,14 @@
 #pragma mark - CreateLWStorage
 
 - (void)createLWStorageWithXPath:(NSString *)xpath
-                      edgeInsets:(UIEdgeInsets)edgeInsets
+             paragraphEdgeInsets:(UIEdgeInsets)edgeInsets
                 configDictionary:(NSDictionary *)dict {
+    NSArray* allKeys = [dict allKeys];
+    for (NSString* key in allKeys) {
+        self.configDict[key] = dict[key];
+    }
     self.xpath = [xpath copy];
-    self.configDict = [dict copy];
     self.edgeInsets = edgeInsets;
-    self.offsetY = self.edgeInsets.top;
     self.imageCallbacksArray = [[NSMutableArray alloc] init];
     [self.parser startSearchWithXPathQuery:xpath];
 }
@@ -108,6 +110,7 @@
 }
 
 - (void)parser:(LWHTMLParser *)parser foundCharacters:(NSString *)string {
+    string = [string stringByNormalizingWhitespace];
     if (self.tmpString && self.tagElement != self.currentNode) {
         NSRange range = NSMakeRange(self.tmpString.length, string.length);
         self.currentNode.range = range;
@@ -162,35 +165,49 @@
                 imageConfig = self.configDict[@"img"];
             }
             LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+            imageStorage.extraDisplayIdentifier = imageConfig.extraDisplayIdentifier;
             imageStorage.contents = [NSURL URLWithString:[NSString stringWithFormat:@"%@",
                                                           (NSString *)node.attributeDict[@"src"]]];
             
-            CGFloat width = (imageConfig.size.width >= SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right) ?
-            SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right : imageConfig.size.width;
+            UIEdgeInsets edgeInsets = self.edgeInsets;
             
-            imageStorage.frame = CGRectMake(self.edgeInsets.left,
-                                            self.edgeInsets.top,
+            if (!UIEdgeInsetsEqualToEdgeInsets(imageConfig.edgeInsets, UIEdgeInsetsZero)) {
+                edgeInsets = imageConfig.edgeInsets;
+            }
+            
+            CGFloat width =
+            (imageConfig.size.width >= SCREEN_WIDTH - edgeInsets.left - edgeInsets.right) ?
+            SCREEN_WIDTH - edgeInsets.left - edgeInsets.right
+            : imageConfig.size.width;
+            
+            imageStorage.frame = CGRectMake(edgeInsets.left,
+                                            edgeInsets.top,
                                             width,
                                             imageConfig.size.height);
+            
             imageStorage.clipsToBounds = YES;
             imageStorage.placeholder = imageConfig.placeholder;
-            imageStorage.htmlLayoutEdgeInsets = self.edgeInsets;
+            imageStorage.htmlLayoutEdgeInsets = edgeInsets;
             
             if (imageConfig.autolayoutHeight) {
                 imageStorage.needResize = YES;
             }
             
             imageStorage.userInteractionEnabled = imageConfig.userInteractionEnabled;
-            self.offsetY += (imageStorage.height + imageConfig.paragraphSpacing);
             
-            if (imageConfig.needAddToImageBrowser &&
+            if (imageConfig.needAddToImageCallbacks &&
                 ![self.imageCallbacksArray containsObject:imageStorage]) {
                 [self.imageCallbacksArray addObject:imageStorage];
             }
             return imageStorage;
         }
         return nil;
-    } else {
+    }
+    else if ([node.elementName isEqualToString:@"object"]) {
+        //todo:
+        return nil;
+    }
+    else {
         if (!node.isTag) {
             return nil;
         }
@@ -220,15 +237,20 @@
                 }
             }
         }
-        CGRect frame = CGRectMake(self.edgeInsets.left,
-                                  self.edgeInsets.top,
-                                  SCREEN_WIDTH - self.edgeInsets.left - self.edgeInsets.right,
+        UIEdgeInsets edgeInsets = self.edgeInsets;
+        if (!UIEdgeInsetsEqualToEdgeInsets(config.edgeInsets, UIEdgeInsetsZero)) {
+            edgeInsets = config.edgeInsets;
+        }
+        
+        CGRect frame = CGRectMake(edgeInsets.left,
+                                  edgeInsets.top,
+                                  SCREEN_WIDTH - edgeInsets.left - edgeInsets.right,
                                   CGFLOAT_MAX);
         LWTextStorage* textStorage = [LWTextStorage lw_textStrageWithText:attributedString
                                                                     frame:frame];
         textStorage.textDrawMode  = config.textDrawMode;
-        textStorage.htmlLayoutEdgeInsets = self.edgeInsets;
-        self.offsetY += (textStorage.height + config.paragraphSpacing);
+        textStorage.htmlLayoutEdgeInsets = edgeInsets;
+        textStorage.extraDisplayIdentifier = config.extraDisplayIdentifier;
         return textStorage;
     }
 }
@@ -248,6 +270,24 @@ static inline void _setAttribute(__unsafe_unretained NSMutableAttributedString* 
 
 
 #pragma mark - Getter
+
+- (NSMutableDictionary *)configDict {
+    if (_configDict) {
+        return _configDict;
+    }
+    _configDict =
+    [[NSMutableDictionary alloc]
+     initWithDictionary:@{@"h1":[LWHTMLTextConfig defaultsH1TextConfig],
+                          @"h2":[LWHTMLTextConfig defaultsH2TextConfig],
+                          @"h3":[LWHTMLTextConfig defaultsH3TextConfig],
+                          @"h4":[LWHTMLTextConfig defaultsH4TextConfig],
+                          @"h5":[LWHTMLTextConfig defaultsH5TextConfig],
+                          @"h6":[LWHTMLTextConfig defaultsH6TextConfig],
+                          @"p":[LWHTMLTextConfig defaultsParagraphTextConfig],
+                          @"q":[LWHTMLTextConfig defaultsQuoteTextConfig],
+                          @"blockquote":[LWHTMLTextConfig defaultsQuoteTextConfig]}];
+    return _configDict;
+}
 
 - (NSString *)xpathTag {
     NSString* xpathTag = @"";

@@ -54,6 +54,7 @@
         self.contentsScale = [GallopUtils contentsScale];
         self.backgroundColor = [UIColor whiteColor];
         self.contentMode = UIViewContentModeScaleAspectFill;
+        self.extraDisplayIdentifier = nil;
     }
     return self;
 }
@@ -81,6 +82,7 @@
         self.contentsScale = [GallopUtils contentsScale];
         self.backgroundColor = nil;
         self.contentMode = UIViewContentModeScaleAspectFill;
+        self.extraDisplayIdentifier = nil;
     }
     return self;
 }

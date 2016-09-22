@@ -41,7 +41,8 @@
 @property (nonatomic,assign) CGFloat strokeWidth;//描边宽度
 @property (nonatomic,strong) UIColor* linkColor;//链接颜色
 @property (nonatomic,strong) UIColor* linkHighlightColor;//链接点击时高亮颜色
-@property (nonatomic,assign) CGFloat paragraphSpacing;//段落间距
+@property (nonatomic,assign) UIEdgeInsets edgeInsets;//设置该storage的edgeInsets，优先级高于paragraphEdgeInsets
+@property (nonatomic,copy) NSString* extraDisplayIdentifier;//额外绘制的标记字符串
 
 /**
  *  获取一个默认的样式设置
@@ -49,5 +50,16 @@
  *  @return 一个默认样式的LWHTMTextCofing对象
  */
 + (LWHTMLTextConfig *)defaultsTextConfig;
+
+
++ (LWHTMLTextConfig *)defaultsH1TextConfig;
++ (LWHTMLTextConfig *)defaultsH2TextConfig;
++ (LWHTMLTextConfig *)defaultsH3TextConfig;
++ (LWHTMLTextConfig *)defaultsH4TextConfig;
++ (LWHTMLTextConfig *)defaultsH5TextConfig;
++ (LWHTMLTextConfig *)defaultsH6TextConfig;
++ (LWHTMLTextConfig *)defaultsParagraphTextConfig;
++ (LWHTMLTextConfig *)defaultsQuoteTextConfig;
+
 
 @end
