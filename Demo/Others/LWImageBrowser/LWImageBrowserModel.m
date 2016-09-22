@@ -25,8 +25,8 @@
 
 #import "LWImageBrowserModel.h"
 #import "SDWebImageManager.h"
-#import "GallopUtils.h"
-#import "GallopDefine.h"
+#import "LWImageBrowserDefine.h"
+
 
 
 #define kImageBrowserWidth (SCREEN_WIDTH + 10.0f)

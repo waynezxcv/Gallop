@@ -25,18 +25,14 @@
 #import "LWImageBrowser.h"
 #import "LWImageBrowserFlowLayout.h"
 #import "LWImageBrowserCell.h"
-#import "UIImage+BlurEffects.h"
-#import "LWImageBrowserButton.h"
+#import "UIImage+ImageEffects.h"
 #import "LWActionSheetView.h"
 #import "LWAlertView.h"
-#import "GallopUtils.h"
-#import "GallopDefine.h"
+#import "LWImageBrowserDefine.h"
+#import "LWImageBrowserButton.h"
 
 
-#define kPageControlHeight 40.0f
-#define kImageBrowserWidth (SCREEN_WIDTH + 10.0f)
-#define kImageBrowserHeight SCREEN_HEIGHT
-#define kCellIdentifier @"LWImageBroserCellIdentifier"
+
 
 @interface LWImageBrowser ()
 

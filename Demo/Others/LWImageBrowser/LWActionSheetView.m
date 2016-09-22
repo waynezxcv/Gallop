@@ -24,9 +24,9 @@
 
 
 #import "LWActionSheetView.h"
-#import "UIImage+BlurEffects.h"
+#import "UIImage+ImageEffects.h"
 #import "LWActionSheetTableViewCell.h"
-#import "GallopDefine.h"
+#import "LWImageBrowserDefine.h"
 
 
 const CGFloat cellHeight = 60.0f;
@@ -157,7 +157,8 @@ const CGFloat cellHeight = 60.0f;
 }
 
 #pragma mark - UIGestrueDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
 @end

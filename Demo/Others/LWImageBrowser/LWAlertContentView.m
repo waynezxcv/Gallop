@@ -24,7 +24,7 @@
 
 
 #import "LWAlertContentView.h"
-#import "GallopDefine.h"
+#import "LWImageBrowserDefine.h"
 
 
 

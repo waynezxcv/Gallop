@@ -29,7 +29,7 @@
 #import "LWTransaction.h"
 #import "CALayer+LWTransaction.h"
 #import "LWAsyncDisplayLayer.h"
-#import "UIImage+BlurEffects.h"
+#import "UIImage+Gallop.h"
 
 
 
@@ -189,10 +189,10 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
         }
 
         if (self.isBlur) {
-            image = [image applyBlurWithRadius:20
-                                     tintColor:RGB(0, 0, 0, 0.15f)
-                         saturationDeltaFactor:1.4
-                                     maskImage:nil];
+            image = [image lw_applyBlurWithRadius:20
+                                        tintColor:RGB(0, 0, 0, 0.15f)
+                            saturationDeltaFactor:1.4
+                                        maskImage:nil];
         }
 
         CGContextSaveGState(context);
@@ -358,10 +358,10 @@ static const void* URLKey;
     if (imageStorage.isBlur && [imageStorage.contents isKindOfClass:[UIImage class]]) {
 
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            UIImage* blurImage = [image applyBlurWithRadius:20
-                                                  tintColor:RGB(0, 0, 0, 0.15f)
-                                      saturationDeltaFactor:1.4
-                                                  maskImage:nil];
+            UIImage* blurImage = [image lw_applyBlurWithRadius:20
+                                                     tintColor:RGB(0, 0, 0, 0.15f)
+                                         saturationDeltaFactor:1.4
+                                                     maskImage:nil];
 
             dispatch_async(dispatch_get_main_queue(), ^{
 

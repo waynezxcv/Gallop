@@ -37,13 +37,13 @@
     ts.text = @"Gallop支持图文混排,可以在文字中插入本地图片→和网络图片→UIView的子类→.给指定位置文字添加链接.快来试试吧。";
     ts.font = [UIFont fontWithName:@"Heiti SC" size:16.0f];
     
-    UIImage* image = [UIImage imageNamed:@"pic.jpeg"];
+    UIImage* image = [UIImage imageNamed:@"001"];
     UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
     
     //在文字中插入本地图片
     [ts lw_replaceTextWithImage:image
                     contentMode:UIViewContentModeScaleAspectFill
-                      imageSize:CGSizeMake(40, 40)
+                      imageSize:CGSizeMake(20, 20)
                       alignment:LWTextAttachAlignmentTop
                           range:NSMakeRange(26, 0)];
     

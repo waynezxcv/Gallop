@@ -74,13 +74,13 @@
     [ts2 lw_appendTextStorage:ts3];
     
     //将图片装换成属性字符串拼接到LWTextStorage对象后
-    UIImage* image = [UIImage imageNamed:@"pic.jpeg"];
+    UIImage* image = [UIImage imageNamed:@"001"];
     NSMutableAttributedString* as2 = [NSMutableAttributedString
                                       lw_textAttachmentStringWithContent:image
                                       contentMode:UIViewContentModeScaleAspectFill
-                                      ascent:50.0f
+                                      ascent:30
                                       descent:0.0f
-                                      width:50.0f];
+                                      width:30.0f];
     LWTextStorage* ts4 = [LWTextStorage lw_textStrageWithText:as2 frame:CGRectZero];
     [ts2 lw_appendTextStorage:ts4];
     

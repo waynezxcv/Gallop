@@ -24,8 +24,8 @@
 
 
 #import "LWActionSheetTableViewCell.h"
-#import "GallopUtils.h"
-#import "GallopDefine.h"
+#import "LWImageBrowserDefine.h"
+
 
 
 @interface LWActionSheetTableViewCell ()

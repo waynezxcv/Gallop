@@ -23,8 +23,7 @@
  */
 
 #import "LWImageBrowserCell.h"
-#import "GallopUtils.h"
-#import "GallopDefine.h"
+#import "LWImageBrowserDefine.h"
 
 
 

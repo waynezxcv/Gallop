@@ -42,7 +42,7 @@
  *  @param textStorage      点击的那个LWTextStorage对象
  *  @param data             添加点击链接时所附带的信息。
  */
-- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
+- (void)lw_htmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
    didCilickedTextStorage:(LWTextStorage *)textStorage
                  linkdata:(id)data;
 
@@ -52,8 +52,14 @@
  *  @param asyncDisplayView LWImageStorage所处的LWAsyncDisplayView
  *  @param imageStorage     点击的那个LWImageStorage对象
  */
-- (void)lwhtmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
-  didCilickedImageStorage:(LWImageStorage *)imageStorage;
+
+- (void)lw_htmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView
+   didSelectedImageStorage:(LWImageStorage *)imageStorage
+               totalImages:(NSArray *)images
+                 superView:(UIView *)superView
+       inSuperViewPosition:(CGRect)position
+                     index:(NSUInteger)index;
+
 
 @end
 

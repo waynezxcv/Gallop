@@ -23,8 +23,7 @@
  */
 
 #import "LWImageItem.h"
-#import "GallopUtils.h"
-#import "GallopDefine.h"
+#import "LWImageBrowserDefine.h"
 #import "LWProgeressHUD.h"
 
 

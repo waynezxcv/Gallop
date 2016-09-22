@@ -24,8 +24,8 @@
 
 
 #import "LWImageBrowserFlowLayout.h"
-#import "GallopUtils.h"
-#import "GallopDefine.h"
+#import "LWImageBrowserDefine.h"
+
 
 
 @implementation LWImageBrowserFlowLayout

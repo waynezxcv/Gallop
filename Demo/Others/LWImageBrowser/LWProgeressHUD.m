@@ -23,7 +23,10 @@
  */
 
 #import "LWProgeressHUD.h"
-#import "GallopDefine.h"
+#import "LWImageBrowserDefine.h"
+
+
+
 
 const CGFloat kHUDSize = 70.0f;
 

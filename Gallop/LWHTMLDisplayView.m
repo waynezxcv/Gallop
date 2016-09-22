@@ -26,7 +26,6 @@
 #import "LWAsyncDisplayView.h"
 #import "LWLayout.h"
 #import "LWStorageBuilder.h"
-#import "LWImageBrowser.h"
 #import "SDImageCache.h"
 #import "LWHTMLLayout.h"
 
@@ -172,39 +171,24 @@
 #pragma mark - LWHTMLDisplayCellDelegate
 
 - (void)lwhtmlDisplayCellDidCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data atIndexPath:(NSIndexPath *)indexPath {
-    if ([self.displayDelegate respondsToSelector:@selector(lwhtmlDisplayView:didCilickedTextStorage:linkdata:)] &&
+    if ([self.displayDelegate respondsToSelector:@selector(lw_htmlDisplayView:didCilickedTextStorage:linkdata:)] &&
         [self.displayDelegate conformsToProtocol:@protocol(LWHTMLDisplayViewDelegate)]) {
-        [self.displayDelegate lwhtmlDisplayView:self didCilickedTextStorage:textStorage linkdata:data];
+        [self.displayDelegate lw_htmlDisplayView:self didCilickedTextStorage:textStorage linkdata:data];
     }
 }
 
 - (void)lwhtmlDisplayCellDidCilickedImageStorage:(LWImageStorage *)imageStorage touch:(UITouch *)touch atIndexPath:(NSIndexPath *)indexPath {
-    if ([self.imageCallbacks containsObject:imageStorage]) {
-        NSInteger index = [self.imageCallbacks indexOfObject:imageStorage];
-        NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:self.imageCallbacks.count];
-        for (NSInteger i = 0; i < self.imageCallbacks.count; i ++) {
-            @autoreleasepool {
-                LWImageStorage* imageStorage = [self.imageCallbacks objectAtIndex:i];
-                LWHTMLDisplayCell* cell = [self cellForRowAtIndexPath:indexPath];
-                LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
-                                                                                      thumbnailURL:(NSURL *)imageStorage.contents
-                                                                                             HDURL:(NSURL *)imageStorage.contents
-                                                                                imageViewSuperView:cell.displayView
-                                                                               positionAtSuperView:imageStorage.frame
-                                                                                             index:index];
-                [tmp addObject:imageModel];
-            }
+    if ([self.displayDelegate respondsToSelector:@selector(lw_htmlDisplayView:didSelectedImageStorage:totalImages:superView:inSuperViewPosition:index:)]) {
+        if ([self.imageCallbacks containsObject:imageStorage]) {
+            NSInteger index = [self.imageCallbacks indexOfObject:imageStorage];
+            LWHTMLDisplayCell* cell = [self cellForRowAtIndexPath:indexPath];
+            [self.displayDelegate lw_htmlDisplayView:self
+                             didSelectedImageStorage:imageStorage
+                                         totalImages:self.imageCallbacks
+                                           superView:cell.displayView
+                                 inSuperViewPosition:imageStorage.frame
+                                               index:index];
         }
-        LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self.parentVC
-                                                                                imageModels:tmp
-                                                                               currentIndex:index];
-        imageBrowser.isScalingToHide = NO ;
-        imageBrowser.isShowPageControl = NO;
-        [imageBrowser show];
-    }
-    if ([self.displayDelegate respondsToSelector:@selector(lwhtmlDisplayView:didCilickedImageStorage:)] &&
-        [self.displayDelegate conformsToProtocol:@protocol(LWHTMLDisplayViewDelegate)]) {
-        [self.displayDelegate lwhtmlDisplayView:self didCilickedImageStorage:imageStorage];
     }
 }
 
@@ -232,7 +216,8 @@
         else if ([object isKindOfClass:[NSArray class]]) {
             NSArray* arr = (NSArray *)object;
             for (LWStorage* storage in arr) {
-                bottomMarigin =  storage.htmlLayoutEdgeInsets.bottom >= bottomMarigin ? storage.htmlLayoutEdgeInsets.bottom : bottomMarigin;
+                bottomMarigin =  storage.htmlLayoutEdgeInsets.bottom >= bottomMarigin ?
+                storage.htmlLayoutEdgeInsets.bottom : bottomMarigin;
                 [cellLayout addStorage:storage];
             }
         }

@@ -26,7 +26,7 @@
 #import "LWCornerRadiusHelper.h"
 #import "GallopUtils.h"
 #import "GallopDefine.h"
-#import "UIImage+BlurEffects.h"
+#import "UIImage+Gallop.h"
 
 
 
@@ -175,10 +175,10 @@
         CGFloat borderWidth = bw * [GallopUtils contentsScale];
 
         if (blur) {
-            image = [image applyBlurWithRadius:20
-                                     tintColor:RGB(0, 0, 0, 0.15f)
-                         saturationDeltaFactor:1.4
-                                     maskImage:nil];
+            image = [image lw_applyBlurWithRadius:20
+                                        tintColor:RGB(0, 0, 0, 0.15f)
+                            saturationDeltaFactor:1.4
+                                        maskImage:nil];
         }
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = CGBitmapContextCreate(NULL,
@@ -227,8 +227,7 @@
             CGImageRef imageMasked = CGBitmapContextCreateImage(context);
             image = [UIImage imageWithCGImage:imageMasked];
             CGImageRelease(imageMasked);
-        }
-        else {
+        } else {
             //draw cornerRadius image
             CGContextDrawTiledImage(context, imgRect, image.CGImage);
             CGImageRef imageMasked = CGBitmapContextCreateImage(context);
