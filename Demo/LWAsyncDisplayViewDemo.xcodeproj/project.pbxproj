@@ -71,7 +71,6 @@
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
 		01F58BC01D85AA8C0089DB02 /* RichTextDemo1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F58BBF1D85AA8C0089DB02 /* RichTextDemo1ViewController.m */; };
-		01F58BC41D85B1AE0089DB02 /* RichTextDemo2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F58BC31D85B1AE0089DB02 /* RichTextDemo2ViewController.m */; };
 		B0ACEC021CEDC9A50019074F /* AutoFitSizeTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBEF1CEDC9A50019074F /* AutoFitSizeTextView.m */; };
 		B0ACEC031CEDC9A50019074F /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBF11CEDC9A50019074F /* CellLayout.m */; };
 		B0ACEC041CEDC9A50019074F /* CommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBF31CEDC9A50019074F /* CommentModel.m */; };
@@ -231,8 +230,6 @@
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		01F58BBE1D85AA8C0089DB02 /* RichTextDemo1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RichTextDemo1ViewController.h; sourceTree = "<group>"; };
 		01F58BBF1D85AA8C0089DB02 /* RichTextDemo1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RichTextDemo1ViewController.m; sourceTree = "<group>"; };
-		01F58BC21D85B1AE0089DB02 /* RichTextDemo2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RichTextDemo2ViewController.h; sourceTree = "<group>"; };
-		01F58BC31D85B1AE0089DB02 /* RichTextDemo2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RichTextDemo2ViewController.m; sourceTree = "<group>"; };
 		B0ACEBEE1CEDC9A50019074F /* AutoFitSizeTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoFitSizeTextView.h; sourceTree = "<group>"; };
 		B0ACEBEF1CEDC9A50019074F /* AutoFitSizeTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoFitSizeTextView.m; sourceTree = "<group>"; };
 		B0ACEBF01CEDC9A50019074F /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
@@ -327,7 +324,6 @@
 				B085B3441CB69C7B00087739 /* Vendors */,
 				0134D12A1D16BDEE00FB91FF /* Root */,
 				01F58BBD1D85AA1D0089DB02 /* RichTextDemo1 */,
-				01F58BC11D85B1910089DB02 /* RichTextDemo2 */,
 				01D5B2F21D37D525007C5CB1 /* CornerRaius Demo */,
 				B0ACEBED1CEDC9530019074F /* WechatMomentsDemo */,
 				0134D11D1D16B62D00FB91FF /* HTML Parsing Demo 1 */,
@@ -518,15 +514,6 @@
 				01F58BBF1D85AA8C0089DB02 /* RichTextDemo1ViewController.m */,
 			);
 			name = RichTextDemo1;
-			sourceTree = "<group>";
-		};
-		01F58BC11D85B1910089DB02 /* RichTextDemo2 */ = {
-			isa = PBXGroup;
-			children = (
-				01F58BC21D85B1AE0089DB02 /* RichTextDemo2ViewController.h */,
-				01F58BC31D85B1AE0089DB02 /* RichTextDemo2ViewController.m */,
-			);
-			name = RichTextDemo2;
 			sourceTree = "<group>";
 		};
 		B079C2841CD8C58F003B15D3 /* _CoreText */ = {
@@ -814,7 +801,6 @@
 				01571FAF1D92FFB3002D71A5 /* UIView+WebCacheOperation.m in Sources */,
 				B0ACEC031CEDC9A50019074F /* CellLayout.m in Sources */,
 				01571FA71D92FFB3002D71A5 /* SDWebImageManager.m in Sources */,
-				01F58BC41D85B1AE0089DB02 /* RichTextDemo2ViewController.m in Sources */,
 				B0F991DA1D93802E00D7B529 /* UIImage+ImageEffects.m in Sources */,
 				B0F991D01D937EA000D7B529 /* LWImageBrowserFlowLayout.m in Sources */,
 				B0F991CA1D937EA000D7B529 /* LWActionSheetTableViewCell.m in Sources */,

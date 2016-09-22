@@ -7,7 +7,6 @@
 
 #import "RootViewController.h"
 #import "RichTextDemo1ViewController.h"
-#import "RichTextDemo2ViewController.h"
 #import "CornerRadiusViewController.h"
 #import "MomentsViewController.h"
 #import "ArticleListViewController.h"
@@ -41,7 +40,7 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -51,18 +50,15 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"LWTextStorage-图文混排和添加点击事件Demo";
+        cell.textLabel.text = @"LWTextStorage-富文本和添加点击事件Demo";
     }
     else if (indexPath.row == 1) {
-        cell.textLabel.text = @"LWTextStorage-富文本Demo";
-    }
-    else if (indexPath.row == 2) {
         cell.textLabel.text = @"LWImageStorage-图片设置圆角半径和模糊效果Demo";
     }
-    else if (indexPath.row == 3) {
+    else if (indexPath.row == 2) {
         cell.textLabel.text = @"Gallop构建的顺滑的朋友圈Demo";
     }
-    else if (indexPath.row == 4) {
+    else if (indexPath.row == 3) {
         cell.textLabel.text = @"Gallop进行HTML解析的知乎日报Demo";
     }
     return cell;
@@ -75,18 +71,14 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (indexPath.row == 1) {
-        RichTextDemo2ViewController* vc = [[RichTextDemo2ViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if (indexPath.row == 2) {
         CornerRadiusViewController* vc = [[CornerRadiusViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
-    else if (indexPath.row == 3) {
+    else if (indexPath.row == 2) {
         MomentsViewController* vc = [[MomentsViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
-    else if (indexPath.row == 4) {
+    else if (indexPath.row == 3) {
         ArticleListViewController* vc = [[ArticleListViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
