@@ -28,7 +28,6 @@
 @interface LWProgeressHUD : UIView
 
 + (LWProgeressHUD *)showHUDAddedTo:(UIView *)view;
-
 + (void)hideAllHUDForView:(UIView *)view;
 
 @property (nonatomic,assign) CGFloat progress;

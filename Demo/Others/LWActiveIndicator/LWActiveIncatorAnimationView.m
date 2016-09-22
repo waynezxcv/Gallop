@@ -25,6 +25,8 @@
 
 #import "LWActiveIncatorAnimationView.h"
 
+
+
 @interface LWActiveIncatorAnimationView ()
 
 @property (nonatomic,strong) NSMutableArray* pulsingLayers;

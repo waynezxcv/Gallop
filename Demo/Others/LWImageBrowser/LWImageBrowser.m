@@ -25,17 +25,16 @@
 #import "LWImageBrowser.h"
 #import "LWImageBrowserFlowLayout.h"
 #import "LWImageBrowserCell.h"
-#import "UIImage+ImageEffects.h"
+#import "LWImageBrowserButton.h"
 #import "LWActionSheetView.h"
 #import "LWAlertView.h"
 #import "LWImageBrowserDefine.h"
-#import "LWImageBrowserButton.h"
-
+#import "UIImage+ImageEffects.h"
+#import "LWImageItem.h"
 
 
 
 @interface LWImageBrowser ()
-
 
 <UICollectionViewDataSource,
 UICollectionViewDelegate,
@@ -54,6 +53,9 @@ LWActionSheetViewDelegate>
 @property (nonatomic,weak) UIViewController* parentVC;
 @property (nonatomic,assign,getter=isFirstShow) BOOL firstShow;
 @property (nonatomic,strong) LWImageBrowserButton* button;
+@property (nonatomic,copy)NSArray* imageModels;//存放图片模型的数组
+@property (nonatomic,assign) NSInteger currentIndex;//当前页码
+@property (nonatomic,strong) LWImageItem* currentImageItem;//当前的ImageItem
 
 @end
 
@@ -82,32 +84,21 @@ LWActionSheetViewDelegate>
     [super viewDidAppear:animated];
     [UIView animateWithDuration:0.2f animations:^{
         self.screenshotImageView.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-        
-    }];
+    } completion:^(BOOL finished) {}];
+    
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [self _setCurrentItem];
     self.firstShow = NO;
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    if ([self.delegate respondsToSelector:@selector(imageBrowser:DidFinishSelectImageWithImages:)]) {
-        NSMutableArray* tmp = [[NSMutableArray alloc] init];
-        for (LWImageBrowserModel* model in self.imageModels) {
-            UIImage* image = model.placeholder;
-            [tmp addObject:image];
-        }
-        [self.delegate imageBrowser:self DidFinishSelectImageWithImages:tmp];
-    }
-}
-
 #pragma mark - UICollectionViewDataSource
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section {
     return self.imageModels.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     LWImageBrowserCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier
                                                                          forIndexPath:indexPath];
     cell.imageItem.firstShow = self.isFirstShow;
@@ -132,13 +123,6 @@ LWActionSheetViewDelegate>
 
 - (void)didClickedItemToHide {
     [self _hide];
-}
-
-- (void)didFinishRefreshThumbnailImageIfNeed {
-    if ([self.delegate respondsToSelector:@selector(imageBrowserDidFnishDownloadImageToRefreshThumbnialImageIfNeed)]
-        && [self.delegate conformsToProtocol:@protocol(LWImageBrowserDelegate)]) {
-        [self.delegate imageBrowserDidFnishDownloadImageToRefreshThumbnialImageIfNeed];
-    }
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -192,11 +176,10 @@ LWActionSheetViewDelegate>
 - (void)_hideNavigationBar {
     if (self.navigationController.navigationBarHidden == NO) {
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
-        
+        [self.navigationController setNavigationBarHidden:YES];
     } else {
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
+        [self.navigationController setNavigationBarHidden:NO];
     }
 }
 
@@ -248,7 +231,6 @@ LWActionSheetViewDelegate>
 
 - (void)lwActionSheet:(LWActionSheetView *)actionSheet didSelectedButtonWithIndex:(NSInteger)index {
     if (index == 0) {
-        //保存图片
         [self saveImageToPhotos:self.currentImageItem.imageView.image];
     }
     
@@ -349,16 +331,14 @@ LWActionSheetViewDelegate>
     return _blurImageView;
 }
 
-#pragma mark - Initialization
+#pragma mark - Initial
 
-- (id)initWithParentViewController:(UIViewController *)parentVC
-                       imageModels:(NSArray *)imageModels
-                      currentIndex:(NSInteger)index {
-    
+- (id)initWithImageBrowserModels:(NSArray *)imageModels
+                    currentIndex:(NSInteger)index {
     self  = [super init];
     if (self) {
         self.isScalingToHide = YES;
-        self.parentVC = parentVC;
+        self.parentVC = [self _getParentVC];
         self.imageModels = imageModels;
         self.currentIndex = index;
         self.screenshot = [self _screenshotFromView:[UIApplication sharedApplication].keyWindow];
@@ -372,12 +352,56 @@ LWActionSheetViewDelegate>
 }
 
 #pragma mark - Private
+
 - (UIImage *)_screenshotFromView:(UIView *)aView {
     UIGraphicsBeginImageContextWithOptions(aView.bounds.size,NO,[UIScreen mainScreen].scale);
     [aView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage* screenshotImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return screenshotImage;
+}
+
+- (UIViewController *)_getParentVC{
+    UIViewController* result = nil;
+    UIWindow* window = [[UIApplication sharedApplication] keyWindow];
+    
+    if (window.windowLevel != UIWindowLevelNormal) {
+        NSArray* windows = [[UIApplication sharedApplication] windows];
+        for(UIWindow * tmpWin in windows) {
+            if (tmpWin.windowLevel == UIWindowLevelNormal){
+                window = tmpWin;
+                break;
+            }
+        }
+    }
+    
+    id  nextResponder = nil;
+    UIViewController* appRootVC = window.rootViewController;
+    if (appRootVC.presentedViewController) {
+        
+        nextResponder = appRootVC.presentedViewController;
+        
+    }else{
+        
+        UIView* frontView = [[window subviews] objectAtIndex:0];
+        nextResponder = [frontView nextResponder];
+    }
+    if ([nextResponder isKindOfClass:[UITabBarController class]]){
+        
+        UITabBarController* tabbar = (UITabBarController *)nextResponder;
+        UINavigationController* nav = (UINavigationController *)tabbar.viewControllers[tabbar.selectedIndex];
+        result=nav.childViewControllers.lastObject;
+        
+    } else if ([nextResponder isKindOfClass:[UINavigationController class]]){
+        
+        UIViewController * nav = (UIViewController *)nextResponder;
+        result = nav.childViewControllers.lastObject;
+        
+    } else {
+        
+        result = nextResponder;
+    }
+    return result;
 }
 
 @end

@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,10 +49,10 @@ const CGFloat cellHeight = 60.0f;
         self.delegate = delegate;
         self.titlesCount = titles.count;
         self.dataSource = titles;
-
+        
         UIWindow* window = [UIApplication sharedApplication].keyWindow;
         UIImage* screenshot = [self _screenshotFromView:window];
-
+        
         self.screenshotImageView = [[UIImageView alloc] initWithFrame:SCREEN_BOUNDS];
         self.screenshotImageView.backgroundColor = [UIColor blackColor];
         self.screenshotImageView.image = [screenshot applyBlurWithRadius:20
@@ -60,7 +60,7 @@ const CGFloat cellHeight = 60.0f;
                                                    saturationDeltaFactor:1.4
                                                                maskImage:nil];
         [self addSubview:self.screenshotImageView];
-
+        
         self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f,
                                                                        SCREEN_HEIGHT  - cellHeight * self.titlesCount ,
                                                                        SCREEN_WIDTH,
@@ -80,13 +80,14 @@ const CGFloat cellHeight = 60.0f;
 - (void)show {
     UIWindow* window = [UIApplication sharedApplication].keyWindow;
     [window addSubview:self];
-
+    
     NSArray* cells = [self.tableView visibleCells];
     for (NSInteger i = 0;i < cells.count;i ++) {
         LWActionSheetTableViewCell* cell = cells[i];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(i * 0.09f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [cell show];
-        });
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(i * 0.09f * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+                           [cell show];
+                       });
     }
 }
 
@@ -94,7 +95,11 @@ const CGFloat cellHeight = 60.0f;
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     UITouch* touch = [touches anyObject];
     CGPoint point = [touch locationInView:self];
-    if (CGRectContainsPoint(CGRectMake(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT - cellHeight * self.titlesCount ), point)) {
+    if (CGRectContainsPoint(CGRectMake(0.0f,
+                                       0.0f,
+                                       SCREEN_WIDTH,
+                                       SCREEN_HEIGHT - cellHeight * self.titlesCount ),
+                            point)) {
         [self _hide];
     }
 }
@@ -157,8 +162,7 @@ const CGFloat cellHeight = 60.0f;
 }
 
 #pragma mark - UIGestrueDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
-shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
 @end

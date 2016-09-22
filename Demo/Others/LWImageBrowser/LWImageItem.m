@@ -23,8 +23,8 @@
  */
 
 #import "LWImageItem.h"
-#import "LWImageBrowserDefine.h"
 #import "LWProgeressHUD.h"
+#import "LWImageBrowserDefine.h"
 
 
 const CGFloat kMaximumZoomScale = 3.0f;
@@ -159,8 +159,8 @@ const CGFloat kDuration = 0.3f;
                                      [LWProgeressHUD hideAllHUDForView:sself];
                                      sself.imageView.image = image;
                                      sself.imageModel.thumbnailImage = image;
-                                     if ([sself.eventDelegate respondsToSelector:@selector(didFinishRefreshThumbnailImageIfNeed)]) {
-                                         [sself.eventDelegate didFinishRefreshThumbnailImageIfNeed];
+                                     if ([sself.eventDelegate respondsToSelector:@selector(didFinishedDownLoadHDImage)]) {
+                                         [sself.eventDelegate didFinishedDownLoadHDImage];
                                      }
                                      [UIView animateWithDuration:kDuration
                                                            delay:0.0f
@@ -169,7 +169,6 @@ const CGFloat kDuration = 0.3f;
                                                          options:0 animations:^{
                                                              sself.imageView.frame = destinationRect;
                                                          } completion:^(BOOL finished) {
-                                                             
                                                          }];
                                  }
                              }];
@@ -203,27 +202,16 @@ const CGFloat kDuration = 0.3f;
 
 
 #pragma mark - UIScrollViewDelegate
-/**
- *  缩放对象
- *
- */
+
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
     return self.imageView;
 }
 
-/**
- *  缩放结束
- *
- */
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale{
     [scrollView setZoomScale:scale + 0.01 animated:NO];
     [scrollView setZoomScale:scale animated:NO];
 }
 
-/**
- *  让UIImageView在UIScrollView缩放后居中显示
- *
- */
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ? (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
     CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ? (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
@@ -232,7 +220,6 @@ const CGFloat kDuration = 0.3f;
 
 #pragma mark - UIGestureRecognizerHandler
 
-/**单击*/
 - (void)handleSingleTap:(UITapGestureRecognizer *)gestureRecognizer{
     if (gestureRecognizer.numberOfTapsRequired == 1) {
         if ([self.eventDelegate respondsToSelector:@selector(didClickedItemToHide)]) {
@@ -241,7 +228,6 @@ const CGFloat kDuration = 0.3f;
     }
 }
 
-/**双击**/
 - (void)handleDoubleTap:(UITapGestureRecognizer *)gestureRecognizer{
     if (gestureRecognizer.numberOfTapsRequired == 2) {
         if(self.zoomScale == 1){

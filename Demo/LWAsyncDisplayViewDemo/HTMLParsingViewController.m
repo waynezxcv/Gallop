@@ -244,12 +244,12 @@
             [tmp addObject:imageModel];
         }
     }
-    LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self
-                                                                            imageModels:tmp
-                                                                           currentIndex:index];
-    imageBrowser.isScalingToHide = NO ;
-    imageBrowser.isShowPageControl = NO;
-    [imageBrowser show];
+
+    LWImageBrowser* browser = [[LWImageBrowser alloc] initWithImageBrowserModels:tmp
+                                                                    currentIndex:index];
+    browser.isScalingToHide = NO ;
+    browser.isShowPageControl = NO;
+    [browser show];
     
 }
 

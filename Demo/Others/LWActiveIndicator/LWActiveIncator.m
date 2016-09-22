@@ -85,7 +85,8 @@
     for (UIView* aView in view.subviews) {
         if ([aView isMemberOfClass:[LWActiveIncator class]]) {
             LWActiveIncator* loadingView = (LWActiveIncator *)aView;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2f * NSEC_PER_SEC)),
+                           dispatch_get_main_queue(), ^{
                 [UIView animateWithDuration:0.5 animations:^{
                     loadingView.alpha = 0.0f;
                 }completion:^(BOOL finished) {

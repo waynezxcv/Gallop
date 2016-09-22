@@ -30,15 +30,16 @@
 
 @protocol LWImageItemEventDelegate <NSObject>
 
+@optional
+
 - (void)didClickedItemToHide;
-- (void)didFinishRefreshThumbnailImageIfNeed;
+- (void)didFinishedDownLoadHDImage;
 
 @end
 
 @interface LWImageItem : UIScrollView
 
 @property (nonatomic,weak) id <LWImageItemEventDelegate> eventDelegate;
-
 @property (nonatomic,strong) LWImageBrowserModel* imageModel;
 @property (nonatomic,strong) UIImageView* imageView;
 @property (nonatomic,assign,getter=isFirstShow) BOOL firstShow;

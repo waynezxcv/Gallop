@@ -33,7 +33,6 @@
 
 @end
 
-
 @interface LWActionSheetTableViewCellContent : UIView
 
 @property (nonatomic,copy) NSString* title;

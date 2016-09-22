@@ -102,6 +102,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		010D02611D946E6D002887C7 /* LWImageBrowserDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LWImageBrowserDefine.h; path = Others/LWImageBrowser/LWImageBrowserDefine.h; sourceTree = "<group>"; };
 		011DFA1A1C987CD6000410D7 /* LWAsyncDisplayViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LWAsyncDisplayViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		011DFA1E1C987CD6000410D7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		011DFA201C987CD6000410D7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -654,6 +655,7 @@
 		B0F991B51D937E4C00D7B529 /* LWImageBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				010D02611D946E6D002887C7 /* LWImageBrowserDefine.h */,
 				B0F991BE1D937EA000D7B529 /* LWImageBrowser.h */,
 				B0F991BF1D937EA000D7B529 /* LWImageBrowser.m */,
 				B0F991C41D937EA000D7B529 /* LWImageBrowserModel.h */,

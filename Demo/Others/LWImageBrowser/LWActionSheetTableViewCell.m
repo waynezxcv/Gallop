@@ -96,7 +96,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-
         self.textLabel = [[UILabel alloc] initWithFrame:self.bounds];
         self.textLabel.backgroundColor = [UIColor clearColor];
         self.textLabel.font = [UIFont fontWithName:@"Heiti SC" size:18.0f];

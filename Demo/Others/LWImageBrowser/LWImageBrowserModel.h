@@ -28,58 +28,15 @@
 
 @interface LWImageBrowserModel : NSObject
 
-/**
- *  占位图
- */
-@property (nonatomic,strong) UIImage* placeholder;
 
-/**
- *  略缩图URL
- *
- */
-@property (nonatomic,strong) NSURL* thumbnailURL;
-
-/**
- *  略缩图
- *
- */
-@property (nonatomic,strong) UIImage* thumbnailImage;
-
-/**
- *  高清图URL
- */
-@property (nonatomic,strong) NSURL* HDURL;
-
-/**
- *  是否已经下载
- */
-@property (nonatomic,assign,readonly) BOOL isDownload;
-
-/**
- *  原始位置（在window坐标系中）
- */
-@property (nonatomic,assign) CGRect originPosition;
-
-/**
- *  计算后的位置
- */
-@property (nonatomic,assign,readonly) CGRect destinationFrame;
-
-/**
- *  标号
- */
-@property (nonatomic,assign) NSInteger index;
-
-/**
- 标题
- */
-@property (nonatomic,copy) NSString* title;
-
-/**
- *  详细描述
- */
-@property (nonatomic,copy) NSString* contentDescription;
-
+@property (nonatomic,strong) UIImage* placeholder;//占位图
+@property (nonatomic,strong) NSURL* thumbnailURL;//缩略图的URL
+@property (nonatomic,strong) UIImage* thumbnailImage;//缩略图
+@property (nonatomic,strong) NSURL* HDURL;//高清图的URL
+@property (nonatomic,assign,readonly) BOOL isDownload;//高清图是否已经下载
+@property (nonatomic,assign) CGRect originPosition;//原始位置（点击时，该图片位于UIWindow坐标系中的位置）
+@property (nonatomic,assign,readonly) CGRect destinationFrame;//动画的目的地位置
+@property (nonatomic,assign) NSInteger index;//标号
 
 /**
  *  创建LWImageModel实例对象
@@ -98,19 +55,5 @@
        imageViewSuperView:(UIView *)superView
       positionAtSuperView:(CGRect)positionAtSuperView
                     index:(NSInteger)index;
-
-/**
- *  创建LWImageModel实例对象
- *
- *  @param placeholder  本地图片
- *  @param originRect   原始位置
- *  @param index        标号
- *
- *  @return LWImageModel实例对象
- */
-- (id)initWithLocalImage:(UIImage *)localImage
-      imageViewSuperView:(UIView *)superView
-     positionAtSuperView:(CGRect)positionAtSuperView
-                   index:(NSInteger)index;
 
 @end

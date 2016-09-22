@@ -43,13 +43,14 @@
     [[UIColor whiteColor] setStroke];
     [bezierPath stroke];
     [bezierPath addClip];
-
+    
     NSMutableParagraphStyle* papragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [papragraphStyle setAlignment:NSTextAlignmentCenter];
     NSDictionary* attributes = @{NSForegroundColorAttributeName:[UIColor whiteColor],
                                  NSFontAttributeName:[UIFont systemFontOfSize:14.0f],
                                  NSParagraphStyleAttributeName:papragraphStyle};
-    NSAttributedString* string = [[NSAttributedString alloc] initWithString:@"•••" attributes:attributes];
+    NSAttributedString* string = [[NSAttributedString alloc] initWithString:@"•••"
+                                                                 attributes:attributes];
     [string drawInRect:r];
 }
 
