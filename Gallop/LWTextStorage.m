@@ -416,8 +416,8 @@
 }
 
 - (CGPoint)center {
-    return CGPointMake(self.textLayout.cgPathBox.origin.x  + + self.position.x + self.textLayout.cgPathBox.size.width * 0.5f,
-                       self.textLayout.cgPathBox.origin.y + + self.position.y + self.textLayout.cgPathBox.size.height * 0.5f);
+    return CGPointMake(self.textLayout.cgPathBox.origin.x  + self.position.x + self.textLayout.cgPathBox.size.width * 0.5f,
+                       self.textLayout.cgPathBox.origin.y + self.position.y + self.textLayout.cgPathBox.size.height * 0.5f);
 }
 
 - (CGSize)suggestSize {
