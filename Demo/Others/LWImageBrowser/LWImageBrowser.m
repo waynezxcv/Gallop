@@ -333,40 +333,6 @@ LWActionSheetViewDelegate>
 
 #pragma mark - Initial
 
-- (id)initWithPlaceholder:(UIImage *)placeholder
-                thumbURLs:(NSArray *)thumbURLs
-                   HDURLs:(NSArray *)HDURLs
-            containerView:(UIView *)containerView
-     positionInContainers:(NSArray<NSValue *> *)positions
-             currentIndex:(NSInteger)index {
-
-    self = [super init];
-    if (self) {
-        self.firstShow = YES;
-        self.isScalingToHide = YES;
-        self.parentVC = [self _getParentVC];
-        self.currentIndex = index;
-        self.screenshot = [self _screenshotFromView:[UIApplication sharedApplication].keyWindow];
-        self.blurImage = [self.screenshot applyBlurWithRadius:20
-                                                    tintColor:RGB(0, 0, 0, 0.5f)
-                                        saturationDeltaFactor:1.4
-                                                    maskImage:nil];
-        NSMutableArray* tmp = [[NSMutableArray alloc] init];
-        for (NSInteger i = 0; i < thumbURLs.count && i < HDURLs.count && i < positions.count; i ++) {
-            CGRect position = [positions[i] CGRectValue];
-            LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:placeholder
-                                                                                  thumbnailURL:thumbURLs[i]
-                                                                                         HDURL:HDURLs[i]
-                                                                                 containerView:containerView
-                                                                           positionInContainer:position
-                                                                                         index:i];
-            [tmp addObject:imageModel];
-        }
-        self.imageModels = [tmp copy];
-    }
-    return self;
-}
-
 - (id)initWithImageBrowserModels:(NSArray *)imageModels
                     currentIndex:(NSInteger)index {
     self  = [super init];

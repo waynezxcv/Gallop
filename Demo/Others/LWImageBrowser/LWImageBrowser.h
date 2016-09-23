@@ -35,24 +35,7 @@
 @property (nonatomic,assign) BOOL isScalingToHide;//消失的时候是否启动缩放动画
 @property (nonatomic,assign) BOOL isShowPageControl;//是否显示页码
 
-/**
- *  构造方法
- *  @param placeholder      占位图
- *  @param thumbURLs        存放略缩图URL的数组
- *  @param HDURLs           存放高清图图URL的数组
- *  @param containerView    图片UIImageView的SuperView
- *  @param positions        图片在SuperView中所处的frame的数组
- *  @param index        点击的图片在数组中所处的位置
- *
- */
-
-- (id)initWithPlaceholder:(UIImage *)placeholder
-                thumbURLs:(NSArray *)thumbURLs
-                   HDURLs:(NSArray *)HDURLs
-            containerView:(UIView *)containerView
-     positionInContainers:(NSArray<NSValue *> *)positions
-             currentIndex:(NSInteger)inde;
-/**
+/*
  *  构造方法
  *
  *  @param imageModels 一个存放LWImageModel的数组
