@@ -67,7 +67,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidAppearNotifications:)
                                                  name:UIKeyboardWillShowNotification object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidHidenNotifications:)
                                                  name:UIKeyboardWillHideNotification object:nil];
@@ -78,7 +78,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidHideNotification
                                                   object:nil];
@@ -100,19 +100,19 @@ const CGFloat kRefreshBoundary = 170.0f;
 #pragma mark - Actions
 /***  点赞 ***/
 - (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike atIndexPath:(NSIndexPath *)indexPath {
-    
+
     /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
      延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
     UIImage* screenshot = [GallopUtils screenshotFromView:cell];
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
     imgView.image = screenshot;
     [self.tableView addSubview:imgView];
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [imgView removeFromSuperview];
     });
-    
-    
+
+
     CellLayout* layout = [self.dataSource objectAtIndex:indexPath.row];
     if (isLike) {
         NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
@@ -134,7 +134,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         [self.dataSource replaceObjectAtIndex:indexPath.row withObject:layout];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
                               withRowAnimation:UITableViewRowAnimationAutomatic];
-        
+
     }
 }
 
@@ -153,7 +153,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 /***  发表评论 ***/
 - (void)postCommentWithCommentModel:(CommentModel *)model {
-    
+
     /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
      延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
     UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:model.index inSection:0]];
@@ -161,12 +161,12 @@ const CGFloat kRefreshBoundary = 170.0f;
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
     imgView.image = screenshot;
     [self.tableView addSubview:imgView];
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [imgView removeFromSuperview];
     });
-    
-    
+
+
     CellLayout* layout = [self.dataSource objectAtIndex:model.index];
     NSMutableArray* newCommentLists = [[NSMutableArray alloc] initWithArray:layout.statusModel.commentList];
     NSDictionary* newComment = @{@"from":model.from,
@@ -179,25 +179,26 @@ const CGFloat kRefreshBoundary = 170.0f;
     [self.dataSource replaceObjectAtIndex:model.index withObject:layout];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.index inSection:0]]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
-    
+
 }
 
 
 /***  点击图片 ***/
 - (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index {
-    NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:layout.imagePostionArray.count];
-    for (NSInteger i = 0; i < layout.imagePostionArray.count; i ++) {
-        LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc]
-                                           initWithplaceholder:nil
-                                           thumbnailURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
-                                           HDURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
-                                           imageViewSuperView:cell.contentView
-                                           positionAtSuperView:CGRectFromString(layout.imagePostionArray[i])
-                                           index:index];
-        [tmp addObject:imageModel];
+
+    NSMutableArray* positions = [[NSMutableArray alloc] init];
+    NSMutableArray* thumbs = [[NSMutableArray alloc] init];
+
+    for (NSInteger i = 0; i < positions.count; i ++) {
+        [positions addObject:[NSValue valueWithCGRect:CGRectFromString(layout.imagePostionArray[i])]];
+        [thumbs addObject:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]];
     }
-    LWImageBrowser* browser = [[LWImageBrowser alloc] initWithImageBrowserModels:tmp
-                                                                    currentIndex:index];
+    LWImageBrowser* browser = [[LWImageBrowser alloc] initWithPlaceholder:nil
+                                                                thumbURLs:thumbs
+                                                                   HDURLs:thumbs
+                                                            containerView:cell.contentView
+                                                     positionInContainers:positions
+                                                             currentIndex:index];
     [browser show];
 }
 
@@ -242,7 +243,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     CellLayout* newLayout = [[CellLayout alloc] initWithStatusModel:model
                                                               index:indexPath.row
                                                       dateFormatter:self.dateFormatter];
-    
+
     [self.dataSource replaceObjectAtIndex:indexPath.row withObject:newLayout];
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -467,7 +468,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
+
                         @{@"type":@"image",
                           @"name":@"SIZE潮流生活",
                           @"avatar":@"http://tp2.sinaimg.cn/1829483361/50/5753078359/1",
@@ -490,7 +491,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv",@"伊布拉希莫维奇",@"权志龙",@"郜林",@"扎克伯格"]},
-                        
+
                         @{@"type":@"website",
                           @"name":@"Ronaldo",
                           @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
@@ -504,8 +505,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv",@"Gallop"]},
-                        
-                        
+
+
                         @{@"type":@"image",
                           @"name":@"妖妖小精",
                           @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
@@ -530,7 +531,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
+
                         @{@"type":@"image",
                           @"name":@"Instagram热门",
                           @"avatar":@"http://tp4.sinaimg.cn/5074408479/50/5706839595/0",
@@ -552,8 +553,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"Tim Cook"]},
-                        
-                        
+
+
                         @{@"type":@"image",
                           @"name":@"头条新闻",
                           @"avatar":@"http://tp1.sinaimg.cn/1618051664/50/5735009977/0",
@@ -569,8 +570,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"Tim Cook"]},
-                        
-                        
+
+
                         @{@"type":@"image",
                           @"name":@"Kindle中国",
                           @"avatar":@"http://tp1.sinaimg.cn/3262223112/50/5684307907/1",
@@ -584,9 +585,9 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"统一回复,使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
-                        
-                        
+
+
+
                         @{@"type":@"image",
                           @"name":@"G-SHOCK",
                           @"avatar":@"http://tp3.sinaimg.cn/1595142730/50/5691224157/1",
@@ -605,11 +606,11 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
-                        
-                        
-                        
-                        
+
+
+
+
+
                         @{@"type":@"image",
                           @"name":@"数字尾巴",
                           @"avatar":@"http://tp1.sinaimg.cn/1726544024/50/5630520790/1",
@@ -628,8 +629,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                              @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
                           @"isLike":@(NO),
                           @"likeList":@[@"waynezxcv"]},
-                        
-                        
+
+
                         @{@"type":@"image",
                           @"name":@"欧美街拍XOXO",
                           @"avatar":@"http://tp4.sinaimg.cn/1708004923/50/1283204657/0",

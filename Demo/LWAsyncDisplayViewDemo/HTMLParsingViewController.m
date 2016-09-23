@@ -238,8 +238,8 @@
             [[LWImageBrowserModel alloc] initWithplaceholder:nil
                                                 thumbnailURL:(NSURL *)imageStorage.contents
                                                        HDURL:(NSURL *)imageStorage.contents
-                                          imageViewSuperView:superView
-                                         positionAtSuperView:imageStorage.frame
+                                               containerView:superView
+                                         positionInContainer:imageStorage.frame
                                                        index:index];
             [tmp addObject:imageModel];
         }
@@ -255,9 +255,9 @@
 
 - (void)lw_htmlDisplayView:(LWHTMLDisplayView *)asyncDisplayView extraDisplayIncontext:(CGContextRef)context size:(CGSize)size displayIdentifier:(NSString *)displayIdentifier {
     if ([displayIdentifier isEqualToString:kImageDisplayIdentifier]) {
-        CGContextAddRect(context, CGRectMake(15.0f, 5.0f, size.width - 30.0f, size.height - 10.0f));
+        CGContextAddRect(context, CGRectMake(15.0f, 5.0f, size.width - 30.0f, size.height - 20.0f));
         CGContextSetLineWidth(context, 0.5f);
-        CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
+        CGContextSetStrokeColorWithColor(context, RGB(230, 230, 230, 1).CGColor);
         CGContextStrokePath(context);
         
         NSMutableParagraphStyle* p = [[NSMutableParagraphStyle alloc] init];

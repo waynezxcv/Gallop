@@ -42,8 +42,8 @@
 - (id)initWithplaceholder:(UIImage *)placeholder
              thumbnailURL:(NSURL *)thumbnailURL
                     HDURL:(NSURL *)HDURL
-       imageViewSuperView:(UIView *)superView
-      positionAtSuperView:(CGRect)positionAtSuperView
+            containerView:(UIView *)containerView
+      positionInContainer:(CGRect)positionInContainer
                     index:(NSInteger)index {
     self = [super init];
     if (self) {
@@ -51,9 +51,9 @@
         self.thumbnailURL = thumbnailURL;
         self.HDURL = HDURL;
         self.index = index;
-        if (superView != nil) {
+        if (containerView != nil) {
             UIWindow* window = [UIApplication sharedApplication].keyWindow;
-            CGRect originRect = [superView convertRect:positionAtSuperView toView:window];
+            CGRect originRect = [containerView convertRect:positionInContainer toView:window];
             self.originPosition = originRect;
         }
         else {

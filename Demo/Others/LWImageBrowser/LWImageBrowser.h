@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,6 +35,23 @@
 @property (nonatomic,assign) BOOL isScalingToHide;//消失的时候是否启动缩放动画
 @property (nonatomic,assign) BOOL isShowPageControl;//是否显示页码
 
+/**
+ *  构造方法
+ *  @param placeholder      占位图
+ *  @param thumbURLs        存放略缩图URL的数组
+ *  @param HDURLs           存放高清图图URL的数组
+ *  @param containerView    图片UIImageView的SuperView
+ *  @param positions        图片在SuperView中所处的frame的数组
+ *  @param index        点击的图片在数组中所处的位置
+ *
+ */
+
+- (id)initWithPlaceholder:(UIImage *)placeholder
+                thumbURLs:(NSArray *)thumbURLs
+                   HDURLs:(NSArray *)HDURLs
+            containerView:(UIView *)containerView
+     positionInContainers:(NSArray<NSValue *> *)positions
+             currentIndex:(NSInteger)inde;
 /**
  *  构造方法
  *

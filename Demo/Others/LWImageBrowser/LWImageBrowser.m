@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -85,7 +85,7 @@ LWActionSheetViewDelegate>
     [UIView animateWithDuration:0.2f animations:^{
         self.screenshotImageView.alpha = 0.0f;
     } completion:^(BOOL finished) {}];
-    
+
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [self _setCurrentItem];
     self.firstShow = NO;
@@ -149,7 +149,7 @@ LWActionSheetViewDelegate>
 - (void)_hide {
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     __weak typeof(self) weakSelf = self;
-    
+
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     if (self.currentImageItem.zoomScale != 1.0f) {
         self.currentImageItem.zoomScale = 1.0f;
@@ -233,7 +233,7 @@ LWActionSheetViewDelegate>
     if (index == 0) {
         [self saveImageToPhotos:self.currentImageItem.imageView.image];
     }
-    
+
 }
 
 #pragma mark - Save Photo
@@ -333,10 +333,45 @@ LWActionSheetViewDelegate>
 
 #pragma mark - Initial
 
+- (id)initWithPlaceholder:(UIImage *)placeholder
+                thumbURLs:(NSArray *)thumbURLs
+                   HDURLs:(NSArray *)HDURLs
+            containerView:(UIView *)containerView
+     positionInContainers:(NSArray<NSValue *> *)positions
+             currentIndex:(NSInteger)index {
+
+    self = [super init];
+    if (self) {
+        self.firstShow = YES;
+        self.isScalingToHide = YES;
+        self.parentVC = [self _getParentVC];
+        self.currentIndex = index;
+        self.screenshot = [self _screenshotFromView:[UIApplication sharedApplication].keyWindow];
+        self.blurImage = [self.screenshot applyBlurWithRadius:20
+                                                    tintColor:RGB(0, 0, 0, 0.5f)
+                                        saturationDeltaFactor:1.4
+                                                    maskImage:nil];
+        NSMutableArray* tmp = [[NSMutableArray alloc] init];
+        for (NSInteger i = 0; i < thumbURLs.count && i < HDURLs.count && i < positions.count; i ++) {
+            CGRect position = [positions[i] CGRectValue];
+            LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:placeholder
+                                                                                  thumbnailURL:thumbURLs[i]
+                                                                                         HDURL:HDURLs[i]
+                                                                                 containerView:containerView
+                                                                           positionInContainer:position
+                                                                                         index:i];
+            [tmp addObject:imageModel];
+        }
+        self.imageModels = [tmp copy];
+    }
+    return self;
+}
+
 - (id)initWithImageBrowserModels:(NSArray *)imageModels
                     currentIndex:(NSInteger)index {
     self  = [super init];
     if (self) {
+        self.firstShow = YES;
         self.isScalingToHide = YES;
         self.parentVC = [self _getParentVC];
         self.imageModels = imageModels;
@@ -346,7 +381,6 @@ LWActionSheetViewDelegate>
                                                     tintColor:RGB(0, 0, 0, 0.5f)
                                         saturationDeltaFactor:1.4
                                                     maskImage:nil];
-        self.firstShow = YES;
     }
     return self;
 }
@@ -364,7 +398,7 @@ LWActionSheetViewDelegate>
 - (UIViewController *)_getParentVC{
     UIViewController* result = nil;
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
-    
+
     if (window.windowLevel != UIWindowLevelNormal) {
         NSArray* windows = [[UIApplication sharedApplication] windows];
         for(UIWindow * tmpWin in windows) {
@@ -374,29 +408,29 @@ LWActionSheetViewDelegate>
             }
         }
     }
-    
+
     id  nextResponder = nil;
     UIViewController* appRootVC = window.rootViewController;
     if (appRootVC.presentedViewController) {
-        
+
         nextResponder = appRootVC.presentedViewController;
-        
+
     }else{
-        
+
         UIView* frontView = [[window subviews] objectAtIndex:0];
         nextResponder = [frontView nextResponder];
     }
     if ([nextResponder isKindOfClass:[UITabBarController class]]){
-        
+
         UITabBarController* tabbar = (UITabBarController *)nextResponder;
         UINavigationController* nav = (UINavigationController *)tabbar.viewControllers[tabbar.selectedIndex];
         result=nav.childViewControllers.lastObject;
-        
+
     } else if ([nextResponder isKindOfClass:[UINavigationController class]]){
-        
+
         UIViewController * nav = (UIViewController *)nextResponder;
         result = nav.childViewControllers.lastObject;
-        
+
     } else {
         
         result = nextResponder;
