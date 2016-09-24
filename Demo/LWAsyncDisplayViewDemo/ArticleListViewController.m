@@ -32,10 +32,13 @@
     
     NSString* plistPath = [[NSBundle mainBundle] pathForResource:@"articlelist" ofType:@"plist"];
     NSArray* list = [[NSArray alloc] initWithContentsOfFile:plistPath];
-
+    
     for (NSDictionary* dict in list) {
         @autoreleasepool {
-            ArticleListModel* model = [ArticleListModel modelWithJSON:dict];
+            ArticleListModel* model = [[ArticleListModel alloc] init];
+            model.idString = dict[@"id"];
+            model.images = dict[@"images"];
+            model.title = dict[@"title"];
             [self.dataSource addObject:model];
         }
     }

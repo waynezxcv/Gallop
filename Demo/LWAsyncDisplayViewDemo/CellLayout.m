@@ -15,7 +15,6 @@
 #import "CommentModel.h"
 #import "Gallop.h"
 
-
 #define MAX_TEXT_HEIGHT 100.0f
 #define MESSAGE_TYPE_IMAGE @"image"
 #define MESSAGE_TYPE_WEBSITE @"website"

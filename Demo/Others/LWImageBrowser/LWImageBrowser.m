@@ -71,7 +71,7 @@ LWActionSheetViewDelegate>
     [self.view addSubview:self.pageControl];
     [self.view addSubview:self.button];
     [self.collectionView setContentOffset:
-     CGPointMake(self.currentIndex * (SCREEN_WIDTH + 10.0f), 0.0f) animated:NO];
+     CGPointMake(self.currentIndex * kImageBrowserWidth, 0.0f) animated:NO];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -271,7 +271,7 @@ LWActionSheetViewDelegate>
         _collectionView = [[UICollectionView alloc]
                            initWithFrame:CGRectMake(0,
                                                     0,
-                                                    SCREEN_WIDTH + 10.0f,
+                                                    kImageBrowserWidth,
                                                     self.view.bounds.size.height)
                            collectionViewLayout:self.flowLayout];
         _collectionView.backgroundColor = [UIColor clearColor];

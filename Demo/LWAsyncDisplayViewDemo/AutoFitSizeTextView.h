@@ -25,7 +25,6 @@
 
 @optional
 
-
 - (void)textView:(AutoFitSizeTextView *)textView heightChanged:(NSInteger)height;
 
 @end

@@ -58,10 +58,6 @@
 		01571FAD1D92FFB3002D71A5 /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571F9B1D92FFB3002D71A5 /* UIImageView+HighlightedWebCache.m */; };
 		01571FAE1D92FFB3002D71A5 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571F9D1D92FFB3002D71A5 /* UIImageView+WebCache.m */; };
 		01571FAF1D92FFB3002D71A5 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571F9F1D92FFB3002D71A5 /* UIView+WebCacheOperation.m */; };
-		01571FB91D93003D002D71A5 /* LWAlchemyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FB21D93003D002D71A5 /* LWAlchemyManager.m */; };
-		01571FBA1D93003D002D71A5 /* LWAlchemyPropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FB41D93003D002D71A5 /* LWAlchemyPropertyInfo.m */; };
-		01571FBB1D93003D002D71A5 /* LWAlchemyValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FB61D93003D002D71A5 /* LWAlchemyValueTransformer.m */; };
-		01571FBC1D93003D002D71A5 /* NSObject+LWAlchemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FB81D93003D002D71A5 /* NSObject+LWAlchemy.m */; };
 		01571FC11D93004B002D71A5 /* LWActiveIncatorAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FBE1D93004B002D71A5 /* LWActiveIncatorAnimationView.m */; };
 		01571FC21D93004B002D71A5 /* LWActiveIncator.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FC01D93004B002D71A5 /* LWActiveIncator.m */; };
 		016A10331D9426B400268B4F /* articlelist.plist in Resources */ = {isa = PBXBuildFile; fileRef = 016A10321D9426B400268B4F /* articlelist.plist */; };
@@ -206,15 +202,6 @@
 		01571F9D1D92FFB3002D71A5 /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+WebCache.m"; path = "Others/SDWebImage/UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		01571F9E1D92FFB3002D71A5 /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCacheOperation.h"; path = "Others/SDWebImage/UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		01571F9F1D92FFB3002D71A5 /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCacheOperation.m"; path = "Others/SDWebImage/UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
-		01571FB01D93003D002D71A5 /* LWAlchemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemy.h; path = Others/LWAlchemy/LWAlchemy.h; sourceTree = "<group>"; };
-		01571FB11D93003D002D71A5 /* LWAlchemyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyManager.h; path = Others/LWAlchemy/LWAlchemyManager.h; sourceTree = "<group>"; };
-		01571FB21D93003D002D71A5 /* LWAlchemyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyManager.m; path = Others/LWAlchemy/LWAlchemyManager.m; sourceTree = "<group>"; };
-		01571FB31D93003D002D71A5 /* LWAlchemyPropertyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyPropertyInfo.h; path = Others/LWAlchemy/LWAlchemyPropertyInfo.h; sourceTree = "<group>"; };
-		01571FB41D93003D002D71A5 /* LWAlchemyPropertyInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyPropertyInfo.m; path = Others/LWAlchemy/LWAlchemyPropertyInfo.m; sourceTree = "<group>"; };
-		01571FB51D93003D002D71A5 /* LWAlchemyValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWAlchemyValueTransformer.h; path = Others/LWAlchemy/LWAlchemyValueTransformer.h; sourceTree = "<group>"; };
-		01571FB61D93003D002D71A5 /* LWAlchemyValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWAlchemyValueTransformer.m; path = Others/LWAlchemy/LWAlchemyValueTransformer.m; sourceTree = "<group>"; };
-		01571FB71D93003D002D71A5 /* NSObject+LWAlchemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+LWAlchemy.h"; path = "Others/LWAlchemy/NSObject+LWAlchemy.h"; sourceTree = "<group>"; };
-		01571FB81D93003D002D71A5 /* NSObject+LWAlchemy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+LWAlchemy.m"; path = "Others/LWAlchemy/NSObject+LWAlchemy.m"; sourceTree = "<group>"; };
 		01571FBD1D93004B002D71A5 /* LWActiveIncatorAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWActiveIncatorAnimationView.h; path = Others/LWActiveIndicator/LWActiveIncatorAnimationView.h; sourceTree = "<group>"; };
 		01571FBE1D93004B002D71A5 /* LWActiveIncatorAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWActiveIncatorAnimationView.m; path = Others/LWActiveIndicator/LWActiveIncatorAnimationView.m; sourceTree = "<group>"; };
 		01571FBF1D93004B002D71A5 /* LWActiveIncator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWActiveIncator.h; path = Others/LWActiveIndicator/LWActiveIncator.h; sourceTree = "<group>"; };
@@ -279,7 +266,6 @@
 		B0F991C71D937EA000D7B529 /* LWImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWImageItem.m; path = Others/LWImageBrowser/LWImageItem.m; sourceTree = "<group>"; };
 		B0F991C81D937EA000D7B529 /* LWProgeressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWProgeressHUD.h; path = Others/LWImageBrowser/LWProgeressHUD.h; sourceTree = "<group>"; };
 		B0F991C91D937EA000D7B529 /* LWProgeressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWProgeressHUD.m; path = Others/LWImageBrowser/LWProgeressHUD.m; sourceTree = "<group>"; };
-		B0F991D41D937EE000D7B529 /* LWImageBrowserDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LWImageBrowserDefine.h; path = Others/LWImageBrowser/LWImageBrowserDefine.h; sourceTree = "<group>"; };
 		B0F991D51D937FBD00D7B529 /* LWImageBrowserButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWImageBrowserButton.h; path = Others/LWImageBrowser/LWImageBrowserButton.h; sourceTree = "<group>"; };
 		B0F991D61D937FBD00D7B529 /* LWImageBrowserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWImageBrowserButton.m; path = Others/LWImageBrowser/LWImageBrowserButton.m; sourceTree = "<group>"; };
 		B0F991D81D93802E00D7B529 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageEffects.h"; path = "Others/LWImageBrowser/UIImage+ImageEffects.h"; sourceTree = "<group>"; };
@@ -301,6 +287,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		010D02621D966138002887C7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				01AFD9871CF4D32700BF46D0 /* LikeButton.h */,
+				01AFD9881CF4D32700BF46D0 /* LikeButton.m */,
+				B0ACEBF41CEDC9A50019074F /* CommentView.h */,
+				B0ACEBF51CEDC9A50019074F /* CommentView.m */,
+				B0ACEBFC1CEDC9A50019074F /* TableViewCell.h */,
+				B0ACEBFD1CEDC9A50019074F /* TableViewCell.m */,
+				B0ACEBFE1CEDC9A50019074F /* TableViewHeader.h */,
+				B0ACEBFF1CEDC9A50019074F /* TableViewHeader.m */,
+				B0ACEBEE1CEDC9A50019074F /* AutoFitSizeTextView.h */,
+				B0ACEBEF1CEDC9A50019074F /* AutoFitSizeTextView.m */,
+				B0ACEBF81CEDC9A50019074F /* Menu.h */,
+				B0ACEBF91CEDC9A50019074F /* Menu.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		011DFA111C987CD6000410D7 = {
 			isa = PBXGroup;
 			children = (
@@ -361,22 +366,6 @@
 				B085B3431CB68D1000087739 /* Utils */,
 			);
 			name = Gallop;
-			sourceTree = "<group>";
-		};
-		011DFA361C987DFC000410D7 /* LWAlchemy */ = {
-			isa = PBXGroup;
-			children = (
-				01571FB01D93003D002D71A5 /* LWAlchemy.h */,
-				01571FB11D93003D002D71A5 /* LWAlchemyManager.h */,
-				01571FB21D93003D002D71A5 /* LWAlchemyManager.m */,
-				01571FB31D93003D002D71A5 /* LWAlchemyPropertyInfo.h */,
-				01571FB41D93003D002D71A5 /* LWAlchemyPropertyInfo.m */,
-				01571FB51D93003D002D71A5 /* LWAlchemyValueTransformer.h */,
-				01571FB61D93003D002D71A5 /* LWAlchemyValueTransformer.m */,
-				01571FB71D93003D002D71A5 /* NSObject+LWAlchemy.h */,
-				01571FB81D93003D002D71A5 /* NSObject+LWAlchemy.m */,
-			);
-			name = LWAlchemy;
 			sourceTree = "<group>";
 		};
 		011DFA681C9881AE000410D7 /* SDWebImage */ = {
@@ -564,7 +553,6 @@
 			children = (
 				B0F991B51D937E4C00D7B529 /* LWImageBrowser */,
 				B0E7F39B1D212B6400877644 /* LWActiveIndicator */,
-				011DFA361C987DFC000410D7 /* LWAlchemy */,
 				011DFA681C9881AE000410D7 /* SDWebImage */,
 			);
 			name = Vendors;
@@ -587,44 +575,17 @@
 		B0ACEBED1CEDC9530019074F /* WechatMomentsDemo */ = {
 			isa = PBXGroup;
 			children = (
+				010D02621D966138002887C7 /* Views */,
 				B0ACEC001CEDC9A50019074F /* MomentsViewController.h */,
 				B0ACEC011CEDC9A50019074F /* MomentsViewController.m */,
-				B0ACEC0D1CEDCC530019074F /* Models */,
-				B0ACEC0C1CEDCC240019074F /* Views */,
-			);
-			name = WechatMomentsDemo;
-			sourceTree = "<group>";
-		};
-		B0ACEC0C1CEDCC240019074F /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				B0ACEBF81CEDC9A50019074F /* Menu.h */,
-				B0ACEBF91CEDC9A50019074F /* Menu.m */,
-				01AFD9871CF4D32700BF46D0 /* LikeButton.h */,
-				01AFD9881CF4D32700BF46D0 /* LikeButton.m */,
-				B0ACEBF41CEDC9A50019074F /* CommentView.h */,
-				B0ACEBF51CEDC9A50019074F /* CommentView.m */,
-				B0ACEBFC1CEDC9A50019074F /* TableViewCell.h */,
-				B0ACEBFD1CEDC9A50019074F /* TableViewCell.m */,
-				B0ACEBFE1CEDC9A50019074F /* TableViewHeader.h */,
-				B0ACEBFF1CEDC9A50019074F /* TableViewHeader.m */,
-				B0ACEBEE1CEDC9A50019074F /* AutoFitSizeTextView.h */,
-				B0ACEBEF1CEDC9A50019074F /* AutoFitSizeTextView.m */,
-			);
-			name = Views;
-			sourceTree = "<group>";
-		};
-		B0ACEC0D1CEDCC530019074F /* Models */ = {
-			isa = PBXGroup;
-			children = (
 				B0ACEBFA1CEDC9A50019074F /* StatusModel.h */,
 				B0ACEBFB1CEDC9A50019074F /* StatusModel.m */,
-				B0ACEBF01CEDC9A50019074F /* CellLayout.h */,
-				B0ACEBF11CEDC9A50019074F /* CellLayout.m */,
 				B0ACEBF21CEDC9A50019074F /* CommentModel.h */,
 				B0ACEBF31CEDC9A50019074F /* CommentModel.m */,
+				B0ACEBF01CEDC9A50019074F /* CellLayout.h */,
+				B0ACEBF11CEDC9A50019074F /* CellLayout.m */,
 			);
-			name = Models;
+			name = WechatMomentsDemo;
 			sourceTree = "<group>";
 		};
 		B0C9A92F1D2273D300DFAA44 /* ArticleList */ = {
@@ -678,7 +639,6 @@
 				B0F991BD1D937EA000D7B529 /* LWAlertView.m */,
 				B0F991C81D937EA000D7B529 /* LWProgeressHUD.h */,
 				B0F991C91D937EA000D7B529 /* LWProgeressHUD.m */,
-				B0F991D41D937EE000D7B529 /* LWImageBrowserDefine.h */,
 				B0F991D81D93802E00D7B529 /* UIImage+ImageEffects.h */,
 				B0F991D91D93802E00D7B529 /* UIImage+ImageEffects.m */,
 			);
@@ -792,12 +752,10 @@
 				01571FAD1D92FFB3002D71A5 /* UIImageView+HighlightedWebCache.m in Sources */,
 				B0C9A92E1D2272DD00DFAA44 /* ArticleListTableViewCell.m in Sources */,
 				012EDDFA1D931D8B009AFA90 /* LWTextContainer.m in Sources */,
-				01571FBA1D93003D002D71A5 /* LWAlchemyPropertyInfo.m in Sources */,
 				B0ACEC041CEDC9A50019074F /* CommentModel.m in Sources */,
 				B0ACEC091CEDC9A50019074F /* TableViewCell.m in Sources */,
 				012EDE4C1D931FB1009AFA90 /* LWHTMLTextConfig.m in Sources */,
 				B0ACEC0B1CEDC9A50019074F /* MomentsViewController.m in Sources */,
-				01571FB91D93003D002D71A5 /* LWAlchemyManager.m in Sources */,
 				01571FAE1D92FFB3002D71A5 /* UIImageView+WebCache.m in Sources */,
 				B0F991DD1D93859000D7B529 /* UIImage+Gallop.m in Sources */,
 				01571FAF1D92FFB3002D71A5 /* UIView+WebCacheOperation.m in Sources */,
@@ -814,7 +772,6 @@
 				012EDDE21D931CB8009AFA90 /* LWTextStorage.m in Sources */,
 				012EDE161D931E60009AFA90 /* GallopUtils.m in Sources */,
 				012EDDD41D931C98009AFA90 /* LWAsyncDisplayView.m in Sources */,
-				01571FBB1D93003D002D71A5 /* LWAlchemyValueTransformer.m in Sources */,
 				012EDDEB1D931D08009AFA90 /* SDImageCache+Gallop.m in Sources */,
 				01571FA11D92FFB3002D71A5 /* NSData+ImageContentType.m in Sources */,
 				01571FAA1D92FFB3002D71A5 /* UIImage+GIF.m in Sources */,
@@ -838,7 +795,6 @@
 				01571FA21D92FFB3002D71A5 /* SDImageCache.m in Sources */,
 				012EDDE11D931CB8009AFA90 /* LWStorage.m in Sources */,
 				B0ACEC081CEDC9A50019074F /* StatusModel.m in Sources */,
-				01571FBC1D93003D002D71A5 /* NSObject+LWAlchemy.m in Sources */,
 				01D14EF41CDCFA780028714A /* RootViewController.m in Sources */,
 				012EDE051D931DED009AFA90 /* CALayer+LWTransaction.m in Sources */,
 				B0F991D71D937FBD00D7B529 /* LWImageBrowserButton.m in Sources */,

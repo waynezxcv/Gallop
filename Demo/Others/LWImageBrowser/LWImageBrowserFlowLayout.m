@@ -31,7 +31,7 @@
 -(id)init {
     self = [super init];
     if (self) {
-        self.itemSize = CGSizeMake(SCREEN_WIDTH + 10.0f, SCREEN_HEIGHT);
+        self.itemSize = CGSizeMake(kImageBrowserWidth, SCREEN_HEIGHT);
         self.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         self.minimumLineSpacing = 0.0f;
         self.sectionInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);

@@ -12,9 +12,6 @@
 
 
 
-
-
-
 #import <Foundation/Foundation.h>
 
 @interface CommentModel : NSObject

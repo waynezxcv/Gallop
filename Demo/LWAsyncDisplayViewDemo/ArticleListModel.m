@@ -9,8 +9,4 @@
 
 @implementation ArticleListModel
 
-+ (NSDictionary *)mapper {
-    return @{@"idString":@"id"};
-}
-
 @end

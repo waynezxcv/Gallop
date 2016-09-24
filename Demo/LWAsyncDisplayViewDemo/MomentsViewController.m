@@ -21,14 +21,16 @@
 #import "TableViewCell.h"
 #import "TableViewHeader.h"
 #import "GallopUtils.h"
-#import "LWAlchemy.h"
 #import "StatusModel.h"
 #import "CellLayout.h"
 #import "CommentView.h"
 #import "CommentModel.h"
 #import "LWAlertView.h"
 
-@interface MomentsViewController () <UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
+@interface MomentsViewController ()
+
+
+<UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
 
 @property (nonatomic,strong) NSArray* fakeDatasource;
 @property (nonatomic,strong) TableViewHeader* tableViewHeader;
@@ -41,7 +43,6 @@
 @end
 
 const CGFloat kRefreshBoundary = 170.0f;
-
 @implementation MomentsViewController
 
 #pragma mark - ViewControllerLifeCycle
@@ -97,10 +98,11 @@ const CGFloat kRefreshBoundary = 170.0f;
     self.navigationItem.title = @"朋友圈";
 }
 
+
+
 #pragma mark - Actions
 /***  点赞 ***/
 - (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike atIndexPath:(NSIndexPath *)indexPath {
-    
     /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
      延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
     UIImage* screenshot = [GallopUtils screenshotFromView:cell];
@@ -112,48 +114,27 @@ const CGFloat kRefreshBoundary = 170.0f;
         [imgView removeFromSuperview];
     });
     
-    
     CellLayout* layout = [self.dataSource objectAtIndex:indexPath.row];
+    NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
     if (isLike) {
-        NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
         [newLikeList addObject:@"waynezxcv的粉丝"];
-        StatusModel* statusModel = layout.statusModel;
-        statusModel.likeList = newLikeList;
-        statusModel.isLike = YES;
-        layout = [self layoutWithStatusModel:statusModel index:indexPath.row];
-        [self.dataSource replaceObjectAtIndex:indexPath.row withObject:layout];
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
-    } else {
-        NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
+    }
+    else {
         [newLikeList removeObject:@"waynezxcv的粉丝"];
-        StatusModel* statusModel = layout.statusModel;
-        statusModel.likeList = newLikeList;
-        statusModel.isLike = NO;
-        layout = [self layoutWithStatusModel:statusModel index:indexPath.row];
-        [self.dataSource replaceObjectAtIndex:indexPath.row withObject:layout];
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
         
     }
+    StatusModel* statusModel = layout.statusModel;
+    statusModel.likeList = newLikeList;
+    statusModel.isLike = isLike;
+    layout = [self layoutWithStatusModel:statusModel index:indexPath.row];
+    [self.dataSource replaceObjectAtIndex:indexPath.row withObject:layout];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
-
-/***  点击评论 ***/
-- (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
-          atIndexPath:(NSIndexPath *)indexPath {
-    self.commentView.placeHolder = @"评论";
-    if (![self.commentView.textView isFirstResponder]) {
-        [self.commentView.textView becomeFirstResponder];
-    }
-    self.postComment.from = @"Waynezxcv的粉丝";
-    self.postComment.to = @"";
-    self.postComment.index = indexPath.row;
-}
 
 /***  发表评论 ***/
 - (void)postCommentWithCommentModel:(CommentModel *)model {
-    
     /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
      延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
     UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:model.index inSection:0]];
@@ -165,7 +146,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [imgView removeFromSuperview];
     });
-    
     
     CellLayout* layout = [self.dataSource objectAtIndex:model.index];
     NSMutableArray* newCommentLists = [[NSMutableArray alloc] initWithArray:layout.statusModel.commentList];
@@ -182,10 +162,35 @@ const CGFloat kRefreshBoundary = 170.0f;
     
 }
 
+/*** 开始评论 ***/
+- (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
+          atIndexPath:(NSIndexPath *)indexPath {
+    self.postComment.from = @"Waynezxcv的粉丝";
+    self.postComment.to = @"";
+    self.postComment.index = indexPath.row;
+    self.commentView.placeHolder = @"评论";
+    if (![self.commentView.textView isFirstResponder]) {
+        [self.commentView.textView becomeFirstResponder];
+    }
+}
+
+/*** 开始回复评论 ***/
+- (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
+    //添加连接时，可以再data中放入自己的标记符，回调时通过判断标记符来进行不同的处理
+    if ([data isKindOfClass:[CommentModel class]]) {
+        CommentModel* commentModel = (CommentModel *)data;
+        self.postComment.from = @"waynezxcv的粉丝";
+        self.postComment.to = commentModel.to;
+        self.postComment.index = commentModel.index;
+        self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",commentModel.to];
+        if (![self.commentView.textView isFirstResponder]) {
+            [self.commentView.textView becomeFirstResponder];
+        }
+    }
+}
 
 /***  点击图片 ***/
 - (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index {
-    
     NSMutableArray* tmps = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < layout.imagePostionArray.count; i ++) {
         LWImageBrowserModel* model = [[LWImageBrowserModel alloc]
@@ -201,23 +206,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                                     currentIndex:index];
     
     [browser show];
-}
-
-
-/**
- *  点击链接
- */
-- (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
-    if ([data isKindOfClass:[CommentModel class]]) {
-        CommentModel* commentModel = (CommentModel *)data;
-        self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",commentModel.to];
-        if (![self.commentView.textView isFirstResponder]) {
-            [self.commentView.textView becomeFirstResponder];
-        }
-        self.postComment.from = @"waynezxcv的粉丝";
-        self.postComment.to = commentModel.to;
-        self.postComment.index = commentModel.index;
-    }
 }
 
 /**
@@ -251,15 +239,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     [self.tableView endUpdates];
 }
 
-- (void)refreshComplete {
-    [self.tableViewHeader refreshingAnimateStop];
-    [self.tableView reloadData];
-    [UIView animateWithDuration:0.35f animations:^{
-        self.tableView.contentInset = UIEdgeInsetsMake(64.0f, 0.0f, 0.0f, 0.0f);
-    } completion:^(BOOL finished) {
-        self.needRefresh = NO;
-    }];
-}
 
 #pragma mark - KeyboardNotifications
 
@@ -309,6 +288,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 #pragma mark - UIScrollViewDelegate
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self.commentView endEditing:YES];
     CGFloat offset = scrollView.contentOffset.y;
@@ -322,18 +302,21 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
 }
 
+#pragma mark - Data
 - (void)refreshBegin {
+    
     [UIView animateWithDuration:0.2f animations:^{
         self.tableView.contentInset = UIEdgeInsetsMake(kRefreshBoundary, 0.0f, 0.0f, 0.0f);
     } completion:^(BOOL finished) {
         [self.tableViewHeader refreshingAnimateBegin];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self downloadData];
-        });
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+                           [self fakeDownload];
+                       });
     }];
 }
 
-- (void)downloadData {
+- (void)fakeDownload {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if (self.needRefresh) {
             [self.dataSource removeAllObjects];
@@ -342,39 +325,34 @@ const CGFloat kRefreshBoundary = 170.0f;
                 [fakes addObjectsFromArray:self.fakeDatasource];
             }
             for (NSInteger i = 0; i < fakes.count; i ++) {
-                StatusModel* statusModel = [StatusModel modelWithJSON:fakes[i]];
-                LWLayout* layout = [self layoutWithStatusModel:statusModel index:i];
+                LWLayout* layout = [self layoutWithStatusModel:
+                                    [[StatusModel alloc] initWithDict:fakes[i]]
+                                                         index:i];
                 [self.dataSource addObject:layout];
             }
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
             [self refreshComplete];
         });
     });
 }
 
-
-/****************************************************************************/
-/**
- *  在这里生成LWAsyncDisplayView的模型。
- */
-/****************************************************************************/
-
-- (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel index:(NSInteger)index {
-    //生成Layout
-    CellLayout* layout = [[CellLayout alloc] initWithStatusModel:statusModel index:index dateFormatter:self.dateFormatter];
-    return layout;
+- (void)refreshComplete {
+    [self.tableViewHeader refreshingAnimateStop];
+    [self.tableView reloadData];
+    [UIView animateWithDuration:0.35f animations:^{
+        self.tableView.contentInset = UIEdgeInsetsMake(64.0f, 0.0f, 0.0f, 0.0f);
+    } completion:^(BOOL finished) {
+        self.needRefresh = NO;
+    }];
 }
 
-/****************************************************************************/
-
-
-- (UIImage *)_screenshotFromView:(UIView *)aView {
-    UIGraphicsBeginImageContextWithOptions(aView.bounds.size,NO,[UIScreen mainScreen].scale);
-    [aView.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage* screenshotImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return screenshotImage;
+- (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel index:(NSInteger)index {
+    //生成LWLayout实例
+    CellLayout* layout = [[CellLayout alloc] initWithStatusModel:statusModel
+                                                           index:index
+                                                   dateFormatter:self.dateFormatter];
+    return layout;
 }
 
 #pragma mark - Getter
@@ -384,12 +362,13 @@ const CGFloat kRefreshBoundary = 170.0f;
         return _commentView;
     }
     __weak typeof(self) wself = self;
-    _commentView = [[CommentView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 54.0f)
-                                            sendBlock:^(NSString *content) {
-                                                __strong  typeof(wself) swself = wself;
-                                                swself.postComment.content = content;
-                                                [swself postCommentWithCommentModel:swself.postComment];
-                                            }];
+    _commentView = [[CommentView alloc]
+                    initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 54.0f)
+                    sendBlock:^(NSString *content) {
+                        __strong  typeof(wself) swself = wself;
+                        swself.postComment.content = content;
+                        [swself postCommentWithCommentModel:swself.postComment];
+                    }];
     return _commentView;
 }
 
@@ -420,7 +399,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     return _dataSource;
 }
 
-
 - (NSDateFormatter *)dateFormatter {
     static NSDateFormatter* dateFormatter;
     static dispatch_once_t onceToken;
@@ -439,215 +417,211 @@ const CGFloat kRefreshBoundary = 170.0f;
     return _postComment;
 }
 
-
-/**
- *  模拟数据
- *
- */
 - (NSArray *)fakeDatasource {
     if (_fakeDatasource) {
         return _fakeDatasource;
     }
-    _fakeDatasource = @[
-                        @{@"type":@"image",
-                          @"name":@"型格志style",
-                          @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
-                          @"content":@"春天卫衣的正确打开方式~\n\n\n\n哈哈哈哈,oops~",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jeloxwhnj30fu0g0ta5.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelpn9bdj30b40gkgmh.jpg",
-                                    @"http://ww1.sinaimg.cn/mw690/006gWxKPgw1f2jelriw1bj30fz0g175g.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelt1kh5j30b10gmt9o.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jeluxjcrj30fw0fz0tx.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelzxngwj30b20godgn.jpg",
-                                    @"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jelwmsoej30fx0fywfq.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jem32ccrj30xm0sdwjt.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jelyhutwj30fz0fxwfr.jpg",],
-                          @"statusID":@"8",
-                          @"commentList":@[@{@"from":@"SIZE潮流生活",
-                                             @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv"]},
-                        
-                        @{@"type":@"image",
-                          @"name":@"SIZE潮流生活",
-                          @"avatar":@"http://tp2.sinaimg.cn/1829483361/50/5753078359/1",
-                          @"content":@"近日[心][心][心][心][心][心][face]，adidas Originals为经典鞋款Stan Smith打造Primeknit版本，并带来全新的“OG”系列。简约的鞋身采用白色透气Primeknit针织材质制作，再将Stan Smith代表性的绿、红、深蓝三个元年色调融入到鞋舌和后跟点缀，最后搭载上米白色大底来保留其复古风味。据悉该鞋款将在今月登陆全球各大adidas Originals指定店舖。",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hgxij20lo0egwgc.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/6d0bb361gw1f2jim2hsg6j20lo0egwg2.jpg",
-                                    @"http://ww1.sinaimg.cn/mw690/6d0bb361gw1f2jim2d7nfj20lo0eg40q.jpg",
-                                    @"http://ww1.sinaimg.cn/mw690/6d0bb361gw1f2jim2hka3j20lo0egdhw.jpg",
-                                    @"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hq61j20lo0eg769.jpg"],
-                          @"statusID":@"1",
-                          @"commentList":@[@{@"from":@"SIZE潮流生活",
-                                             @"to":@"",
-                                             @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
-                                           @{@"from":@"waynezxcv",
-                                             @"to":@"SIZE潮流生活",
-                                             @"content":@"哈哈哈哈"},
-                                           @{@"from":@"SIZE潮流生活",
-                                             @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv",@"伊布拉希莫维奇",@"权志龙",@"郜林",@"扎克伯格"]},
-                        
-                        @{@"type":@"website",
-                          @"name":@"Ronaldo",
-                          @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
-                          @"content":@"Easy to use yet capable of so much, iOS 9 was engineered to work hand in hand with the advanced technologies built into iPhone.",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hgxij20lo0egwgc.jpg"],
-                          @"detail":@"LWAlchemy,A fast and lightweight ORM framework for Cocoa and Cocoa Touch.",
-                          @"statusID":@"1",
-                          @"commentList":@[@{@"from":@"伊布拉西莫维奇",
-                                             @"to":@"",
-                                             @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv",@"Gallop"]},
-                        
-                        
-                        @{@"type":@"image",
-                          @"name":@"妖妖小精",
-                          @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
-                          @"content":@"出国留学的儿子为思念自己的家人们寄来一个用自己照片做成的人形立牌",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh2ohanj20jg0yk418.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/8245bf01jw1f2jhh34q9rj20jg0px77y.jpg",
-                                    @"http://ww1.sinaimg.cn/mw690/8245bf01jw1f2jhh3grfwj20jg0pxn13.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/8245bf01jw1f2jhh3ttm6j20jg0el76g.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh43riaj20jg0pxado.jpg",
-                                    @"http://ww2.sinaimg.cn/mw690/8245bf01jw1f2jhh4mutgj20jg0ly0xt.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh4vc7pj20jg0px41m.jpg",],
-                          @"statusID":@"2",
-                          @"commentList":@[@{@"from":@"炉石传说",
-                                             @"to":@"",
-                                             @"content":@"#炉石传说#"},
-                                           @{@"from":@"waynezxcv",
-                                             @"to":@"SIZE潮流生活",
-                                             @"content":@"哈哈哈哈"},
-                                           @{@"from":@"SIZE潮流生活",
-                                             @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv"]},
-                        
-                        @{@"type":@"image",
-                          @"name":@"Instagram热门",
-                          @"avatar":@"http://tp4.sinaimg.cn/5074408479/50/5706839595/0",
-                          @"content":@"Austin Butler & Vanessa Hudgens  想试试看扑到一个一米八几的人怀里是有多舒服[心]",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww1.sinaimg.cn/mw690/005xpHs3gw1f2jg132p3nj309u0goq62.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/005xpHs3gw1f2jg14per3j30b40ctmzp.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/005xpHs3gw1f2jg14vtjjj30b40b4q5m.jpg",
-                                    @"http://ww1.sinaimg.cn/mw690/005xpHs3gw1f2jg15amskj30b40f1408.jpg",
-                                    @"http://ww3.sinaimg.cn/mw690/005xpHs3gw1f2jg16f8vnj30b40g4q4q.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/005xpHs3gw1f2jg178dxdj30am0gowgv.jpg",
-                                    @"http://ww2.sinaimg.cn/mw690/005xpHs3gw1f2jg17c5urj30b40ghjto.jpg"],
-                          @"statusID":@"3",
-                          @"commentList":@[@{@"from":@"waynezxcv",
-                                             @"to":@"SIZE潮流生活",
-                                             @"content":@"哈哈哈哈"},
-                                           @{@"from":@"SIZE潮流生活",
-                                             @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"Tim Cook"]},
-                        
-                        
-                        @{@"type":@"image",
-                          @"name":@"头条新闻",
-                          @"avatar":@"http://tp1.sinaimg.cn/1618051664/50/5735009977/0",
-                          @"content":@"#万象# 【熊孩子！4名小学生铁轨上设障碍物逼停火车】4名小学生打赌，1人认为火车会将石头碾成粉末，其余3人不信，认为只会碾碎，于是他们将道碴摆放在铁轨上。火车司机发现前方不远处的铁轨上，摆放了影响行车安全的障碍物，于是紧急采取制动，列车中途停车13分钟。O4名学生铁轨上设障碍物逼停火车#waynezxcv# nice",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/60718250jw1f2jg46smtmj20go0go77r.jpg"],
-                          @"statusID":@"4",
-                          @"commentList":@[@{@"from":@"waynezxcv",
-                                             @"to":@"SIZE潮流生活",
-                                             @"content":@"哈哈哈哈"},
-                                           @{@"from":@"SIZE潮流生活",
-                                             @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"Tim Cook"]},
-                        
-                        
-                        @{@"type":@"image",
-                          @"name":@"Kindle中国",
-                          @"avatar":@"http://tp1.sinaimg.cn/3262223112/50/5684307907/1",
-                          @"content":@"#只限今日#《简单的逻辑学》作者D.Q.麦克伦尼在书中提出了28种非逻辑思维形式，抛却了逻辑学一贯的刻板理论，转而以轻松的笔触带领我们畅游这个精彩无比的逻辑世界；《蝴蝶梦》我错了，我曾以为付出自己就是爱你。全球公认20世纪伟大的爱情经典，大陆独家合法授权。",
-                          @"date":@"",
-                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/c2719308gw1f2hav54htyj20dj0l00uk.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/c2719308gw1f2hav47jn7j20dj0j341h.jpg"],
-                          @"statusID":@"6",
-                          @"commentList":@[@{@"from":@"Kindle中国",
-                                             @"to":@"",
-                                             @"content":@"统一回复,使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv"]},
-                        
-                        
-                        
-                        @{@"type":@"image",
-                          @"name":@"G-SHOCK",
-                          @"avatar":@"http://tp3.sinaimg.cn/1595142730/50/5691224157/1",
-                          @"content":@"就算平时没有时间，周末也要带着G-SHOCK到户外走走，感受大自然的满满正能量！",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/5f13f24ajw1f2hc1r6j47j20dc0dc0t4.jpg"],
-                          @"statusID":@"7",
-                          @"commentList":@[@{@"from":@"SIZE潮流生活",
-                                             @"to":@"",
-                                             @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
-                                           @{@"from":@"waynezxcv",
-                                             @"to":@"SIZE潮流生活",
-                                             @"content":@"哈哈哈哈"},
-                                           @{@"from":@"SIZE潮流生活",
-                                             @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv"]},
-                        
-                        
-                        
-                        
-                        
-                        @{@"type":@"image",
-                          @"name":@"数字尾巴",
-                          @"avatar":@"http://tp1.sinaimg.cn/1726544024/50/5630520790/1",
-                          @"content":@"外媒 AndroidAuthority 日前曝光诺基亚首款回归作品 NOKIA A1 的渲染图，手机的外形很 N 记，边框控制的不错。这是一款纯正的 Android 机型，传闻手机将采用 5.5 英寸 1080P 屏幕，搭载骁龙 652，Android 6.0 系统，并使用了诺基亚自家的 Z 启动器，不过具体发表的时间还是未知。尾巴们你会期待吗？",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww3.sinaimg.cn/mw690/66e8f898gw1f2jck6jnckj20go0fwdhb.jpg"],
-                          @"statusID":@"9",
-                          @"commentList":@[@{@"from":@"SIZE潮流生活",
-                                             @"to":@"",
-                                             @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
-                                           @{@"from":@"waynezxcv",
-                                             @"to":@"SIZE潮流生活",
-                                             @"content":@"哈哈哈哈"},
-                                           @{@"from":@"SIZE潮流生活",
-                                             @"to":@"waynezxcv",
-                                             @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv"]},
-                        
-                        
-                        @{@"type":@"image",
-                          @"name":@"欧美街拍XOXO",
-                          @"avatar":@"http://tp4.sinaimg.cn/1708004923/50/1283204657/0",
-                          @"content":@"3.31～4.2 肯豆",
-                          @"date":@"1459668442",
-                          @"imgs":@[@"http://ww2.sinaimg.cn/mw690/65ce163bjw1f2jdkd2hgjj20cj0gota8.jpg",
-                                    @"http://ww1.sinaimg.cn/mw690/65ce163bjw1f2jdkjdm96j20bt0gota9.jpg",
-                                    @"http://ww2.sinaimg.cn/mw690/65ce163bjw1f2jdkvwepij20go0clgnd.jpg",
-                                    @"http://ww4.sinaimg.cn/mw690/65ce163bjw1f2jdl2ao77j20ci0gojsw.jpg",],
-                          @"statusID":@"10",
-                          @"commentList":@[@{@"from":@"waynezxcv",
-                                             @"to":@"SIZE潮流生活",
-                                             @"content":@"哈哈哈哈"}],
-                          @"isLike":@(NO),
-                          @"likeList":@[@"waynezxcv"]},
-                        ];
+    _fakeDatasource =
+    @[
+      @{@"type":@"image",
+        @"name":@"型格志style",
+        @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
+        @"content":@"春天卫衣的正确打开方式~\n\n\n\n哈哈哈哈,oops~",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jeloxwhnj30fu0g0ta5.jpg",
+                  @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelpn9bdj30b40gkgmh.jpg",
+                  @"http://ww1.sinaimg.cn/mw690/006gWxKPgw1f2jelriw1bj30fz0g175g.jpg",
+                  @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelt1kh5j30b10gmt9o.jpg",
+                  @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jeluxjcrj30fw0fz0tx.jpg",
+                  @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelzxngwj30b20godgn.jpg",
+                  @"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jelwmsoej30fx0fywfq.jpg",
+                  @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jem32ccrj30xm0sdwjt.jpg",
+                  @"http://ww4.sinaimg.cn/mw690/006gWxKPgw1f2jelyhutwj30fz0fxwfr.jpg",],
+        @"statusID":@"8",
+        @"commentList":@[@{@"from":@"SIZE潮流生活",
+                           @"to":@"waynezxcv",
+                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"waynezxcv"]},
+      
+      @{@"type":@"image",
+        @"name":@"SIZE潮流生活",
+        @"avatar":@"http://tp2.sinaimg.cn/1829483361/50/5753078359/1",
+        @"content":@"近日[心][心][心][心][心][心][face]，adidas Originals为经典鞋款Stan Smith打造Primeknit版本，并带来全新的“OG”系列。简约的鞋身采用白色透气Primeknit针织材质制作，再将Stan Smith代表性的绿、红、深蓝三个元年色调融入到鞋舌和后跟点缀，最后搭载上米白色大底来保留其复古风味。据悉该鞋款将在今月登陆全球各大adidas Originals指定店舖。",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hgxij20lo0egwgc.jpg",
+                  @"http://ww3.sinaimg.cn/mw690/6d0bb361gw1f2jim2hsg6j20lo0egwg2.jpg",
+                  @"http://ww1.sinaimg.cn/mw690/6d0bb361gw1f2jim2d7nfj20lo0eg40q.jpg",
+                  @"http://ww1.sinaimg.cn/mw690/6d0bb361gw1f2jim2hka3j20lo0egdhw.jpg",
+                  @"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hq61j20lo0eg769.jpg"],
+        @"statusID":@"1",
+        @"commentList":@[@{@"from":@"SIZE潮流生活",
+                           @"to":@"",
+                           @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
+                         @{@"from":@"waynezxcv",
+                           @"to":@"SIZE潮流生活",
+                           @"content":@"哈哈哈哈"},
+                         @{@"from":@"SIZE潮流生活",
+                           @"to":@"waynezxcv",
+                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"waynezxcv",@"伊布拉希莫维奇",@"权志龙",@"郜林",@"扎克伯格"]},
+      
+      @{@"type":@"website",
+        @"name":@"Ronaldo",
+        @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
+        @"content":@"Easy to use yet capable of so much, iOS 9 was engineered to work hand in hand with the advanced technologies built into iPhone.",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hgxij20lo0egwgc.jpg"],
+        @"detail":@"LWAlchemy,A fast and lightweight ORM framework for Cocoa and Cocoa Touch.",
+        @"statusID":@"1",
+        @"commentList":@[@{@"from":@"伊布拉西莫维奇",
+                           @"to":@"",
+                           @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"waynezxcv",@"Gallop"]},
+      
+      
+      @{@"type":@"image",
+        @"name":@"妖妖小精",
+        @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
+        @"content":@"出国留学的儿子为思念自己的家人们寄来一个用自己照片做成的人形立牌",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh2ohanj20jg0yk418.jpg",
+                  @"http://ww4.sinaimg.cn/mw690/8245bf01jw1f2jhh34q9rj20jg0px77y.jpg",
+                  @"http://ww1.sinaimg.cn/mw690/8245bf01jw1f2jhh3grfwj20jg0pxn13.jpg",
+                  @"http://ww4.sinaimg.cn/mw690/8245bf01jw1f2jhh3ttm6j20jg0el76g.jpg",
+                  @"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh43riaj20jg0pxado.jpg",
+                  @"http://ww2.sinaimg.cn/mw690/8245bf01jw1f2jhh4mutgj20jg0ly0xt.jpg",
+                  @"http://ww3.sinaimg.cn/mw690/8245bf01jw1f2jhh4vc7pj20jg0px41m.jpg",],
+        @"statusID":@"2",
+        @"commentList":@[@{@"from":@"炉石传说",
+                           @"to":@"",
+                           @"content":@"#炉石传说#"},
+                         @{@"from":@"waynezxcv",
+                           @"to":@"SIZE潮流生活",
+                           @"content":@"哈哈哈哈"},
+                         @{@"from":@"SIZE潮流生活",
+                           @"to":@"waynezxcv",
+                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"waynezxcv"]},
+      
+      @{@"type":@"image",
+        @"name":@"Instagram热门",
+        @"avatar":@"http://tp4.sinaimg.cn/5074408479/50/5706839595/0",
+        @"content":@"Austin Butler & Vanessa Hudgens  想试试看扑到一个一米八几的人怀里是有多舒服[心]",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww1.sinaimg.cn/mw690/005xpHs3gw1f2jg132p3nj309u0goq62.jpg",
+                  @"http://ww3.sinaimg.cn/mw690/005xpHs3gw1f2jg14per3j30b40ctmzp.jpg",
+                  @"http://ww3.sinaimg.cn/mw690/005xpHs3gw1f2jg14vtjjj30b40b4q5m.jpg",
+                  @"http://ww1.sinaimg.cn/mw690/005xpHs3gw1f2jg15amskj30b40f1408.jpg",
+                  @"http://ww3.sinaimg.cn/mw690/005xpHs3gw1f2jg16f8vnj30b40g4q4q.jpg",
+                  @"http://ww4.sinaimg.cn/mw690/005xpHs3gw1f2jg178dxdj30am0gowgv.jpg",
+                  @"http://ww2.sinaimg.cn/mw690/005xpHs3gw1f2jg17c5urj30b40ghjto.jpg"],
+        @"statusID":@"3",
+        @"commentList":@[@{@"from":@"waynezxcv",
+                           @"to":@"SIZE潮流生活",
+                           @"content":@"哈哈哈哈"},
+                         @{@"from":@"SIZE潮流生活",
+                           @"to":@"waynezxcv",
+                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"Tim Cook"]},
+      
+      
+      @{@"type":@"image",
+        @"name":@"头条新闻",
+        @"avatar":@"http://tp1.sinaimg.cn/1618051664/50/5735009977/0",
+        @"content":@"#万象# 【熊孩子！4名小学生铁轨上设障碍物逼停火车】4名小学生打赌，1人认为火车会将石头碾成粉末，其余3人不信，认为只会碾碎，于是他们将道碴摆放在铁轨上。火车司机发现前方不远处的铁轨上，摆放了影响行车安全的障碍物，于是紧急采取制动，列车中途停车13分钟。O4名学生铁轨上设障碍物逼停火车#waynezxcv# nice",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww2.sinaimg.cn/mw690/60718250jw1f2jg46smtmj20go0go77r.jpg"],
+        @"statusID":@"4",
+        @"commentList":@[@{@"from":@"waynezxcv",
+                           @"to":@"SIZE潮流生活",
+                           @"content":@"哈哈哈哈"},
+                         @{@"from":@"SIZE潮流生活",
+                           @"to":@"waynezxcv",
+                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"Tim Cook"]},
+      
+      
+      @{@"type":@"image",
+        @"name":@"Kindle中国",
+        @"avatar":@"http://tp1.sinaimg.cn/3262223112/50/5684307907/1",
+        @"content":@"#只限今日#《简单的逻辑学》作者D.Q.麦克伦尼在书中提出了28种非逻辑思维形式，抛却了逻辑学一贯的刻板理论，转而以轻松的笔触带领我们畅游这个精彩无比的逻辑世界；《蝴蝶梦》我错了，我曾以为付出自己就是爱你。全球公认20世纪伟大的爱情经典，大陆独家合法授权。",
+        @"date":@"",
+        @"imgs":@[@"http://ww2.sinaimg.cn/mw690/c2719308gw1f2hav54htyj20dj0l00uk.jpg",
+                  @"http://ww4.sinaimg.cn/mw690/c2719308gw1f2hav47jn7j20dj0j341h.jpg"],
+        @"statusID":@"6",
+        @"commentList":@[@{@"from":@"Kindle中国",
+                           @"to":@"",
+                           @"content":@"统一回复,使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"waynezxcv"]},
+      
+      
+      
+      @{@"type":@"image",
+        @"name":@"G-SHOCK",
+        @"avatar":@"http://tp3.sinaimg.cn/1595142730/50/5691224157/1",
+        @"content":@"就算平时没有时间，周末也要带着G-SHOCK到户外走走，感受大自然的满满正能量！",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww2.sinaimg.cn/mw690/5f13f24ajw1f2hc1r6j47j20dc0dc0t4.jpg"],
+        @"statusID":@"7",
+        @"commentList":@[@{@"from":@"SIZE潮流生活",
+                           @"to":@"",
+                           @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
+                         @{@"from":@"waynezxcv",
+                           @"to":@"SIZE潮流生活",
+                           @"content":@"哈哈哈哈"},
+                         @{@"from":@"SIZE潮流生活",
+                           @"to":@"waynezxcv",
+                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"waynezxcv"]},
+      
+      
+      
+      
+      
+      @{@"type":@"image",
+        @"name":@"数字尾巴",
+        @"avatar":@"http://tp1.sinaimg.cn/1726544024/50/5630520790/1",
+        @"content":@"外媒 AndroidAuthority 日前曝光诺基亚首款回归作品 NOKIA A1 的渲染图，手机的外形很 N 记，边框控制的不错。这是一款纯正的 Android 机型，传闻手机将采用 5.5 英寸 1080P 屏幕，搭载骁龙 652，Android 6.0 系统，并使用了诺基亚自家的 Z 启动器，不过具体发表的时间还是未知。尾巴们你会期待吗？",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww3.sinaimg.cn/mw690/66e8f898gw1f2jck6jnckj20go0fwdhb.jpg"],
+        @"statusID":@"9",
+        @"commentList":@[@{@"from":@"SIZE潮流生活",
+                           @"to":@"",
+                           @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
+                         @{@"from":@"waynezxcv",
+                           @"to":@"SIZE潮流生活",
+                           @"content":@"哈哈哈哈"},
+                         @{@"from":@"SIZE潮流生活",
+                           @"to":@"waynezxcv",
+                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"waynezxcv"]},
+      
+      
+      @{@"type":@"image",
+        @"name":@"欧美街拍XOXO",
+        @"avatar":@"http://tp4.sinaimg.cn/1708004923/50/1283204657/0",
+        @"content":@"3.31～4.2 肯豆",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww2.sinaimg.cn/mw690/65ce163bjw1f2jdkd2hgjj20cj0gota8.jpg",
+                  @"http://ww1.sinaimg.cn/mw690/65ce163bjw1f2jdkjdm96j20bt0gota9.jpg",
+                  @"http://ww2.sinaimg.cn/mw690/65ce163bjw1f2jdkvwepij20go0clgnd.jpg",
+                  @"http://ww4.sinaimg.cn/mw690/65ce163bjw1f2jdl2ao77j20ci0gojsw.jpg",],
+        @"statusID":@"10",
+        @"commentList":@[@{@"from":@"waynezxcv",
+                           @"to":@"SIZE潮流生活",
+                           @"content":@"哈哈哈哈"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"waynezxcv"]},
+      ];
     return _fakeDatasource;
 }
 

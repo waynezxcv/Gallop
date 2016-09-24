@@ -100,10 +100,13 @@
                         options:0 animations:^{
                             self.frame = CGRectMake(self.frame.origin.x + 160,
                                                     self.frame.origin.y,
-                                                    0.5f,
+                                                    0.0f,
                                                     34.0f);
                         } completion:^(BOOL finished) {
-                            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 0.0f, 34.0f);
+                            self.frame = CGRectMake(self.frame.origin.x,
+                                                    self.frame.origin.y,
+                                                    0.0f,
+                                                    34.0f);
                             self.show = NO;
                             self.isShowing = NO;
                         }];

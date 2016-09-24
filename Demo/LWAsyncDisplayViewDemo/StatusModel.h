@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LWAlchemy.h"
+#import "CommentModel.h"
 
 @interface StatusModel : NSObject
 
@@ -22,5 +22,7 @@
 @property (nullable, nonatomic, copy) NSArray* commentList;
 @property (nullable, nonatomic, copy) NSArray* likeList;
 @property (nonatomic,assign) BOOL isLike;
+
+- (StatusModel *)initWithDict:(NSDictionary *)dict;
 
 @end
