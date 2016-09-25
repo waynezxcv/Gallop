@@ -11,7 +11,9 @@
 #import "MomentsViewController.h"
 #import "ArticleListViewController.h"
 
-@interface RootViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface RootViewController ()
+
+<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic,strong) UITableView* tableView;
 
@@ -50,10 +52,10 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"LWTextStorage-富文本和添加点击事件Demo";
+        cell.textLabel.text = @"属性文本";
     }
     else if (indexPath.row == 1) {
-        cell.textLabel.text = @"LWImageStorage-图片设置圆角半径和模糊效果Demo";
+        cell.textLabel.text = @"图片设置圆角半径和模糊效果";
     }
     else if (indexPath.row == 2) {
         cell.textLabel.text = @"Gallop构建的顺滑的朋友圈Demo";

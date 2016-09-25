@@ -59,11 +59,17 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 @property (nonatomic,assign) NSUnderlineStyle underlineStyle;//下划线样式
 @property (nonatomic,strong) UIColor* underlineColor;//下划线颜色
 @property (nonatomic,assign) NSLineBreakMode lineBreakMode;//换行模式
-@property (nonatomic,assign) BOOL sizeToFit;//是否需要自适应大小，默认YES
 @property (nonatomic,assign) LWTextDrawMode textDrawMode;//绘制模式
 @property (nonatomic,strong) UIColor* strokeColor;//描边颜色
 @property (nonatomic,assign) CGFloat strokeWidth;//描边宽度
 @property (nonatomic,assign,readonly) CGSize suggestSize;//建议的绘制大小
+
+@property (nonatomic,assign) NSInteger maxNumberOfLines;//最大行数限制
+@property (nonatomic,assign,readonly) NSInteger numberOfLines;//文本的实际行数
+@property (nonatomic,assign) BOOL needDebug;//是否开启调试模式
+@property (nonatomic,assign,readonly) BOOL isTruncation;//是否折叠
+
+
 
 /**
  *  构造方法
@@ -82,7 +88,7 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
  *
  *  @return 一个 LWTextStorage对象
  */
-+ (LWTextStorage *)lw_textStrageWithText:(NSAttributedString *)attributedText frame:(CGRect)frame;
++ (LWTextStorage *)lw_textStorageWithText:(NSAttributedString *)attributedText frame:(CGRect)frame;
 
 /**
  *  构造方法

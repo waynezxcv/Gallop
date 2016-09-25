@@ -426,7 +426,7 @@ const CGFloat kRefreshBoundary = 170.0f;
       @{@"type":@"image",
         @"name":@"型格志style",
         @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
-        @"content":@"春天卫衣的正确打开方式~\n\n\n\n哈哈哈哈,oops~",
+        @"content":@"春天卫衣的正确打开方式~",
         @"date":@"1459668442",
         @"imgs":@[@"http://ww2.sinaimg.cn/mw690/006gWxKPgw1f2jeloxwhnj30fu0g0ta5.jpg",
                   @"http://ww3.sinaimg.cn/mw690/006gWxKPgw1f2jelpn9bdj30b40gkgmh.jpg",

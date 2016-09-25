@@ -155,8 +155,9 @@
         [imageStorage lw_drawInContext:context isCancelled:isCancelledBlock];
     }
     for (LWTextStorage* textStorage in _textStorages) {
+        
         [textStorage.textLayout drawIncontext:context
-                                         size:textStorage.textLayout.textBoundingSize
+                                         size:CGSizeZero
                                         point:textStorage.frame.origin
                                 containerView:self
                                containerLayer:self.layer
@@ -258,6 +259,7 @@
     __block BOOL found = NO;
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
+    
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (imageStorage == nil) {
             continue;
@@ -274,7 +276,8 @@
             continue;
         }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
-            if (_highlight) {
+            LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
+            if (hightlight == _highlight) {
                 if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedTextStorage:linkdata:)]) {
                     [self.delegate lwAsyncDisplayView:self didCilickedTextStorage:textStorage linkdata:_highlight.content];
                 }

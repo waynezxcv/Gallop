@@ -21,46 +21,18 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-
 #import <UIKit/UIKit.h>
+#import <CoreText/CoreText.h>
 
 
+@interface LWTextGlyph : NSObject
 
-/**
- *  文本容器，包含文本绘制的范围大小、路径、会edgeInsets等信息
- */
-@interface LWTextContainer : NSObject
-
-@property (nonatomic,assign,readonly) CGSize size;//容器的大小
-@property (nonatomic,strong,readonly) UIBezierPath* path;//容器的路径
-@property (nonatomic,assign,readonly) UIEdgeInsets edgeInsets;//边缘内嵌大小
-@property (nonatomic,assign) NSInteger maxNumberOfLines;//最大行数限制
-
-/**
- *  构造方法
- *
- *  @param size 容器大小
- *
- *  @return 一个LWTextContrainer对象
- */
-+ (id)lw_textContainerWithSize:(CGSize)size;
-
-/**
- *  构造方法
- *
- *  @param size       容器大小
- *  @param edgeInsets 边缘内嵌大小
- *
- *  @return 一个LWTextContrainer对象
- */
-+ (id)lw_textContainerWithSize:(CGSize)size edgeInsets:(UIEdgeInsets)edgeInsets;
-
-/**
- *  容器路径的行宽
- *
- *  @return 路径的行宽
- */
-- (CGFloat)pathLineWidth;
-
+@property (nonatomic,assign) CGGlyph glyph;
+@property (nonatomic,assign) CGPoint position;
+@property (nonatomic,assign) CGFloat ascent;
+@property (nonatomic,assign) CGFloat descent;
+@property (nonatomic,assign) CGFloat leading;
+@property (nonatomic,assign) CGFloat width;
+@property (nonatomic,assign) CGFloat height;
 
 @end

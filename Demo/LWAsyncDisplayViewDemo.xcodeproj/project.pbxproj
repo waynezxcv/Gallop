@@ -60,6 +60,7 @@
 		01571FAF1D92FFB3002D71A5 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571F9F1D92FFB3002D71A5 /* UIView+WebCacheOperation.m */; };
 		01571FC11D93004B002D71A5 /* LWActiveIncatorAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FBE1D93004B002D71A5 /* LWActiveIncatorAnimationView.m */; };
 		01571FC21D93004B002D71A5 /* LWActiveIncator.m in Sources */ = {isa = PBXBuildFile; fileRef = 01571FC01D93004B002D71A5 /* LWActiveIncator.m */; };
+		01609CA41D982A380025A285 /* LWTextGlyph.m in Sources */ = {isa = PBXBuildFile; fileRef = 01609CA31D982A380025A285 /* LWTextGlyph.m */; };
 		016A10331D9426B400268B4F /* articlelist.plist in Resources */ = {isa = PBXBuildFile; fileRef = 016A10321D9426B400268B4F /* articlelist.plist */; };
 		01AFD9891CF4D32700BF46D0 /* LikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 01AFD9881CF4D32700BF46D0 /* LikeButton.m */; };
 		01D14EF41CDCFA780028714A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EF31CDCFA780028714A /* RootViewController.m */; };
@@ -207,6 +208,8 @@
 		01571FBF1D93004B002D71A5 /* LWActiveIncator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWActiveIncator.h; path = Others/LWActiveIndicator/LWActiveIncator.h; sourceTree = "<group>"; };
 		01571FC01D93004B002D71A5 /* LWActiveIncator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWActiveIncator.m; path = Others/LWActiveIndicator/LWActiveIncator.m; sourceTree = "<group>"; };
 		015FC0E31CDFA48800B4DF82 /* Gallop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Gallop.h; path = ../Gallop/Gallop.h; sourceTree = "<group>"; };
+		01609CA21D982A380025A285 /* LWTextGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWTextGlyph.h; path = ../Gallop/LWTextGlyph.h; sourceTree = "<group>"; };
+		01609CA31D982A380025A285 /* LWTextGlyph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWTextGlyph.m; path = ../Gallop/LWTextGlyph.m; sourceTree = "<group>"; };
 		016A10321D9426B400268B4F /* articlelist.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = articlelist.plist; sourceTree = "<group>"; };
 		01AFD9871CF4D32700BF46D0 /* LikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeButton.h; sourceTree = "<group>"; };
 		01AFD9881CF4D32700BF46D0 /* LikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeButton.m; sourceTree = "<group>"; };
@@ -509,14 +512,16 @@
 		B079C2841CD8C58F003B15D3 /* _CoreText */ = {
 			isa = PBXGroup;
 			children = (
-				012EDDF51D931D8B009AFA90 /* LWTextRunDelegate.h */,
-				012EDDF61D931D8B009AFA90 /* LWTextRunDelegate.m */,
 				012EDDF11D931D8B009AFA90 /* LWTextLayout.h */,
 				012EDDF21D931D8B009AFA90 /* LWTextLayout.m */,
+				012EDDF51D931D8B009AFA90 /* LWTextRunDelegate.h */,
+				012EDDF61D931D8B009AFA90 /* LWTextRunDelegate.m */,
 				012EDDEF1D931D8B009AFA90 /* LWTextContainer.h */,
 				012EDDF01D931D8B009AFA90 /* LWTextContainer.m */,
 				012EDDF31D931D8B009AFA90 /* LWTextLine.h */,
 				012EDDF41D931D8B009AFA90 /* LWTextLine.m */,
+				01609CA21D982A380025A285 /* LWTextGlyph.h */,
+				01609CA31D982A380025A285 /* LWTextGlyph.m */,
 				012EDDED1D931D8B009AFA90 /* LWTextAttachment.h */,
 				012EDDEE1D931D8B009AFA90 /* LWTextAttachment.m */,
 				012EDDF71D931D8B009AFA90 /* NSMutableAttributedString+Gallop.h */,
@@ -795,6 +800,7 @@
 				01571FA21D92FFB3002D71A5 /* SDImageCache.m in Sources */,
 				012EDDE11D931CB8009AFA90 /* LWStorage.m in Sources */,
 				B0ACEC081CEDC9A50019074F /* StatusModel.m in Sources */,
+				01609CA41D982A380025A285 /* LWTextGlyph.m in Sources */,
 				01D14EF41CDCFA780028714A /* RootViewController.m in Sources */,
 				012EDE051D931DED009AFA90 /* CALayer+LWTransaction.m in Sources */,
 				B0F991D71D937FBD00D7B529 /* LWImageBrowserButton.m in Sources */,

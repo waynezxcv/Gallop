@@ -24,6 +24,10 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
+#import "LWTextGlyph.h"
+
+
+
 
 @class LWTextAttachment;
 
@@ -48,9 +52,16 @@
 @property (nonatomic,assign,readonly) CGFloat leading;// line leading 行距
 @property (nonatomic,assign,readonly) CGFloat lineWidth;// line width 行宽
 @property (nonatomic,assign,readonly) CGFloat trailingWhitespaceWidth;//尾部空白的宽度
-@property (nonatomic,strong,readonly) NSMutableArray<LWTextAttachment *>* attachments;//包含文本附件的数组
-@property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRanges;//包含文本附件在文本中位置信息的数组
-@property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRects;//包含文本附件在LWAsyncDisplayView上位置CGRect信息的数组
+
+@property (nonatomic,copy,readonly) NSArray<LWTextGlyph *>* glyphs;//保存CGGlyph封装对象的数组
+@property (nonatomic,copy,readonly) NSArray<LWTextAttachment *>* attachments;//包含文本附件的数组
+@property (nonatomic,copy,readonly) NSArray<NSValue *>* attachmentRanges;//包含文本附件在文本中位置信息的数组
+@property (nonatomic,copy,readonly) NSArray<NSValue *>* attachmentRects;//包含文本附件在LWAsyncDisplayView上位置CGRect信息的数组
+
+//
+//@property (nonatomic,strong,readonly) NSMutableArray<LWTextAttachment *>* attachments;//包含文本附件的数组
+//@property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRanges;//包含文本附件在文本中位置信息的数组
+//@property (nonatomic,strong,readonly) NSMutableArray<NSValue *>* attachmentRects;//包含文本附件在LWAsyncDisplayView上位置CGRect信息的数组
 @property (nonatomic) NSUInteger index;//ctline在CTFrameGetLines数组中的index
 @property (nonatomic) NSUInteger row;//行数
 

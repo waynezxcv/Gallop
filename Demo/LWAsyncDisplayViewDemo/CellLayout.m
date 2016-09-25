@@ -60,15 +60,15 @@
                                               nameTextStorage.bottom + 10.0f,
                                               SCREEN_WIDTH - 80.0f,
                                               CGFLOAT_MAX);
-
+        contentTextStorage.maxNumberOfLines = 5;//设置最大行数，超过则折叠
+        //折叠的条件
         CGFloat contentBottom = contentTextStorage.bottom;
-        //折叠的条件,文字高度超过MAX_TEXT_HEIGHT则折叠
-        if (contentTextStorage.bottom - (nameTextStorage.bottom + 10.0f) > MAX_TEXT_HEIGHT) {
+        if (contentTextStorage.numberOfLines > 5) {
             contentTextStorage.frame = CGRectMake(nameTextStorage.left,
                                                   nameTextStorage.bottom + 10.0f,
                                                   SCREEN_WIDTH - 80.0f,
                                                   MAX_TEXT_HEIGHT);
-
+            
             LWTextStorage* openStorage = [[LWTextStorage alloc] init];
             openStorage.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
             openStorage.textColor = RGB(40, 40, 40, 1);
@@ -84,7 +84,7 @@
             [self addStorage:openStorage];
             contentBottom = openStorage.bottom;
         }
-
+        
         //解析表情和主题
         [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
         [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
@@ -376,7 +376,8 @@
             [commentBgStorage stretchableImageWithLeftCapWidth:40
                                                   topCapHeight:15];
         }
-
+    
+        
         [self addStorage:nameTextStorage];//将Storage添加到遵循LWLayoutProtocol协议的类
         [self addStorage:contentTextStorage];
         [self addStorage:dateTextStorage];

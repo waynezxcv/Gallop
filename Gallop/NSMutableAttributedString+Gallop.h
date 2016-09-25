@@ -121,6 +121,8 @@
  */
 - (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode range:(NSRange)range;
 
+
+
 #pragma mark - Link & Attachment
 /**
  *  添加一个点击链接事件

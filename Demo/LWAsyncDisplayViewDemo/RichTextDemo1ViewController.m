@@ -33,13 +33,13 @@
     
     //创建LWTextStorage对象
     LWTextStorage* ts = [[LWTextStorage alloc] init];
-    ts.frame = CGRectMake(20, 50.0f,SCREEN_WIDTH - 40.0f, ts.suggestSize.height);
+    ts.frame = CGRectMake(20, 30.0f,SCREEN_WIDTH - 40.0f, CGFLOAT_MAX);
     ts.text = @"Gallop支持图文混排,可以在文字中插入本地图片→和网络图片→UIView的子类→.给指定位置文字添加链接.快来试试吧。";
-    ts.font = [UIFont fontWithName:@"Heiti SC" size:16.0f];
+    ts.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
     
     UIImage* image = [UIImage imageNamed:@"001"];
     UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
-    
+        
     //在文字中插入本地图片
     [ts lw_replaceTextWithImage:image
                     contentMode:UIViewContentModeScaleAspectFill
@@ -66,40 +66,38 @@
                  linkColor:[UIColor blueColor]
             highLightColor:RGB(0, 0, 0, 0.15)];
     
-    //给整段文字添加点击事件
-    [ts lw_addLinkForWholeTextStorageWithData:@"整段文字"
-                                    linkColor:nil
-                               highLightColor:RGB(0, 0, 0, 0.15)];
-    
     
     //用属性字符串创建LWTextStorage
     NSMutableAttributedString* as1 = [[NSMutableAttributedString alloc] initWithString:@"世界对着它的爱人，把它浩翰的面具揭下了。它变小了，小如一首歌，小如一回永恒的接吻。"];
+    [as1 setFont:[UIFont fontWithName:@"Heiti SC" size:13.0f] range:NSMakeRange(0, as1.length)];
     [as1 setTextBackgroundColor:[UIColor orangeColor] range:NSMakeRange(0, 9)];
     [as1 setTextColor:[UIColor whiteColor] range:NSMakeRange(0, 9)];
     [as1 setTextColor:[UIColor blackColor] range:NSMakeRange(9, as1.length - 9)];
     [as1 setUnderlineStyle:NSUnderlineStyleDouble underlineColor:[UIColor blueColor]
-                     range:NSMakeRange(9, as1.length - 9)];
+                     range:NSMakeRange(9, as1.length - 20.0f)];
     
-    LWTextStorage* ts1 = [LWTextStorage lw_textStrageWithText:as1
-                                                        frame:CGRectMake(20.0f,
-                                                                         ts.bottom + 20.0f,
-                                                                         SCREEN_WIDTH - 40.0f,
-                                                                         CGFLOAT_MAX)];
-    ts1.font = [UIFont fontWithName:@"Heiti SC" size:18.0f];
+    [as1 setTextBackgroundColor:RGB(43, 187, 228, 0.9f) range:NSMakeRange(as1.length - 10, 10)];
+    [as1 setTextColor:[UIColor whiteColor] range:NSMakeRange(as1.length - 10, 10)];
+    
+    LWTextStorage* ts1 = [LWTextStorage lw_textStorageWithText:as1
+                                                         frame:CGRectMake(20.0f,
+                                                                          ts.bottom + 20.0f,
+                                                                          SCREEN_WIDTH - 40.0f,
+                                                                          CGFLOAT_MAX)];
     ts1.linespacing = 3.0f;
     
-    //空心字和外框
+    
+    
     LWTextStorage* ts2 = [[LWTextStorage alloc] initWithFrame:CGRectMake(20.0f,
                                                                          ts1.bottom + 20.0f,
                                                                          SCREEN_WIDTH - 40.0f,
                                                                          CGFLOAT_MAX)];
-    ts2.text = @"The world puts off its mask of vastness to its lover.It becomes small as one song, as one kiss of the eternal.";
-    ts2.textDrawMode = LWTextDrawModeStroke;
-    ts2.strokeColor = [UIColor redColor];
-    ts2.font = [UIFont fontWithName:@"Heiti SC" size:18.0f];
-    ts2.linespacing = 5.0f;
-    ts2.textBoundingStrokeColor = [UIColor grayColor];
-    
+
+    ts2.text = @"世界对着它的爱人，把它浩翰的面具揭下了。它变小了，小如一首歌，小如一回永恒的接吻。The world puts off its mask of vastness to its lover.It becomes small as one song, as one kiss of the eternal.";
+    ts2.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
+    ts2.textAlignment = NSTextAlignmentCenter;//设置居中
+    ts2.needDebug = YES;//设置为调试模式
+
     //创建LWLayout对象
     LWLayout* layout = [[LWLayout alloc] init];
     //将LWTextStorage对象添加到LWLayout对象中

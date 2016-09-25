@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,11 +49,13 @@
 @property (nonatomic,assign) CGFloat lineWidth;
 @property (nonatomic,assign) CGFloat trailingWhitespaceWidth;
 
-@property (nonatomic,strong) NSMutableArray<LWTextAttachment *>* attachments;
-@property (nonatomic,strong) NSMutableArray<NSValue *>* attachmentRanges;
-@property (nonatomic,strong) NSMutableArray<NSValue *>* attachmentRects;
-
+@property (nonatomic,copy) NSArray<LWTextGlyph *>* glyphs;
+@property (nonatomic,copy) NSArray<LWTextAttachment *>* attachments;
+@property (nonatomic,copy) NSArray<NSValue *>* attachmentRanges;
+@property (nonatomic,copy) NSArray<NSValue *>* attachmentRects;
 @property (nonatomic,assign) CGFloat firstGlyphPosition;
+
+
 
 @end
 
@@ -145,59 +147,68 @@
     if (runCount == 0) {
         return;
     }
-    [self.attachments removeAllObjects];
-    [self.attachmentRanges removeAllObjects];
-    [self.attachmentRects removeAllObjects];
+    
+    NSMutableArray* attachments = [[NSMutableArray alloc] init];
+    NSMutableArray* attachmentRanges = [[NSMutableArray alloc] init];
+    NSMutableArray* attachmentRects = [[NSMutableArray alloc] init];
+    NSMutableArray* glyphsArray = [[NSMutableArray alloc] init];
+    
     for (NSUInteger i = 0; i < runCount; i ++) {
         CTRunRef run = CFArrayGetValueAtIndex(runs, i);
         CFIndex glyphCount = CTRunGetGlyphCount(run);
         if (glyphCount == 0) {
             continue;
         }
+        CGPoint runPosition = CGPointZero;
+        CTRunGetPositions(run, CFRangeMake(0, 1), &runPosition);
+        CGFloat ascent, descent, leading, runWidth;
+        CGRect runTypoBounds;
+        
+        runWidth = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
+        runPosition.x += self.lineOrigin.x;
+        runPosition.y = self.lineOrigin.y - runPosition.y;
+        runTypoBounds = CGRectMake(runPosition.x, runPosition.y - ascent, runWidth, ascent + descent);
+        
+        NSRange runRange = NSMakeRange(CTRunGetStringRange(run).location, CTRunGetStringRange(run).length);
+        
+        {
+            
+            CGGlyph glyphs[glyphCount];
+            CTRunGetGlyphs(run, CFRangeMake(0, 0),glyphs);
+            
+            CGPoint glyphPositions[glyphCount];
+            CTRunGetPositions(run, CFRangeMake(0, 0), glyphPositions);
+            
+            CGSize glyphAdvances[glyphCount];
+            CTRunGetAdvances(run, CFRangeMake(0, glyphCount), glyphAdvances);
+                        
+            for (NSInteger i = 0; i < glyphCount; i ++) {
+                LWTextGlyph* glyph = [[LWTextGlyph alloc] init];
+                glyph.glyph = glyphs[i];
+                glyph.position = glyphPositions[i];
+                glyph.leading = leading;
+                glyph.ascent = ascent;
+                glyph.descent = descent;
+                glyph.width = glyphAdvances[i].width;
+                glyph.height = glyphAdvances[i].height;
+                [glyphsArray addObject:glyph];
+            }
+        }
         NSDictionary* attributes = (id)CTRunGetAttributes(run);
         LWTextAttachment* attachment = [attributes objectForKey:LWTextAttachmentAttributeName];
         if (attachment) {
-            CGPoint runPosition = CGPointZero;
-            CTRunGetPositions(run, CFRangeMake(0, 1), &runPosition);
-            CGFloat ascent, descent, leading, runWidth;
-            CGRect runTypoBounds;
-            runWidth = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
-            runPosition.x += self.lineOrigin.x;
-            runPosition.y = self.lineOrigin.y - runPosition.y;
-            runTypoBounds = CGRectMake(runPosition.x, runPosition.y - ascent, runWidth, ascent + descent);
-            NSRange runRange = NSMakeRange(CTRunGetStringRange(run).location, CTRunGetStringRange(run).length);
-            [self.attachments addObject:attachment];
-            [self.attachmentRanges addObject:[NSValue valueWithRange:runRange]];
-            [self.attachmentRects addObject:[NSValue valueWithCGRect:runTypoBounds]];
+            [attachments addObject:attachment];
+            [attachmentRanges addObject:[NSValue valueWithRange:runRange]];
+            [attachmentRects addObject:[NSValue valueWithCGRect:runTypoBounds]];
         }
     }
+    self.attachments = [attachments copy];
+    self.attachmentRanges = [attachmentRanges copy];
+    self.attachmentRects = [attachmentRects copy];
+    self.glyphs = [glyphsArray copy];
 }
 
 #pragma mark - Getter
-
-- (NSMutableArray *)attachments {
-    if (_attachments) {
-        return _attachments;
-    }
-    _attachments = [[NSMutableArray alloc] init];
-    return _attachments;
-}
-
-- (NSMutableArray *)attachmentRanges {
-    if (_attachmentRanges) {
-        return _attachmentRanges;
-    }
-    _attachmentRanges = [[NSMutableArray alloc] init];
-    return _attachmentRanges;
-}
-
-- (NSMutableArray *)attachmentRects {
-    if (_attachmentRects) {
-        return _attachmentRects;
-    }
-    _attachmentRects = [[NSMutableArray alloc] init];
-    return _attachmentRects;
-}
 
 - (CGSize)size {
     return self.frame.size;

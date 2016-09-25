@@ -46,10 +46,10 @@
     return textStorage;
 }
 
-+ (LWTextStorage *)lw_textStrageWithText:(NSAttributedString *)attributedText frame:(CGRect)frame {
++ (LWTextStorage *)lw_textStorageWithText:(NSAttributedString *)attributedText frame:(CGRect)frame {
     LWTextStorage* textStorage = [[LWTextStorage alloc] initWithFrame:frame];
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:frame.size];
-    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:attributedText sizeToFit:YES];
+    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:attributedText];
     textStorage.attributedText = [attributedText mutableCopy];
     return textStorage;
 }
@@ -72,7 +72,6 @@
 }
 
 - (void)setup {
-    self.sizeToFit = YES;
     self.frame = CGRectZero;
     self.position = CGPointZero;
     self.text = nil;
@@ -89,6 +88,9 @@
     self.strokeColor = [UIColor blackColor];
     self.strokeWidth = 1.0f;
     self.textBoundingStrokeColor = nil;
+    self.maxNumberOfLine = 0;
+    self.needDebug = NO;
+    
 }
 
 #pragma mark - Methods
@@ -233,6 +235,7 @@
 }
 
 #pragma mark - Setter
+
 - (void)setText:(NSString *)text {
     if (!text || _text== text) {
         return;
@@ -281,11 +284,6 @@
     if (self.textDrawMode == LWTextDrawModeStroke) {
         [_attributedText setStrokeColor:self.strokeColor strokeWidth:self.strokeWidth range:range];
     }
-    [self _creatTextLayout];
-}
-
-- (void)setSizeToFit:(BOOL)sizeToFit {
-    _sizeToFit = sizeToFit;
     [self _creatTextLayout];
 }
 
@@ -374,16 +372,36 @@
     [self _creatTextLayout];
 }
 
+- (void)setMaxNumberOfLine:(NSInteger)maxNumberOfLine {
+    _maxNumberOfLines = maxNumberOfLine;
+    [self _creatTextLayout];
+}
+
+- (void)setNeedDebug:(BOOL)needDebug {
+    _needDebug = needDebug;
+    [self _creatTextLayout];
+}
+
 - (void)_creatTextLayout {
     if (!self.attributedText) {
         return;
     }
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:self.frame.size];
-    self.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:self.attributedText sizeToFit:self.sizeToFit];
+    textContainer.maxNumberOfLines = self.maxNumberOfLines;
+    
+    self.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:self.attributedText];
+    self.textLayout.needDebugDraw = self.needDebug;
 }
 
-
 #pragma mark - Getter
+- (BOOL)isTruncation {
+    return self.textLayout.needTruncation;
+}
+
+- (NSInteger)numberOfLines {
+    return self.textLayout.numberOfLines;
+}
+
 - (CGFloat)left {
     return self.textLayout.cgPathBox.origin.x + self.position.x;
 }
@@ -401,11 +419,11 @@
 }
 
 - (CGFloat)height {
-    return self.textLayout.cgPathBox.size.height;
+    return self.textLayout.suggestSize.height;
 }
 
 - (CGFloat)width {
-    return self.textLayout.cgPathBox.size.width;
+    return self.textLayout.suggestSize.width;
 }
 
 - (void)setCenter:(CGPoint)center {

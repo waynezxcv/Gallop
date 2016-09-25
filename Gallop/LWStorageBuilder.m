@@ -246,7 +246,7 @@
                                   edgeInsets.top,
                                   SCREEN_WIDTH - edgeInsets.left - edgeInsets.right,
                                   CGFLOAT_MAX);
-        LWTextStorage* textStorage = [LWTextStorage lw_textStrageWithText:attributedString
+        LWTextStorage* textStorage = [LWTextStorage lw_textStorageWithText:attributedString
                                                                     frame:frame];
         textStorage.textDrawMode  = config.textDrawMode;
         textStorage.htmlLayoutEdgeInsets = edgeInsets;

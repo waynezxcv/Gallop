@@ -28,12 +28,14 @@
     LWTextStorage* ts = [[LWTextStorage alloc] initWithFrame:CGRectMake(20.0f, 20.0f, SCREEN_WIDTH - 40.0f, CGFLOAT_MAX)];
     ts.text = @"使用Gallop可以直接给网络图片设置圆角半径、描边处理、模糊效果，下载完成后将对处理过的图片额外缓存一份，而不需要每次都重复处理。";
     ts.font = [UIFont fontWithName:@"Heiti SC" size:16.0f];
+    ts.textAlignment = NSTextAlignmentCenter;
     
     //普通的加载网络图片
     LWImageStorage* is1 = [[LWImageStorage alloc] init];
     is1.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, ts.bottom + 10.0f, 100.0f, 100.0f);
     is1.clipsToBounds = YES;
     is1.contents = [NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"];
+    
     
     //设置圆角半径和模糊效果
     LWImageStorage* is2 = [[LWImageStorage alloc] init];

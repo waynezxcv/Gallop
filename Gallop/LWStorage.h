@@ -38,12 +38,16 @@
 @property (nonatomic,assign) CGFloat alpha;//跟UIView对象的同名属性作用一样
 @property (nonatomic,assign) CGRect frame;//跟UIView对象的同名属性作用一样
 @property (nonatomic,assign) CGRect bounds;//跟UIView对象的同名属性作用一样
+
+
 @property (nonatomic,assign,readonly) CGFloat height;//跟UIView对象的frame.size.height作用一样
 @property (nonatomic,assign,readonly) CGFloat width;//跟UIView对象的frame.size.width作用一样
 @property (nonatomic,assign,readonly) CGFloat left;//跟UIView对象的frame.origin.x作用一样
 @property (nonatomic,assign,readonly) CGFloat right;//跟UIView对象的frame.origin.x+frame.size.width作用一样
 @property (nonatomic,assign,readonly) CGFloat top;//跟UIView对象的frame.origin.y作用一样
 @property (nonatomic,assign,readonly) CGFloat bottom;//跟UIView对象的frame.origin.y+frame.size.height作用一样
+
+
 @property (nonatomic,assign) CGPoint center;//跟UIView对象的同名属性作用一样
 @property (nonatomic,assign) CGPoint position;//跟UIView对象的同名属性作用一样
 @property (nonatomic,assign) CGFloat cornerRadius;//跟CALayer对象的同名属性作用一样

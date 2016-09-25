@@ -54,6 +54,7 @@
     textContainer.path = bezierPath;
     textContainer.size = size;
     textContainer.edgeInsets = UIEdgeInsetsZero;
+    textContainer.maxNumberOfLines = 0;
     return textContainer;
 }
 
@@ -65,6 +66,7 @@
     textContainer.path = bezierPath;
     textContainer.size = size;
     textContainer.edgeInsets = edgeInsets;
+    textContainer.maxNumberOfLines = 0;
     return textContainer;
 }
 

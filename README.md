@@ -2,7 +2,7 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# Gallop v0.3.5
+# Gallop v0.3.6
 
 # About Gallop
 
@@ -32,6 +32,10 @@ Gallop是一个功能强大、性能优秀的异步绘制、图文混排框架�
 
 
 # Modifications
+
+v0.3.6
+* 可以设置maxNumberOfLines来设置文本的行数限制了。
+
 
 v0.3.5
 * LWImageStorage现在可以对图片进行模糊处理了。

@@ -22,45 +22,21 @@
  THE SOFTWARE.
  */
 
-#import <UIKit/UIKit.h>
+#import "LWTextGlyph.h"
 
+@implementation LWTextGlyph
 
-
-/**
- *  文本容器，包含文本绘制的范围大小、路径、会edgeInsets等信息
- */
-@interface LWTextContainer : NSObject
-
-@property (nonatomic,assign,readonly) CGSize size;//容器的大小
-@property (nonatomic,strong,readonly) UIBezierPath* path;//容器的路径
-@property (nonatomic,assign,readonly) UIEdgeInsets edgeInsets;//边缘内嵌大小
-@property (nonatomic,assign) NSInteger maxNumberOfLines;//最大行数限制
-
-/**
- *  构造方法
- *
- *  @param size 容器大小
- *
- *  @return 一个LWTextContrainer对象
- */
-+ (id)lw_textContainerWithSize:(CGSize)size;
-
-/**
- *  构造方法
- *
- *  @param size       容器大小
- *  @param edgeInsets 边缘内嵌大小
- *
- *  @return 一个LWTextContrainer对象
- */
-+ (id)lw_textContainerWithSize:(CGSize)size edgeInsets:(UIEdgeInsets)edgeInsets;
-
-/**
- *  容器路径的行宽
- *
- *  @return 路径的行宽
- */
-- (CGFloat)pathLineWidth;
-
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.position = CGPointZero;
+        self.ascent = 0.0f;
+        self.descent = 0.0f;
+        self.leading = 0.0f;
+        self.width = 0.0f;
+        self.height = 0.0f;
+    }
+    return self;
+}
 
 @end
