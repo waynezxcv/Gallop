@@ -34,7 +34,8 @@ Gallop是一个功能强大、性能优秀的异步绘制、图文混排框架�
 # Modifications
 
 v0.3.6
-* 可以设置maxNumberOfLines来设置文本的行数限制了。
+* 可以通过maxNumberOfLines来设置文本的行数限制。
+* 可以通过VericalAlignment来设置文本垂直方向对齐方式。
 
 
 v0.3.5

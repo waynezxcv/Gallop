@@ -25,12 +25,33 @@
 #import <UIKit/UIKit.h>
 
 
+/**
+ *  垂直方向对齐方式
+ */
+typedef NS_ENUM(NSUInteger, LWTextVericalAlignment) {
+    /**
+     *  顶部对齐
+     */
+    LWTextVericalAlignmentTop,
+    /**
+     *  居中对齐
+     */
+    LWTextVericalAlignmentCenter,
+    /**
+     *  底部对齐
+     */
+    LWTextVericalAlignmentBottom
+};
+
+
+
 
 /**
  *  文本容器，包含文本绘制的范围大小、路径、会edgeInsets等信息
  */
 @interface LWTextContainer : NSObject
 
+@property (nonatomic,assign) LWTextVericalAlignment vericalAlignment;//垂直对齐方式，默认是TOP
 @property (nonatomic,assign,readonly) CGSize size;//容器的大小
 @property (nonatomic,strong,readonly) UIBezierPath* path;//容器的路径
 @property (nonatomic,assign,readonly) UIEdgeInsets edgeInsets;//边缘内嵌大小

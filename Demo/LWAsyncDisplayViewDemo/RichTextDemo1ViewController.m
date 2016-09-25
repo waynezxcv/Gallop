@@ -96,7 +96,9 @@
     ts2.frame = CGRectMake(20.0f,
                            ts1.bottom + 20.0f,
                            SCREEN_WIDTH - 40.0f,
-                           150.0f);
+                           200.0f);
+    ts2.linespacing = 8.0f;
+    ts2.vericalAlignment = LWTextVericalAlignmentCenter;//垂直方向居中对齐
     
     //创建LWLayout对象
     LWLayout* layout = [[LWLayout alloc] init];

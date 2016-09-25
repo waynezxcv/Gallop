@@ -90,7 +90,7 @@
     self.textBoundingStrokeColor = nil;
     self.maxNumberOfLine = 0;
     self.needDebug = NO;
-    
+    self.vericalAlignment = LWTextVericalAlignmentTop;
 }
 
 #pragma mark - Methods
@@ -382,13 +382,18 @@
     [self _creatTextLayout];
 }
 
+- (void)setVericalAlignment:(LWTextVericalAlignment)vericalAlignment {
+    _vericalAlignment = vericalAlignment;
+    [self _creatTextLayout];
+}
+
 - (void)_creatTextLayout {
     if (!self.attributedText) {
         return;
     }
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:self.frame.size];
     textContainer.maxNumberOfLines = self.maxNumberOfLines;
-    
+    textContainer.vericalAlignment = self.vericalAlignment;
     self.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:self.attributedText];
     self.textLayout.needDebugDraw = self.needDebug;
 }

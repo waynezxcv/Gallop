@@ -55,6 +55,7 @@
     textContainer.size = size;
     textContainer.edgeInsets = UIEdgeInsetsZero;
     textContainer.maxNumberOfLines = 0;
+    textContainer.vericalAlignment = LWTextVericalAlignmentTop;
     return textContainer;
 }
 
@@ -67,6 +68,7 @@
     textContainer.size = size;
     textContainer.edgeInsets = edgeInsets;
     textContainer.maxNumberOfLines = 0;
+    textContainer.vericalAlignment = LWTextVericalAlignmentTop;
     return textContainer;
 }
 

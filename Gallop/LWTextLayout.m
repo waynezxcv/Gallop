@@ -110,6 +110,8 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                                 containerBoudingBox.size,
                                                 maxNumberOfLines,
                                                 &cfRange);
+    
+    
     NSInteger realLength = cfRange.length;
     BOOL needTruncation = NO;
     if (originLength != realLength) {
@@ -117,11 +119,31 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     }
     
     CGMutablePathRef suggetPath = CGPathCreateMutable();
+    
     CGRect suggestRect = {
         containerBoudingBox.origin,
         {containerBoudingBox.size.width,
             suggestSize.height}
     };
+    
+    if (containerBoudingBox.size.height != CGFLOAT_MAX) {
+        switch (container.vericalAlignment) {
+            case LWTextVericalAlignmentTop:
+                break;
+            case LWTextVericalAlignmentCenter:
+                suggestRect = CGRectMake(suggestRect.origin.x,
+                                         suggestRect.origin.y + (containerBoudingBox.size.height - suggestRect.size.height)/2.0f,
+                                         suggestRect.size.width,
+                                         suggestRect.size.height);
+                break;
+            case LWTextVericalAlignmentBottom:
+                suggestRect = CGRectMake(suggestRect.origin.x,
+                                         suggestRect.origin.y + containerBoudingBox.size.height - suggestRect.size.height,
+                                         suggestRect.size.width,
+                                         suggestRect.size.height);
+                break;
+        }
+    }
     
     CGPathAddRect(suggetPath, NULL,suggestRect);
     CTFrameRef ctFrame = CTFramesetterCreateFrame(ctFrameSetter,
@@ -422,7 +444,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     CGContextAddRect(context,CGRectMake(r.origin.x - 0.2f,
                                         r.origin.y - 1.0f,
                                         r.size.width + 5.0f,
-                                        r.size.height));
+                                        r.size.height + 2.0f));
     CGContextSetLineWidth(context, 0.2f);
     CGContextSetStrokeColorWithColor(context, [UIColor purpleColor].CGColor);
     CGContextStrokePath(context);

@@ -30,6 +30,7 @@
 #import "GallopUtils.h"
 
 
+
 @class LWTextLine;
 
 /**
