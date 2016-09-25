@@ -422,7 +422,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     CGContextAddRect(context,CGRectMake(r.origin.x - 0.2f,
                                         r.origin.y - 1.0f,
                                         r.size.width + 5.0f,
-                                        r.size.height + 2.0f) );
+                                        r.size.height));
     CGContextSetLineWidth(context, 0.2f);
     CGContextSetStrokeColorWithColor(context, [UIColor purpleColor].CGColor);
     CGContextStrokePath(context);

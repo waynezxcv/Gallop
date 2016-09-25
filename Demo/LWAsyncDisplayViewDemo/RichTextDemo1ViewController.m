@@ -19,7 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Demo1-图文混排和添加点击事件";
+    self.title = @"属性文本";
     self.view.backgroundColor = [UIColor whiteColor];
     
     //创建LWAsyncDisplayView对象
@@ -37,20 +37,20 @@
     ts.text = @"Gallop支持图文混排,可以在文字中插入本地图片→和网络图片→UIView的子类→.给指定位置文字添加链接.快来试试吧。";
     ts.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
     
-    UIImage* image = [UIImage imageNamed:@"001"];
+    UIImage* image = [UIImage imageNamed:@"wayne"];
     UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
-        
+    
     //在文字中插入本地图片
     [ts lw_replaceTextWithImage:image
                     contentMode:UIViewContentModeScaleAspectFill
-                      imageSize:CGSizeMake(20, 20)
+                      imageSize:CGSizeMake(50.0f, 50.0f)
                       alignment:LWTextAttachAlignmentTop
                           range:NSMakeRange(26, 0)];
     
     //在文字中插入网络图片
-    [ts lw_replaceTextWithImageURL:[NSURL URLWithString:@"http://joymepic.joyme.com/article/uploads/20163/81460101559518330.jpeg?imageView2/1"]
+    [ts lw_replaceTextWithImageURL:[NSURL URLWithString:@"http://ww2.sinaimg.cn/mw690/6d0bb361gw1f2jim2hgxij20lo0egwgc.jpg"]
                        contentMode:UIViewContentModeScaleAspectFill
-                         imageSize:CGSizeMake(80, 40)
+                         imageSize:CGSizeMake(80, 50.0f)
                          alignment:LWTextAttachAlignmentTop
                              range:NSMakeRange(33, 0)];
     //在文字中插入UIView的子类
@@ -88,16 +88,16 @@
     
     
     
-    LWTextStorage* ts2 = [[LWTextStorage alloc] initWithFrame:CGRectMake(20.0f,
-                                                                         ts1.bottom + 20.0f,
-                                                                         SCREEN_WIDTH - 40.0f,
-                                                                         CGFLOAT_MAX)];
-
+    LWTextStorage* ts2 = [[LWTextStorage alloc] init];
     ts2.text = @"世界对着它的爱人，把它浩翰的面具揭下了。它变小了，小如一首歌，小如一回永恒的接吻。The world puts off its mask of vastness to its lover.It becomes small as one song, as one kiss of the eternal.";
     ts2.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
     ts2.textAlignment = NSTextAlignmentCenter;//设置居中
     ts2.needDebug = YES;//设置为调试模式
-
+    ts2.frame = CGRectMake(20.0f,
+                           ts1.bottom + 20.0f,
+                           SCREEN_WIDTH - 40.0f,
+                           150.0f);
+    
     //创建LWLayout对象
     LWLayout* layout = [[LWLayout alloc] init];
     //将LWTextStorage对象添加到LWLayout对象中
