@@ -168,17 +168,33 @@
         if (w < 0 || h < 0) {
             return nil;
         }
-        UIImage* image = img;
+        UIImage* originImg = img;
+        UIImage* processedImg = nil;
         CGFloat width = w * [GallopUtils contentsScale];
         CGFloat height = h * [GallopUtils contentsScale];
         CGFloat cornerRadius = r * [GallopUtils contentsScale];
         CGFloat borderWidth = bw * [GallopUtils contentsScale];
+        if (originImg.size.width >= originImg.size.height) {
+            CGFloat scale = originImg.size.width/originImg.size.height;
+            processedImg = [originImg
+                            lw_subImageWithRect:CGRectMake((originImg.size.width - originImg.size.height * scale)/2.0f,
+                                                           0.0f,
+                                                           originImg.size.height * scale,
+                                                           originImg.size.height)];
+        } else {
+            CGFloat scale = originImg.size.height/originImg.size.width;
+            processedImg = [originImg
+                            lw_subImageWithRect:CGRectMake(0.0f,
+                                                           (originImg.size.height - originImg.size.width * scale)/2.0f,
+                                                           originImg.size.width,
+                                                           originImg.size.width * scale)];
+        }
         
         if (blur) {
-            image = [image lw_applyBlurWithRadius:20
-                                        tintColor:RGB(0, 0, 0, 0.15f)
-                            saturationDeltaFactor:1.4
-                                        maskImage:nil];
+            processedImg = [processedImg lw_applyBlurWithRadius:20
+                                                      tintColor:RGB(0, 0, 0, 0.15f)
+                                          saturationDeltaFactor:1.4
+                                                      maskImage:nil];
         }
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = CGBitmapContextCreate(NULL,
@@ -219,40 +235,26 @@
             CGContextRestoreGState(context);
         }
         //draw cornerRadius image
+        UIImage* results = nil;
         if (cornerRadius) {
             UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:imgRect
                                                                   cornerRadius:cornerRadius];
             CGContextAddPath(context, bezierPath.CGPath);
             CGContextClip(context);
-            
-            if (image.size.width >= image.size.height) {
-                UIImage* subImg = [image
-                                   lw_subImageWithRect:CGRectMake((image.size.width - image.size.height)/2.0f,
-                                                                  0.0f,
-                                                                  image.size.height,
-                                                                  image.size.height)];
-                CGContextDrawTiledImage(context, imgRect, subImg.CGImage);
-            } else {
-                UIImage* subImg = [image
-                                   lw_subImageWithRect:CGRectMake(0.0f,
-                                                                  (image.size.height - image.size.width)/2.0f,
-                                                                  image.size.width,
-                                                                  image.size.width)];
-                CGContextDrawTiledImage(context, imgRect, subImg.CGImage);
-            }
+            CGContextDrawTiledImage(context, imgRect, processedImg.CGImage);
             CGImageRef imageMasked = CGBitmapContextCreateImage(context);
-            image = [UIImage imageWithCGImage:imageMasked];
+            results = [UIImage imageWithCGImage:imageMasked];
             CGImageRelease(imageMasked);
         } else {
             //draw cornerRadius image
-            CGContextDrawTiledImage(context, imgRect, image.CGImage);
+            CGContextDrawTiledImage(context, imgRect, processedImg.CGImage);
             CGImageRef imageMasked = CGBitmapContextCreateImage(context);
-            image = [UIImage imageWithCGImage:imageMasked];
+            results = [UIImage imageWithCGImage:imageMasked];
             CGImageRelease(imageMasked);
         }
         CGContextRelease(context);
         CGColorSpaceRelease(colorSpace);
-        return image;
+        return results;
     }
     return img;
 }
