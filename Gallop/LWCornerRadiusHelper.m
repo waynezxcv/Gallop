@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,12 +43,12 @@
                                                  4,
                                                  rgbColorSpace,
                                                  (CGBitmapInfo)kCGImageAlphaNoneSkipLast);
-
+    
     CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
-
+    
     for (int component = 0; component < 4; component++) {
         components[component] = resultingPixel[component];
     }
@@ -64,12 +64,12 @@
     if (!url) {
         return nil;
     }
-
+    
     CGFloat cr = -1;
     CGFloat cg = -1;
     CGFloat cb = -1;
     CGFloat ca = -1;
-
+    
     if (cornerBackgroundColor) {
         CGFloat cornerComponents[4];
         [self getRGBComponents:cornerComponents forColor:cornerBackgroundColor];
@@ -78,12 +78,12 @@
         cb = cornerComponents[2];
         ca = cornerComponents[3];
     }
-
+    
     CGFloat br = -1;
     CGFloat bg = -1;
     CGFloat bb = -1;
     CGFloat ba = -1;
-
+    
     if (borderColor) {
         CGFloat borderCompnents[4];
         [self getRGBComponents:borderCompnents forColor:borderColor];
@@ -92,13 +92,13 @@
         bb = borderCompnents[2];
         ba = borderCompnents[3];
     }
-
-
+    
+    
     int blur = 0;
     if (isBlur) {
         blur = 1;
     }
-
+    
     NSString* imageStransformCacheKey = [NSString stringWithFormat:@"%@%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%@",
                                          LWCornerRadiusPrefixKey,
                                          cornerRadius,
@@ -120,7 +120,7 @@
 
 
 + (UIImage *)lw_cornerRadiusImageWithImage:(UIImage*)img withKey:(NSString *)key {
-
+    
     if (key && [key hasPrefix:[NSString stringWithFormat:@"%@",LWCornerRadiusPrefixKey]]) {
         NSString* infoString = [key substringFromIndex:LWCornerRadiusPrefixKey.length];
         NSArray* arr = [infoString componentsSeparatedByString:@","];
@@ -135,12 +135,12 @@
         CGFloat bg;
         CGFloat bb;
         CGFloat ba;
-
+        
         UIColor* cornerBackgroundColor = nil;
         UIColor* borderColor = nil;
-
+        
         int blur = 0;
-
+        
         CGFloat r = [arr[0] floatValue];
         w = [arr[1] floatValue];
         h = [arr[2] floatValue];
@@ -154,13 +154,13 @@
         ba = [arr[10] floatValue];
         bw = [arr[11] floatValue];
         blur = [arr[12] intValue];
-
+        
         if (cr != -1 && cg != -1 && cb != -1 && ca != -1) {
             CGFloat alpha = ca/255.0f;
             cornerBackgroundColor = RGB(cr, cg, cb, alpha);
-
+            
         }
-
+        
         if (br != -1 && bg != -1 && bb != -1 && ba != -1) {
             CGFloat alpha = ba/255.0f;
             borderColor = RGB(br, bg, bb, alpha);
@@ -173,7 +173,7 @@
         CGFloat height = h * [GallopUtils contentsScale];
         CGFloat cornerRadius = r * [GallopUtils contentsScale];
         CGFloat borderWidth = bw * [GallopUtils contentsScale];
-
+        
         if (blur) {
             image = [image lw_applyBlurWithRadius:20
                                         tintColor:RGB(0, 0, 0, 0.15f)
@@ -193,6 +193,7 @@
             {0,0},
             {width,height}
         };
+        
         //image rect
         CGRect imgRect = {
             {borderWidth,borderWidth},
@@ -223,7 +224,22 @@
                                                                   cornerRadius:cornerRadius];
             CGContextAddPath(context, bezierPath.CGPath);
             CGContextClip(context);
-            CGContextDrawTiledImage(context, imgRect, image.CGImage);
+            
+            if (image.size.width >= image.size.height) {
+                UIImage* subImg = [image
+                                   lw_subImageWithRect:CGRectMake((image.size.width - image.size.height)/2.0f,
+                                                                  0.0f,
+                                                                  image.size.height,
+                                                                  image.size.height)];
+                CGContextDrawTiledImage(context, imgRect, subImg.CGImage);
+            } else {
+                UIImage* subImg = [image
+                                   lw_subImageWithRect:CGRectMake(0.0f,
+                                                                  (image.size.height - image.size.width)/2.0f,
+                                                                  image.size.width,
+                                                                  image.size.width)];
+                CGContextDrawTiledImage(context, imgRect, subImg.CGImage);
+            }
             CGImageRef imageMasked = CGBitmapContextCreateImage(context);
             image = [UIImage imageWithCGImage:imageMasked];
             CGImageRelease(imageMasked);
