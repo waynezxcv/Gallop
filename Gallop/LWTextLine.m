@@ -172,7 +172,6 @@
         NSRange runRange = NSMakeRange(CTRunGetStringRange(run).location, CTRunGetStringRange(run).length);
         
         {
-            
             CGGlyph glyphs[glyphCount];
             CTRunGetGlyphs(run, CFRangeMake(0, 0),glyphs);
             
@@ -194,6 +193,7 @@
                 [glyphsArray addObject:glyph];
             }
         }
+        
         NSDictionary* attributes = (id)CTRunGetAttributes(run);
         LWTextAttachment* attachment = [attributes objectForKey:LWTextAttachmentAttributeName];
         if (attachment) {

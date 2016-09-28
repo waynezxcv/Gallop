@@ -28,7 +28,6 @@
 #import "GallopDefine.h"
 
 
-
 @implementation LWTextAttachment
 
 + (id)lw_textAttachmentWithContent:(id)content {

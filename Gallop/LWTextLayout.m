@@ -117,7 +117,6 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     if (originLength != realLength) {
         needTruncation  = YES;
     }
-    
     CGMutablePathRef suggetPath = CGPathCreateMutable();
     
     CGRect suggestRect = {
@@ -393,7 +392,10 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                     point:(CGPoint)point
                               isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld  {
     
-    [textLayout.backgroundColors enumerateObjectsUsingBlock:^(LWTextBackgroundColor * _Nonnull background, NSUInteger idx, BOOL * _Nonnull stop) {
+    [textLayout.backgroundColors enumerateObjectsUsingBlock:^(LWTextBackgroundColor *
+                                                              _Nonnull background,
+                                                              NSUInteger idx,
+                                                              BOOL * _Nonnull stop) {
         if (isCancelld()) {
             return ;
         }
