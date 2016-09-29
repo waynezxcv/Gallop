@@ -36,19 +36,19 @@
 + (void)getRGBComponents:(CGFloat [4])components forColor:(UIColor *)color {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     unsigned char resultingPixel[4];
-    CGContextRef context = CGBitmapContextCreate(&resultingPixel,
-                                                 1,
-                                                 1,
-                                                 8,
-                                                 4,
-                                                 rgbColorSpace,
-                                                 (CGBitmapInfo)kCGImageAlphaNoneSkipLast);
+    CGContextRef context =
+    CGBitmapContextCreate(&resultingPixel,
+                          1,
+                          1,
+                          8,
+                          4,
+                          rgbColorSpace,
+                          (CGBitmapInfo)kCGImageAlphaNoneSkipLast);
     
     CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
-    
     for (int component = 0; component < 4; component++) {
         components[component] = resultingPixel[component];
     }
@@ -72,7 +72,8 @@
     
     if (cornerBackgroundColor) {
         CGFloat cornerComponents[4];
-        [self getRGBComponents:cornerComponents forColor:cornerBackgroundColor];
+        [self getRGBComponents:cornerComponents
+                      forColor:cornerBackgroundColor];
         cr = cornerComponents[0];
         cg = cornerComponents[1];
         cb = cornerComponents[2];
@@ -86,7 +87,8 @@
     
     if (borderColor) {
         CGFloat borderCompnents[4];
-        [self getRGBComponents:borderCompnents forColor:borderColor];
+        [self getRGBComponents:borderCompnents
+                      forColor:borderColor];
         br = borderCompnents[0];
         bg = borderCompnents[1];
         bb = borderCompnents[2];
@@ -99,30 +101,35 @@
         blur = 1;
     }
     
-    NSString* imageStransformCacheKey = [NSString stringWithFormat:@"%@%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%@",
-                                         LWCornerRadiusPrefixKey,
-                                         cornerRadius,
-                                         size.width,
-                                         size.height,
-                                         cr,
-                                         cg,
-                                         cb,
-                                         ca,
-                                         br,
-                                         bg,
-                                         bb,
-                                         ba,
-                                         borderWidth,
-                                         blur,
-                                         url.absoluteString];
+    NSString* imageStransformCacheKey =
+    [NSString stringWithFormat:
+     @"%@%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%@",
+     LWCornerRadiusPrefixKey,
+     cornerRadius,
+     size.width,
+     size.height,
+     cr,
+     cg,
+     cb,
+     ca,
+     br,
+     bg,
+     bb,
+     ba,
+     borderWidth,
+     blur,
+     url.absoluteString];
     return imageStransformCacheKey;
 }
 
 
 + (UIImage *)lw_cornerRadiusImageWithImage:(UIImage*)img withKey:(NSString *)key {
     
-    if (key && [key hasPrefix:[NSString stringWithFormat:@"%@",LWCornerRadiusPrefixKey]]) {
-        NSString* infoString = [key substringFromIndex:LWCornerRadiusPrefixKey.length];
+    if (key &&
+        [key hasPrefix:[NSString stringWithFormat:@"%@",
+                        LWCornerRadiusPrefixKey]]) {
+        NSString* infoString =
+        [key substringFromIndex:LWCornerRadiusPrefixKey.length];
         NSArray* arr = [infoString componentsSeparatedByString:@","];
         CGFloat w;
         CGFloat h;

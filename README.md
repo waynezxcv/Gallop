@@ -7,32 +7,17 @@
 ## About Gallop
 
 
-Gallop是一个功能强大、性能优秀的异步绘制、图文混排框架。你只需要使用框架中抽象的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIIamgeView）模型来方便、快速地构建图文混排界面，Gallop将为你通过各种优化手段，来确保你的应用的流畅性。
+Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框架。只需要使用框架中抽象的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIIamgeView）模型来构建界面，Gallop将确保你的应用的流畅性。
 
 ## Features
 
 主要用于解决以下需求：
 
-* 滚动列表的性能优化,能在实现复杂的图文混排界面时，仍然保持一个相当优秀的滚动性能（FPS基本保持在60）。
+* 滚动列表的性能优化,能在实现复杂的图文混排界面时，仍然保持一个相当优秀的滚动性能。
 * 实现图文混排界面，比如在文本中添加图片，对文字添加点击链接等。
-* 简便地实现对网络图片和本地图片的圆角和模糊处理等，并能提供缓存，无需重复处理。
 * 方便的解析HTML渲染生成原生iOS页面，并可做自定义的调节。
+* 简便地实现对网络图片和本地图片的圆角和模糊处理等，并能提供缓存，无需重复处理。
 
-
-## Demo
-
-**项目内有使用Gallop构建的微信朋友圈Demo**
-
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.PNG)
-
----
-
-**项目内有使用Gallop构建的知乎日报Demo**
-
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
-
-
-***
 
 
 ## Requirements
@@ -50,6 +35,21 @@ Gallop是一个功能强大、性能优秀的异步绘制、图文混排框架�
 4. 将Gallop文件夹下的.h及.m文件添加到你的工程当中
 5. #import "Gallop.h"
 
+
+## Demo
+
+**项目内有使用Gallop构建的微信朋友圈Demo**
+
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.PNG)
+
+---
+
+**项目内有使用Gallop构建的知乎日报Demo**
+
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
+
+
+***
 
 
 ## Modifications
@@ -103,7 +103,7 @@ v0.2.2
 
 1.使用LWTextStorage在文本中插入图片、添加点击事件
 
-```
+```objc
 //创建LWAsyncDisplayView对象
 LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,                                                                     64.0,SCREEN_WIDTH,SCREEN_HEIGHT - 64.0f)];
 //设置代理
@@ -159,11 +159,11 @@ view.layout = layout;
 
 //给文字添加点击事件后，若触发事件，会在这个代理方法中收到回调
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
-didCilickedTextStorage:(LWTextStorage *)textStorage
-linkdata:(id)data {
-if ([data isKindOfClass:[NSString class]]) {
-[LWAlertView shoWithMessage:data];
-}
+	didCilickedTextStorage:(LWTextStorage *)textStorage
+				   linkdata:(id)data {
+	if ([data isKindOfClass:[NSString class]]) {
+		[LWAlertView shoWithMessage:data];
+	}
 }
 
 
@@ -171,7 +171,7 @@ if ([data isKindOfClass:[NSString class]]) {
 
 2.LWTextStorage的更多用法
 
-```
+```objc
 //用属性字符串创建LWTextStorage
 NSMutableAttributedString* as1 = [[NSMutableAttributedString alloc] initWithString:@"世界对着它的爱人，把它浩翰的面具揭下了。它变小了，小如一首歌，小如一回永恒的接吻。"];
 [as1 setTextBackgroundColor:[UIColor orangeColor] range:NSMakeRange(0, 9)];
@@ -226,7 +226,7 @@ LWTextStorage* ts4 = [LWTextStorage lw_textStrageWithText:as2 frame:CGRectZero];
 
 3.LWImageStorage的使用方法
 
-```
+```objc
 //普通的加载网络图片
 LWImageStorage* is1 = [[LWImageStorage alloc] init];
 is1.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, ts.bottom + 10.0f, 100.0f, 100.0f);
@@ -247,7 +247,7 @@ is2.isBlur = YES;
 
 4.使用Gallop来进行HTML解析
 
-```
+```objc
 //创建LWHTMLDisplayView
 LWHTMLDisplayView* htmlView = [[LWHTMLDisplayView alloc] initWithFrame:self.view.bounds];
 htmlView.parentVC = self;
@@ -269,7 +269,6 @@ contentConfig.linkHighlightColor = RGB(0, 0, 0, 0.35f);
 
 
 //通过XPath解析HTML并生成LWStorage,标签名对应的LWHTMLTextConfig以字典的Key-Value格式传入最后一个参数
-
 [builder createLWStorageWithXPath:@"//div[@class='content']/p"
 edgeInsets:UIEdgeInsetsMake([layout suggestHeightWithBottomMargin:10.0f], 10.0f, 10.0, 10.0f)
 configDictionary:@{@"p":contentConfig,
