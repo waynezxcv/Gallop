@@ -57,7 +57,7 @@
         CGContextSetLineWidth(context, 0.2f);
         CGContextSetStrokeColorWithColor(context,RGB(220.0f, 220.0f, 220.0f, 1).CGColor);
         CGContextStrokePath(context);
-        if ([self.cellLayout.statusModel.type isEqualToString:@"website"]) {
+        if ([self.cellLayout.statusModel.type isEqualToString:MESSAGE_TYPE_WEBSITE]) {
             CGContextAddRect(context, self.cellLayout.websitePosition);
             CGContextSetFillColorWithColor(context, RGB(240, 240, 240, 1).CGColor);
             CGContextFillPath(context);
@@ -69,7 +69,7 @@
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                      touch:(UITouch *)touch{
     NSInteger tag = imageStorage.tag;
-    //tag 0~8 是点击图片，9是点击头像
+    //tag 0~8 是图片，9是头像
     switch (tag) {
         case 0:
         case 1:

@@ -15,11 +15,7 @@
 #import "CommentModel.h"
 #import "Gallop.h"
 
-#define MAX_TEXT_HEIGHT 100.0f
-#define MESSAGE_TYPE_IMAGE @"image"
-#define MESSAGE_TYPE_WEBSITE @"website"
-#define MESSAGE_TYPE_VIDEO @"video"
-#define AVATAR_IDENTIFIER @"avatar"
+
 
 @implementation CellLayout
 
@@ -67,7 +63,7 @@
             contentTextStorage.frame = CGRectMake(nameTextStorage.left,
                                                   nameTextStorage.bottom + 10.0f,
                                                   SCREEN_WIDTH - 80.0f,
-                                                  MAX_TEXT_HEIGHT);
+                                                  CGFLOAT_MAX);
             
             LWTextStorage* openStorage = [[LWTextStorage alloc] init];
             openStorage.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];

@@ -18,6 +18,10 @@
 #import "StatusModel.h"
 
 
+#define MESSAGE_TYPE_IMAGE @"image"
+#define MESSAGE_TYPE_WEBSITE @"website"
+#define MESSAGE_TYPE_VIDEO @"video"
+#define AVATAR_IDENTIFIER @"avatar"
 
 
 @interface CellLayout : LWLayout
