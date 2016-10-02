@@ -65,7 +65,6 @@ static CGFloat LWTextWidthCallback(void *ref) {
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
     if (self) {
-        self.CTRunDelegate = (__bridge CTRunDelegateRef _Nullable)([aDecoder decodeObjectForKey:@"CTRunDelegate"]);
         self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"];
         self.ascent = [aDecoder decodeFloatForKey:@"ascent"];
         self.descent = [aDecoder decodeFloatForKey:@"descent"];
@@ -76,7 +75,6 @@ static CGFloat LWTextWidthCallback(void *ref) {
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.CTRunDelegate forKey:@"CTRunDelegate"];
     [aCoder encodeObject:self.userInfo forKey:@"userInfo"];
     [aCoder encodeFloat:self.ascent forKey:@"ascent"];
     [aCoder encodeFloat:self.descent forKey:@"descent"];
