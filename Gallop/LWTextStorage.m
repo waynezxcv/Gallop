@@ -40,16 +40,19 @@
 
 #pragma mark - Init
 
-+ (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout frame:(CGRect)frame {
++ (LWTextStorage *)lw_textStorageWithTextLayout:(LWTextLayout *)textLayout
+                                          frame:(CGRect)frame {
     LWTextStorage* textStorage = [[LWTextStorage alloc] initWithFrame:frame];
     textStorage.textLayout = textLayout;
     return textStorage;
 }
 
-+ (LWTextStorage *)lw_textStorageWithText:(NSAttributedString *)attributedText frame:(CGRect)frame {
++ (LWTextStorage *)lw_textStorageWithText:(NSAttributedString *)attributedText
+                                    frame:(CGRect)frame {
     LWTextStorage* textStorage = [[LWTextStorage alloc] initWithFrame:frame];
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:frame.size];
-    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:attributedText];
+    textStorage.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer
+                                                             text:attributedText];
     textStorage.attributedText = [attributedText mutableCopy];
     return textStorage;
 }
@@ -98,13 +101,20 @@
 - (void)lw_addLinkForWholeTextStorageWithData:(id)data
                                     linkColor:(UIColor *)linkColor
                                highLightColor:(UIColor *)highLightColor {
-    [self.attributedText addLinkForWholeTextWithData:data linkColor:linkColor highLightColor:highLightColor];
+    [self.attributedText addLinkForWholeTextWithData:data
+                                           linkColor:linkColor
+                                      highLightColor:highLightColor];
     [self _creatTextLayout];
 }
 
 /***  为指定位置的文本添加链接  ***/
-- (void)lw_addLinkWithData:(id)data range:(NSRange)range linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor {
-    [self.attributedText addLinkWithData:data range:range linkColor:linkColor highLightColor:highLightColor];
+- (void)lw_addLinkWithData:(id)data range:(NSRange)range
+                 linkColor:(UIColor *)linkColor
+            highLightColor:(UIColor *)highLightColor {
+    [self.attributedText addLinkWithData:data
+                                   range:range
+                               linkColor:linkColor
+                          highLightColor:highLightColor];
     [self _creatTextLayout];
 }
 
@@ -135,12 +145,14 @@
         }
             break;
     }
-    NSMutableAttributedString* attachString = [NSMutableAttributedString lw_textAttachmentStringWithContent:image
-                                                                                                contentMode:contentMode
-                                                                                                     ascent:ascent
-                                                                                                    descent:descent
-                                                                                                      width:size.width];
-    [self.attributedText replaceCharactersInRange:range withAttributedString:attachString];
+    NSMutableAttributedString* attachString =
+    [NSMutableAttributedString lw_textAttachmentStringWithContent:image
+                                                      contentMode:contentMode
+                                                           ascent:ascent
+                                                          descent:descent
+                                                            width:size.width];
+    [self.attributedText replaceCharactersInRange:range
+                             withAttributedString:attachString];
     [self _creatTextLayout];
 }
 
@@ -175,13 +187,18 @@
     if (URL) {
         userInfo = @{@"URL":URL};
     }
-    NSMutableAttributedString* attachString = [NSMutableAttributedString lw_textAttachmentStringWithContent:[[UIImageView alloc]
-                                                                                                             initWithFrame:CGRectMake(0, 0, size.width, size.height)]                                                                                                   userInfo:userInfo
-                                                                                                contentMode:contentMode
-                                                                                                     ascent:ascent
-                                                                                                    descent:descent
-                                                                                                      width:size.width];
-    [self.attributedText replaceCharactersInRange:range withAttributedString:attachString];
+    NSMutableAttributedString* attachString =
+    [NSMutableAttributedString lw_textAttachmentStringWithContent:[[UIImageView alloc]
+                                                                   initWithFrame:CGRectMake(0,
+                                                                                            0,
+                                                                                            size.width,
+                                                                                            size.height)]                                                                                                   userInfo:userInfo
+                                                      contentMode:contentMode
+                                                           ascent:ascent
+                                                          descent:descent
+                                                            width:size.width];
+    [self.attributedText replaceCharactersInRange:range
+                             withAttributedString:attachString];
     [self _creatTextLayout];
 }
 
@@ -212,11 +229,12 @@
         }
             break;
     }
-    NSMutableAttributedString* attachString = [NSMutableAttributedString lw_textAttachmentStringWithContent:view
-                                                                                                contentMode:contentMode
-                                                                                                     ascent:ascent
-                                                                                                    descent:descent
-                                                                                                      width:size.width];
+    NSMutableAttributedString* attachString =
+    [NSMutableAttributedString lw_textAttachmentStringWithContent:view
+                                                      contentMode:contentMode
+                                                           ascent:ascent
+                                                          descent:descent
+                                                            width:size.width];
     [self.attributedText replaceCharactersInRange:range withAttributedString:attachString];
     [self _creatTextLayout];
 }
@@ -337,7 +355,9 @@
         _underlineStyle = underlineStyle;
     }
     NSRange range = NSMakeRange(0, self.attributedText.length);
-    [self.attributedText setUnderlineStyle:self.underlineStyle underlineColor:self.underlineColor range:range];
+    [self.attributedText setUnderlineStyle:self.underlineStyle
+                            underlineColor:self.underlineColor
+                                     range:range];
     [self _creatTextLayout];
 }
 
@@ -394,7 +414,8 @@
     LWTextContainer* textContainer = [LWTextContainer lw_textContainerWithSize:self.frame.size];
     textContainer.maxNumberOfLines = self.maxNumberOfLines;
     textContainer.vericalAlignment = self.vericalAlignment;
-    self.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer text:self.attributedText];
+    self.textLayout = [LWTextLayout lw_layoutWithContainer:textContainer
+                                                      text:self.attributedText];
     self.textLayout.needDebugDraw = self.needDebug;
 }
 

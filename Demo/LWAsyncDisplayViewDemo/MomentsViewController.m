@@ -219,7 +219,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                                         dateFormatter:self.dateFormatter];
     [self.dataSource replaceObjectAtIndex:indexPath.row withObject:newLayout];
     [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
 }
 
@@ -235,7 +236,8 @@ const CGFloat kRefreshBoundary = 170.0f;
     
     [self.dataSource replaceObjectAtIndex:indexPath.row withObject:newLayout];
     [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
 }
 
@@ -373,29 +375,35 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 - (UITableView *)tableView {
-    if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:SCREEN_BOUNDS style:UITableViewStylePlain];
-        _tableView.dataSource = self;
-        _tableView.delegate = self;
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.tableHeaderView = self.tableViewHeader;
-        _tableView.decelerationRate = 1.0f;
+    if (_tableView) {
+        return _tableView;
     }
+    _tableView = [[UITableView alloc] initWithFrame:SCREEN_BOUNDS
+                                              style:UITableViewStylePlain];
+    _tableView.dataSource = self;
+    _tableView.delegate = self;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.tableHeaderView = self.tableViewHeader;
     return _tableView;
 }
 
 - (TableViewHeader *)tableViewHeader {
-    if (!_tableViewHeader) {
-        _tableViewHeader = [[TableViewHeader alloc]
-                            initWithFrame:CGRectMake(0.0f, 0.0f,SCREEN_WIDTH, 270.0f)];
+    if (_tableViewHeader) {
+        return _tableViewHeader;
     }
+    _tableViewHeader =
+    [[TableViewHeader alloc] initWithFrame:CGRectMake(0.0f,
+                                                      0.0f,
+                                                      SCREEN_WIDTH,
+                                                      300.0f)];
     return _tableViewHeader;
 }
 
 - (NSMutableArray *)dataSource {
-    if (!_dataSource) {
-        _dataSource = [[NSMutableArray alloc] init];
+    if (_dataSource) {
+        return _dataSource;
     }
+    _dataSource = [[NSMutableArray alloc] init];
     return _dataSource;
 }
 

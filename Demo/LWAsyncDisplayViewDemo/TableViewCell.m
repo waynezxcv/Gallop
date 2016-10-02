@@ -127,7 +127,10 @@
     [super layoutSubviews];
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.cellLayout.cellHeight);
     self.menuButton.frame = self.cellLayout.menuPosition;
-    self.menu.frame = CGRectMake(self.cellLayout.menuPosition.origin.x - 5.0f,self.cellLayout.menuPosition.origin.y - 9.0f + 14.5f,0,34);
+    self.menu.frame = CGRectMake(self.cellLayout.menuPosition.origin.x - 5.0f,
+                                 self.cellLayout.menuPosition.origin.y - 9.0f + 14.5f,
+                                 0,
+                                 34);
     self.line.frame = self.cellLayout.lineRect;
 }
 

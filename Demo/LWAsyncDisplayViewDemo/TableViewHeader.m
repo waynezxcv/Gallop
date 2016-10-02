@@ -1,23 +1,20 @@
-//
-//  TableViewHeader.m
-//  LWAsyncDisplayViewDemo
-//
-//  Created by 刘微 on 16/3/16.
-//  Copyright © 2016年 WayneInc. All rights reserved.
-//
+
+
+
+
+
+/********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
+/***************  https://github.com/waynezxcv/Gallop 持续更新 ***************************/
+/******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
+
+
 
 #import "TableViewHeader.h"
-#import "GallopUtils.h"
-#import "UIImageView+WebCache.h"
-#import "GallopDefine.h"
+#import "Gallop.h"
 
 
 @interface TableViewHeader ()
 
-@property (nonatomic,strong) UIImageView* imageView;
-@property (nonatomic,strong) UIView* avatarContainer;
-@property (nonatomic,strong) UIImageView* avatarView;
-@property (nonatomic,strong) UILabel* nameLabel;
 @property (nonatomic,strong) UIImageView* loadingView;
 
 @end
@@ -28,62 +25,49 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-        [self addSubview:self.imageView];
-        [self addSubview:self.avatarContainer];
-        [self.avatarContainer addSubview:self.avatarView];
-        [self addSubview:self.nameLabel];
+        
+        LWAsyncDisplayView* displayView =
+        [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,
+                                                             - 100.0f,
+                                                             SCREEN_WIDTH,
+                                                             350.0f)];
+        [self addSubview:displayView];
         [self addSubview:self.loadingView];
-        [self.imageView sd_setImageWithURL:[NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"]];
-        [self.avatarView sd_setImageWithURL:[NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"]];
-        self.nameLabel.text = @"Waynezxcv";
+        
+        LWLayout* layout = [[LWLayout alloc] init];
+        LWImageStorage* bg = [[LWImageStorage alloc] init];
+        bg.contents = [NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"];
+        bg.frame = CGRectMake(0.0f, 0.0f, SCREEN_WIDTH, displayView.bounds.size.height);
+        bg.clipsToBounds = YES;
+        [layout addStorage:bg];
+        
+        LWImageStorage* avtar = [[LWImageStorage alloc] init];
+        avtar.contents = [NSURL URLWithString:@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460"];
+        avtar.frame = CGRectMake(SCREEN_WIDTH - 90.0f, displayView.bounds.size.height - 40.0f, 80.0f, 80.0f);
+        avtar.cornerRadius = 0.01f;
+        avtar.cornerBorderColor = [UIColor whiteColor];
+        avtar.cornerBorderWidth = 5.0f;
+        [layout addStorage:avtar];
+        
+        
+        displayView.layout = layout;
     }
     return self;
 }
 
-- (UIImageView *)imageView {
-    if (!_imageView) {
-        _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, - 60.0f, SCREEN_WIDTH, 240.0f)];
-        _imageView.contentMode = UIViewContentModeScaleAspectFill;
-        _imageView.backgroundColor = RGB(50, 50, 50, 1);
-    }
-    return _imageView;
-}
-
-- (UIView *)avatarContainer {
-    if (!_avatarContainer) {
-        _avatarContainer = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 75.0f, 200.0f, 65.0f, 65.0f)];
-        _avatarContainer.backgroundColor = [UIColor whiteColor];
-    }
-    return _avatarContainer;
-}
-
-- (UIImageView *)avatarView {
-    if (!_avatarView) {
-        _avatarView = [[UIImageView alloc] initWithFrame:CGRectMake(2.5f, 2.5f, 60.0f, 60.0f)];
-        _avatarView.contentMode = UIViewContentModeScaleAspectFill;
-        _avatarView.clipsToBounds = YES;
-    }
-    return _avatarView;
-}
-
-- (UILabel *)nameLabel {
-    if (!_nameLabel) {
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 235.0f, 215.0f, 150.0f, 20.0f)];
-        _nameLabel.font = [UIFont boldSystemFontOfSize:16.0f];
-        _nameLabel.textColor = [UIColor whiteColor];
-        _nameLabel.textAlignment = NSTextAlignmentRight;
-    }
-    return _nameLabel;
-}
 
 - (UIImageView *)loadingView {
-    if (!_loadingView) {
-        _loadingView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0f, -70.0f, 25.0f, 25.0f)];
-        _loadingView.contentMode = UIViewContentModeScaleAspectFill;
-        _loadingView.image = [UIImage imageNamed:@"loading"];
-        _loadingView.clipsToBounds = YES;
-        _loadingView.backgroundColor = [UIColor clearColor];
+    if (_loadingView) {
+        return _loadingView;
     }
+    _loadingView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0f,
+                                                                 -70.0f,
+                                                                 25.0f,
+                                                                 25.0f)];
+    _loadingView.contentMode = UIViewContentModeScaleAspectFill;
+    _loadingView.image = [UIImage imageNamed:@"loading"];
+    _loadingView.clipsToBounds = YES;
+    _loadingView.backgroundColor = [UIColor clearColor];
     return _loadingView;
 }
 

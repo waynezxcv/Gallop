@@ -17,12 +17,19 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
+
+
+
+
 #import "LWTextParser.h"
 #define EmojiRegular @"\\[[a-zA-Z0-9\\u4e00-\\u9fa5]+\\]"
 #define AccountRegular @"@[\u4e00-\u9fa5a-zA-Z0-9_-]{2,30}"
 #define TopicRegular @"#[^#]+#"
 #define URLRegular @"^(http|https)://([\\w-]+\.)+[\\w-]+(/[\\w-./?%&=]*)?$"
 #define TELRegular @"^1[3|4|5|7|8][0-9]\\d{8}$"
+
+
+
 
 
 static inline NSRegularExpression* EmojiRegularExpression() {
