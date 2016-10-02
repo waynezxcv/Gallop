@@ -290,15 +290,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		010D02621D966138002887C7 /* Views */ = {
+		010D02621D966138002887C7 /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				B0ACEBFA1CEDC9A50019074F /* StatusModel.h */,
+				B0ACEBFB1CEDC9A50019074F /* StatusModel.m */,
+				B0ACEBF21CEDC9A50019074F /* CommentModel.h */,
+				B0ACEBF31CEDC9A50019074F /* CommentModel.m */,
 				01AFD9871CF4D32700BF46D0 /* LikeButton.h */,
 				01AFD9881CF4D32700BF46D0 /* LikeButton.m */,
 				B0ACEBF41CEDC9A50019074F /* CommentView.h */,
 				B0ACEBF51CEDC9A50019074F /* CommentView.m */,
-				B0ACEBFC1CEDC9A50019074F /* TableViewCell.h */,
-				B0ACEBFD1CEDC9A50019074F /* TableViewCell.m */,
 				B0ACEBFE1CEDC9A50019074F /* TableViewHeader.h */,
 				B0ACEBFF1CEDC9A50019074F /* TableViewHeader.m */,
 				B0ACEBEE1CEDC9A50019074F /* AutoFitSizeTextView.h */,
@@ -306,7 +308,7 @@
 				B0ACEBF81CEDC9A50019074F /* Menu.h */,
 				B0ACEBF91CEDC9A50019074F /* Menu.m */,
 			);
-			name = Views;
+			name = Others;
 			sourceTree = "<group>";
 		};
 		011DFA111C987CD6000410D7 = {
@@ -455,8 +457,6 @@
 				B0C9A92F1D2273D300DFAA44 /* ArticleList */,
 				0134D11E1D16B64A00FB91FF /* HTMLParsingViewController.h */,
 				0134D11F1D16B64A00FB91FF /* HTMLParsingViewController.m */,
-				B0E7F3981D210CE300877644 /* WebViewController.h */,
-				B0E7F3991D210CE300877644 /* WebViewController.m */,
 			);
 			name = "HTML Parsing Demo 1";
 			sourceTree = "<group>";
@@ -580,13 +580,11 @@
 		B0ACEBED1CEDC9530019074F /* WechatMomentsDemo */ = {
 			isa = PBXGroup;
 			children = (
-				010D02621D966138002887C7 /* Views */,
+				010D02621D966138002887C7 /* Others */,
 				B0ACEC001CEDC9A50019074F /* MomentsViewController.h */,
 				B0ACEC011CEDC9A50019074F /* MomentsViewController.m */,
-				B0ACEBFA1CEDC9A50019074F /* StatusModel.h */,
-				B0ACEBFB1CEDC9A50019074F /* StatusModel.m */,
-				B0ACEBF21CEDC9A50019074F /* CommentModel.h */,
-				B0ACEBF31CEDC9A50019074F /* CommentModel.m */,
+				B0ACEBFC1CEDC9A50019074F /* TableViewCell.h */,
+				B0ACEBFD1CEDC9A50019074F /* TableViewCell.m */,
 				B0ACEBF01CEDC9A50019074F /* CellLayout.h */,
 				B0ACEBF11CEDC9A50019074F /* CellLayout.m */,
 			);
@@ -596,6 +594,8 @@
 		B0C9A92F1D2273D300DFAA44 /* ArticleList */ = {
 			isa = PBXGroup;
 			children = (
+				B0E7F3981D210CE300877644 /* WebViewController.h */,
+				B0E7F3991D210CE300877644 /* WebViewController.m */,
 				016A10321D9426B400268B4F /* articlelist.plist */,
 				B0C9A9291D2270C000DFAA44 /* ArticleListViewController.h */,
 				B0C9A92A1D2270C000DFAA44 /* ArticleListViewController.m */,

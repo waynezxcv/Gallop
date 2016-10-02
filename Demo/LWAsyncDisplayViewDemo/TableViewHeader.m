@@ -27,10 +27,7 @@
         self.backgroundColor = [UIColor whiteColor];
         
         LWAsyncDisplayView* displayView =
-        [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,
-                                                             - 100.0f,
-                                                             SCREEN_WIDTH,
-                                                             350.0f)];
+        [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,- 100.0f,SCREEN_WIDTH,350.0f)];
         [self addSubview:displayView];
         [self addSubview:self.loadingView];
         
@@ -60,10 +57,7 @@
     if (_loadingView) {
         return _loadingView;
     }
-    _loadingView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0f,
-                                                                 -70.0f,
-                                                                 25.0f,
-                                                                 25.0f)];
+    _loadingView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0f,-70.0f,25.0f,25.0f)];
     _loadingView.contentMode = UIViewContentModeScaleAspectFill;
     _loadingView.image = [UIImage imageNamed:@"loading"];
     _loadingView.clipsToBounds = YES;

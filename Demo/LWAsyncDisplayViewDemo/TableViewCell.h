@@ -19,34 +19,17 @@
 #import "CellLayout.h"
 #import "Gallop.h"
 
-
-@class TableViewCell;
-
-@protocol TableViewCellDelegate <NSObject>
-
-- (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout
-              atIndex:(NSInteger)index;
-
-- (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data;
-
-- (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
-              atIndexPath:(NSIndexPath *)indexPath;
-
-- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike
-          atIndexPath:(NSIndexPath *)indexPath;
-
-- (void)tableViewCellDidClickedOpenAtIndexPath:(NSIndexPath *)indexPath;
-
-- (void)tableViewCellDidClickedCloseAtIndexPath:(NSIndexPath *)indexPath;
-
-@end
-
 @interface TableViewCell : UITableViewCell
 
-@property (nonatomic,weak) id <TableViewCellDelegate> delegate;
 @property (nonatomic,strong) CellLayout* cellLayout;
 @property (nonatomic,strong) NSIndexPath* indexPath;
-
+@property (nonatomic,copy) void(^clickedImageCallback)(TableViewCell* cell,NSInteger imageIndex);
+@property (nonatomic,copy) void(^clickedLikeButtonCallback)(TableViewCell* cell,BOOL isLike);
+@property (nonatomic,copy) void(^clickedAvatarCallback)(TableViewCell* cell);
+@property (nonatomic,copy) void(^clickedReCommentCallback)(TableViewCell* cell,CommentModel* model);
+@property (nonatomic,copy) void(^clickedCommentButtonCallback)(TableViewCell* cell);
+@property (nonatomic,copy) void(^clickedOpenCellCallback)(TableViewCell* cell);
+@property (nonatomic,copy) void(^clickedCloseCellCallback)(TableViewCell* cell);
 
 @end
 

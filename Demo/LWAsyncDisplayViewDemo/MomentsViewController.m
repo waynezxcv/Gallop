@@ -20,7 +20,6 @@
 #import "LWImageBrowser.h"
 #import "TableViewCell.h"
 #import "TableViewHeader.h"
-#import "GallopUtils.h"
 #import "StatusModel.h"
 #import "CellLayout.h"
 #import "CommentView.h"
@@ -29,8 +28,7 @@
 
 @interface MomentsViewController ()
 
-
-<UITableViewDataSource,UITableViewDelegate,TableViewCellDelegate>
+<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic,strong) NSArray* fakeDatasource;
 @property (nonatomic,strong) TableViewHeader* tableViewHeader;
@@ -98,11 +96,80 @@ const CGFloat kRefreshBoundary = 170.0f;
     self.navigationItem.title = @"Gallop构建朋友圈Demo";
 }
 
+#pragma mark - UITableViewDataSource
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.dataSource.count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.dataSource.count >= indexPath.row) {
+        CellLayout* layout = self.dataSource[indexPath.row];
+        return layout.cellHeight;
+    }
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString* cellIdentifier = @"cellIdentifier";
+    TableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[TableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    [self confirgueCell:cell atIndexPath:indexPath];
+    return cell;
+}
+
+- (void)confirgueCell:(TableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.indexPath = indexPath;
+    CellLayout* cellLayout = self.dataSource[indexPath.row];
+    cell.cellLayout = cellLayout;
+    [self callbackWithCell:cell];
+}
+
+- (void)callbackWithCell:(TableViewCell *)cell {
+    
+    __weak typeof(self) weakSelf = self;
+    cell.clickedLikeButtonCallback = ^(TableViewCell* cell,BOOL isLike) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself tableViewCell:cell didClickedLikeButtonWithIsLike:isLike];
+    };
+    
+    cell.clickedCommentButtonCallback = ^(TableViewCell* cell) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself commentWithCell:cell];
+    };
+    
+    cell.clickedReCommentCallback = ^(TableViewCell* cell,CommentModel* model) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself reCommentWithCell:cell commentModel:model];
+    };
+    
+    cell.clickedOpenCellCallback = ^(TableViewCell* cell) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself openTableViewCell:cell];
+    };
+    
+    cell.clickedCloseCellCallback = ^(TableViewCell* cell) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself closeTableViewCell:cell];
+    };
+    
+    cell.clickedAvatarCallback = ^(TableViewCell* cell) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself showAvatarWithCell:cell];
+    };
+    
+    cell.clickedImageCallback = ^(TableViewCell* cell,NSInteger imageIndex) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself tableViewCell:cell showImageBrowserWithImageIndex:imageIndex];
+    };
+}
 
 #pragma mark - Actions
-/***  点赞 ***/
-- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike atIndexPath:(NSIndexPath *)indexPath {
+//点赞
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike {
     /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
      延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
     UIImage* screenshot = [GallopUtils screenshotFromView:cell];
@@ -114,7 +181,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         [imgView removeFromSuperview];
     });
     
-    CellLayout* layout = [self.dataSource objectAtIndex:indexPath.row];
+    CellLayout* layout = [self.dataSource objectAtIndex:cell.indexPath.row];
     NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
     if (isLike) {
         [newLikeList addObject:@"waynezxcv的粉丝"];
@@ -126,14 +193,89 @@ const CGFloat kRefreshBoundary = 170.0f;
     StatusModel* statusModel = layout.statusModel;
     statusModel.likeList = newLikeList;
     statusModel.isLike = isLike;
-    layout = [self layoutWithStatusModel:statusModel index:indexPath.row];
-    [self.dataSource replaceObjectAtIndex:indexPath.row withObject:layout];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
+    layout = [self layoutWithStatusModel:statusModel index:cell.indexPath.row];
+    [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:layout];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:cell.indexPath.row inSection:0]]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
+//开始评论
+- (void)commentWithCell:(TableViewCell *)cell  {
+    self.postComment.from = @"Waynezxcv的粉丝";
+    self.postComment.to = @"";
+    self.postComment.index = cell.indexPath.row;
+    self.commentView.placeHolder = @"评论";
+    if (![self.commentView.textView isFirstResponder]) {
+        [self.commentView.textView becomeFirstResponder];
+    }
+}
 
-/***  发表评论 ***/
+//开始回复评论
+- (void)reCommentWithCell:(TableViewCell *)cell commentModel:(CommentModel *)commentModel {
+    self.postComment.from = @"waynezxcv的粉丝";
+    self.postComment.to = commentModel.to;
+    self.postComment.index = commentModel.index;
+    self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",commentModel.to];
+    if (![self.commentView.textView isFirstResponder]) {
+        [self.commentView.textView becomeFirstResponder];
+    }
+}
+
+//点击查看大图
+- (void)tableViewCell:(TableViewCell *)cell showImageBrowserWithImageIndex:(NSInteger)imageIndex {
+    NSMutableArray* tmps = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < cell.cellLayout.imagePostions.count; i ++) {
+        LWImageBrowserModel* model = [[LWImageBrowserModel alloc]
+                                      initWithplaceholder:nil
+                                      thumbnailURL:[NSURL URLWithString:[cell.cellLayout.statusModel.imgs objectAtIndex:i]]
+                                      HDURL:[NSURL URLWithString:[cell.cellLayout.statusModel.imgs objectAtIndex:i]]
+                                      containerView:cell.contentView
+                                      positionInContainer:CGRectFromString(cell.cellLayout.imagePostions[i])
+                                      index:i];
+        [tmps addObject:model];
+    }
+    LWImageBrowser* browser = [[LWImageBrowser alloc] initWithImageBrowserModels:tmps
+                                                                    currentIndex:imageIndex];
+    
+    [browser show];
+}
+
+//查看头像
+- (void)showAvatarWithCell:(TableViewCell *)cell {
+    [LWAlertView shoWithMessage:[NSString stringWithFormat:@"点击了头像:%@",cell.cellLayout.statusModel.name]];
+}
+
+
+//展开Cell
+- (void)openTableViewCell:(TableViewCell *)cell {
+    CellLayout* layout =  [self.dataSource objectAtIndex:cell.indexPath.row];
+    StatusModel* model = layout.statusModel;
+    CellLayout* newLayout = [[CellLayout alloc] initContentOpendLayoutWithStatusModel:model
+                                                                                index:cell.indexPath.row
+                                                                        dateFormatter:self.dateFormatter];
+    [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:newLayout];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[cell.indexPath]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
+}
+
+//折叠Cell
+- (void)closeTableViewCell:(TableViewCell *)cell {
+    CellLayout* layout =  [self.dataSource objectAtIndex:cell.indexPath.row];
+    StatusModel* model = layout.statusModel;
+    CellLayout* newLayout = [[CellLayout alloc] initWithStatusModel:model
+                                                              index:cell.indexPath.row
+                                                      dateFormatter:self.dateFormatter];
+    
+    [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:newLayout];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[cell.indexPath]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
+}
+
+//发表评论
 - (void)postCommentWithCommentModel:(CommentModel *)model {
     /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
      延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
@@ -159,135 +301,9 @@ const CGFloat kRefreshBoundary = 170.0f;
     [self.dataSource replaceObjectAtIndex:model.index withObject:layout];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.index inSection:0]]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
-    
-}
-
-/*** 开始评论 ***/
-- (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
-          atIndexPath:(NSIndexPath *)indexPath {
-    self.postComment.from = @"Waynezxcv的粉丝";
-    self.postComment.to = @"";
-    self.postComment.index = indexPath.row;
-    self.commentView.placeHolder = @"评论";
-    if (![self.commentView.textView isFirstResponder]) {
-        [self.commentView.textView becomeFirstResponder];
-    }
-}
-
-/*** 开始回复评论 ***/
-- (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
-    //添加连接时，可以再data中放入自己的标记符，回调时通过判断标记符来进行不同的处理
-    if ([data isKindOfClass:[CommentModel class]]) {
-        CommentModel* commentModel = (CommentModel *)data;
-        self.postComment.from = @"waynezxcv的粉丝";
-        self.postComment.to = commentModel.to;
-        self.postComment.index = commentModel.index;
-        self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",commentModel.to];
-        if (![self.commentView.textView isFirstResponder]) {
-            [self.commentView.textView becomeFirstResponder];
-        }
-    }
-}
-
-/***  点击图片 ***/
-- (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout atIndex:(NSInteger)index {
-    NSMutableArray* tmps = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < layout.imagePostionArray.count; i ++) {
-        LWImageBrowserModel* model = [[LWImageBrowserModel alloc]
-                                      initWithplaceholder:nil
-                                      thumbnailURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
-                                      HDURL:[NSURL URLWithString:[layout.statusModel.imgs objectAtIndex:i]]
-                                      containerView:cell.contentView
-                                      positionInContainer:CGRectFromString(layout.imagePostionArray[i])
-                                      index:i];
-        [tmps addObject:model];
-    }
-    LWImageBrowser* browser = [[LWImageBrowser alloc] initWithImageBrowserModels:tmps
-                                                                    currentIndex:index];
-    
-    [browser show];
-}
-
-/**
- *  点击展开
- */
-- (void)tableViewCellDidClickedOpenAtIndexPath:(NSIndexPath *)indexPath {
-    CellLayout* layout =  [self.dataSource objectAtIndex:indexPath.row];
-    StatusModel* model = layout.statusModel;
-    CellLayout* newLayout = [[CellLayout alloc] initContentOpendLayoutWithStatusModel:model
-                                                                                index:indexPath.row
-                                                                        dateFormatter:self.dateFormatter];
-    [self.dataSource replaceObjectAtIndex:indexPath.row withObject:newLayout];
-    [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath]
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView endUpdates];
-}
-
-/**
- *  点击关闭
- */
-- (void)tableViewCellDidClickedCloseAtIndexPath:(NSIndexPath *)indexPath {
-    CellLayout* layout =  [self.dataSource objectAtIndex:indexPath.row];
-    StatusModel* model = layout.statusModel;
-    CellLayout* newLayout = [[CellLayout alloc] initWithStatusModel:model
-                                                              index:indexPath.row
-                                                      dateFormatter:self.dateFormatter];
-    
-    [self.dataSource replaceObjectAtIndex:indexPath.row withObject:newLayout];
-    [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath]
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView endUpdates];
 }
 
 
-#pragma mark - KeyboardNotifications
-
-- (void)tapView:(id)sender {
-    [self.commentView endEditing:YES];
-}
-
-- (void)keyboardDidAppearNotifications:(NSNotification *)notifications {
-    NSDictionary *userInfo = [notifications userInfo];
-    CGSize keyboardSize = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    CGFloat keyboardHeight = keyboardSize.height;
-    self.commentView.frame = CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f - keyboardHeight, SCREEN_WIDTH, 44.0f);
-}
-
-- (void)keyboardDidHidenNotifications:(NSNotification *)notifications {
-    self.commentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f);
-}
-
-#pragma mark - UITableViewDataSource
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.dataSource.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString* cellIdentifier = @"cellIdentifier";
-    TableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[TableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-    cell.delegate = self;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.indexPath = indexPath;
-    if (self.dataSource.count >= indexPath.row) {
-        CellLayout* cellLayout = self.dataSource[indexPath.row];
-        cell.cellLayout = cellLayout;
-    }
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.dataSource.count >= indexPath.row) {
-        CellLayout* layout = self.dataSource[indexPath.row];
-        return layout.cellHeight;
-    }
-    return 0;
-}
 
 #pragma mark - UIScrollViewDelegate
 
@@ -302,6 +318,23 @@ const CGFloat kRefreshBoundary = 170.0f;
     if (offset <= -kRefreshBoundary) {
         [self refreshBegin];
     }
+}
+
+#pragma mark - Keyboard
+
+- (void)tapView:(id)sender {
+    [self.commentView endEditing:YES];
+}
+
+- (void)keyboardDidAppearNotifications:(NSNotification *)notifications {
+    NSDictionary *userInfo = [notifications userInfo];
+    CGSize keyboardSize = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    CGFloat keyboardHeight = keyboardSize.height;
+    self.commentView.frame = CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f - keyboardHeight, SCREEN_WIDTH, 44.0f);
+}
+
+- (void)keyboardDidHidenNotifications:(NSNotification *)notifications {
+    self.commentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f);
 }
 
 #pragma mark - Data
@@ -352,7 +385,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     }];
 }
 
-//生成LWLayout实例
+
 - (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel index:(NSInteger)index {
     CellLayout* layout = [[CellLayout alloc] initWithStatusModel:statusModel
                                                            index:index

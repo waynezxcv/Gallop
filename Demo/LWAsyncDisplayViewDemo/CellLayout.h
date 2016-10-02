@@ -17,9 +17,8 @@
 #import "LWLayout.h"
 #import "StatusModel.h"
 
-/**
- *  要添加一些其他属性，可以继承自LWLayout
- */
+
+
 
 @interface CellLayout : LWLayout
 
@@ -28,9 +27,9 @@
 @property (nonatomic,assign) CGRect lineRect;
 @property (nonatomic,assign) CGRect menuPosition;
 @property (nonatomic,assign) CGRect commentBgPosition;
-@property (nonatomic,copy) NSArray* imagePostionArray;
-@property (nonatomic,assign) CGRect websiteRect;
-
+@property (nonatomic,assign) CGRect avatarPosition;
+@property (nonatomic,assign) CGRect websitePosition;
+@property (nonatomic,copy) NSArray* imagePostions;
 
 //文字过长时，折叠状态的布局模型
 - (id)initWithStatusModel:(StatusModel *)stautsModel

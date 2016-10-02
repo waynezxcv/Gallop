@@ -47,113 +47,126 @@
     return self;
 }
 
+#pragma mark - LWAsyncDisplayViewDelegate
 
-#pragma mark - Actions
-
-/***  点击图片  ***/
-- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
-   didCilickedImageStorage:(LWImageStorage *)imageStorage
-                     touch:(UITouch *)touch{
-    NSLog(@"tag:%ld",imageStorage.tag);//这里可以通过判断Tag来执行相应的回调。
-    CGPoint point = [touch locationInView:self];
-    for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
-        CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
-        if (CGRectContainsPoint(imagePosition, point)) {
-            if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedImageWithCellLayout:atIndex:)] &&
-                [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-                [self.delegate tableViewCell:self didClickedImageWithCellLayout:self.cellLayout atIndex:i];
-            }
+//额外的绘制
+- (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
+    if (!isCancelled()) {
+        CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
+        CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
+        CGContextSetLineWidth(context, 0.2f);
+        CGContextSetStrokeColorWithColor(context,RGB(220.0f, 220.0f, 220.0f, 1).CGColor);
+        CGContextStrokePath(context);
+        if ([self.cellLayout.statusModel.type isEqualToString:@"website"]) {
+            CGContextAddRect(context, self.cellLayout.websitePosition);
+            CGContextSetFillColorWithColor(context, RGB(240, 240, 240, 1).CGColor);
+            CGContextFillPath(context);
         }
     }
 }
+//点击LWImageStorage
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
+   didCilickedImageStorage:(LWImageStorage *)imageStorage
+                     touch:(UITouch *)touch{
+    NSInteger tag = imageStorage.tag;
+    //tag 0~8 是点击图片，9是点击头像
+    switch (tag) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:{
+            if (self.clickedImageCallback) {
+                self.clickedImageCallback(self,tag);
+            }
+        }break;
+        case 9: {
+            if (self.clickedAvatarCallback) {
+                self.clickedAvatarCallback(self);
+            }
+        }break;
+    }
+}
 
-/***  点击文本链接 ***/
-- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
-    if ([data isKindOfClass:[NSString class]]) {
+//点击LWTextStorage
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
+    didCilickedTextStorage:(LWTextStorage *)textStorage
+                  linkdata:(id)data {
+    //回复评论
+    if ([data isKindOfClass:[CommentModel class]]) {
+        if (self.clickedReCommentCallback) {
+            self.clickedReCommentCallback(self,data);
+        }
+    }
+    else if ([data isKindOfClass:[NSString class]]) {
+        //折叠Cell
         if ([data isEqualToString:@"close"]) {
-            [self.delegate tableViewCellDidClickedCloseAtIndexPath:self.indexPath];
+            if (self.clickedCloseCellCallback) {
+                self.clickedCloseCellCallback(self);
+            }
         }
+        //展开Cell
         else if ([data isEqualToString:@"open"]) {
-            [self.delegate tableViewCellDidClickedOpenAtIndexPath:self.indexPath];
+            if (self.clickedOpenCellCallback) {
+                self.clickedOpenCellCallback(self);
+            }
         }
+        //其他
         else {
             [LWAlertView shoWithMessage:data];
         }
     }
-    else {
-        if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLinkWithData:)] &&
-            [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-            [self.delegate tableViewCell:self didClickedLinkWithData:data];
-        }
-    }
 }
 
-/***  点击菜单按钮  ***/
+#pragma mark - Actions
+//点击菜单按钮
 - (void)didClickedMenuButton {
     [self.menu clickedMenu];
 }
 
-/***  点击评论 ***/
+//点击评论
 - (void)didClickedCommentButton {
-    if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedCommentWithCellLayout:atIndexPath:)]) {
-        [self.delegate tableViewCell:self didClickedCommentWithCellLayout:self.cellLayout atIndexPath:self.indexPath];
+    if (self.clickedCommentButtonCallback) {
+        self.clickedCommentButtonCallback(self);
         [self.menu menuHide];
     }
 }
 
-//** 点赞 **//
+//点赞
 - (void)didclickedLikeButton:(LikeButton *)likeButton {
     __weak typeof(self) weakSelf = self;
     [likeButton likeButtonAnimationCompletion:^(BOOL isSelectd) {
-        [weakSelf.menu menuHide];
-        if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithIsLike:atIndexPath:)]) {
-            [weakSelf.delegate tableViewCell:weakSelf
-              didClickedLikeButtonWithIsLike:!weakSelf.cellLayout.statusModel.isLike
-                                 atIndexPath:weakSelf.indexPath];
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself.menu menuHide];
+        if (sself.clickedLikeButtonCallback) {
+            sself.clickedLikeButtonCallback(sself,!sself.cellLayout.statusModel.isLike);
         }
     }];
 }
 
-#pragma mark - Draw and setup
+#pragma mark -
 
-- (void)setCellLayout:(CellLayout *)cellLayout {
-    if (_cellLayout == cellLayout) {
-        return;
-    }
-    _cellLayout = cellLayout;
-    self.asyncDisplayView.layout = self.cellLayout;
-    self.menu.statusModel = self.cellLayout.statusModel;
-}
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.cellLayout.cellHeight);
     self.menuButton.frame = self.cellLayout.menuPosition;
     self.menu.frame = CGRectMake(self.cellLayout.menuPosition.origin.x - 5.0f,
-                                 self.cellLayout.menuPosition.origin.y - 9.0f + 14.5f,
-                                 0,
-                                 34);
+                                 self.cellLayout.menuPosition.origin.y - 9.0f + 14.5f,0.0f,34.0f);
     self.line.frame = self.cellLayout.lineRect;
 }
 
-- (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
-    if (!isCancelled()) {
-        //绘制分割线
-        CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
-        CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
-        CGContextSetLineWidth(context, 0.2f);
-        CGContextSetStrokeColorWithColor(context,RGB(220.0f, 220.0f, 220.0f, 1).CGColor);
-        CGContextStrokePath(context);
-
-        if ([self.cellLayout.statusModel.type isEqualToString:@"website"]) {
-            CGContextAddRect(context, self.cellLayout.websiteRect);
-            CGContextSetFillColorWithColor(context, RGB(240, 240, 240, 1).CGColor);
-            CGContextFillPath(context);
-        }
+- (void)setCellLayout:(CellLayout *)cellLayout {
+    if (_cellLayout != cellLayout) {
+        _cellLayout = cellLayout;
+        self.asyncDisplayView.layout = self.cellLayout;
+        self.menu.statusModel = self.cellLayout.statusModel;
     }
 }
-
-#pragma mark - Getter
 
 - (LWAsyncDisplayView *)asyncDisplayView {
     if (!_asyncDisplayView) {
@@ -194,7 +207,7 @@
         return _line;
     }
     _line = [[UIView alloc] initWithFrame:CGRectZero];
-    _line.backgroundColor = RGB(220.0f, 220.0f, 220.0f, 1);
+    _line.backgroundColor = RGB(220.0f, 220.0f, 220.0f, 1.0f);
     return _line;
 }
 
