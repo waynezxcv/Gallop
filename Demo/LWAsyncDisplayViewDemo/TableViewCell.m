@@ -107,7 +107,9 @@
     [likeButton likeButtonAnimationCompletion:^(BOOL isSelectd) {
         [weakSelf.menu menuHide];
         if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithIsLike:atIndexPath:)]) {
-            [weakSelf.delegate tableViewCell:weakSelf didClickedLikeButtonWithIsLike:!weakSelf.cellLayout.statusModel.isLike atIndexPath:weakSelf.indexPath];
+            [weakSelf.delegate tableViewCell:weakSelf
+              didClickedLikeButtonWithIsLike:!weakSelf.cellLayout.statusModel.isLike
+                                 atIndexPath:weakSelf.indexPath];
         }
     }];
 }
@@ -168,7 +170,8 @@
     _menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_menuButton setImage:[UIImage imageNamed:@"[menu]"] forState:UIControlStateNormal];
     _menuButton.imageEdgeInsets = UIEdgeInsetsMake(14.5f, 12.0f, 14.5f, 12.0f);
-    [_menuButton addTarget:self action:@selector(didClickedMenuButton) forControlEvents:UIControlEventTouchUpInside];
+    [_menuButton addTarget:self action:@selector(didClickedMenuButton)
+          forControlEvents:UIControlEventTouchUpInside];
     return _menuButton;
 }
 

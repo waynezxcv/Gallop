@@ -95,7 +95,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 - (void)setup {
     self.needRefresh = YES;
     self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationItem.title = @"朋友圈";
+    self.navigationItem.title = @"Gallop构建朋友圈Demo";
 }
 
 
@@ -305,8 +305,9 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 #pragma mark - Data
+
+//模拟下拉刷新
 - (void)refreshBegin {
-    
     [UIView animateWithDuration:0.2f animations:^{
         self.tableView.contentInset = UIEdgeInsetsMake(kRefreshBoundary, 0.0f, 0.0f, 0.0f);
     } completion:^(BOOL finished) {
@@ -318,6 +319,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     }];
 }
 
+//模拟下载数据
 - (void)fakeDownload {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if (self.needRefresh) {
@@ -339,6 +341,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     });
 }
 
+//模拟刷新完成
 - (void)refreshComplete {
     [self.tableViewHeader refreshingAnimateStop];
     [self.tableView reloadData];
@@ -349,8 +352,8 @@ const CGFloat kRefreshBoundary = 170.0f;
     }];
 }
 
+//生成LWLayout实例
 - (CellLayout *)layoutWithStatusModel:(StatusModel *)statusModel index:(NSInteger)index {
-    //生成LWLayout实例
     CellLayout* layout = [[CellLayout alloc] initWithStatusModel:statusModel
                                                            index:index
                                                    dateFormatter:self.dateFormatter];
@@ -430,8 +433,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         return _fakeDatasource;
     }
     _fakeDatasource =
-    @[
-      @{@"type":@"image",
+    @[@{@"type":@"image",
         @"name":@"型格志style",
         @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
         @"content":@"春天卫衣的正确打开方式~",

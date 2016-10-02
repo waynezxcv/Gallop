@@ -330,7 +330,7 @@
 		011DFA1C1C987CD6000410D7 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				B085B3441CB69C7B00087739 /* Vendors */,
+				B085B3441CB69C7B00087739 /* Vendor */,
 				0134D12A1D16BDEE00FB91FF /* Root */,
 				01F58BBD1D85AA1D0089DB02 /* RichTextDemo1 */,
 				01D5B2F21D37D525007C5CB1 /* CornerRaius Demo */,
@@ -553,14 +553,14 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
-		B085B3441CB69C7B00087739 /* Vendors */ = {
+		B085B3441CB69C7B00087739 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
 				B0F991B51D937E4C00D7B529 /* LWImageBrowser */,
 				B0E7F39B1D212B6400877644 /* LWActiveIndicator */,
 				011DFA681C9881AE000410D7 /* SDWebImage */,
 			);
-			name = Vendors;
+			name = Vendor;
 			path = ..;
 			sourceTree = "<group>";
 		};
@@ -681,6 +681,7 @@
 				TargetAttributes = {
 					011DFA191C987CD6000410D7 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 48NPNTSQK4;
 					};
 				};
 			};

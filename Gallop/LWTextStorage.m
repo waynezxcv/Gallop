@@ -97,7 +97,7 @@
 }
 
 #pragma mark - Methods
-/***  为整个文本添加链接  ***/
+
 - (void)lw_addLinkForWholeTextStorageWithData:(id)data
                                     linkColor:(UIColor *)linkColor
                                highLightColor:(UIColor *)highLightColor {
@@ -107,7 +107,7 @@
     [self _creatTextLayout];
 }
 
-/***  为指定位置的文本添加链接  ***/
+
 - (void)lw_addLinkWithData:(id)data range:(NSRange)range
                  linkColor:(UIColor *)linkColor
             highLightColor:(UIColor *)highLightColor {
@@ -118,7 +118,7 @@
     [self _creatTextLayout];
 }
 
-/***  用本地图片替换掉指定位置的文字  ***/
+
 - (void)lw_replaceTextWithImage:(UIImage *)image
                     contentMode:(UIViewContentMode)contentMode
                       imageSize:(CGSize)size
@@ -156,7 +156,7 @@
     [self _creatTextLayout];
 }
 
-/***  用网络图片替换掉指定位置的文字  ***/
+
 - (void)lw_replaceTextWithImageURL:(NSURL *)URL
                        contentMode:(UIViewContentMode)contentMode
                          imageSize:(CGSize)size
@@ -202,7 +202,7 @@
     [self _creatTextLayout];
 }
 
-/***  用UIView替换掉指定位置的文字  ***/
+
 - (void)lw_replaceTextWithView:(UIView *)view
                    contentMode:(UIViewContentMode)contentMode
                           size:(CGSize)size
@@ -239,7 +239,7 @@
     [self _creatTextLayout];
 }
 
-/***  在末尾拼接一个LWtextStorage实例  ***/
+
 - (void)lw_appendTextStorage:(LWTextStorage *)aTextStorage {
     if (!aTextStorage) {
         return;
@@ -461,6 +461,7 @@
 
 - (CGPoint)center {
     return CGPointMake(self.textLayout.cgPathBox.origin.x  + self.position.x + self.textLayout.cgPathBox.size.width * 0.5f,
+                       
                        self.textLayout.cgPathBox.origin.y + self.position.y + self.textLayout.cgPathBox.size.height * 0.5f);
 }
 
