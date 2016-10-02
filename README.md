@@ -38,11 +38,10 @@ Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框�
 
 ## Demo screenshot
 
-
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/1.png)
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/2.png)
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/3.png)
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/4.png)
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/pic1.png)
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/pic2.png)
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/pic3.png)
+![](https://github.com/waynezxcv/Gallop/raw/master/pics/pic4.png)
 
 ***
 

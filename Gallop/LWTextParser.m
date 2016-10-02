@@ -23,6 +23,8 @@
 #define TopicRegular @"#[^#]+#"
 #define URLRegular @"^(http|https)://([\\w-]+\.)+[\\w-]+(/[\\w-./?%&=]*)?$"
 #define TELRegular @"^1[3|4|5|7|8][0-9]\\d{8}$"
+
+
 static inline NSRegularExpression* EmojiRegularExpression() {
     static NSRegularExpression* _EmojiRegularExpression = nil;
     static dispatch_once_t onceToken;
