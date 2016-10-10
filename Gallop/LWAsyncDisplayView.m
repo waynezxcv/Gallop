@@ -211,14 +211,15 @@
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWTextStorage* textStorage in _textStorages) {
-        if ([textStorage isKindOfClass:[LWTextStorage class]]) {
-            if (!_highlight) {
-                LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
-                if (hightlight) {
-                    [self _showHighlight:hightlight adjustPoint:textStorage.frame.origin];
-                    found = YES;
-                    break;
-                }
+        if (![textStorage isKindOfClass:[LWTextStorage class]]) {
+            continue;
+        }
+        if (!_highlight) {
+            LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
+            if (hightlight) {
+                [self _showHighlight:hightlight adjustPoint:textStorage.frame.origin];
+                found = YES;
+                break;
             }
         }
     }
@@ -232,16 +233,17 @@
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWTextStorage* textStorage in _textStorages) {
-        if ([textStorage isKindOfClass:[LWTextStorage class]]) {
-            LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
-            if (_highlight && hightlight == _highlight) {
-                [self _showHighlight:hightlight adjustPoint:textStorage.frame.origin];
-                found = YES;
-            } else {
-                [self _hideHightlight];
-            }
-            break;
+        if (![textStorage isKindOfClass:[LWTextStorage class]]) {
+            continue;
         }
+        LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
+        if (_highlight && hightlight == _highlight) {
+            [self _showHighlight:hightlight adjustPoint:textStorage.frame.origin];
+            found = YES;
+        } else {
+            [self _hideHightlight];
+        }
+        break;
     }
     if (!found) {
         [super touchesMoved:touches withEvent:event];
@@ -261,19 +263,20 @@
         }
     }
     for (LWTextStorage* textStorage in _textStorages) {
-        if ([textStorage isKindOfClass:[LWTextStorage class]]) {
-            LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
-            if (_highlight && hightlight == _highlight) {
-                if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedTextStorage:linkdata:)]) {
-                    [self.delegate lwAsyncDisplayView:self didCilickedTextStorage:textStorage linkdata:_highlight.content];
-                }
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
-                                             (int64_t)(0.1f * NSEC_PER_SEC)),
-                               dispatch_get_main_queue(), ^{
-                                   [self _removeHightlight];
-                               });
-                break;
+        if (![textStorage isKindOfClass:[LWTextStorage class]]) {
+            continue;
+        }
+        LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
+        if (_highlight && hightlight == _highlight) {
+            if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedTextStorage:linkdata:)]) {
+                [self.delegate lwAsyncDisplayView:self didCilickedTextStorage:textStorage linkdata:_highlight.content];
             }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                         (int64_t)(0.1f * NSEC_PER_SEC)),
+                           dispatch_get_main_queue(), ^{
+                               [self _removeHightlight];
+                           });
+            break;
         }
     }
     if (!found) {
