@@ -252,11 +252,7 @@
     __block BOOL found = NO;
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
-    
     for (LWImageStorage* imageStorage in _imageStorages) {
-        if (imageStorage == nil) {
-            continue;
-        }
         if (CGRectContainsPoint(imageStorage.frame, touchPoint)) {
             if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:touch:)]) {
                 found = YES;
