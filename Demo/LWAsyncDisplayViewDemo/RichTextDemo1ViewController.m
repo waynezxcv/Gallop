@@ -112,6 +112,7 @@
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
     didCilickedTextStorage:(LWTextStorage *)textStorage
                   linkdata:(id)data {
+    NSLog(@"%@",data);
     if ([data isKindOfClass:[NSString class]]) {
         [LWAlertView shoWithMessage:data];
     }

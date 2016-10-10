@@ -29,7 +29,6 @@
 #import "GallopDefine.h"
 
 
-
 @interface LWStorageBuilder ()<LWHTMLParserDelegate>
 
 @property (nonatomic,strong) LWHTMLParser* parser;

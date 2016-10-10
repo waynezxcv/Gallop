@@ -211,9 +211,6 @@
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWTextStorage* textStorage in _textStorages) {
-        if (textStorage == nil) {
-            continue;
-        }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
             if (!_highlight) {
                 LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
@@ -235,12 +232,9 @@
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     for (LWTextStorage* textStorage in _textStorages) {
-        if (textStorage == nil) {
-            continue;
-        }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
             LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
-            if (hightlight == _highlight) {
+            if (_highlight && hightlight == _highlight) {
                 [self _showHighlight:hightlight adjustPoint:textStorage.frame.origin];
                 found = YES;
             } else {
@@ -271,12 +265,9 @@
         }
     }
     for (LWTextStorage* textStorage in _textStorages) {
-        if (textStorage == nil) {
-            continue;
-        }
         if ([textStorage isKindOfClass:[LWTextStorage class]]) {
             LWTextHighlight* hightlight = [self _isNeedShowHighlight:textStorage touchPoint:touchPoint];
-            if (hightlight == _highlight) {
+            if (_highlight && hightlight == _highlight) {
                 if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedTextStorage:linkdata:)]) {
                     [self.delegate lwAsyncDisplayView:self didCilickedTextStorage:textStorage linkdata:_highlight.content];
                 }
