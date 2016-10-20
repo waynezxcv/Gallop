@@ -17,19 +17,12 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-
-
-
-
 #import "LWTextParser.h"
 #define EmojiRegular @"\\[[a-zA-Z0-9\\u4e00-\\u9fa5]+\\]"
 #define AccountRegular @"@[\u4e00-\u9fa5a-zA-Z0-9_-]{2,30}"
 #define TopicRegular @"#[^#]+#"
-#define URLRegular @"^(http|https)://([\\w-]+\.)+[\\w-]+(/[\\w-./?%&=]*)?$"
 #define TELRegular @"^1[3|4|5|7|8][0-9]\\d{8}$"
-
-
-
+#define URLRegular @"[a-zA-z]+://[^\\s]*"
 
 
 static inline NSRegularExpression* EmojiRegularExpression() {
@@ -42,6 +35,7 @@ static inline NSRegularExpression* EmojiRegularExpression() {
     });
     return _EmojiRegularExpression;
 }
+
 static inline NSRegularExpression* URLRegularExpression() {
     static NSRegularExpression* _URLRegularExpression = nil;
     static dispatch_once_t onceToken;
@@ -52,6 +46,7 @@ static inline NSRegularExpression* URLRegularExpression() {
     });
     return _URLRegularExpression;
 }
+
 static inline NSRegularExpression* AccountRegularExpression() {
     static NSRegularExpression* _AccountRegularExpression = nil;
     static dispatch_once_t onceToken;
@@ -62,6 +57,7 @@ static inline NSRegularExpression* AccountRegularExpression() {
     });
     return _AccountRegularExpression;
 }
+
 static inline NSRegularExpression* TopicRegularExpression() {
     static NSRegularExpression* _TopicRegularExpression = nil;
     static dispatch_once_t onceToken;
@@ -72,6 +68,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
     });
     return _TopicRegularExpression;
 }
+
 static inline NSRegularExpression* TelRegularExpression() {
     static NSRegularExpression* _TelRegularExpression = nil;
     static dispatch_once_t onceToken;
@@ -86,7 +83,6 @@ static inline NSRegularExpression* TelRegularExpression() {
 
 @implementation LWTextParser
 
-
 + (void)parseEmojiWithTextStorage:(LWTextStorage *)textStorage {
     NSString* text = textStorage.text;
     if (!text) {
@@ -95,7 +91,9 @@ static inline NSRegularExpression* TelRegularExpression() {
     NSArray* resultArray = [EmojiRegularExpression() matchesInString:text
                                                              options:0
                                                                range:NSMakeRange(0,text.length)];
-    [resultArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [resultArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj,
+                                                                               NSUInteger idx,
+                                                                               BOOL * _Nonnull stop) {
         NSTextCheckingResult* match = [resultArray objectAtIndex:idx];
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
@@ -108,6 +106,8 @@ static inline NSRegularExpression* TelRegularExpression() {
         }
     }];
 }
+
+
 + (void)parseHttpURLWithTextStorage:(LWTextStorage *)textStorage
                           linkColor:(UIColor *)linkColor
                      highlightColor:(UIColor *)higlightColor {
@@ -118,12 +118,21 @@ static inline NSRegularExpression* TelRegularExpression() {
     NSArray* resultArray = [URLRegularExpression() matchesInString:text
                                                            options:0
                                                              range:NSMakeRange(0,text.length)];
-    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match, NSUInteger idx, BOOL * _Nonnull stop) {
+    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match,
+                                              NSUInteger idx,
+                                              BOOL * _Nonnull stop) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-        [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
+        if (textStorage.text.length >= range.location + range.length) {
+            [textStorage lw_addLinkWithData:content
+                                      range:range
+                                  linkColor:linkColor
+                             highLightColor:higlightColor];
+            
+        }
     }];
 }
+
 
 + (void)parseAccountWithTextStorage:(LWTextStorage *)textStorage
                           linkColor:(UIColor *)linkColor
@@ -135,10 +144,17 @@ static inline NSRegularExpression* TelRegularExpression() {
     NSArray* resultArray = [AccountRegularExpression() matchesInString:text
                                                                options:0
                                                                  range:NSMakeRange(0,text.length)];
-    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match, NSUInteger idx, BOOL * _Nonnull stop) {
+    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match,
+                                              NSUInteger idx,
+                                              BOOL * _Nonnull stop) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-        [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
+        if (textStorage.text.length >= range.location + range.length) {
+            [textStorage lw_addLinkWithData:content
+                                      range:range
+                                  linkColor:linkColor
+                             highLightColor:higlightColor];
+        }
     }];
 }
 
@@ -152,10 +168,17 @@ static inline NSRegularExpression* TelRegularExpression() {
     NSArray* resultArray = [TopicRegularExpression() matchesInString:text
                                                              options:0
                                                                range:NSMakeRange(0,text.length)];
-    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match, NSUInteger idx, BOOL * _Nonnull stop) {
+    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match,
+                                              NSUInteger idx,
+                                              BOOL * _Nonnull stop) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-        [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
+        if (textStorage.text.length >= range.location + range.length) {
+            [textStorage lw_addLinkWithData:content
+                                      range:range
+                                  linkColor:linkColor
+                             highLightColor:higlightColor];
+        }
     }];
 }
 
@@ -169,12 +192,18 @@ static inline NSRegularExpression* TelRegularExpression() {
     NSArray* resultArray = [TelRegularExpression() matchesInString:text
                                                            options:0
                                                              range:NSMakeRange(0,text.length)];
-    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match, NSUInteger idx, BOOL * _Nonnull stop) {
+    [resultArray enumerateObjectsUsingBlock:^(NSTextCheckingResult*  _Nonnull match,
+                                              NSUInteger idx,
+                                              BOOL * _Nonnull stop) {
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
-        [textStorage lw_addLinkWithData:content range:range linkColor:linkColor highLightColor:higlightColor];
+        if (textStorage.text.length >= range.location + range.length) {
+            [textStorage lw_addLinkWithData:content
+                                      range:range
+                                  linkColor:linkColor
+                             highLightColor:higlightColor];
+        }
     }];
 }
-
 
 @end
