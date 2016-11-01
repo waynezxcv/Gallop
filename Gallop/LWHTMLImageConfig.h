@@ -34,7 +34,7 @@
 @property (nonatomic,assign) BOOL needAddToImageCallbacks;//是否需要将这个Image包含到点击事件的回调数组里去
 @property (nonatomic,assign) UIEdgeInsets edgeInsets;//设置该storage的edgeInsets，优先级高于paragraphEdgeInsets
 @property (nonatomic,copy) NSString* extraDisplayIdentifier;//额外绘制的标记字符串
-
+@property (nonatomic,assign) UIViewContentMode contentMode;//效果UIImageView的同名属性
 
 /**
  *  获取一个默认样式的图片设置

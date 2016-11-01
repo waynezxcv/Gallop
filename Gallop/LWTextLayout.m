@@ -620,6 +620,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
         rect = UIEdgeInsetsInsetRect(rect,attachment.contentEdgeInsets);
         rect = LWCGRectFitWithContentMode(rect, asize, attachment.contentMode);
         rect = CGRectStandardize(rect);
+
         rect.origin.x += point.x;
         rect.origin.y += point.y;
         if (image) {

@@ -106,6 +106,7 @@
                 [imagePositionArray addObject:imagePositionString];
                 LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
                 imageStorage.tag = 0;
+                imageStorage.contentMode = UIViewContentModeScaleAspectFill;
                 imageStorage.clipsToBounds = YES;
                 imageStorage.frame = imageRect;
                 imageStorage.backgroundColor = RGB(240, 240, 240, 1);
@@ -123,6 +124,7 @@
                     [imagePositionArray addObject:imagePositionString];
                     LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
                     imageStorage.clipsToBounds = YES;
+                    imageStorage.contentMode = UIViewContentModeScaleAspectFill;
                     imageStorage.tag = i;
                     imageStorage.frame = imageRect;
                     imageStorage.backgroundColor = RGB(240, 240, 240, 1);
@@ -151,6 +153,7 @@
             NSString* URLString = [statusModel.imgs objectAtIndex:0];
             imageStorage.contents = [NSURL URLWithString:URLString];
             imageStorage.clipsToBounds = YES;
+            imageStorage.contentMode = UIViewContentModeScaleAspectFill;
             imageStorage.frame = CGRectMake(nameTextStorage.left + 5.0f,
                                             contentBottom + 10.0f ,
                                             50.0f,
@@ -475,6 +478,7 @@
                 LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
                 imageStorage.tag = 0;
                 imageStorage.clipsToBounds = YES;
+                imageStorage.contentMode = UIViewContentModeScaleAspectFill;
                 imageStorage.frame = imageRect;
                 imageStorage.backgroundColor = RGB(240, 240, 240, 1);
                 NSString* URLString = [statusModel.imgs objectAtIndex:0];
@@ -492,6 +496,7 @@
                     [imagePositionArray addObject:imagePositionString];
                     LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
                     imageStorage.clipsToBounds = YES;
+                    imageStorage.contentMode = UIViewContentModeScaleAspectFill;
                     imageStorage.tag = i;
                     imageStorage.frame = imageRect;
                     imageStorage.backgroundColor = RGB(240, 240, 240, 1);
@@ -520,6 +525,7 @@
             NSString* URLString = [statusModel.imgs objectAtIndex:0];
             imageStorage.contents = [NSURL URLWithString:URLString];
             imageStorage.clipsToBounds = YES;
+            imageStorage.contentMode = UIViewContentModeScaleAspectFill;
             imageStorage.frame = CGRectMake(nameTextStorage.left + 5.0f,
                                             contentBottom + 10.0f ,
                                             50.0f,

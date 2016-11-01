@@ -53,7 +53,7 @@
         self.shadowRadius = 0.0f;
         self.contentsScale = [GallopUtils contentsScale];
         self.backgroundColor = [UIColor whiteColor];
-        self.contentMode = UIViewContentModeScaleAspectFill;
+        self.contentMode = UIViewContentModeScaleToFill;
         self.extraDisplayIdentifier = nil;
     }
     return self;
@@ -81,7 +81,7 @@
         self.shadowRadius = 0.0f;
         self.contentsScale = [GallopUtils contentsScale];
         self.backgroundColor = nil;
-        self.contentMode = UIViewContentModeScaleAspectFill;
+        self.contentMode = UIViewContentModeScaleToFill;
         self.extraDisplayIdentifier = nil;
     }
     return self;

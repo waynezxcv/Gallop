@@ -52,11 +52,6 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UITapGestureRecognizer* tapGestureRecognizer = [[UITapGestureRecognizer alloc]
-                                                    initWithTarget:self
-                                                    action:@selector(tapView:)];
-    tapGestureRecognizer.cancelsTouchesInView = NO;
-    [self.view addGestureRecognizer:tapGestureRecognizer];
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.commentView];
 }
@@ -66,7 +61,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidAppearNotifications:)
                                                  name:UIKeyboardWillShowNotification object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidHidenNotifications:)
                                                  name:UIKeyboardWillHideNotification object:nil];
@@ -77,7 +72,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidHideNotification
                                                   object:nil];
@@ -90,11 +85,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
 }
 
-- (void)setup {
-    self.needRefresh = YES;
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationItem.title = @"Gallop构建朋友圈Demo";
-}
 
 #pragma mark - UITableViewDataSource
 
@@ -129,38 +119,38 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 - (void)callbackWithCell:(TableViewCell *)cell {
-    
+
     __weak typeof(self) weakSelf = self;
     cell.clickedLikeButtonCallback = ^(TableViewCell* cell,BOOL isLike) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself tableViewCell:cell didClickedLikeButtonWithIsLike:isLike];
     };
-    
+
     cell.clickedCommentButtonCallback = ^(TableViewCell* cell) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself commentWithCell:cell];
     };
-    
+
     cell.clickedReCommentCallback = ^(TableViewCell* cell,CommentModel* model) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself reCommentWithCell:cell commentModel:model];
     };
-    
+
     cell.clickedOpenCellCallback = ^(TableViewCell* cell) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself openTableViewCell:cell];
     };
-    
+
     cell.clickedCloseCellCallback = ^(TableViewCell* cell) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself closeTableViewCell:cell];
     };
-    
+
     cell.clickedAvatarCallback = ^(TableViewCell* cell) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself showAvatarWithCell:cell];
     };
-    
+
     cell.clickedImageCallback = ^(TableViewCell* cell,NSInteger imageIndex) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself tableViewCell:cell showImageBrowserWithImageIndex:imageIndex];
@@ -176,11 +166,11 @@ const CGFloat kRefreshBoundary = 170.0f;
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
     imgView.image = screenshot;
     [self.tableView addSubview:imgView];
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [imgView removeFromSuperview];
     });
-    
+
     CellLayout* layout = [self.dataSource objectAtIndex:cell.indexPath.row];
     NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
     if (isLike) {
@@ -188,7 +178,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
     else {
         [newLikeList removeObject:@"waynezxcv的粉丝"];
-        
+
     }
     StatusModel* statusModel = layout.statusModel;
     statusModel.likeList = newLikeList;
@@ -236,7 +226,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
     LWImageBrowser* browser = [[LWImageBrowser alloc] initWithImageBrowserModels:tmps
                                                                     currentIndex:imageIndex];
-    
+
     [browser show];
 }
 
@@ -267,7 +257,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     CellLayout* newLayout = [[CellLayout alloc] initWithStatusModel:model
                                                               index:cell.indexPath.row
                                                       dateFormatter:self.dateFormatter];
-    
+
     [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:newLayout];
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[cell.indexPath]
@@ -284,11 +274,11 @@ const CGFloat kRefreshBoundary = 170.0f;
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
     imgView.image = screenshot;
     [self.tableView addSubview:imgView];
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [imgView removeFromSuperview];
     });
-    
+
     CellLayout* layout = [self.dataSource objectAtIndex:model.index];
     NSMutableArray* newCommentLists = [[NSMutableArray alloc] initWithArray:layout.statusModel.commentList];
     NSDictionary* newComment = @{@"from":model.from,
@@ -395,6 +385,12 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 #pragma mark - Getter
 
+- (void)setup {
+    self.needRefresh = YES;
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.navigationItem.title = @"Gallop构建朋友圈Demo";
+}
+
 - (CommentView *)commentView {
     if (_commentView) {
         return _commentView;
@@ -486,7 +482,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
-      
+
       @{@"type":@"image",
         @"name":@"SIZE潮流生活",
         @"avatar":@"http://tp2.sinaimg.cn/1829483361/50/5753078359/1",
@@ -509,7 +505,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv",@"伊布拉希莫维奇",@"权志龙",@"郜林",@"扎克伯格"]},
-      
+
       @{@"type":@"website",
         @"name":@"Ronaldo",
         @"avatar":@"https://avatars0.githubusercontent.com/u/8408918?v=3&s=460",
@@ -523,8 +519,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv",@"Gallop"]},
-      
-      
+
+
       @{@"type":@"image",
         @"name":@"妖妖小精",
         @"avatar":@"http://tp2.sinaimg.cn/2185608961/50/5714822219/0",
@@ -549,7 +545,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
-      
+
       @{@"type":@"image",
         @"name":@"Instagram热门",
         @"avatar":@"http://tp4.sinaimg.cn/5074408479/50/5706839595/0",
@@ -571,8 +567,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
         @"isLike":@(NO),
         @"likeList":@[@"Tim Cook"]},
-      
-      
+
+
       @{@"type":@"image",
         @"name":@"头条新闻",
         @"avatar":@"http://tp1.sinaimg.cn/1618051664/50/5735009977/0",
@@ -588,8 +584,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
         @"isLike":@(NO),
         @"likeList":@[@"Tim Cook"]},
-      
-      
+
+
       @{@"type":@"image",
         @"name":@"Kindle中国",
         @"avatar":@"http://tp1.sinaimg.cn/3262223112/50/5684307907/1",
@@ -603,9 +599,9 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"统一回复,使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
-      
-      
-      
+
+
+
       @{@"type":@"image",
         @"name":@"G-SHOCK",
         @"avatar":@"http://tp3.sinaimg.cn/1595142730/50/5691224157/1",
@@ -624,11 +620,11 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
-      
-      
-      
-      
-      
+
+
+
+
+
       @{@"type":@"image",
         @"name":@"数字尾巴",
         @"avatar":@"http://tp1.sinaimg.cn/1726544024/50/5630520790/1",
@@ -647,8 +643,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
-      
-      
+
+
       @{@"type":@"image",
         @"name":@"欧美街拍XOXO",
         @"avatar":@"http://tp4.sinaimg.cn/1708004923/50/1283204657/0",

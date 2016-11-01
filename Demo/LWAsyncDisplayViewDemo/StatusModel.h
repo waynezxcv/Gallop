@@ -1,28 +1,32 @@
-//
-//  StatusModel.h
-//  LWAsyncDisplayViewDemo
-//
-//  Created by 刘微 on 16/4/5.
-//  Copyright © 2016年 WayneInc. All rights reserved.
-//
+
+
+/********************* 有任何问题欢迎反馈给我 liuweiself@126.com ****************************************/
+/***************  https://github.com/waynezxcv/Gallop 持续更新 ***************************/
+/******************** 正在不断完善中，谢谢~  Enjoy ******************************************************/
+
 
 #import <Foundation/Foundation.h>
 #import "CommentModel.h"
 
+
+NS_ASSUME_NONNULL_BEGIN
+
 @interface StatusModel : NSObject
 
-@property (nullable, nonatomic, copy) NSString* type;
-@property (nullable, nonatomic, strong) NSURL* avatar;
-@property (nullable, nonatomic, copy) NSString* content;
-@property (nullable, nonatomic, copy) NSString* detail;
-@property (nullable, nonatomic, strong) NSDate* date;
-@property (nullable, nonatomic, copy) NSArray* imgs;
-@property (nullable, nonatomic, copy) NSString* name;
-@property (nullable, nonatomic, strong) NSNumber* statusID;
-@property (nullable, nonatomic, copy) NSArray* commentList;
-@property (nullable, nonatomic, copy) NSArray* likeList;
+@property (nonatomic,copy) NSString* type;
+@property (nonatomic,strong) NSURL* avatar;
+@property (nonatomic,copy) NSString* content;
+@property (nonatomic,copy) NSString* detail;
+@property (nonatomic,strong) NSDate* date;
+@property (nonatomic,copy) NSArray* imgs;
+@property (nonatomic,copy) NSString* name;
+@property (nonatomic,strong) NSNumber* statusID;
+@property (nonatomic,copy) NSArray* commentList;
+@property (nonatomic,copy) NSArray* likeList;
 @property (nonatomic,assign) BOOL isLike;
 
 - (StatusModel *)initWithDict:(NSDictionary *)dict;
 
 @end
+
+NS_ASSUME_NONNULL_END

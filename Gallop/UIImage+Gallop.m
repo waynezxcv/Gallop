@@ -196,11 +196,11 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
     }
 }
 
-+ (UIImage *)animatedImageWithAnimatedGIFData:(NSData *)data {
++ (UIImage *)lw_animatedImageWithAnimatedGIFData:(NSData *)data {
     return animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceCreateWithData((__bridge CFTypeRef) data, NULL));
 }
 
-+ (UIImage *)animatedImageWithAnimatedGIFURL:(NSURL *)url {
++ (UIImage *)lw_animatedImageWithAnimatedGIFURL:(NSURL *)url {
     return animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceCreateWithURL((__bridge CFTypeRef) url, NULL));
 }
 
@@ -360,7 +360,7 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
 }
 
 /** 水平翻转 */
-- (UIImage *)flipHorizontal {
+- (UIImage *)lw_flipHorizontal {
     return [self lw_rotate:UIImageOrientationUpMirrored];
 }
 

@@ -95,7 +95,7 @@
 #pragma mark - Display
 
 - (void)display:(BOOL)asynchronously {
-    __strong id<LWAsyncDisplayLayerDelegate> delegate = self.delegate;
+    id<LWAsyncDisplayLayerDelegate> delegate = (id<LWAsyncDisplayLayerDelegate>)self.delegate;
     LWAsyncDisplayTransaction* transaction = [delegate asyncDisplayTransaction];
     if (!transaction.displayBlock) {
         if (transaction.willDisplayBlock) {

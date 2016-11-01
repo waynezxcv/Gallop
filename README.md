@@ -2,7 +2,7 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/waynezxcv/LWAsyncDisplayView/blob/master/LICENSE)&nbsp;
 
 
-# Gallop v0.3.6
+# Gallop v0.3.7
 
 ## About Gallop
 
@@ -47,6 +47,11 @@ Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框�
 
 
 ## Modifications
+
+v0.3.7
+
+* 修复了contentMode设置无效的问题。
+
 
 v0.3.6
 

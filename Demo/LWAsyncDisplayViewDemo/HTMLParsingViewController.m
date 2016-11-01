@@ -105,6 +105,7 @@
         LWStorageBuilder* builder = swself.htmlView.storageBuilder;
         /** cover  **/
         LWHTMLImageConfig* coverConfig = [[LWHTMLImageConfig alloc] init];
+        coverConfig.contentMode = UIViewContentModeScaleAspectFill;
         coverConfig.size = CGSizeMake(SCREEN_WIDTH, 250.0f);
         [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/img"
                       paragraphEdgeInsets:UIEdgeInsetsMake(0.0f, 0, 5.0f, 0)
@@ -118,7 +119,7 @@
         /** cover description **/
         [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/span[@class='img-source']"];
         NSString* coverDes = [builder contents];
-        
+
         /** title  **/
         LWHTMLTextConfig* titleConfig = [[LWHTMLTextConfig alloc] init];
         titleConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:18.0];

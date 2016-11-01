@@ -179,11 +179,19 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
         UIImage* image = (UIImage *)self.contents;
         BOOL isOpaque = self.opaque;
         UIColor* backgroundColor = self.backgroundColor;
-        CGRect imageDrawRect = self.frame;
         CGFloat cornerRaiuds = self.cornerRadius;
         UIColor* cornerBackgroundColor = self.cornerBackgroundColor;
         UIColor* cornerBorderColor = self.cornerBorderColor;
         CGFloat cornerBorderWidth = self.cornerBorderWidth;
+        CGRect rect = self.frame;
+        rect = CGRectStandardize(rect);
+
+        //image rect
+        CGRect imgRect = {
+            {rect.origin.x + cornerBorderWidth,rect.origin.y + cornerBorderWidth},
+            {rect.size.width - 2 * cornerBorderWidth,rect.size.height - 2 * cornerBorderWidth}
+        };
+
         if (!image) {
             return;
         }
@@ -198,18 +206,23 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
         CGContextSaveGState(context);
         if (isOpaque && backgroundColor) {
             [backgroundColor setFill];
-            UIRectFill(imageDrawRect);
+            UIRectFill(imgRect);
         }
-        UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:imageDrawRect
+
+        UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:imgRect];
+
+        UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:imgRect
                                                               cornerRadius:cornerRaiuds];
-        UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:imageDrawRect];
+
         if (cornerBackgroundColor) {
             [cornerBackgroundColor setFill];
             [backgroundRect fill];
         }
+
         [cornerPath addClip];
-        [image drawInRect:imageDrawRect];
+        [image drawInRect:imgRect];
         CGContextRestoreGState(context);
+
         if (cornerBorderColor && cornerBorderWidth != 0) {
             [cornerPath setLineWidth:cornerBorderWidth];
             [cornerBorderColor setStroke];
@@ -241,9 +254,9 @@ static const void* URLKey;
     objc_setAssociatedObject(self, &URLKey, URL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage
                        resizeBlock:(void(^)(LWImageStorage*imageStorage, CGFloat delta))resizeBlock {
-
     if ([imageStorage.contents isKindOfClass:[UIImage class]]) {
         switch (imageStorage.localImageType) {
             case LWLocalImageDrawInLWAsyncDisplayView: {
@@ -253,6 +266,7 @@ static const void* URLKey;
                 UIImage* image = (UIImage *)imageStorage.contents;
                 self.backgroundColor = imageStorage.backgroundColor;
                 self.clipsToBounds = imageStorage.clipsToBounds;
+                self.contentMode = imageStorage.contentMode;
                 if (!imageStorage.needResize) {
                     [self layoutWithStorage:imageStorage];
                 } else {
@@ -293,6 +307,8 @@ static const void* URLKey;
     self.URL = imageStorage.contents;
     self.backgroundColor = imageStorage.backgroundColor;
     self.clipsToBounds = imageStorage.clipsToBounds;
+    self.contentMode = imageStorage.contentMode;
+
     if (!imageStorage.needResize) {
         [self layoutWithStorage:imageStorage];
     }
@@ -343,20 +359,8 @@ static const void* URLKey;
     if (!image || !imageStorage) {
         return;
     }
-    int width = imageStorage.frame.size.width;
-    int height = imageStorage.frame.size.height;
-    CGFloat scale = (height / width) / (self.bounds.size.height / self.bounds.size.width);
-    if (scale < 0.99 || isnan(scale)) {
-        self.contentMode = UIViewContentModeScaleAspectFill;
-        self.layer.contentsRect = CGRectMake(0, 0, 1, 1);
-    } else {
-        self.contentMode = UIViewContentModeScaleAspectFill;
-        self.layer.contentsRect = CGRectMake(0, 0, 1, (float)width / height);
-    }
-
 
     if (imageStorage.isBlur && [imageStorage.contents isKindOfClass:[UIImage class]]) {
-
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             UIImage* blurImage = [image lw_applyBlurWithRadius:20
                                                      tintColor:RGB(0, 0, 0, 0.15f)

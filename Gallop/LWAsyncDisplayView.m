@@ -97,7 +97,6 @@
                 container.identifier = imageStorage.identifier;
                 [self addSubview:container];
             }
-            
             [self.imageContainers addObject:container];
             [container setContentWithImageStorage:imageStorage resizeBlock:resizeBlock];
         }
@@ -147,12 +146,14 @@
         }
         [self.delegate extraAsyncDisplayIncontext:context size:self.bounds.size isCancelled:isCancelledBlock];
     }
+
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (isCancelledBlock()) {
             return;
         }
         [imageStorage lw_drawInContext:context isCancelled:isCancelledBlock];
     }
+
     for (LWTextStorage* textStorage in _textStorages) {
         
         [textStorage.textLayout drawIncontext:context
@@ -162,6 +163,7 @@
                                containerLayer:self.layer
                                   isCancelled:isCancelledBlock];
     }
+
     if (_showingHighlight && _highlight) {
         for (NSValue* rectValue in _highlight.positions) {
             if (isCancelledBlock()) {
@@ -310,7 +312,7 @@
     _highlightAdjustPoint = CGPointZero;
 }
 
-#pragma mark - Getter
+#pragma mark - Getter
 
 + (Class)layerClass {
     return [LWAsyncDisplayLayer class];

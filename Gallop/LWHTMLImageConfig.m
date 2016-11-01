@@ -38,6 +38,7 @@
         self.size = CGSizeMake(SCREEN_WIDTH, 100.0f);
         self.needAddToImageCallbacks = NO;
         self.edgeInsets = UIEdgeInsetsZero;
+        self.contentMode = UIViewContentModeScaleToFill;
     }
     return self;
 }

@@ -187,6 +187,7 @@
             imageStorage.clipsToBounds = YES;
             imageStorage.placeholder = imageConfig.placeholder;
             imageStorage.htmlLayoutEdgeInsets = edgeInsets;
+            imageStorage.contentMode = imageConfig.contentMode;
             
             if (imageConfig.autolayoutHeight) {
                 imageStorage.needResize = YES;
