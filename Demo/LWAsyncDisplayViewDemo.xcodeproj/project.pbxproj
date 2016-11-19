@@ -681,7 +681,7 @@
 				TargetAttributes = {
 					011DFA191C987CD6000410D7 = {
 						CreatedOnToolsVersion = 7.2.1;
-						DevelopmentTeam = 48NPNTSQK4;
+						DevelopmentTeam = N29J3PPND9;
 					};
 				};
 			};
@@ -902,7 +902,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 48NPNTSQK4;
+				DEVELOPMENT_TEAM = N29J3PPND9;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -920,7 +920,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 48NPNTSQK4;
+				DEVELOPMENT_TEAM = N29J3PPND9;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = LWAsyncDisplayViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

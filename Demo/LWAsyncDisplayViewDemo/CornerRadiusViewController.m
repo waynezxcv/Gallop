@@ -29,59 +29,60 @@
     ts.font = [UIFont fontWithName:@"Heiti SC" size:16.0f];
     ts.textAlignment = NSTextAlignmentCenter;
     
-    //普通的加载网络图片
+    //1.普通的加载网络图片
     LWImageStorage* is1 = [[LWImageStorage alloc] init];
-    is1.contentMode = UIViewContentModeScaleToFill;
+    is1.contentMode = UIViewContentModeScaleAspectFill;
     is1.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, ts.bottom + 10.0f, 100.0f, 100.0f);
-    is1.contents = [NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"];
-
-    //本地图片
+    is1.contents = [NSURL URLWithString:@"http://upload.chinaz.com/2016/1024/16102400312025068.jpg"];
+    is1.clipsToBounds = YES;
+    
+    
+    //2.本地图片
     LWImageStorage* lis = [[LWImageStorage alloc] init];
-    lis.contents = [UIImage imageNamed:@"wayne"];
+    lis.contents = [UIImage imageNamed:@"test"];
     lis.backgroundColor = [UIColor grayColor];
     lis.cornerRadius = 25.0f;
     lis.cornerBackgroundColor = [UIColor whiteColor];
     lis.cornerBorderColor = [UIColor redColor];
-    lis.cornerBorderWidth = 5.0f;
+    lis.cornerBorderWidth = 0.0f;
     lis.isBlur = YES;
     lis.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, is1.bottom + 10.0f, 100.0f, 100.0f);
-
-    //设置圆角半径和模糊效果
+    
+    
+    //3.网络图片设置圆角半径和模糊效果
     LWImageStorage* is2 = [[LWImageStorage alloc] init];
     is2.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, lis.bottom + 10.0f, 100.0f, 100.0f);
-    is2.contents = [NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"];
+    is2.contents = [NSURL URLWithString:@"http://upload.chinaz.com/2016/1024/16102400312025068.jpg"];
     is2.cornerRadius = 50.0f;
-    is2.cornerBorderWidth = 5.0f;
+    is2.cornerBorderWidth = 0.0f;
     is2.cornerBorderColor = [UIColor orangeColor];
-    is2.isBlur = YES;
+    is2.contentMode = UIViewContentModeScaleAspectFill;
     
-    LWLayout* layout = [[LWLayout alloc] init];
-    [layout addStorages:@[ts,is1,lis,is2]];
-    view.layout = layout;
     
-    //也可以直接对CALayer对象使用
+    //4.直接对CALayer对象使用
     UIView* view2 = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 50,
                                                                   64.0f + is2.bottom + 10 ,
                                                                   100.0f,
                                                                   100.0f)];
     [self.view addSubview:view2];
-    /**
-     *  指定一个圆角半径、是否模糊处理和描边颜色和宽度，SDWebImage将额外缓存一份圆角半径版本的图片
-     *
-     */
     [view2.layer lw_setImageWithURL:
-     [NSURL URLWithString:@"http://img.club.pchome.net/kdsarticle/2013/11small/21/fd548da909d64a988da20fa0ec124ef3_1000x750.jpg"]
+     [NSURL URLWithString:@"http://upload.chinaz.com/2016/1024/16102400312025068.jpg"]
                    placeholderImage:nil
                        cornerRadius:25.0f
               cornerBackgroundColor:RGB(255, 255, 255, 1.0f)
-                        borderColor:[UIColor yellowColor]
+                        borderColor:[UIColor orangeColor]
                         borderWidth:5.0f
                                size:CGSizeMake(100.0f, 100.0f)
+                        contentMode:UIViewContentModeScaleAspectFill
                              isBlur:NO
                             options:0
                            progress:nil
                           completed:nil];
     
+    
+    LWLayout* layout = [[LWLayout alloc] init];
+    [layout addStorages:@[ts,is1,lis,is2]];
+    view.layout = layout;
 }
 
 

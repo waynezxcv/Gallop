@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -68,10 +68,10 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
     size_t destinationWidth = boundsSize.width;
     size_t destinationHeight = boundsSize.height;
     CGFloat boundsAspectRatio = (float)destinationWidth / (float)destinationHeight;
-
+    
     CGSize scaledSizeForImage = sourceImageSize;
     BOOL cropToRectDimensions = !CGRectIsEmpty(cropRect);
-
+    
     if (cropToRectDimensions) {
         scaledSizeForImage = CGSizeMake(boundsSize.width / cropRect.size.width, boundsSize.height / cropRect.size.height);
     } else {
@@ -111,7 +111,7 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
                                   ((destinationHeight - scaledSizeForDestination.height) * cropRect.origin.y),
                                   scaledSizeForDestination.width,
                                   scaledSizeForDestination.height);
-
+            
         } else {
             drawRect = CGRectMake(((destinationWidth - scaledSizeForDestination.width) / 2.0),
                                   ((destinationHeight - scaledSizeForDestination.height) / 2.0),
@@ -175,7 +175,7 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
     }
     if ([self.contents isKindOfClass:[UIImage class]] &&
         self.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
-
+        
         UIImage* image = (UIImage *)self.contents;
         BOOL isOpaque = self.opaque;
         UIColor* backgroundColor = self.backgroundColor;
@@ -185,44 +185,45 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
         CGFloat cornerBorderWidth = self.cornerBorderWidth;
         CGRect rect = self.frame;
         rect = CGRectStandardize(rect);
-
+        
         //image rect
         CGRect imgRect = {
             {rect.origin.x + cornerBorderWidth,rect.origin.y + cornerBorderWidth},
             {rect.size.width - 2 * cornerBorderWidth,rect.size.height - 2 * cornerBorderWidth}
         };
-
+        
         if (!image) {
             return;
         }
-
+        
         if (self.isBlur) {
             image = [image lw_applyBlurWithRadius:20
                                         tintColor:RGB(0, 0, 0, 0.15f)
                             saturationDeltaFactor:1.4
                                         maskImage:nil];
         }
-
+        
         CGContextSaveGState(context);
         if (isOpaque && backgroundColor) {
             [backgroundColor setFill];
             UIRectFill(imgRect);
         }
-
+        
         UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:imgRect];
-
         UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:imgRect
                                                               cornerRadius:cornerRaiuds];
-
+        
         if (cornerBackgroundColor) {
             [cornerBackgroundColor setFill];
             [backgroundRect fill];
         }
-
         [cornerPath addClip];
-        [image drawInRect:imgRect];
+        
+        [image lw_drawInRect:imgRect
+             withContentMode:self.contentMode
+               clipsToBounds:YES];
+        
         CGContextRestoreGState(context);
-
         if (cornerBorderColor && cornerBorderWidth != 0) {
             [cornerPath setLineWidth:cornerBorderWidth];
             [cornerBorderColor setStroke];
@@ -295,23 +296,24 @@ static const void* URLKey;
             }
         }
     }
-
+    
     if ([imageStorage.contents isKindOfClass:[NSString class]]) {
         imageStorage.contents = [NSURL URLWithString:imageStorage.contents];
     }
-
+    
     if ([[(NSURL *)imageStorage.contents absoluteString] isEqualToString:self.URL.absoluteString]) {
         return;
     }
-
+    
     self.URL = imageStorage.contents;
     self.backgroundColor = imageStorage.backgroundColor;
     self.clipsToBounds = imageStorage.clipsToBounds;
     self.contentMode = imageStorage.contentMode;
-
+    
     if (!imageStorage.needResize) {
         [self layoutWithStorage:imageStorage];
     }
+    
     __weak typeof(self) weakSelf = self;
     [self.layer lw_setImageWithURL:(NSURL *)imageStorage.contents
                   placeholderImage:imageStorage.placeholder
@@ -320,6 +322,7 @@ static const void* URLKey;
                        borderColor:imageStorage.cornerBorderColor
                        borderWidth:imageStorage.cornerBorderWidth
                               size:imageStorage.frame.size
+                       contentMode:imageStorage.contentMode
                             isBlur:imageStorage.isBlur
                            options:SDWebImageAvoidAutoSetImage
                           progress:nil
@@ -359,16 +362,16 @@ static const void* URLKey;
     if (!image || !imageStorage) {
         return;
     }
-
+    
     if (imageStorage.isBlur && [imageStorage.contents isKindOfClass:[UIImage class]]) {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             UIImage* blurImage = [image lw_applyBlurWithRadius:20
                                                      tintColor:RGB(0, 0, 0, 0.15f)
                                          saturationDeltaFactor:1.4
                                                      maskImage:nil];
-
+            
             dispatch_async(dispatch_get_main_queue(), ^{
-
+                
                 LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
                 [layerAsyncTransaction
                  addAsyncOperationWithTarget:self.layer
@@ -377,10 +380,10 @@ static const void* URLKey;
                  completion:^(BOOL canceled) {
                      completion();
                  }];
-
+                
             });
         });
-
+        
     } else {
         LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
         [layerAsyncTransaction
@@ -452,10 +455,10 @@ static const void* URLKey;
                 [backgroundColor setFill];
                 UIRectFill(CGRectMake(0, 0, backingSize.width, backingSize.height));
             }
-
+            
             UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:imageDrawRect
                                                                   cornerRadius:cornerRadius * contentsScale];
-
+            
             UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:imageDrawRect];
             if (cornerBackgroundColor) {
                 [cornerBackgroundColor setFill];
@@ -468,7 +471,7 @@ static const void* URLKey;
             }
             [cornerPath stroke];
             [cornerPath setLineWidth:cornerBorderWidth];
-
+            
             CGImageRef processedImageRef = (UIGraphicsGetImageFromCurrentImageContext().CGImage);
             UIGraphicsEndImageContext();
             dispatch_sync(dispatch_get_main_queue(), ^{

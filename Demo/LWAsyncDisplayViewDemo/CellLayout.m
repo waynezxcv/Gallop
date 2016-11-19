@@ -34,8 +34,7 @@
         avatarStorage.frame = CGRectMake(10, 20, 40, 40);
         avatarStorage.tag = 9;
         avatarStorage.cornerBorderWidth = 1.0f;
-        avatarStorage.cornerBorderColor = [UIColor blackColor];
-        
+        avatarStorage.cornerBorderColor = [UIColor grayColor];
         
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
@@ -413,7 +412,7 @@
         avatarStorage.frame = CGRectMake(10, 20, 40, 40);
         avatarStorage.tag = 9;
         avatarStorage.cornerBorderWidth = 1.0f;
-        avatarStorage.cornerBorderColor = [UIColor blackColor];
+        avatarStorage.cornerBorderColor = [UIColor grayColor];
         
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];

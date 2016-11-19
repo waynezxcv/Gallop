@@ -121,6 +121,7 @@ static char imageURLKey;
           placeholderImage:(UIImage *)placeholder
               cornerRadius:(CGFloat)cornerRadius
                       size:(CGSize)size
+               contentMode:(UIViewContentMode)contentMode
                     isBlur:(BOOL)isBlur
                    options:(SDWebImageOptions)options
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
@@ -142,6 +143,7 @@ static char imageURLKey;
          borderColor:nil
          borderWidth:0
          size:size
+         contentMode:contentMode
          isBlur:isBlur
          options:options
          progress:progressBlock
@@ -191,6 +193,7 @@ static char imageURLKey;
                borderColor:(UIColor *)borderColor
                borderWidth:(CGFloat)borderWidth
                       size:(CGSize)size
+               contentMode:(UIViewContentMode)contentMode
                     isBlur:(BOOL)isBlur
                    options:(SDWebImageOptions)options
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
@@ -212,6 +215,7 @@ static char imageURLKey;
          borderColor:borderColor
          borderWidth:borderWidth
          size:size
+         contentMode:contentMode
          isBlur:isBlur
          options:options
          progress:progressBlock
