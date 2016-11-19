@@ -189,6 +189,13 @@
         UIImage* processedImg = [img processedImageWithContentMode:contentMode
                                                               size:CGSizeMake(width, height)];
         
+        if (blur) {
+            processedImg = [processedImg lw_applyBlurWithRadius:20
+                                                      tintColor:RGB(0, 0, 0, 0.15f)
+                                          saturationDeltaFactor:1.4
+                                                      maskImage:nil];
+        }
+                
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = CGBitmapContextCreate(NULL,
                                                      (int)width,
