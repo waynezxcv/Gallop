@@ -47,6 +47,16 @@
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data;
 
 /**
+ *  通过LWTextStorage添加的文字长按事件，长按时可以在这个代理方法里收到回调。
+ *
+ *  @param asyncDisplayView LWTextStorage所处的LWAsyncDisplayView
+ *  @param textStorage      点击的那个LWTextStorage对象
+ *  @param data             添加点击链接时所附带的信息。
+ */
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didLongpressedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data;
+
+
+/**
  *  点击LWImageStorage时，可以在这个代理方法里收到回调
  *
  *  @param asyncDisplayView LWImageStorage所处的LWAsyncDisplayView
@@ -82,5 +92,10 @@ typedef void(^LWAsyncDisplayViewAutoLayoutCallback)(LWImageStorage* imageStorage
 @property (nonatomic,assign) BOOL displaysAsynchronously;//是否异步绘制，默认是YES
 @property (nonatomic,copy) LWAsyncDisplayViewAutoLayoutCallback auotoLayoutCallback;//自动布局回调Block
 
+/**
+ *  移除所有高亮显示
+ *
+ */
+- (void)removeAllHighlights;
 
 @end

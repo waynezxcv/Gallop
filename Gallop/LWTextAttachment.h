@@ -27,9 +27,17 @@
 
 #define LWTextAttachmentAttributeName @"LWTextAttachmentKey"
 #define LWTextLinkAttributedName @"LWTextLinkAttributedName"
+#define LWTextLongPressAttributedName @"LWTextLongPressAttributedName"
 #define LWTextBackgroundColorAttributedName @"LWTextBackgroundColorAttributedName"
 #define LWTextStrokeAttributedName @"LWTextStrokeAttributedName"
 #define LWTextBoundingStrokeAttributedName @"LWTextBoundingStrokeAttributedName"
+
+
+typedef NS_ENUM(NSUInteger, LWTextHighLightType) {
+    LWTextHighLightTypeNormal,
+    LWTextHighLightTypeWholeText,
+    LWTextHighLightTypeLongPress,
+};
 
 /**
  *  文本的附件的封装，可以是图片或是UIView对象、CALayer对象
@@ -68,10 +76,9 @@
 @property (nonatomic,copy) NSArray<NSValue *>* positions;//位置数组
 @property (nonatomic,strong) id content;//内容
 @property (nonatomic,strong) NSDictionary* userInfo;//自定义的一些信息
+@property (nonatomic,assign) LWTextHighLightType type;//高亮类型
 
 @end
-
-
 
 /**
  *  文本背景颜色的封装

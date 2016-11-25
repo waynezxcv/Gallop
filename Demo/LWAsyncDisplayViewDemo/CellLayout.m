@@ -85,7 +85,6 @@
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
         
-        
         //发布的图片模型 imgsStorage
         CGFloat imageWidth = (SCREEN_WIDTH - 110.0f)/3.0f;
         NSInteger imageCount = [statusModel.imgs count];
@@ -171,7 +170,6 @@
             
             detailTextStorage.linespacing = 0.5f;
             [detailTextStorage lw_addLinkForWholeTextStorageWithData:@"https://github.com/waynezxcv/LWAlchemy"
-                                                           linkColor:nil
                                                       highLightColor:RGB(0, 0, 0, 0.15)];
             [self addStorage:detailTextStorage];
         }
@@ -301,7 +299,6 @@
                     commentModel1.to = commentDict[@"from"];
                     commentModel1.index = index;
                     [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentModel1
-                                                                    linkColor:nil
                                                                highLightColor:RGB(0, 0, 0, 0.15)];
                     
                     [commentTextStorage lw_addLinkWithData:commentModel1
@@ -345,7 +342,6 @@
                     commentModel.to = commentDict[@"from"];
                     commentModel.index = index;
                     [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentModel
-                                                                    linkColor:nil
                                                                highLightColor:RGB(0, 0, 0, 0.15)];
                     
                     [commentTextStorage lw_addLinkWithData:commentModel
@@ -457,6 +453,7 @@
                                    highlightColor:RGB(0, 0, 0, 0.15)];
         
         
+        
         //发布的图片模型 imgsStorage
         CGFloat imageWidth = (SCREEN_WIDTH - 110.0f)/3.0f;
         NSInteger imageCount = [statusModel.imgs count];
@@ -543,7 +540,6 @@
             
             detailTextStorage.linespacing = 0.5f;
             [detailTextStorage lw_addLinkForWholeTextStorageWithData:@"https://github.com/waynezxcv/LWAlchemy"
-                                                           linkColor:nil
                                                       highLightColor:RGB(0, 0, 0, 0.15)];
             [self addStorage:detailTextStorage];
         }
@@ -674,7 +670,6 @@
                     commentModel1.to = commentDict[@"from"];
                     commentModel1.index = index;
                     [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentModel1
-                                                                    linkColor:nil
                                                                highLightColor:RGB(0, 0, 0, 0.15)];
                     
                     [commentTextStorage lw_addLinkWithData:commentModel1
@@ -719,7 +714,6 @@
                     commentModel.to = commentDict[@"from"];
                     commentModel.index = index;
                     [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentModel
-                                                                    linkColor:nil
                                                                highLightColor:RGB(0, 0, 0, 0.15)];
                     
                     [commentTextStorage lw_addLinkWithData:commentModel

@@ -103,7 +103,7 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 
 
 /**
- *  为整个文本添加链接
+ *  为整个文本添加点击事件
  *  如果两个点击事件重叠，会优先响应使用“- (void)lw_addLinkWithData:(id)data
                                                         range:(NSRange)range
                                                     linkColor:(UIColor *)linkColor
@@ -116,11 +116,27 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
  */
 - (void)lw_addLinkForWholeTextStorageWithData:(id)data
                                     linkColor:(UIColor *)linkColor
+                               highLightColor:(UIColor *)highLightColor
+__deprecated_msg("Please use 'lw_addLinkForWholeTextStorageWithData:highLightColor:' instead");
+
+/**
+ *  为整个文本添加点击事件
+ *  如果两个点击事件重叠，会优先响应使用“- (void)lw_addLinkWithData:(id)data
+                                                    range:(NSRange)range
+                                                    linkColor:(UIColor *)linkColor
+ *                                             highLightColor:(UIColor *)highLightColor;”
+ *  这个方法添加的指定位置链接。
+ *
+ *  @param data           为点击事件附带的用户信息
+ *  @param highLightColor 点击连接时的高亮颜色
+ */
+- (void)lw_addLinkForWholeTextStorageWithData:(id)data
                                highLightColor:(UIColor *)highLightColor;
 
 
+
 /**
- *  为指定位置的文本添加链接
+ *  为指定位置的文本添加点击事件
  *
  *  @param data           为点击事件附带的用户信息
  *  @param range          需要添加链接的文本在LWTextStorage对象的text中所处的位置，一个NSRange型的结构体对象
@@ -131,6 +147,16 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
                      range:(NSRange)range
                  linkColor:(UIColor *)linkColor
             highLightColor:(UIColor *)highLightColor;
+
+
+/**
+ *  为整个文本添加长按事件
+ *
+ *  @param data           为点击事件附带的用户信息
+ *  @param highLightColor 点击连接时的高亮颜色
+ */
+- (void)lw_addLongPressActionWithData:(id)data
+                       highLightColor:(UIColor *)highLightColor;
 
 
 /**

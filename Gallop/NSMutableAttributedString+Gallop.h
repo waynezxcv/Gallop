@@ -148,6 +148,16 @@
                           linkColor:(UIColor *)linkColor
                      highLightColor:(UIColor *)highLightColor;
 
+
+/**
+ *  为整个文本添加一个长按事件
+ *
+ *  @param data           链接包含的数据
+ *  @param highLightColor 链接点击时的高亮颜色
+ */
+- (void)addLongPressActionWithData:(id)data
+                    highLightColor:(UIColor *)highLightColor;
+
 /**
  *
  *

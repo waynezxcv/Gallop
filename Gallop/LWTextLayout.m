@@ -184,28 +184,52 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                 continue;
             }
             NSDictionary* attributes = (id)CTRunGetAttributes(run);
-            LWTextHighlight* highlight = [attributes objectForKey:LWTextLinkAttributedName];
-            if (highlight) {
-                if ([highlight.userInfo[@"type"] isEqualToString:@"wholeText"]) {
-                    NSArray* highlightPositions =
-                    @[[NSValue valueWithCGRect:suggestRect]];
-                    highlight.positions = highlightPositions;
-                }
-                else {
-                    NSArray* highlightPositions = [self _highlightPositionsWithCtFrame:ctFrame
-                                                                                 range:highlight.range];
-                    highlight.positions = highlightPositions;
-                }
-                bool isContain = NO;
-                for (LWTextHighlight* one in highlights) {
-                    if ([one isEqual:highlight]) {
-                        isContain = YES;
+            {
+                LWTextHighlight* highlight = [attributes objectForKey:LWTextLinkAttributedName];
+                if (highlight) {
+                    if (highlight.type == LWTextHighLightTypeWholeText) {
+                        NSArray* highlightPositions =
+                        @[[NSValue valueWithCGRect:suggestRect]];
+                        highlight.positions = highlightPositions;
+                    }
+                    
+                    else {
+                        NSArray* highlightPositions = [self _highlightPositionsWithCtFrame:ctFrame
+                                                                                     range:highlight.range];
+                        highlight.positions = highlightPositions;
+                    }
+                    bool isContain = NO;
+                    for (LWTextHighlight* one in highlights) {
+                        if ([one isEqual:highlight]) {
+                            isContain = YES;
+                        }
+                    }
+                    if (!isContain) {
+                        [highlights addObject:highlight];
                     }
                 }
-                if (!isContain) {
-                    [highlights addObject:highlight];
+            }
+            
+            {
+                LWTextHighlight* highlight = [attributes objectForKey:LWTextLongPressAttributedName];
+                if (highlight) {
+                    if (highlight.type == LWTextHighLightTypeLongPress) {
+                        NSArray* highlightPositions =
+                        @[[NSValue valueWithCGRect:suggestRect]];
+                        highlight.positions = highlightPositions;
+                    }
+                    bool isContain = NO;
+                    for (LWTextHighlight* one in highlights) {
+                        if ([one isEqual:highlight]) {
+                            isContain = YES;
+                        }
+                    }
+                    if (!isContain) {
+                        [highlights addObject:highlight];
+                    }
                 }
             }
+            
             LWTextBackgroundColor* color = [attributes objectForKey:LWTextBackgroundColorAttributedName];
             if (color) {
                 NSArray* backgroundsPositions = [self _highlightPositionsWithCtFrame:ctFrame range:color.range];
@@ -317,6 +341,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     if (lineOrigins){
         free(lineOrigins);
     }
+    
     return layout;
 }
 

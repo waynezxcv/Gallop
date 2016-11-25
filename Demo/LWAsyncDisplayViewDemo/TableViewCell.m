@@ -28,6 +28,7 @@
 @property (nonatomic,strong) UIButton* menuButton;
 @property (nonatomic,strong) Menu* menu;
 @property (nonatomic,strong) UIView* line;
+@property (nonatomic,copy) NSString* preCopyText;
 
 @end
 
@@ -121,6 +122,10 @@
         }
     }
 }
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
 
 #pragma mark - Actions
 //点击菜单按钮

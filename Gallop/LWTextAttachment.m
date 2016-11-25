@@ -81,6 +81,7 @@
         self.hightlightColor = [UIColor clearColor];
         self.positions = @[];
         self.userInfo = @{};
+        self.type = LWTextHighLightTypeNormal;
     }
     return self;
 }
@@ -117,6 +118,7 @@
     highlight.hightlightColor = [self.hightlightColor copy];
     highlight.positions = [self.positions copy];
     highlight.userInfo = [self.userInfo copy];
+    highlight.type = self.type;
     return highlight;
 }
 

@@ -37,6 +37,7 @@
 
 @synthesize frame = _frame;
 @synthesize position = _position;
+@synthesize text = _text;
 
 #pragma mark - Init
 
@@ -107,6 +108,14 @@
     [self _creatTextLayout];
 }
 
+- (void)lw_addLinkForWholeTextStorageWithData:(id)data
+                               highLightColor:(UIColor *)highLightColor {
+    [self.attributedText addLinkForWholeTextWithData:data
+                                           linkColor:nil
+                                      highLightColor:highLightColor];
+    [self _creatTextLayout];
+}
+
 
 - (void)lw_addLinkWithData:(id)data range:(NSRange)range
                  linkColor:(UIColor *)linkColor
@@ -118,6 +127,14 @@
     [self _creatTextLayout];
 }
 
+
+- (void)lw_addLongPressActionWithData:(id)data
+                       highLightColor:(UIColor *)highLightColor {
+
+    [self.attributedText addLongPressActionWithData:data
+                                     highLightColor:highLightColor];
+    [self _creatTextLayout];
+}
 
 - (void)lw_replaceTextWithImage:(UIImage *)image
                     contentMode:(UIViewContentMode)contentMode
@@ -255,10 +272,11 @@
 #pragma mark - Setter
 
 - (void)setText:(NSString *)text {
-    if (!text || _text== text) {
+    if (!text || _text == text) {
         return;
     }
     _text = [text copy];
+    
     _attributedText = [[NSMutableAttributedString alloc] initWithString:_text attributes:nil];
     NSRange range = NSMakeRange(0, self.attributedText.length);
     [_attributedText setTextColor:self.textColor range:range];
@@ -467,6 +485,10 @@
 
 - (CGSize)suggestSize {
     return self.textLayout.suggestSize;
+}
+
+- (NSString *)text {
+    return self.attributedText.string;
 }
 
 @end

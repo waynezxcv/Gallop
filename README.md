@@ -3,7 +3,7 @@
 
 
 
-# Gallop v0.3.9
+# Gallop v0.4.0
 
 ## About Gallop
 
@@ -54,7 +54,6 @@ Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框�
 ## Modifications
 
 v0.3.7
-
 * 修复了contentMode设置无效的问题。
 
 
@@ -151,8 +150,12 @@ highLightColor:RGB(0, 0, 0, 0.15)];
 
 //给整段文字添加点击事件
 [ts lw_addLinkForWholeTextStorageWithData:@"整段文字"
-linkColor:nil
 highLightColor:RGB(0, 0, 0, 0.15)];
+
+//给文本添加长按事件
+[ts lw_addLongPressActionWithData:@"longPress"
+highLightColor:RGB(0, 0, 0, 0.25f)];
+
 
 //创建LWLayout对象
 LWLayout* layout = [[LWLayout alloc] init];
@@ -163,11 +166,11 @@ view.layout = layout;
 
 //给文字添加点击事件后，若触发事件，会在这个代理方法中收到回调
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
-	didCilickedTextStorage:(LWTextStorage *)textStorage
-				   linkdata:(id)data {
-	if ([data isKindOfClass:[NSString class]]) {
-		[LWAlertView shoWithMessage:data];
-	}
+didCilickedTextStorage:(LWTextStorage *)textStorage
+linkdata:(id)data {
+if ([data isKindOfClass:[NSString class]]) {
+[LWAlertView shoWithMessage:data];
+}
 }
 
 

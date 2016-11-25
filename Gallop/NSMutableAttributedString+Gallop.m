@@ -141,7 +141,8 @@
     highlight.hightlightColor = highLightColor;
     highlight.linkColor = linkColor;
     highlight.content = data;
-    highlight.userInfo = @{@"type":@"wholeText"};
+    highlight.type = LWTextHighLightTypeWholeText;
+    
     NSRange range;
     NSMutableArray* existLinkRanges = [[NSMutableArray alloc] init];
     CTFramesetterRef ctFrameSetter = CTFramesetterCreateWithAttributedString((CFTypeRef)self);
@@ -210,11 +211,21 @@
     }
 }
 
+- (void)addLongPressActionWithData:(id)data highLightColor:(UIColor *)highLightColor {
+    LWTextHighlight* highlight = [[LWTextHighlight alloc] init];
+    highlight.hightlightColor = highLightColor;
+    highlight.content = data;
+    highlight.type = LWTextHighLightTypeLongPress;
+    highlight.range = NSMakeRange(0,self.length);
+    [self setAttribute:LWTextLongPressAttributedName value:highlight range:NSMakeRange(0,self.length)];
+}
+
 - (void)addLinkWithData:(id)data range:(NSRange)range linkColor:(UIColor *)linkColor highLightColor:(UIColor *)highLightColor {
     LWTextHighlight* highlight = [[LWTextHighlight alloc] init];
     highlight.hightlightColor = highLightColor;
     highlight.linkColor = linkColor;
     highlight.content = data;
+    highlight.type = LWTextHighLightTypeNormal;
     highlight.range = NSMakeRange(range.location, range.length);
     [self setAttribute:LWTextLinkAttributedName value:highlight range:range];
     [self setAttribute:NSForegroundColorAttributeName value:linkColor range:range];
