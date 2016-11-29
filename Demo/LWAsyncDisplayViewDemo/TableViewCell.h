@@ -15,6 +15,8 @@
 #import "CellLayout.h"
 #import "Gallop.h"
 
+
+
 @interface TableViewCell : UITableViewCell
 
 @property (nonatomic,strong) CellLayout* cellLayout;

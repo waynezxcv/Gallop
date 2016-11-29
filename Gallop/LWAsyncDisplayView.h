@@ -91,6 +91,7 @@ typedef void(^LWAsyncDisplayViewAutoLayoutCallback)(LWImageStorage* imageStorage
 @property (nonatomic,weak) id <LWAsyncDisplayViewDelegate> delegate;//代理对象
 @property (nonatomic,assign) BOOL displaysAsynchronously;//是否异步绘制，默认是YES
 @property (nonatomic,copy) LWAsyncDisplayViewAutoLayoutCallback auotoLayoutCallback;//自动布局回调Block
+@property (nonatomic,strong,readonly) UILongPressGestureRecognizer* longPressGesture;//长按手势
 
 /**
  *  移除所有高亮显示

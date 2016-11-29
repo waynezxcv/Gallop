@@ -162,7 +162,9 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight {
     if ([self.contents isKindOfClass:[UIImage class]] &&
         self.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
-        self.contents = [(UIImage *)self.contents stretchableImageWithLeftCapWidth:leftCapWidth topCapHeight:topCapHeight];
+        self.contents = [(UIImage *)self.contents
+                         stretchableImageWithLeftCapWidth:leftCapWidth
+                         topCapHeight:topCapHeight];
     }
 }
 
@@ -269,7 +271,15 @@ static const void* URLKey;
                 self.clipsToBounds = imageStorage.clipsToBounds;
                 self.contentMode = imageStorage.contentMode;
                 if (!imageStorage.needResize) {
-                    [self layoutWithStorage:imageStorage];
+
+                    LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
+                    [layerAsyncTransaction
+                     addAsyncOperationWithTarget:self
+                     selector:@selector(layoutWithStorage:)
+                     object:imageStorage
+                     completion:^(BOOL canceled) {
+                     }];
+
                 } else {
                     CGSize imageSize = image.size;
                     CGFloat imageScale = imageSize.height/imageSize.width;
@@ -280,8 +290,15 @@ static const void* URLKey;
                                                     imageStorage.frame.origin.y,
                                                     imageStorage.frame.size.width,
                                                     imageStorage.frame.size.height + delta);
-                    [self layoutWithStorage:imageStorage];
-                    resizeBlock(imageStorage,delta);
+
+                    LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
+                    [layerAsyncTransaction
+                     addAsyncOperationWithTarget:self
+                     selector:@selector(layoutWithStorage:)
+                     object:imageStorage
+                     completion:^(BOOL canceled) {
+                         resizeBlock(imageStorage,delta);
+                     }];
                 }
                 __weak typeof(self)weakSelf = self;
                 [self _setContentsImage:image
@@ -311,9 +328,15 @@ static const void* URLKey;
     self.contentMode = imageStorage.contentMode;
     
     if (!imageStorage.needResize) {
-        [self layoutWithStorage:imageStorage];
+        LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
+        [layerAsyncTransaction
+         addAsyncOperationWithTarget:self
+         selector:@selector(layoutWithStorage:)
+         object:imageStorage
+         completion:^(BOOL canceled) {
+         }];
     }
-    
+
     __weak typeof(self) weakSelf = self;
     [self.layer lw_setImageWithURL:(NSURL *)imageStorage.contents
                   placeholderImage:imageStorage.placeholder
@@ -343,8 +366,15 @@ static const void* URLKey;
                                                                  imageStorage.frame.origin.y,
                                                                  imageStorage.frame.size.width,
                                                                  imageStorage.frame.size.height + delta);
-                                 [self layoutWithStorage:imageStorage];
-                                 resizeBlock(imageStorage,delta);
+
+                                 LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
+                                 [layerAsyncTransaction
+                                  addAsyncOperationWithTarget:self
+                                  selector:@selector(layoutWithStorage:)
+                                  object:imageStorage
+                                  completion:^(BOOL canceled) {
+                                      resizeBlock(imageStorage,delta);
+                                  }];
                              }
                              [weakSelf _setContentsImage:image
                                             imageStorage:imageStorage

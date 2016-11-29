@@ -85,7 +85,6 @@ const CGFloat kRefreshBoundary = 170.0f;
     }
 }
 
-
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

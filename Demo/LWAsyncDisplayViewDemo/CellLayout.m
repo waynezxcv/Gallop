@@ -85,6 +85,7 @@
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
         
+        
         //发布的图片模型 imgsStorage
         CGFloat imageWidth = (SCREEN_WIDTH - 110.0f)/3.0f;
         NSInteger imageCount = [statusModel.imgs count];
@@ -452,8 +453,7 @@
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
         
-        
-        
+
         //发布的图片模型 imgsStorage
         CGFloat imageWidth = (SCREEN_WIDTH - 110.0f)/3.0f;
         NSInteger imageCount = [statusModel.imgs count];

@@ -38,6 +38,7 @@
 @property (nonatomic,assign) BOOL displaysAsynchronously;//是否异步绘制，默认是YES
 @property (nonatomic,strong,readonly) LWFlag* displayFlag;//一个自增的标识类，用于取消绘制。
 
+
 /**
  *  立即绘制，在主线程
  */

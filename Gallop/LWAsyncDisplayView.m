@@ -34,6 +34,7 @@
 
 @property (nonatomic,strong) NSMutableArray* reusePool;
 @property (nonatomic,strong) NSMutableArray* imageContainers;
+@property (nonatomic,strong) UILongPressGestureRecognizer* longPressGesture;
 
 @end
 
@@ -41,13 +42,12 @@
 @implementation LWAsyncDisplayView
 
 {
+    BOOL _showingHighlight;
     LWTextHighlight* _highlight;
     CGPoint _highlightAdjustPoint;
-    BOOL _showingHighlight;
-    CGPoint _longpressPoint;
+    CGPoint _touchBeganPoint;
     NSArray* _textStorages;
     NSArray* _imageStorages;
-    NSTimer* _longpressTimer;
 }
 
 
@@ -72,8 +72,14 @@
 - (void)setup {
     self.layer.opaque = YES;
     self.layer.contentsScale = [GallopUtils contentsScale];
-    _showingHighlight = NO;
     self.displaysAsynchronously = YES;
+    _showingHighlight = NO;
+    _highlight = nil;
+    _touchBeganPoint = CGPointZero;
+    _highlightAdjustPoint = CGPointZero;
+    _textStorages = nil;
+    _imageStorages = nil;
+    [self addGestureRecognizer:self.longPressGesture];
 }
 
 - (BOOL)canBecomeFirstResponder {
@@ -81,6 +87,7 @@
 }
 
 #pragma mark - Private
+
 - (void)_cleanAddToReusePool {
     for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
         UIView* container = [self.imageContainers objectAtIndex:i];
@@ -119,7 +126,6 @@
     }
     return nil;
 }
-
 
 #pragma mark - Display
 
@@ -162,7 +168,6 @@
     }
     
     for (LWTextStorage* textStorage in _textStorages) {
-        
         [textStorage.textLayout drawIncontext:context
                                          size:CGSizeZero
                                         point:textStorage.frame.origin
@@ -193,26 +198,29 @@
 #pragma mark - Touch
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self _removeLongpressHighlight];
-    BOOL found = NO;
+    
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
+    BOOL found = NO;
+    
+    if (_highlight) {
+        _highlight = nil;
+    }
     
     for (LWTextStorage* textStorage in _textStorages) {
         if (!_highlight) {
-            LWTextHighlight* hightlight =  [self _NeedShowHighlightWithIsLongpress:NO
-                                                                       textStorage:textStorage
-                                                                        touchPoint:touchPoint];
+            LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:NO
+                                                                  textStorage:textStorage
+                                                                   touchPoint:touchPoint];
             if (hightlight) {
-                [self _showHighlight:hightlight adjustPoint:textStorage.frame.origin];
+                _highlight = hightlight;
+                _highlightAdjustPoint = textStorage.frame.origin;
+                [self _showHighligt];
                 found = YES;
                 break;
             }
         }
     }
-    
-    _longpressPoint = touchPoint;
-    [self _startLongPressTimer];
     
     if (!found) {
         [super touchesBegan:touches withEvent:event];
@@ -220,120 +228,123 @@
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    BOOL found = NO;
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
+    BOOL found = NO;
+    
     for (LWTextStorage* textStorage in _textStorages) {
-        LWTextHighlight* hightlight =  [self _NeedShowHighlightWithIsLongpress:NO
-                                                                   textStorage:textStorage
-                                                                    touchPoint:touchPoint];
+        LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:NO
+                                                              textStorage:textStorage
+                                                               touchPoint:touchPoint];
         if (_highlight && hightlight == _highlight) {
-            [self _startLongPressTimer];
-            [self _showHighlight:hightlight adjustPoint:textStorage.frame.origin];
+            [self _showHighligt];
             found = YES;
         } else {
-            [self _endLongPressTimer];
-            [self _hideTapHighlight];
+            [self _hideHighlight];
+            found = NO;
         }
         break;
     }
+    
     if (!found) {
         [super touchesMoved:touches withEvent:event];
     }
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    __block BOOL found = NO;
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
+    BOOL found = NO;
+    
     for (LWImageStorage* imageStorage in _imageStorages) {
         if (CGRectContainsPoint(imageStorage.frame, touchPoint)) {
-            if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:touch:)]) {
-                found = YES;
+            if (self.delegate &&
+                [self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:touch:)] &&
+                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
                 [self.delegate lwAsyncDisplayView:self didCilickedImageStorage:imageStorage touch:touch];
-                break;
             }
-        }
-    }
-    
-    for (LWTextStorage* textStorage in _textStorages) {
-        LWTextHighlight* hightlight =  [self _NeedShowHighlightWithIsLongpress:NO
-                                                                   textStorage:textStorage
-                                                                    touchPoint:touchPoint];
-        if (_highlight && hightlight == _highlight) {
-            if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedTextStorage:linkdata:)]) {
-                [self.delegate lwAsyncDisplayView:self didCilickedTextStorage:textStorage linkdata:_highlight.content];
-            }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
-                                         (int64_t)(0.1f * NSEC_PER_SEC)),
-                           dispatch_get_main_queue(), ^{
-                               [self _removeTapHighlight];
-                           });
+            found = YES;
             break;
         }
     }
     
-    [self _endLongPressTimer];
+    for (LWTextStorage* textStorage in _textStorages) {
+        LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:NO
+                                                              textStorage:textStorage
+                                                               touchPoint:touchPoint];
+        if (_highlight && hightlight == _highlight) {
+            if (self.delegate &&
+                [self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedTextStorage:linkdata:)] &&
+                [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
+                [self.delegate lwAsyncDisplayView:self didCilickedTextStorage:textStorage linkdata:_highlight.content];
+            }
+            found = YES;
+            break;
+        }
+    }
+    
+    if (_highlight) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                     (int64_t)(0.15f * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+                           _highlight = nil;
+                           [self _hideHighlight];
+                       });
+    }
+    
     if (!found) {
         [super touchesEnded:touches withEvent:event];
     }
 }
 
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self _removeTapHighlight];
-    [self _removeLongpressHighlight];
-    [super touchesCancelled:touches withEvent:event];
-}
-
-- (void)_startLongPressTimer {
-    if (!_longpressTimer) {
-        _longpressTimer = [NSTimer timerWithTimeInterval:0.5f
-                                                  target:self
-                                                selector:@selector(_longPressHandler:)
-                                                userInfo:nil
-                                                 repeats:NO];
-        [[NSRunLoop currentRunLoop] addTimer:_longpressTimer
-                                     forMode:NSRunLoopCommonModes];
+- (void)longPressHandler:(UILongPressGestureRecognizer *)longPressGestureRecognizer {
+    switch (longPressGestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan:{
+            CGPoint point = [longPressGestureRecognizer locationInView:self];
+            _touchBeganPoint = point;
+            for (LWTextStorage* textStorage in _textStorages) {
+                LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:YES
+                                                                      textStorage:textStorage
+                                                                       touchPoint:_touchBeganPoint];
+                
+                if (hightlight.type == LWTextHighLightTypeLongPress) {
+                    _highlight = hightlight;
+                    _highlightAdjustPoint = textStorage.frame.origin;
+                    [self _showHighligt];
+                    break;
+                }
+            }
+        }break;
+            
+        case UIGestureRecognizerStateEnded:{
+            for (LWTextStorage* textStorage in _textStorages) {
+                LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:YES
+                                                                      textStorage:textStorage
+                                                                       touchPoint:_touchBeganPoint];
+                if (_highlight && hightlight == _highlight) {
+                    if (self.delegate &&
+                        [self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didLongpressedTextStorage:linkdata:)] &&
+                        [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
+                        [self.delegate lwAsyncDisplayView:self
+                                didLongpressedTextStorage:textStorage
+                                                 linkdata:_highlight.content];
+                    }
+                }
+            }
+        }break;
+            
+        default: break;
     }
 }
 
-- (void)_endLongPressTimer {
-    _longpressPoint = CGPointZero;
-    if (_longpressTimer) {
-        [_longpressTimer invalidate];
-        _longpressTimer = nil;
-    }
-}
-
-- (void)_longPressHandler:(NSTimer *)timer {
-    if (CGPointEqualToPoint(_longpressPoint, CGPointZero)) {
-        return;
-    }
-    for (LWTextStorage* textStorage in _textStorages) {
-        LWTextHighlight* highlight = [self _NeedShowHighlightWithIsLongpress:YES
-                                                                 textStorage:textStorage
-                                                                  touchPoint:_longpressPoint];
-        
-        if (!highlight) {
-            continue;
-        }
-        [self _showHighlight:highlight adjustPoint:textStorage.frame.origin];
-        if ([self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didLongpressedTextStorage:linkdata:)] &&
-            [self.delegate conformsToProtocol:@protocol(LWAsyncDisplayViewDelegate)]) {
-            [self.delegate lwAsyncDisplayView:self didLongpressedTextStorage:textStorage
-                                     linkdata:_highlight.content];
-        }
-        break;
-    }
-    [self _endLongPressTimer];
-}
-
-- (LWTextHighlight *)_NeedShowHighlightWithIsLongpress:(BOOL)isLongPress
-                                           textStorage:(LWTextStorage *)textStorage
-                                            touchPoint:(CGPoint)touchPoint {
+- (LWTextHighlight *)_searchTextHighlightWithType:(BOOL)isLongPress
+                                      textStorage:(LWTextStorage *)textStorage
+                                       touchPoint:(CGPoint)touchPoint {
+    
     if (![textStorage isKindOfClass:[LWTextStorage class]]) {
         return nil;
     }
+    
     CGPoint adjustPosition = textStorage.frame.origin;
     LWTextHighlight* needShow = nil;
     for (LWTextHighlight* one in textStorage.textLayout.textHighlights) {
@@ -364,41 +375,22 @@
     return needShow;
 }
 
-- (void)_showHighlight:(LWTextHighlight *)highlight adjustPoint:(CGPoint)adjustPoint {
+- (void)_showHighligt {
     _showingHighlight = YES;
-    _highlight = highlight;
-    _highlightAdjustPoint = adjustPoint;
     [(LWAsyncDisplayLayer *)self.layer displayImmediately];
 }
 
-- (void)_hideTapHighlight {
-    if (!_showingHighlight ||
-        _highlight.type == LWTextHighLightTypeLongPress) {
-        return;
-    }
+- (void)_hideHighlight {
     _showingHighlight = NO;
-    [(LWAsyncDisplayLayer *)self.layer displayImmediately];
-}
-
-- (void)_removeTapHighlight {
-    [self _hideTapHighlight];
-    _highlight = nil;
-    _highlightAdjustPoint = CGPointZero;
-}
-
-- (void)_removeLongpressHighlight {
-    if (!_showingHighlight){
-        return;
-    }
-    _showingHighlight = NO;
-    _highlight = nil;
-    _highlightAdjustPoint = CGPointZero;
-    _longpressPoint = CGPointZero;
     [(LWAsyncDisplayLayer *)self.layer displayImmediately];
 }
 
 - (void)removeAllHighlights {
-    [self _removeLongpressHighlight];
+    _highlightAdjustPoint = CGPointZero;
+    _touchBeganPoint = CGPointZero;
+    _showingHighlight = NO;
+    _highlight = nil;
+    [(LWAsyncDisplayLayer *)self.layer displayImmediately];
 }
 
 #pragma mark - Getter
@@ -423,11 +415,24 @@
     return _reusePool;
 }
 
+- (UILongPressGestureRecognizer *)longPressGesture {
+    if (_longPressGesture) {
+        return _longPressGesture;
+    }
+    
+    _longPressGesture = [[UILongPressGestureRecognizer alloc]
+                         initWithTarget:self
+                         action:@selector(longPressHandler:)];
+    _longPressGesture.minimumPressDuration = 0.5f;
+    return _longPressGesture;
+}
+
 #pragma mark - Setter
 
 - (void)setDisplaysAsynchronously:(BOOL)displaysAsynchronously {
     _displaysAsynchronously = displaysAsynchronously;
-    [(LWAsyncDisplayLayer *)self.layer setDisplaysAsynchronously:_displaysAsynchronously];
+    [(LWAsyncDisplayLayer *)self.layer
+     setDisplaysAsynchronously:_displaysAsynchronously];
 }
 
 - (void)setLayout:(LWLayout *)layout {
@@ -438,7 +443,7 @@
     [self _cleanAddToReusePool];
     
     _highlightAdjustPoint = CGPointZero;
-    _longpressPoint = CGPointZero;
+    _touchBeganPoint = CGPointZero;
     _showingHighlight = NO;
     
     id oldLayout = _layout;

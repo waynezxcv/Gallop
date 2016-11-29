@@ -25,8 +25,8 @@
 #ifndef Gallop_h
 #define Gallop_h
 
-
 #import "NSMutableAttributedString+Gallop.h"
+#import "CALayer+LWTransaction.h"
 #import "LWAsyncDisplayView.h"
 #import "LWHTMLDisplayView.h"
 #import "LWTextLayout.h"

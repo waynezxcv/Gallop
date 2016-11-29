@@ -16,13 +16,15 @@
 
 
 #import "TableViewCell.h"
-#import "GallopUtils.h"
 #import "LWImageStorage.h"
 #import "Menu.h"
 #import "LWAlertView.h"
 
 
+
+
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate>
+
 
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
 @property (nonatomic,strong) UIButton* menuButton;
@@ -51,7 +53,9 @@
 #pragma mark - LWAsyncDisplayViewDelegate
 
 //额外的绘制
-- (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
+- (void)extraAsyncDisplayIncontext:(CGContextRef)context
+                              size:(CGSize)size
+                       isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
     if (!isCancelled()) {
         CGContextMoveToPoint(context, 0.0f, self.bounds.size.height);
         CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
@@ -122,9 +126,6 @@
         }
     }
 }
-- (BOOL)canBecomeFirstResponder {
-    return YES;
-}
 
 
 #pragma mark - Actions
@@ -155,10 +156,20 @@
 
 #pragma mark -
 
-
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.asyncDisplayView.frame = CGRectMake(0,0,SCREEN_WIDTH,self.cellLayout.cellHeight);
+    
+    //主线程runloop空闲时执行
+    LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
+    [layerAsyncTransaction
+     addAsyncOperationWithTarget:self
+     selector:@selector(_layouSubViews)
+     object:nil
+     completion:^(BOOL canceled) {}];
+}
+
+- (void)_layouSubViews {
     self.menuButton.frame = self.cellLayout.menuPosition;
     self.menu.frame = CGRectMake(self.cellLayout.menuPosition.origin.x - 5.0f,
                                  self.cellLayout.menuPosition.origin.y - 9.0f + 14.5f,0.0f,34.0f);
@@ -169,15 +180,29 @@
     if (_cellLayout != cellLayout) {
         _cellLayout = cellLayout;
         self.asyncDisplayView.layout = self.cellLayout;
-        self.menu.statusModel = self.cellLayout.statusModel;
+        
+        //主线程runloop空闲时执行
+        LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
+        [layerAsyncTransaction
+         addAsyncOperationWithTarget:self
+         selector:@selector(_setCellLayout)
+         object:nil
+         completion:^(BOOL canceled) {}];
     }
 }
 
+- (void)_setCellLayout {
+    self.menu.statusModel = self.cellLayout.statusModel;
+}
+
+#pragma mark - Getter
+
 - (LWAsyncDisplayView *)asyncDisplayView {
-    if (!_asyncDisplayView) {
-        _asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero];
-        _asyncDisplayView.delegate = self;
+    if (_asyncDisplayView) {
+        return _asyncDisplayView;
     }
+    _asyncDisplayView = [[LWAsyncDisplayView alloc] initWithFrame:CGRectZero];
+    _asyncDisplayView.delegate = self;
     return _asyncDisplayView;
 }
 

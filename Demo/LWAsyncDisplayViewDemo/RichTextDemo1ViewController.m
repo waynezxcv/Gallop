@@ -98,6 +98,7 @@
                                                                           CGFLOAT_MAX)];
     ts1.linespacing = 3.0f;
     
+    
     LWTextStorage* ts2 = [[LWTextStorage alloc] init];
     ts2.text = @"世界对着它的爱人，把它浩翰的面具揭下了。它变小了，小如一首歌，小如一回永恒的接吻。The world puts off its mask of vastness to its lover.It becomes small as one song, as one kiss of the eternal.";
     ts2.font = [UIFont fontWithName:@"Heiti SC" size:15.0f];
@@ -109,7 +110,6 @@
                            200.0f);
     ts2.linespacing = 8.0f;
     ts2.vericalAlignment = LWTextVericalAlignmentCenter;//垂直方向居中对齐
-    
     
     
     //创建LWLayout对象

@@ -1,9 +1,9 @@
 //
 //  main.m
-//  LWAsyncDisplayViewDemo
+//  Gallop
 //
 //  Created by 刘微 on 16/3/16.
-//  Copyright © 2016年 WayneInc. All rights reserved.
+//  Copyright © 2016年 Waynezxcv. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
