@@ -26,7 +26,13 @@
 #import "LWStorageBuilder.h"
 #import "LWHTMLParser.h"
 #import "NSMutableAttributedString+Gallop.h"
+#import "NSString+HTML.h"
 #import "GallopDefine.h"
+
+
+static inline void _setAttribute(__unsafe_unretained NSMutableAttributedString* attributedString,
+                                 __unsafe_unretained LWHTMLTextConfig* config,
+                                 NSRange range);
 
 
 @interface LWStorageBuilder ()<LWHTMLParserDelegate>
@@ -255,19 +261,6 @@
     }
 }
 
-static inline void _setAttribute(__unsafe_unretained NSMutableAttributedString* attributedString,
-                                 __unsafe_unretained LWHTMLTextConfig* config,
-                                 NSRange range) {
-    [attributedString setTextColor:config.textColor range:range];
-    [attributedString setTextBackgroundColor:config.textBackgroundColor range:range];
-    [attributedString setFont:config.font range:range];
-    [attributedString setLineSpacing:config.linespacing range:range];
-    [attributedString setCharacterSpacing:config.characterSpacing range:range];
-    [attributedString setTextAlignment:config.textAlignment range:range];
-    [attributedString setUnderlineStyle:config.underlineStyle underlineColor:config.underlineColor range:range];
-    [attributedString setLineBreakMode:config.lineBreakMode range:range];
-}
-
 
 #pragma mark - Getter
 
@@ -331,3 +324,18 @@ static inline void _setAttribute(__unsafe_unretained NSMutableAttributedString* 
 }
 
 @end
+
+
+
+static inline void _setAttribute(__unsafe_unretained NSMutableAttributedString* attributedString,
+                                 __unsafe_unretained LWHTMLTextConfig* config,
+                                 NSRange range) {
+    [attributedString setTextColor:config.textColor range:range];
+    [attributedString setTextBackgroundColor:config.textBackgroundColor range:range];
+    [attributedString setFont:config.font range:range];
+    [attributedString setLineSpacing:config.linespacing range:range];
+    [attributedString setCharacterSpacing:config.characterSpacing range:range];
+    [attributedString setTextAlignment:config.textAlignment range:range];
+    [attributedString setUnderlineStyle:config.underlineStyle underlineColor:config.underlineColor range:range];
+    [attributedString setLineBreakMode:config.lineBreakMode range:range];
+}

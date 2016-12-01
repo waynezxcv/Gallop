@@ -22,28 +22,26 @@
  THE SOFTWARE.
  */
 
-#ifndef Gallop_h
-#define Gallop_h
+#import <Foundation/Foundation.h>
 
-#import "NSMutableAttributedString+Gallop.h"
-#import "CALayer+LWTransaction.h"
-#import "LWAsyncDisplayView.h"
-#import "LWHTMLDisplayView.h"
-#import "LWTextLayout.h"
-#import "LWStorageBuilder.h"
-#import "LWHTMLLayout.h"
-#import "CALayer+WebCache.h"
-#import "LWTextParser.h"
-#import "GallopDefine.h"
-#import "GallopUtils.h"
-#import "LWTextStorage.h"
-#import "LWImageStorage.h"
-#import "LWStorage.h"
-#import "UIImage+Gallop.h"
-#import "UIView+DisplayAddtions.h"
-#import "NSString+HTML.h"
-#import "NSManagedObject+LWLayout.h"
-#import "LWLayout.h"
+/**
+ *  一个自增的标示符，用来取消绘制
+ */
+@interface LWFlag : NSObject
+
+/**
+ *  标示符值，当两次值不相等时，说明开始了一个新的绘制任务，取消当前的绘制
+ *
+ *  @return 标示符的值
+ */
+- (int32_t)value;
+
+/**
+ *  表示赋值增加1
+ *
+ *  @return 增加1后的标示符的值
+ */
+- (int32_t)increment;
 
 
-#endif /* Gallop_h */
+@end

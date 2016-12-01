@@ -22,28 +22,36 @@
  THE SOFTWARE.
  */
 
-#ifndef Gallop_h
-#define Gallop_h
-
-#import "NSMutableAttributedString+Gallop.h"
-#import "CALayer+LWTransaction.h"
-#import "LWAsyncDisplayView.h"
-#import "LWHTMLDisplayView.h"
-#import "LWTextLayout.h"
-#import "LWStorageBuilder.h"
-#import "LWHTMLLayout.h"
-#import "CALayer+WebCache.h"
-#import "LWTextParser.h"
-#import "GallopDefine.h"
-#import "GallopUtils.h"
-#import "LWTextStorage.h"
-#import "LWImageStorage.h"
-#import "LWStorage.h"
-#import "UIImage+Gallop.h"
-#import "UIView+DisplayAddtions.h"
 #import "NSString+HTML.h"
-#import "NSManagedObject+LWLayout.h"
-#import "LWLayout.h"
+
+#define IS_WHITESPACE(_c) (_c == ' '|| _c == '\t' || _c == 0xA || _c == 0xB || _c == 0xC || _c == 0xD || _c == 0x85)
+
+@implementation NSString(HTML)
+
+- (NSString *)stringByNormalizingWhitespace {
+    NSInteger stringLength = [self length];
+    unichar* _characters = calloc(stringLength, sizeof(unichar));
+    [self getCharacters:_characters range:NSMakeRange(0, stringLength)];
+    NSInteger outputLength = 0;
+    BOOL inWhite = NO;
+    for (NSInteger i = 0; i<stringLength; i++) {
+        unichar oneChar = _characters[i];
+        if (IS_WHITESPACE(oneChar)) {
+            if (!inWhite) {
+                _characters[outputLength] = 32;
+                outputLength++;
+                inWhite = YES;
+            }
+        } else {
+            _characters[outputLength] = oneChar;
+            outputLength++;
+            inWhite = NO;
+        }
+    }
+    NSString* retString = [NSString stringWithCharacters:_characters length:outputLength];
+    free(_characters);
+    return retString;
+}
 
 
-#endif /* Gallop_h */
+@end

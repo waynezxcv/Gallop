@@ -26,7 +26,7 @@
 
 
 #import <UIKit/UIKit.h>
-#import "GallopUtils.h"
+#import "GallopDefine.h"
 
 
 @class LWFlag;

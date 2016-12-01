@@ -29,7 +29,7 @@
 /**
  *  HTML渲染布局模型
  */
-@interface LWHTMLLayout : NSObject
+@interface LWHTMLLayout : NSObject <NSCopying,NSMutableCopying,NSCoding>
 
 /**
  *  添加一个LWStorage对象

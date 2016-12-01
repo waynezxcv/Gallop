@@ -26,25 +26,12 @@
 #import <objc/runtime.h>
 #import "GallopUtils.h"
 
-static void LWTextDeallocCallback(void *ref) {
-    LWTextRunDelegate* self = (__bridge_transfer LWTextRunDelegate *)(ref);
-    self = nil;
-}
 
-static CGFloat LWTextAscentCallback(void *ref) {
-    LWTextRunDelegate* self = (__bridge LWTextRunDelegate *)(ref);
-    return self.ascent;
-}
+static void LWTextDeallocCallback(void *ref);
+static CGFloat LWTextAscentCallback(void *ref);
+static CGFloat LWTextDescentCallback(void *ref);
+static CGFloat LWTextWidthCallback(void *ref);
 
-static CGFloat LWTextDescentCallback(void *ref) {
-    LWTextRunDelegate* self = (__bridge LWTextRunDelegate *)(ref);
-    return self.descent;
-}
-
-static CGFloat LWTextWidthCallback(void *ref) {
-    LWTextRunDelegate* self = (__bridge LWTextRunDelegate *)(ref);
-    return self.width;
-}
 
 @implementation LWTextRunDelegate
 
@@ -85,13 +72,38 @@ static CGFloat LWTextWidthCallback(void *ref) {
 
 #pragma mark - NSCopying
 
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
 - (id)copyWithZone:(nullable NSZone *)zone {
     LWTextRunDelegate* delegate = [[[self class] alloc] init];
     delegate.ascent = self.ascent;
     delegate.descent = self.descent;
     delegate.width = self.width;
     delegate.userInfo = [self.userInfo copy];
+    delegate.height = self.height;
     return delegate;
 }
 
 @end
+
+static void LWTextDeallocCallback(void *ref) {
+    LWTextRunDelegate* self = (__bridge_transfer LWTextRunDelegate *)(ref);
+    self = nil;
+}
+
+static CGFloat LWTextAscentCallback(void *ref) {
+    LWTextRunDelegate* self = (__bridge LWTextRunDelegate *)(ref);
+    return self.ascent;
+}
+
+static CGFloat LWTextDescentCallback(void *ref) {
+    LWTextRunDelegate* self = (__bridge LWTextRunDelegate *)(ref);
+    return self.descent;
+}
+
+static CGFloat LWTextWidthCallback(void *ref) {
+    LWTextRunDelegate* self = (__bridge LWTextRunDelegate *)(ref);
+    return self.width;
+}

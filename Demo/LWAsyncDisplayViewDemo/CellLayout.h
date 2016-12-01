@@ -24,7 +24,7 @@
 #define AVATAR_IDENTIFIER @"avatar"
 
 
-@interface CellLayout : LWLayout
+@interface CellLayout : LWLayout <NSCopying>
 
 @property (nonatomic,strong) StatusModel* statusModel;
 @property (nonatomic,assign) CGFloat cellHeight;

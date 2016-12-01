@@ -25,7 +25,7 @@
 #import <UIKit/UIKit.h>
 #import "LWTextStorage.h"
 
-@interface LWHTMLTextConfig : NSObject
+@interface LWHTMLTextConfig : NSObject <NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,strong) UIColor* textColor;//文本颜色
 @property (nonatomic,strong) UIColor* textBackgroundColor;//文本背景颜色
@@ -50,8 +50,6 @@
  *  @return 一个默认样式的LWHTMTextCofing对象
  */
 + (LWHTMLTextConfig *)defaultsTextConfig;
-
-
 + (LWHTMLTextConfig *)defaultsH1TextConfig;
 + (LWHTMLTextConfig *)defaultsH2TextConfig;
 + (LWHTMLTextConfig *)defaultsH3TextConfig;

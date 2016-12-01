@@ -42,7 +42,7 @@ typedef NS_ENUM(NSUInteger, LWTextHighLightType) {
 /**
  *  文本的附件的封装，可以是图片或是UIView对象、CALayer对象
  */
-@interface LWTextAttachment : NSObject<NSCopying>
+@interface LWTextAttachment : NSObject<NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,strong) id content;//内容
 @property (nonatomic,assign) NSRange range;//在string中的range
@@ -68,7 +68,7 @@ typedef NS_ENUM(NSUInteger, LWTextHighLightType) {
 /**
  *  文本链接的封装
  */
-@interface LWTextHighlight : NSObject <NSCopying>
+@interface LWTextHighlight : NSObject <NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,assign) NSRange range;//在字符串的range
 @property (nonatomic,strong) UIColor* linkColor;//链接的颜色
@@ -80,10 +80,12 @@ typedef NS_ENUM(NSUInteger, LWTextHighLightType) {
 
 @end
 
+
+
 /**
  *  文本背景颜色的封装
  */
-@interface LWTextBackgroundColor : NSObject  <NSCopying>
+@interface LWTextBackgroundColor : NSObject  <NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,assign) NSRange range;//在字符串的range
 @property (nonatomic,strong) UIColor* backgroundColor;//背景颜色
@@ -96,7 +98,7 @@ typedef NS_ENUM(NSUInteger, LWTextHighLightType) {
 /**
  *  文本描边的封装（空心字）
  */
-@interface LWTextStroke : NSObject  <NSCopying>
+@interface LWTextStroke : NSObject  <NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,assign) NSRange range;//在字符串的range
 @property (nonatomic,strong) UIColor* strokeColor;//描边颜色
@@ -109,7 +111,7 @@ typedef NS_ENUM(NSUInteger, LWTextHighLightType) {
  *  文本边框
  */
 
-@interface LWTextBoundingStroke : NSObject  <NSCopying>
+@interface LWTextBoundingStroke : NSObject<NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,assign) NSRange range;//在字符串的range
 @property (nonatomic,strong) UIColor* strokeColor;//描边颜色

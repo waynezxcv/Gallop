@@ -62,6 +62,55 @@
 
 @implementation LWTextLine
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextLine* one = [[LWTextLine alloc] init];
+    one.CTLine = self.CTLine;
+    one.range = self.range;
+    one.frame = self.frame;
+    one.size = self.size;
+    one.width = self.width;
+    one.height = self.height;
+    one.top = self.top;
+    one.bottom = self.bottom;
+    one.left = self.left;
+    one.right = self.right;
+    one.lineOrigin = self.lineOrigin;
+    one.ascent = self.ascent;
+    one.descent = self.descent;
+    one.leading = self.leading;
+    one.lineWidth = self.lineWidth;
+    one.trailingWhitespaceWidth = self.trailingWhitespaceWidth;
+    one.glyphs = [self.glyphs copy];
+    one.attachments = [self.attachments copy];
+    one.attachmentRanges = [self.attachmentRanges copy];
+    one.attachmentRects = [self.attachmentRects copy];
+    one.index = self.index;
+    one.row  = self.row;
+    return one;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:(__nonnull id)self.CTLine forKey:@"CTLine"];
+    [aCoder encodeCGPoint:self.lineOrigin forKey:@"lineOrigin"];
+}
+
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    CTLineRef CTLine = (__bridge CTLineRef)([aDecoder decodeObjectForKey:@"CTLine"]);
+    CGPoint lineOrigin = [aDecoder decodeCGPointForKey:@"lineOrigin"];
+    LWTextLine* one = [LWTextLine lw_textLineWithCTlineRef:CTLine lineOrigin:lineOrigin];
+    return one;
+}
+
+#pragma mark - Init
 
 + (id)lw_textLineWithCTlineRef:(CTLineRef)CTLine lineOrigin:(CGPoint)lineOrigin {
     if (!CTLine) {

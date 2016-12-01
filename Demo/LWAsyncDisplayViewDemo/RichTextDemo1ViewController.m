@@ -131,31 +131,37 @@
 }
 
 //给文字添加长按事件后，触发后，会在这个代理方法中收到回调
-- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
- didLongpressedTextStorage:(LWTextStorage *)textStorage
-                  linkdata:(id)data {
-    
-    [asyncDisplayView becomeFirstResponder];
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didLongpressedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
+    [self becomeFirstResponder];
     UIMenuItem* copyLink = [[UIMenuItem alloc] initWithTitle:@"复制"
                                                       action:@selector(copyText)];
-    
     [[UIMenuController sharedMenuController] setMenuItems:[NSArray arrayWithObjects:copyLink, nil]];
-    CGRect rect = CGRectMake(textStorage.center.x - 50.0f, textStorage.top - 50.0f, 100.0f, 50.0f);
+    
+    CGRect rect = CGRectMake(textStorage.center.x - 50.0f, textStorage.top, 100.0f, 50.0f);
     [UIMenuController sharedMenuController].arrowDirection = UIMenuControllerArrowDown;
-    [[UIMenuController sharedMenuController] setTargetRect:rect inView:asyncDisplayView];
+    [[UIMenuController sharedMenuController] setTargetRect:rect inView:self.view];
     [[UIMenuController sharedMenuController] setMenuVisible:YES animated:YES];
     self.preCopyText = data;
 }
 
 //复制
 - (void)copyText {
-    NSLog(@"复制了:%@",self.preCopyText);
     UIPasteboard* pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = self.preCopyText;
-    
-    [self.asyncView resignFirstResponder];
+    [self resignFirstResponder];
     [self.asyncView removeAllHighlights];
     
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    if(action == @selector(copyText)){
+        return YES;
+    }
+    return [super canPerformAction:action withSender:sender];
+}
+
+- (BOOL)canBecomeFirstResponder {
+    return YES;
 }
 
 @end

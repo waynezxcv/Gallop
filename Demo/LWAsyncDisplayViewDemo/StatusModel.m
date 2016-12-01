@@ -28,5 +28,21 @@
 }
 
 
+- (id)copyWithZone:(NSZone *)zone {
+    StatusModel* one = [[StatusModel alloc] init];
+    one.type = [self.type copy];
+    one.avatar = [self.avatar copy];
+    one.content = [self.content copy];
+    one.detail = [self.detail copy];
+    one.date = [self.date copy];
+    one.imgs = [self.imgs copy];
+    one.name = [self.name copy];
+    one.statusID = [self.statusID copy];
+    one.commentList = [self.commentList copy];
+    one.likeList = [self.likeList copy];
+    one.isLike = self.isLike;
+    return one;
+}
+
 
 @end

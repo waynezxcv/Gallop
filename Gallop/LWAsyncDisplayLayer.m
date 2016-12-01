@@ -27,6 +27,8 @@
 #import "LWTransactionGroup.h"
 #import "LWTransaction.h"
 #import "CALayer+LWTransaction.h"
+#import "LWFlag.h"
+
 
 @interface LWAsyncDisplayLayer ()
 
@@ -47,8 +49,7 @@
         displayQueue = dispatch_queue_create("com.Gallop.LWAsyncDisplayLayer.displayQueue",
                                              DISPATCH_QUEUE_CONCURRENT);
         dispatch_set_target_queue(displayQueue,
-                                  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,
-                                                            0));
+                                  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,0));
     });
     return displayQueue;
 }
@@ -106,6 +107,7 @@
         if (transaction.willDisplayBlock) {
             transaction.willDisplayBlock(self);
         }
+
         CGImageRef imageRef = (__bridge_retained CGImageRef)(self.contents);
         id contents = self.contents;
         self.contents = nil;
@@ -115,6 +117,7 @@
                 CFRelease(imageRef);
             });
         }
+
         if (transaction.didDisplayBlock) {
             transaction.didDisplayBlock(self, YES);
         }
@@ -147,6 +150,7 @@
         CGFloat scale = self.contentsScale;
         CGColorRef backgroundColor = (opaque && self.backgroundColor) ?
         CGColorRetain(self.backgroundColor) : NULL;
+
         if (size.width < 1 || size.height < 1) {
             CGImageRef image = (__bridge_retained CGImageRef)(self.contents);
             self.contents = nil;

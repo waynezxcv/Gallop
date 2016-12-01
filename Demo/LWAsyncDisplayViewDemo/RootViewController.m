@@ -52,16 +52,16 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"属性文本";
+        cell.textLabel.text = @"属性文本使用示例";
     }
     else if (indexPath.row == 1) {
-        cell.textLabel.text = @"图片设置圆角半径和模糊效果";
+        cell.textLabel.text = @"图片设置圆角半径和模糊效果示例";
     }
     else if (indexPath.row == 2) {
-        cell.textLabel.text = @"Gallop构建的顺滑的朋友圈Demo";
+        cell.textLabel.text = @"使用Gallop构建FeedsList示例";
     }
     else if (indexPath.row == 3) {
-        cell.textLabel.text = @"Gallop进行HTML解析的知乎日报Demo";
+        cell.textLabel.text = @"Gallop进行HTML解析示例";
     }
     return cell;
 }

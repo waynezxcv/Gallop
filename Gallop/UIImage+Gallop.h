@@ -29,30 +29,19 @@
 
 @interface UIImage (Gallop)
 
-
 /**
  *  将一张图片按照contentMode和指定的size处理
  *
  */
-- (UIImage *)processedImageWithContentMode:(UIViewContentMode)contentMode size:(CGSize)size;
-
+- (UIImage *)lw_processedImageWithContentMode:(UIViewContentMode)contentMode size:(CGSize)size;
 
 
 /**
  *  在指定区域内按照UIViewContentMode的样式和是否clips绘制
  *
  */
-- (void)lw_drawInRect:(CGRect)rect
-   withContentMode:(UIViewContentMode)contentMode
-     clipsToBounds:(BOOL)clips;
+- (void)lw_drawInRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clips;
 
-/**
- *  根据contentMode获取绘制的CGRect
- *
- */
-- (CGRect)lw_CGRectFitWithContentMode:(UIViewContentMode)contentMode
-                                 rect:(CGRect)rect
-                                 size:(CGSize)size;
 
 /**
  *  纠正图片的方向

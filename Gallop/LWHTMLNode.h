@@ -28,7 +28,7 @@
  *  结点
  */
 
-@interface LWHTMLNode : NSObject
+@interface LWHTMLNode : NSObject <NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,strong) LWHTMLNode* parent;//双亲结点
 @property (nonatomic,strong) LWHTMLNode* firstChild;//子结点

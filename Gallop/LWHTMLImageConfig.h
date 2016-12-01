@@ -25,7 +25,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface LWHTMLImageConfig : NSObject
+@interface LWHTMLImageConfig : NSObject <NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,assign) BOOL autolayoutHeight;//是否在图片下载完成后，按图片比例自适应高度，默认YES
 @property (nonatomic,assign) CGSize size;//图片的大小

@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface StatusModel : NSObject
+@interface StatusModel : NSObject <NSCopying>
 
 @property (nonatomic,copy) NSString* type;
 @property (nonatomic,strong) NSURL* avatar;

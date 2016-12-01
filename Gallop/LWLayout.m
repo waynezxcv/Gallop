@@ -38,6 +38,39 @@
 
 @implementation LWLayout
 
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWLayout* one = [[LWLayout alloc] init];
+    one.textStorages = [self.textStorages mutableCopy];
+    one.imageStorages = [self.imageStorages mutableCopy];
+    one.totalStorages = [self.totalStorages mutableCopy];
+    return one;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.textStorages forKey:@"textStorages"];
+    [aCoder encodeObject:self.imageStorages forKey:@"imageStorages"];
+    [aCoder encodeObject:self.totalStorages forKey:@"totalStorages"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.textStorages = [aDecoder decodeObjectForKey:@"textStorages"];
+        self.imageStorages = [aDecoder decodeObjectForKey:@"imageStorages"];
+        self.totalStorages = [aDecoder decodeObjectForKey:@"totalStorages"];
+    }
+    return self;
+}
+
 - (void)addStorage:(LWStorage *)storage {
     if (!storage) {
         return;

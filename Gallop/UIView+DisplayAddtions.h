@@ -22,28 +22,47 @@
  THE SOFTWARE.
  */
 
-#ifndef Gallop_h
-#define Gallop_h
-
-#import "NSMutableAttributedString+Gallop.h"
-#import "CALayer+LWTransaction.h"
-#import "LWAsyncDisplayView.h"
-#import "LWHTMLDisplayView.h"
-#import "LWTextLayout.h"
-#import "LWStorageBuilder.h"
-#import "LWHTMLLayout.h"
-#import "CALayer+WebCache.h"
-#import "LWTextParser.h"
-#import "GallopDefine.h"
-#import "GallopUtils.h"
-#import "LWTextStorage.h"
-#import "LWImageStorage.h"
-#import "LWStorage.h"
-#import "UIImage+Gallop.h"
-#import "UIView+DisplayAddtions.h"
-#import "NSString+HTML.h"
-#import "NSManagedObject+LWLayout.h"
-#import "LWLayout.h"
 
 
-#endif /* Gallop_h */
+#import <UIKit/UIKit.h>
+
+
+@class LWImageStorage;
+
+/**
+ * UIView的绘制扩展
+ *
+ */
+@interface UIView (DisplayAddtions)
+
+
+
+@property (nonatomic,copy) NSString* identifier;//一个标示符字符串，跟LWImageStorage中的同名属性对应
+
+/**
+ * 设置一个LWImageStorage对象给UIView对象，从而完成图片的渲染
+ *
+ *  @param imageStorage 一个LWImageStorage对象
+ *  @param resizeBlock  重新调整图片大小回调Block
+ */
+- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage
+                       resizeBlock:(void(^)(LWImageStorage*imageStorage, CGFloat delta))resizeBlock;
+
+
+/**
+ *  设置一个LWImageStorage对象给UIView对象，从而完成位置布局
+ *
+ *  @param imageStorage 一个LWImageStorage对象
+ */
+- (void)layoutWithStorage:(LWImageStorage *)imageStorage;
+
+
+/**
+ *  清除UIView对象上的内容，并隐藏
+ */
+- (void)cleanup;
+
+
+- (void)fadeShowAnimation;
+
+@end

@@ -32,6 +32,30 @@
 
 @implementation LWHTMLLayout
 
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.items forKey:@"items"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.items = [aDecoder decodeObjectForKey:@"items"];
+    }
+    return self;
+}
+
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWHTMLLayout* one = [[LWHTMLLayout alloc] init];
+    one.items = [self.items mutableCopy];
+    return one;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
 - (id)init {
     self = [super init];
     if (self) {

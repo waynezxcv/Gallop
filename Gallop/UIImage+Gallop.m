@@ -25,6 +25,7 @@
 #import <float.h>
 #import <ImageIO/ImageIO.h>
 #import <Accelerate/Accelerate.h>
+#import "LWCGRectTransform.h"
 
 #define kDegreesToRadian(x) (M_PI * (x) / 180.0)
 #define kRadianToDegrees(radian) (radian * 180.0) / (M_PI)
@@ -32,9 +33,7 @@
 @implementation UIImage (Gallop)
 
 
-
-- (UIImage *)processedImageWithContentMode:(UIViewContentMode)contentMode size:(CGSize)size {
-    
+- (UIImage *)lw_processedImageWithContentMode:(UIViewContentMode)contentMode size:(CGSize)size {
     CGFloat width = size.width;
     CGFloat height = size.height;
     UIImage* processedImg = nil;
@@ -46,8 +45,8 @@
                                                  4 * (int)width,
                                                  colorSpace,
                                                  kCGImageAlphaPremultipliedFirst);
-    //经过ContentMode处理的Rect
-    CGRect contentModeRect = [self lw_CGRectFitWithContentMode:contentMode
+
+    CGRect contentModeRect = [LWCGRectTransform lw_CGRectFitWithContentMode:contentMode
                                                                rect:CGRectMake(0, 0,width, height)
                                                                size:self.size];
     CGContextSaveGState(context);
@@ -65,92 +64,8 @@
 }
 
 
-
-- (CGRect)lw_CGRectFitWithContentMode:(UIViewContentMode)contentMode
-                                 rect:(CGRect)rect
-                                 size:(CGSize)size  {
-    rect = CGRectStandardize(rect);
-    size.width = size.width < 0 ? -size.width : size.width;
-    size.height = size.height < 0 ? -size.height : size.height;
-    CGPoint center = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
-    switch (contentMode) {
-        case UIViewContentModeScaleAspectFit:
-        case UIViewContentModeScaleAspectFill: {
-            if (rect.size.width < 0.01 || rect.size.height < 0.01 ||
-                size.width < 0.01 || size.height < 0.01) {
-                rect.origin = center;
-                rect.size = CGSizeZero;
-            } else {
-                CGFloat scale;
-                if (contentMode == UIViewContentModeScaleAspectFit) {
-                    if (size.width / size.height < rect.size.width / rect.size.height) {
-                        scale = rect.size.height / size.height;
-                    } else {
-                        scale = rect.size.width / size.width;
-                    }
-                } else {
-                    if (size.width / size.height < rect.size.width / rect.size.height) {
-                        scale = rect.size.width / size.width;
-                    } else {
-                        scale = rect.size.height / size.height;
-                    }
-                }
-                size.width *= scale;
-                size.height *= scale;
-                rect.size = size;
-                rect.origin = CGPointMake(center.x - size.width * 0.5, center.y - size.height * 0.5);
-            }
-        } break;
-        case UIViewContentModeCenter: {
-            rect.size = size;
-            rect.origin = CGPointMake(center.x - size.width * 0.5, center.y - size.height * 0.5);
-        } break;
-        case UIViewContentModeTop: {
-            rect.origin.x = center.x - size.width * 0.5;
-            rect.size = size;
-        } break;
-        case UIViewContentModeBottom: {
-            rect.origin.x = center.x - size.width * 0.5;
-            rect.origin.y += rect.size.height - size.height;
-            rect.size = size;
-        } break;
-        case UIViewContentModeLeft: {
-            rect.origin.y = center.y - size.height * 0.5;
-            rect.size = size;
-        } break;
-        case UIViewContentModeRight: {
-            rect.origin.y = center.y - size.height * 0.5;
-            rect.origin.x += rect.size.width - size.width;
-            rect.size = size;
-        } break;
-        case UIViewContentModeTopLeft: {
-            rect.size = size;
-        } break;
-        case UIViewContentModeTopRight: {
-            rect.origin.x += rect.size.width - size.width;
-            rect.size = size;
-        } break;
-        case UIViewContentModeBottomLeft: {
-            rect.origin.y += rect.size.height - size.height;
-            rect.size = size;
-        } break;
-        case UIViewContentModeBottomRight: {
-            rect.origin.x += rect.size.width - size.width;
-            rect.origin.y += rect.size.height - size.height;
-            rect.size = size;
-        } break;
-        case UIViewContentModeScaleToFill:
-        case UIViewContentModeRedraw:
-        default: {
-            rect = rect;
-        }
-    }
-    return rect;
-}
-
-
-- (void)lw_drawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clips {
-    CGRect drawRect = [self lw_CGRectFitWithContentMode:contentMode rect:rect size:self.size];
+- (void)lw_drawInRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clips {
+    CGRect drawRect = [LWCGRectTransform lw_CGRectFitWithContentMode:contentMode rect:rect size:self.size];
     if (drawRect.size.width == 0 || drawRect.size.height == 0) return;
     if (clips) {
         CGContextRef context = UIGraphicsGetCurrentContext();
@@ -167,7 +82,6 @@
 }
 
 
-/** 根据颜色生成纯色图片 */
 + (UIImage *)lw_imageWithColor:(UIColor *)color {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     UIGraphicsBeginImageContext(rect.size);
@@ -179,7 +93,7 @@
     return image;
 }
 
-/** 取图片某一像素的颜色 */
+
 - (UIColor *)lw_colorAtPixel:(CGPoint)point {
     if (!CGRectContainsPoint(CGRectMake(0.0f, 0.0f, self.size.width, self.size.height), point)) {
         return nil;
@@ -215,7 +129,7 @@
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
-/** 获得灰度图 */
+
 - (UIImage *)lw_convertToGrayImage {
     int width = self.size.width;
     int height = self.size.height;
@@ -227,7 +141,7 @@
     }
     CGContextDrawImage(context,CGRectMake(0, 0, width, height), self.CGImage);
     CGImageRef contextRef = CGBitmapContextCreateImage(context);
-    UIImage *grayImage = [UIImage imageWithCGImage:contextRef];
+    UIImage* grayImage = [UIImage imageWithCGImage:contextRef];
     CGContextRelease(context);
     CGImageRelease(contextRef);
     return grayImage;
@@ -293,7 +207,7 @@ static int vectorGCD(size_t const count, int const* const values) {
 static NSArray* frameArray(size_t const count, CGImageRef const images[count], int const delayCentiseconds[count], int const totalDurationCentiseconds) {
     int const gcd = vectorGCD(count, delayCentiseconds);
     size_t const frameCount = totalDurationCentiseconds / gcd;
-    UIImage *frames[frameCount];
+    UIImage* frames[frameCount];
     for (size_t i = 0, f = 0; i < count; ++i) {
         UIImage* const frame = [UIImage imageWithCGImage:images[i]];
         for (size_t j = delayCentiseconds[i] / gcd; j > 0; --j) {
@@ -315,15 +229,15 @@ static UIImage* animatedImageWithAnimatedGIFImageSource(CGImageSourceRef const s
     int delayCentiseconds[count]; // in centiseconds
     createImagesAndDelays(source, count, images, delayCentiseconds);
     int const totalDurationCentiseconds = sum(count, delayCentiseconds);
-    NSArray *const frames = frameArray(count, images, delayCentiseconds, totalDurationCentiseconds);
-    UIImage *const animation = [UIImage animatedImageWithImages:frames duration:(NSTimeInterval)totalDurationCentiseconds / 100.0];
+    NSArray* const frames = frameArray(count, images, delayCentiseconds, totalDurationCentiseconds);
+    UIImage* const animation = [UIImage animatedImageWithImages:frames duration:(NSTimeInterval)totalDurationCentiseconds / 100.0];
     releaseImages(count, images);
     return animation;
 }
 
 static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRef CF_RELEASES_ARGUMENT source) {
     if (source) {
-        UIImage *const image = animatedImageWithAnimatedGIFImageSource(source);
+        UIImage* const image = animatedImageWithAnimatedGIFImageSource(source);
         CFRelease(source);
         return image;
     }
@@ -340,7 +254,6 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
     return animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceCreateWithURL((__bridge CFTypeRef) url, NULL));
 }
 
-/** 纠正图片的方向 */
 - (UIImage *)lw_fixOrientation {
     if (self.imageOrientation == UIImageOrientationUp) return self;
     CGAffineTransform transform = CGAffineTransformIdentity;
@@ -407,7 +320,7 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
     return img;
 }
 
-/** 按给定的方向旋转图片 */
+
 - (UIImage*)lw_rotate:(UIImageOrientation)orient {
     CGRect bnds = CGRectZero;
     UIImage* copy = nil;
@@ -490,17 +403,14 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
     return copy;
 }
 
-/** 垂直翻转 */
 - (UIImage *)lw_flipVertical {
     return [self lw_rotate:UIImageOrientationDownMirrored];
 }
 
-/** 水平翻转 */
 - (UIImage *)lw_flipHorizontal {
     return [self lw_rotate:UIImageOrientationUpMirrored];
 }
 
-/** 将图片旋转弧度radians */
 - (UIImage *)lw_imageRotatedByRadians:(CGFloat)radians {
     UIView* rotatedViewBox = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.size.width, self.size.height)];
     CGAffineTransform t = CGAffineTransformMakeRotation(radians);
@@ -517,12 +427,10 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
     return newImage;
 }
 
-/** 将图片旋转角度degrees */
 - (UIImage *)lw_imageRotatedByDegrees:(CGFloat)degrees {
     return [self lw_imageRotatedByRadians:kDegreesToRadian(degrees)];
 }
 
-/** 交换宽和高 */
 static CGRect swapWidthAndHeight(CGRect rect) {
     CGFloat swap = rect.size.width;
     rect.size.width = rect.size.height;

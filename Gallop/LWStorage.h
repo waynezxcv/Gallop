@@ -28,7 +28,7 @@
  *  包含各种布局数据和其他数据的抽象模型，本身并不能直接拿来使用。
  *  它的子类LWTextStorage、LWImageStorage、LWVideoStorage可以分别用于存储文字、图片。
  */
-@interface LWStorage : NSObject
+@interface LWStorage : NSObject <NSCopying,NSMutableCopying,NSCoding>
 
 @property (nullable,nonatomic,copy) NSString* identifier;//一个标示字符串，可以用于复用时取到属性相同的UIView对象
 @property (nonatomic,assign) NSInteger tag;//一个标示符，跟UIView对象的tag属性作用一样

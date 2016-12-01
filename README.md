@@ -3,7 +3,7 @@
 
 
 
-# Gallop v0.4.1
+# Gallop v0.4.2
 
 ## About Gallop
 

@@ -343,15 +343,13 @@ const CGFloat kRefreshBoundary = 170.0f;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if (self.needRefresh) {
             [self.dataSource removeAllObjects];
-            NSMutableArray* fakes = [[NSMutableArray alloc] init];
-            for (NSInteger i = 0; i < 10; i ++) {
-                [fakes addObjectsFromArray:self.fakeDatasource];
-            }
-            for (NSInteger i = 0; i < fakes.count; i ++) {
-                LWLayout* layout = [self layoutWithStatusModel:
-                                    [[StatusModel alloc] initWithDict:fakes[i]]
-                                                         index:i];
-                [self.dataSource addObject:layout];
+            for (NSInteger i = 0 ; i < 10; i ++) {//让数据更多
+                for (NSInteger i = 0; i < self.fakeDatasource.count; i ++) {
+                    LWLayout* layout = [self layoutWithStatusModel:
+                                        [[StatusModel alloc] initWithDict:self.fakeDatasource[i]]
+                                                             index:i];
+                    [self.dataSource addObject:layout];
+                }
             }
         }
         dispatch_sync(dispatch_get_main_queue(), ^{

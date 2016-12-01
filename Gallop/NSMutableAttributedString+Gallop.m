@@ -29,7 +29,6 @@
 
 @implementation NSMutableAttributedString(Gallop)
 
-
 #pragma mark -
 - (void)setTextColor:(UIColor *)textColor range:(NSRange)range {
     [self setAttribute:NSForegroundColorAttributeName value:textColor range:range];

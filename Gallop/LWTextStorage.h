@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 /**
  *  文本绘制的数据模型
  */
-@interface LWTextStorage : LWStorage
+@interface LWTextStorage : LWStorage<NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,strong,readonly) LWTextLayout* textLayout;//文本布局模型
 @property (nonatomic,copy) NSString* text;//文本
@@ -64,7 +64,6 @@ typedef NS_ENUM(NSUInteger, LWTextDrawMode) {
 @property (nonatomic,strong) UIColor* strokeColor;//描边颜色
 @property (nonatomic,assign) CGFloat strokeWidth;//描边宽度
 @property (nonatomic,assign,readonly) CGSize suggestSize;//建议的绘制大小
-
 @property (nonatomic,assign) NSInteger maxNumberOfLines;//最大行数限制
 @property (nonatomic,assign,readonly) NSInteger numberOfLines;//文本的实际行数
 @property (nonatomic,assign) BOOL needDebug;//是否开启调试模式

@@ -25,7 +25,7 @@
 #import <CoreText/CoreText.h>
 
 
-@interface LWTextGlyph : NSObject
+@interface LWTextGlyph : NSObject<NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,assign) CGGlyph glyph;
 @property (nonatomic,assign) CGPoint position;

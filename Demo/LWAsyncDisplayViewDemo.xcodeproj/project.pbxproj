@@ -77,6 +77,10 @@
 		B0ACEC091CEDC9A50019074F /* TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBFD1CEDC9A50019074F /* TableViewCell.m */; };
 		B0ACEC0A1CEDC9A50019074F /* TableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBFF1CEDC9A50019074F /* TableViewHeader.m */; };
 		B0ACEC0B1CEDC9A50019074F /* MomentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEC011CEDC9A50019074F /* MomentsViewController.m */; };
+		B0B7DF891DEFCAAE0050BFB1 /* LWCGRectTransform.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B7DF881DEFCAAE0050BFB1 /* LWCGRectTransform.m */; };
+		B0B7DF8C1DEFCBF00050BFB1 /* LWFlag.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B7DF8B1DEFCBF00050BFB1 /* LWFlag.m */; };
+		B0B7DF8F1DEFCC500050BFB1 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B7DF8E1DEFCC500050BFB1 /* NSString+HTML.m */; };
+		B0B7DF921DEFCE090050BFB1 /* UIView+DisplayAddtions.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B7DF911DEFCE090050BFB1 /* UIView+DisplayAddtions.m */; };
 		B0C9A92B1D2270C000DFAA44 /* ArticleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C9A92A1D2270C000DFAA44 /* ArticleListViewController.m */; };
 		B0C9A92E1D2272DD00DFAA44 /* ArticleListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C9A92D1D2272DD00DFAA44 /* ArticleListTableViewCell.m */; };
 		B0C9A9321D2273EF00DFAA44 /* ArticleListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C9A9311D2273EF00DFAA44 /* ArticleListModel.m */; };
@@ -239,6 +243,14 @@
 		B0ACEBFF1CEDC9A50019074F /* TableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewHeader.m; sourceTree = "<group>"; };
 		B0ACEC001CEDC9A50019074F /* MomentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MomentsViewController.h; sourceTree = "<group>"; };
 		B0ACEC011CEDC9A50019074F /* MomentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MomentsViewController.m; sourceTree = "<group>"; };
+		B0B7DF871DEFCAAE0050BFB1 /* LWCGRectTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWCGRectTransform.h; path = ../Gallop/LWCGRectTransform.h; sourceTree = "<group>"; };
+		B0B7DF881DEFCAAE0050BFB1 /* LWCGRectTransform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWCGRectTransform.m; path = ../Gallop/LWCGRectTransform.m; sourceTree = "<group>"; };
+		B0B7DF8A1DEFCBF00050BFB1 /* LWFlag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LWFlag.h; path = ../Gallop/LWFlag.h; sourceTree = "<group>"; };
+		B0B7DF8B1DEFCBF00050BFB1 /* LWFlag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LWFlag.m; path = ../Gallop/LWFlag.m; sourceTree = "<group>"; };
+		B0B7DF8D1DEFCC500050BFB1 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "../Gallop/NSString+HTML.h"; sourceTree = "<group>"; };
+		B0B7DF8E1DEFCC500050BFB1 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HTML.m"; path = "../Gallop/NSString+HTML.m"; sourceTree = "<group>"; };
+		B0B7DF901DEFCE090050BFB1 /* UIView+DisplayAddtions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+DisplayAddtions.h"; path = "../Gallop/UIView+DisplayAddtions.h"; sourceTree = "<group>"; };
+		B0B7DF911DEFCE090050BFB1 /* UIView+DisplayAddtions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+DisplayAddtions.m"; path = "../Gallop/UIView+DisplayAddtions.m"; sourceTree = "<group>"; };
 		B0C9A9291D2270C000DFAA44 /* ArticleListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleListViewController.h; sourceTree = "<group>"; };
 		B0C9A92A1D2270C000DFAA44 /* ArticleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleListViewController.m; sourceTree = "<group>"; };
 		B0C9A92C1D2272DD00DFAA44 /* ArticleListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleListTableViewCell.h; sourceTree = "<group>"; };
@@ -514,6 +526,8 @@
 			children = (
 				012EDDF11D931D8B009AFA90 /* LWTextLayout.h */,
 				012EDDF21D931D8B009AFA90 /* LWTextLayout.m */,
+				B0B7DF871DEFCAAE0050BFB1 /* LWCGRectTransform.h */,
+				B0B7DF881DEFCAAE0050BFB1 /* LWCGRectTransform.m */,
 				012EDDF51D931D8B009AFA90 /* LWTextRunDelegate.h */,
 				012EDDF61D931D8B009AFA90 /* LWTextRunDelegate.m */,
 				012EDDEF1D931D8B009AFA90 /* LWTextContainer.h */,
@@ -526,6 +540,8 @@
 				012EDDEE1D931D8B009AFA90 /* LWTextAttachment.m */,
 				012EDDF71D931D8B009AFA90 /* NSMutableAttributedString+Gallop.h */,
 				012EDDF81D931D8B009AFA90 /* NSMutableAttributedString+Gallop.m */,
+				B0B7DF8D1DEFCC500050BFB1 /* NSString+HTML.h */,
+				B0B7DF8E1DEFCC500050BFB1 /* NSString+HTML.m */,
 			);
 			name = _CoreText;
 			sourceTree = "<group>";
@@ -567,12 +583,16 @@
 		B08CFE2B1D02CD4100A8B70D /* _Transactions */ = {
 			isa = PBXGroup;
 			children = (
+				B0B7DF901DEFCE090050BFB1 /* UIView+DisplayAddtions.h */,
+				B0B7DF911DEFCE090050BFB1 /* UIView+DisplayAddtions.m */,
 				012EDDFF1D931DED009AFA90 /* CALayer+LWTransaction.h */,
 				012EDE001D931DED009AFA90 /* CALayer+LWTransaction.m */,
 				012EDE011D931DED009AFA90 /* LWTransaction.h */,
 				012EDE021D931DED009AFA90 /* LWTransaction.m */,
 				012EDE031D931DED009AFA90 /* LWTransactionGroup.h */,
 				012EDE041D931DED009AFA90 /* LWTransactionGroup.m */,
+				B0B7DF8A1DEFCBF00050BFB1 /* LWFlag.h */,
+				B0B7DF8B1DEFCBF00050BFB1 /* LWFlag.m */,
 			);
 			name = _Transactions;
 			sourceTree = "<group>";
@@ -722,6 +742,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0F991CE1D937EA000D7B529 /* LWImageBrowser.m in Sources */,
+				B0B7DF8F1DEFCC500050BFB1 /* NSString+HTML.m in Sources */,
 				012EDDD31D931C98009AFA90 /* LWAsyncDisplayLayer.m in Sources */,
 				012EDE071D931DED009AFA90 /* LWTransactionGroup.m in Sources */,
 				01571FA51D92FFB3002D71A5 /* SDWebImageDownloader.m in Sources */,
@@ -731,6 +752,7 @@
 				012EDE4A1D931FB1009AFA90 /* LWHTMLNode.m in Sources */,
 				011DFA221C987CD6000410D7 /* AppDelegate.m in Sources */,
 				01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */,
+				B0B7DF891DEFCAAE0050BFB1 /* LWCGRectTransform.m in Sources */,
 				012EDDFB1D931D8B009AFA90 /* LWTextLayout.m in Sources */,
 				012EDE0E1D931E26009AFA90 /* CALayer+WebCache.m in Sources */,
 				B0ACEC051CEDC9A50019074F /* CommentView.m in Sources */,
@@ -754,6 +776,7 @@
 				01571FA01D92FFB3002D71A5 /* MKAnnotationView+WebCache.m in Sources */,
 				012EDDEA1D931D08009AFA90 /* LWCornerRadiusHelper.m in Sources */,
 				012EDE4B1D931FB1009AFA90 /* LWHTMLParser.m in Sources */,
+				B0B7DF921DEFCE090050BFB1 /* UIView+DisplayAddtions.m in Sources */,
 				B0F991CD1D937EA000D7B529 /* LWAlertView.m in Sources */,
 				01571FAD1D92FFB3002D71A5 /* UIImageView+HighlightedWebCache.m in Sources */,
 				B0C9A92E1D2272DD00DFAA44 /* ArticleListTableViewCell.m in Sources */,
@@ -792,6 +815,7 @@
 				B0E7F39A1D210CE300877644 /* WebViewController.m in Sources */,
 				B0ACEC071CEDC9A50019074F /* Menu.m in Sources */,
 				012EDDFE1D931D8B009AFA90 /* NSMutableAttributedString+Gallop.m in Sources */,
+				B0B7DF8C1DEFCBF00050BFB1 /* LWFlag.m in Sources */,
 				012EDE0F1D931E26009AFA90 /* CALayer+WebCacheOperation.m in Sources */,
 				01F58BC01D85AA8C0089DB02 /* RichTextDemo1ViewController.m in Sources */,
 				01571FA91D92FFB3002D71A5 /* UIButton+WebCache.m in Sources */,

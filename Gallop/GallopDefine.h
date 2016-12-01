@@ -22,6 +22,8 @@
  THE SOFTWARE.
  */
 
+
+
 #ifndef GallopDefine_h
 #define GallopDefine_h
 
@@ -40,6 +42,12 @@
 #ifndef RGB
 #define RGB(A,B,C,D) [UIColor colorWithRed:A/255.0f green:B/255.0f blue:C/255.0f alpha:D]
 #endif
+
+typedef BOOL(^LWAsyncDisplayIsCanclledBlock)(void);
+typedef void(^LWAsyncDisplayWillDisplayBlock)(CALayer *layer);
+typedef void(^LWAsyncDisplayBlock)(CGContextRef context, CGSize size, LWAsyncDisplayIsCanclledBlock isCancelledBlock);
+typedef void(^LWAsyncDisplayDidDisplayBlock)(CALayer *layer, BOOL finished);
+
 
 
 #endif /* GallopDefine_h */

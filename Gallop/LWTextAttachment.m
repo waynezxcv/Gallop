@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
- 
+
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,6 +28,7 @@
 #import "GallopDefine.h"
 
 
+
 @implementation LWTextAttachment
 
 + (id)lw_textAttachmentWithContent:(id)content {
@@ -38,6 +39,7 @@
     return attachment;
 }
 
+
 - (id)init {
     self = [super init];
     if (self) {
@@ -47,11 +49,38 @@
     return self;
 }
 
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+
+    [aCoder encodeObject:self.content forKey:@"content"];
+    [aCoder encodeObject:[NSValue valueWithRange:self.range] forKey:@"range"];
+    [aCoder encodeCGRect:self.frame forKey:@"frame"];
+    [aCoder encodeObject:self.URL forKey:@"URL"];
+    [aCoder encodeInteger:self.contentMode forKey:@"contentMode"];
+    [aCoder encodeUIEdgeInsets:self.contentEdgeInsets forKey:@"contentEdgeInsets"];
+    [aCoder encodeObject:self.userInfo forKey:@"userInfo"];
+
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.content = [aDecoder decodeObjectForKey:@"content"];
+        self.range = [[aDecoder decodeObjectForKey:@"range"] rangeValue];
+        self.frame = [aDecoder decodeCGRectForKey:@"frame"];
+        self.URL = [aDecoder decodeObjectForKey:@"URL"];
+        self.contentMode = [aDecoder decodeIntegerForKey:@"contentMode"];
+        self.contentEdgeInsets = [aDecoder decodeUIEdgeInsetsForKey:@"contentEdgeInsets"];
+        self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"];
+    }
+    return self;
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
     LWTextAttachment* attachment = [[LWTextAttachment alloc] init];
-    
     if ([self.content conformsToProtocol:@protocol(NSCopying)]) {
         attachment.content = [self.content copy];
     }
@@ -67,7 +96,13 @@
     return attachment;
 }
 
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
 @end
+
+
 
 
 @implementation LWTextHighlight
@@ -86,22 +121,33 @@
     return self;
 }
 
-- (NSUInteger)hash {
-    long v1 = (long)((__bridge void *)self.content);
-    long v2 = (long)[NSValue valueWithRange:self.range];
-    return v1 ^ v2;
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.content forKey:@"content"];
+    [aCoder encodeObject:[NSValue valueWithRange:self.range] forKey:@"range"];
+    [aCoder encodeObject:self.linkColor forKey:@"linkColor"];
+    [aCoder encodeObject:self.hightlightColor forKey:@"hightlightColor"];
+    [aCoder encodeObject:self.positions forKey:@"positions"];
+    [aCoder encodeObject:self.userInfo forKey:@"userInfo"];
+    [aCoder encodeInteger:self.type forKey:@"type"];
 }
 
-- (BOOL)isEqual:(id)object{
-    if (self == object) {
-        return YES;
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.content = [aDecoder decodeObjectForKey:@"content"];
+        self.range = [[aDecoder decodeObjectForKey:@"range"] rangeValue];
+        self.linkColor = [aDecoder decodeObjectForKey:@"linkColor"];
+        self.hightlightColor = [aDecoder decodeObjectForKey:@"hightlightColor"];
+        self.positions = [aDecoder decodeObjectForKey:@"positions"];
+        self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"];
+        self.type = [aDecoder decodeIntegerForKey:@"type"];
     }
-    if (![object isMemberOfClass:self.class]){
-        return NO;
-    }
-    LWTextHighlight* other = object;
-    return other.content == _content && [NSValue valueWithRange:other.range] == [NSValue valueWithRange:self.range];
+    return self;
 }
+
 
 #pragma mark - NSCopying
 
@@ -122,6 +168,29 @@
     return highlight;
 }
 
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+
+#pragma mark -
+- (NSUInteger)hash {
+    long v1 = (long)((__bridge void *)self.content);
+    long v2 = (long)[NSValue valueWithRange:self.range];
+    return v1 ^ v2;
+}
+
+- (BOOL)isEqual:(id)object{
+    if (self == object) {
+        return YES;
+    }
+    if (![object isMemberOfClass:self.class]){
+        return NO;
+    }
+    LWTextHighlight* other = object;
+    return other.content == _content && [NSValue valueWithRange:other.range] == [NSValue valueWithRange:self.range];
+}
+
 
 @end
 
@@ -140,6 +209,26 @@
 }
 
 
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.backgroundColor forKey:@"backgroundColor"];
+    [aCoder encodeObject:[NSValue valueWithRange:self.range] forKey:@"range"];
+    [aCoder encodeObject:self.userInfo forKey:@"userInfo"];
+    [aCoder encodeObject:self.positions forKey:@"positions"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.backgroundColor = [aDecoder decodeObjectForKey:@"backgroundColor"];
+        self.range = [[aDecoder decodeObjectForKey:@"range"] rangeValue];
+        self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"];
+        self.positions = [aDecoder decodeObjectForKey:@"positions"];
+    }
+    return self;
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
@@ -151,7 +240,18 @@
     return bgColor;
 }
 
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
 @end
+
+
+
+
+
+
+
 
 //*** Text描边 ***//
 
@@ -179,7 +279,36 @@
     return stroke;
 }
 
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[NSValue valueWithRange:self.range] forKey:@"range"];
+    [aCoder encodeObject:self.strokeColor forKey:@"strokeColor"];
+    [aCoder encodeObject:self.userInfo forKey:@"userInfo"];
+    [aCoder encodeFloat:self.strokeWidth forKey:@"strokeWidth"];
+
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.range = [[aDecoder decodeObjectForKey:@"range"] rangeValue];
+        self.strokeColor = [aDecoder decodeObjectForKey:@"strokeColor"];
+        self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"];
+        self.strokeWidth = [aDecoder decodeFloatForKey:@"strokeWidth"];
+    }
+    return self;
+}
+
 @end
+
+
+
+
 
 
 /**
@@ -194,6 +323,7 @@
         self.range = NSMakeRange(0, 0);
         self.strokeColor = [UIColor clearColor];
         self.userInfo = @{};
+        self.positions = @[];
     }
     return self;
 }
@@ -207,6 +337,30 @@
     stroke.userInfo = [self.userInfo copy];
     stroke.positions = [self.positions copy];
     return stroke;
+}
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[NSValue valueWithRange:self.range] forKey:@"range"];
+    [aCoder encodeObject:self.strokeColor forKey:@"strokeColor"];
+    [aCoder encodeObject:self.userInfo forKey:@"userInfo"];
+    [aCoder encodeObject:self.positions forKey:@"positions"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.range = [[aDecoder decodeObjectForKey:@"range"] rangeValue];
+        self.strokeColor = [aDecoder decodeObjectForKey:@"strokeColor"];
+        self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"];
+        self.positions = [aDecoder decodeObjectForKey:@"positions"];
+    }
+    return self;
 }
 
 @end

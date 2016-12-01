@@ -78,34 +78,35 @@ static char imageURLKey;
     if (url) {
         __weak __typeof(self)wself = self;
         id <SDWebImageOperation> operation =
-        [[SDWebImageManager sharedManager] downloadImageWithURL:url
-                                                        options:options
-                                                       progress:progressBlock
-                                                      completed:^(UIImage *image,
-                                                                  NSError *error,
-                                                                  SDImageCacheType cacheType,
-                                                                  BOOL finished,
-                                                                  NSURL *imageURL) {
-                                                          if (!wself) return;
-                                                          dispatch_main_sync_safe(^{
-                                                              if (!wself) return;
-                                                              if (image && (options & SDWebImageAvoidAutoSetImage) && completedBlock) {
-                                                                  completedBlock(image, error, cacheType, url);
-                                                                  return;
-                                                              } else if (image) {
-                                                                  wself.contents = (__bridge id)image.CGImage;
-                                                                  [wself setNeedsLayout];
-                                                              } else {
-                                                                  if ((options & SDWebImageDelayPlaceholder)) {
-                                                                      wself.contents = (__bridge id)placeholder.CGImage;
-                                                                      [wself setNeedsLayout];
-                                                                  }
-                                                              }
-                                                              if (completedBlock && finished) {
-                                                                  completedBlock(image, error, cacheType, url);
-                                                              }
-                                                          });
-                                                      }];
+        [[SDWebImageManager sharedManager]
+         downloadImageWithURL:url
+         options:options
+         progress:progressBlock
+         completed:^(UIImage *image,
+                     NSError *error,
+                     SDImageCacheType cacheType,
+                     BOOL finished,
+                     NSURL *imageURL) {
+             if (!wself) return;
+             dispatch_main_sync_safe(^{
+                 if (!wself) return;
+                 if (image && (options & SDWebImageAvoidAutoSetImage) && completedBlock) {
+                     completedBlock(image, error, cacheType, url);
+                     return;
+                 } else if (image) {
+                     wself.contents = (__bridge id)image.CGImage;
+                     [wself setNeedsLayout];
+                 } else {
+                     if ((options & SDWebImageDelayPlaceholder)) {
+                         wself.contents = (__bridge id)placeholder.CGImage;
+                         [wself setNeedsLayout];
+                     }
+                 }
+                 if (completedBlock && finished) {
+                     completedBlock(image, error, cacheType, url);
+                 }
+             });
+         }];
         [self sd_setImageLoadOperation:operation forKey:@"CALayerImageLoad"];
     } else {
         dispatch_main_async_safe(^{
@@ -198,6 +199,7 @@ static char imageURLKey;
                    options:(SDWebImageOptions)options
                   progress:(SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(SDWebImageCompletionBlock)completedBlock {
+
     [self sd_cancelCurrentImageLoad];
     objc_setAssociatedObject(self, &imageURLKey, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (!(options & SDWebImageDelayPlaceholder)) {

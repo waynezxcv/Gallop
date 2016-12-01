@@ -117,8 +117,7 @@
 - (void)placeholderHidenOrShow:(UITextView *)textView {
     if (textView.text.length == 0) {
         self.placeholderLabel.hidden = NO;
-    }
-    else {
+    } else {
         self.placeholderLabel.hidden = YES;
     }
 }

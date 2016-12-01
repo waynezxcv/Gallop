@@ -27,7 +27,7 @@
 #import <CoreText/CoreText.h>
 #import "LWTextContainer.h"
 #import "LWTextAttachment.h"
-#import "GallopUtils.h"
+#import "GallopDefine.h"
 
 
 
@@ -36,7 +36,7 @@
 /**
  *  文本布局模型，对CoreText的封装
  */
-@interface LWTextLayout : NSObject
+@interface LWTextLayout : NSObject <NSCoding,NSCopying,NSMutableCopying>
 
 @property (nonatomic,strong,readonly) LWTextContainer* container;//文本容器
 @property (nonatomic,strong,readonly) NSAttributedString* text;//文本
@@ -46,7 +46,6 @@
 @property (nonatomic,assign) NSInteger maxNumberOfLines;//行数限制，如果是0，则不限制行数，默认是0
 @property (nonatomic,assign,readonly) CGPathRef cgPath;//文本绘制的路径
 @property (nonatomic,assign,readonly) CGRect cgPathBox;//文本容器的边框
-
 @property (nonatomic,assign,readonly) CGSize suggestSize;//建议的绘制大小
 @property (nonatomic,assign,readonly) CGRect textBoundingRect;//文本边框
 @property (nonatomic,assign,readonly) CGSize textBoundingSize;//文本边框的大小

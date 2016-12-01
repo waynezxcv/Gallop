@@ -19,6 +19,20 @@
 
 @implementation CellLayout
 
+- (id)copyWithZone:(NSZone *)zone {
+    CellLayout* one = [[CellLayout alloc] init];
+    one.statusModel = [self.statusModel copy];
+    one.cellHeight = self.cellHeight;
+    one.lineRect = self.lineRect;
+    one.menuPosition = self.menuPosition;
+    one.commentBgPosition = self.commentBgPosition;
+    one.avatarPosition = self.avatarPosition;
+    one.websitePosition = self.websitePosition;
+    one.imagePostions = [self.imagePostions copy];
+    return one;
+}
+
+
 - (id)initWithStatusModel:(StatusModel *)statusModel
                     index:(NSInteger)index
             dateFormatter:(NSDateFormatter *)dateFormatter {
@@ -84,6 +98,10 @@
         [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
+        
+        //添加长按复制
+        [contentTextStorage lw_addLongPressActionWithData:contentTextStorage.text
+                                           highLightColor:RGB(0, 0, 0, 0.25f)];
         
         
         //发布的图片模型 imgsStorage
@@ -452,6 +470,11 @@
         [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
+        
+        
+        //添加长按复制
+        [contentTextStorage lw_addLongPressActionWithData:contentTextStorage.text
+                                           highLightColor:RGB(0, 0, 0, 0.25f)];
         
 
         //发布的图片模型 imgsStorage

@@ -27,6 +27,53 @@
 
 @implementation LWHTMLNode
 
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWHTMLNode* one = [[LWHTMLNode alloc] init];
+    one.parent = [self.parent copy];
+    one.firstChild = [self.firstChild copy];
+    one.rightSib = [self.rightSib copy];
+    one.children = [self.children mutableCopy];
+    one.elementName = [self.elementName copy];
+    one.contentString = [self.contentString copy];
+    one.attributeDict = [self.attributeDict copy];
+    one.range = self.range;
+    one.isTag = self.isTag;
+    return one;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.parent forKey:@"parent"];
+    [aCoder encodeObject:self.firstChild forKey:@"firstChild"];
+    [aCoder encodeObject:self.rightSib forKey:@"rightSib"];
+    [aCoder encodeObject:self.children forKey:@"children"];
+    [aCoder encodeObject:self.elementName forKey:@"elementName"];
+    [aCoder encodeObject:self.contentString forKey:@"contentString"];
+    [aCoder encodeObject:self.attributeDict forKey:@"attributeDict"];
+    [aCoder encodeObject:[NSValue valueWithRange:self.range] forKey:@""];
+    [aCoder encodeBool:self.isTag forKey:@"isTag"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.parent = [aDecoder decodeObjectForKey:@"parent"];
+        self.firstChild = [aDecoder decodeObjectForKey:@"firstChild"];
+        self.rightSib = [aDecoder decodeObjectForKey:@"rightSib"];
+        self.children = [aDecoder decodeObjectForKey:@"children"];
+        self.elementName = [aDecoder decodeObjectForKey:@"elementName"];
+        self.contentString = [aDecoder decodeObjectForKey:@"contentString"];
+        self.attributeDict = [aDecoder decodeObjectForKey:@"attributeDict"];
+        self.range = [[aDecoder decodeObjectForKey:@"range"] rangeValue];
+        self.isTag = [aDecoder decodeBoolForKey:@"isTag"];
+    }
+    return self;
+}
+
 - (id)init {
     self = [super init];
     if (self) {

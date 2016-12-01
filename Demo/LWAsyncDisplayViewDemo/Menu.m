@@ -19,7 +19,6 @@
 @interface Menu ()
 
 @property (nonatomic,assign) BOOL show;
-@property (nonatomic,assign) BOOL isShowing;
 
 @end
 
@@ -32,7 +31,6 @@
     if (self) {
         self.clipsToBounds = YES;
         self.show = NO;
-        self.isShowing = NO;
         self.backgroundColor = [UIColor clearColor];
         [self addSubview:self.likeButton];
         [self addSubview:self.commentButton];
@@ -63,14 +61,10 @@
 
 #pragma mark - Actions
 - (void)clickedMenu {
-    if (!self.isShowing) {
-        self.isShowing = YES;
-        if (self.show) {
-            [self menuHide];
-        }
-        else {
-            [self menuShow];
-        }
+    if (self.show) {
+        [self menuHide];
+    } else {
+        [self menuShow];
     }
 }
 
@@ -80,36 +74,40 @@
                           delay:0.0f
          usingSpringWithDamping:0.7
           initialSpringVelocity:0.0f
-                        options:0 animations:^{
-                            self.frame = CGRectMake(self.frame.origin.x - 160,
-                                                    self.frame.origin.y,
-                                                    160,
-                                                    34.0f);
-                        } completion:^(BOOL finished) {
-                            self.show = YES;
-                            self.isShowing = NO;
-                        }];
-
+                        options:0
+                     animations:^{
+                         self.frame = CGRectMake(self.frame.origin.x - 160,
+                                                 self.frame.origin.y,
+                                                 160,
+                                                 34.0f);
+                     } completion:^(BOOL finished) {
+                         self.show = YES;
+                     }];
+    
 }
 
 - (void)menuHide {
+    if (!self.show) {
+        return;
+    }
+    
     [UIView animateWithDuration:0.3f
                           delay:0.0f
          usingSpringWithDamping:0.7f
           initialSpringVelocity:0.0f
-                        options:0 animations:^{
-                            self.frame = CGRectMake(self.frame.origin.x + 160,
-                                                    self.frame.origin.y,
-                                                    0.0f,
-                                                    34.0f);
-                        } completion:^(BOOL finished) {
-                            self.frame = CGRectMake(self.frame.origin.x,
-                                                    self.frame.origin.y,
-                                                    0.0f,
-                                                    34.0f);
-                            self.show = NO;
-                            self.isShowing = NO;
-                        }];
+                        options:0
+                     animations:^{
+                         self.frame = CGRectMake(self.frame.origin.x + 160,
+                                                 self.frame.origin.y,
+                                                 0.0f,
+                                                 34.0f);
+                     } completion:^(BOOL finished) {
+                         self.frame = CGRectMake(self.frame.origin.x,
+                                                 self.frame.origin.y,
+                                                 0.0f,
+                                                 34.0f);
+                         self.show = NO;
+                     }];
 }
 
 #pragma mark - Getter & Setter
@@ -141,7 +139,7 @@
     if (_commentButton) {
         return _commentButton;
     }
-
+    
     _commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_commentButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_commentButton setTitle:@" 评论" forState:UIControlStateNormal];

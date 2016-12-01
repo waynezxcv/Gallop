@@ -31,7 +31,7 @@ static char loadOperationKey;
 @implementation CALayer(WebCacheOperation)
 
 - (NSMutableDictionary *)operationDictionary {
-    NSMutableDictionary *operations = objc_getAssociatedObject(self, &loadOperationKey);
+    NSMutableDictionary* operations = objc_getAssociatedObject(self, &loadOperationKey);
     if (operations) {
         return operations;
     }
@@ -45,12 +45,12 @@ static char loadOperationKey;
 
 - (void)sd_setImageLoadOperation:(id)operation forKey:(NSString *)key {
     [self sd_cancelImageLoadOperationWithKey:key];
-    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    NSMutableDictionary* operationDictionary = [self operationDictionary];
     [operationDictionary setObject:operation forKey:key];
 }
 
 - (void)sd_cancelImageLoadOperationWithKey:(NSString *)key {
-    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    NSMutableDictionary* operationDictionary = [self operationDictionary];
     id operations = [operationDictionary objectForKey:key];
     if (operations) {
         if ([operations isKindOfClass:[NSArray class]]) {
@@ -67,7 +67,7 @@ static char loadOperationKey;
 }
 
 - (void)sd_removeImageLoadOperationWithKey:(NSString *)key {
-    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    NSMutableDictionary* operationDictionary = [self operationDictionary];
     [operationDictionary removeObjectForKey:key];
 }
 

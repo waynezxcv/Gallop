@@ -128,6 +128,42 @@
 }
 
 
+//长按内容文字
+- (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didLongpressedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
+    [self becomeFirstResponder];
+    UIMenuItem* copyLink = [[UIMenuItem alloc] initWithTitle:@"复制"
+                                                      action:@selector(copyText)];
+    [[UIMenuController sharedMenuController] setMenuItems:[NSArray arrayWithObjects:copyLink, nil]];
+    
+    CGRect rect = CGRectMake(textStorage.center.x - 50.0f, textStorage.top, 100.0f, 50.0f);
+    [UIMenuController sharedMenuController].arrowDirection = UIMenuControllerArrowDown;
+    [[UIMenuController sharedMenuController] setTargetRect:rect inView:self];
+    [[UIMenuController sharedMenuController] setMenuVisible:YES animated:YES];
+    self.preCopyText = data;
+}
+
+//复制
+- (void)copyText {
+    UIPasteboard* pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = self.preCopyText;
+    
+    [self resignFirstResponder];
+    [self.asyncDisplayView removeAllHighlights];
+    
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    if(action == @selector(copyText)){
+        return YES;
+    }
+    return [super canPerformAction:action withSender:sender];
+}
+
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+
 #pragma mark - Actions
 //点击菜单按钮
 - (void)didClickedMenuButton {
@@ -177,6 +213,9 @@
 }
 
 - (void)setCellLayout:(CellLayout *)cellLayout {
+    
+    [self.menu menuHide];
+    
     if (_cellLayout != cellLayout) {
         _cellLayout = cellLayout;
         self.asyncDisplayView.layout = self.cellLayout;

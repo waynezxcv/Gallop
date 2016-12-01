@@ -27,17 +27,188 @@
 #import <objc/runtime.h>
 #import "GallopDefine.h"
 
+
+
 @interface LWTextStorage ()
 
 @property (nonatomic,strong) LWTextLayout* textLayout;
+@property (nonatomic,assign) CGSize suggestSize;//建议的绘制大小
+@property (nonatomic,assign) NSInteger numberOfLines;//文本的实际行数
+@property (nonatomic,assign) BOOL isTruncation;//是否折叠
 
 @end
+
 
 @implementation LWTextStorage
 
 @synthesize frame = _frame;
 @synthesize position = _position;
 @synthesize text = _text;
+
+
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextStorage* one = [[LWTextStorage alloc] init];
+    one.textLayout = [self.textLayout copy];
+    one.text = [self.text copy];
+    one.attributedText = [self.attributedText mutableCopy];
+    one.textColor = [self.textColor copy];
+    one.textBackgroundColor = [self.textBackgroundColor copy];
+    one.textBoundingStrokeColor = [self.textBoundingStrokeColor copy];
+    one.font = [self.font copy];
+    one.linespacing = self.linespacing;
+    one.characterSpacing = self.characterSpacing;
+    one.textAlignment = self.textAlignment;
+    one.vericalAlignment = self.vericalAlignment;
+    one.underlineStyle = self.underlineStyle;
+    one.underlineColor = [self.underlineColor copy];
+    one.lineBreakMode = self.lineBreakMode;
+    one.textDrawMode = self.textDrawMode;
+    one.strokeColor = [self.strokeColor copy];
+    one.strokeWidth = self.strokeWidth;
+    one.suggestSize = self.suggestSize;
+    one.maxNumberOfLines = self.maxNumberOfLines;
+    one.numberOfLines = self.numberOfLines;
+    one.needDebug = self.needDebug;
+    one.isTruncation = self.isTruncation;
+    one.identifier = [self.identifier copy];
+    one.tag = self.tag;
+    one.clipsToBounds = self.clipsToBounds;
+    one.opaque = self.opaque;
+    one.hidden = self.hidden;
+    one.alpha = self.alpha;
+    one.frame = self.frame;
+    one.bounds = self.bounds;
+    one.center = self.center;
+    one.position = self.position;
+    one.cornerRadius = self.cornerRadius;
+    one.cornerBackgroundColor = [self.cornerBackgroundColor copy];
+    one.cornerBorderColor = [self.cornerBorderColor copy];
+    one.cornerBorderWidth = self.cornerBorderWidth;
+    one.shadowColor = self.shadowColor;
+    one.shadowOpacity = self.shadowOpacity;
+    one.shadowOffset = self.shadowOffset;
+    one.shadowRadius = self.shadowRadius;
+    one.contentsScale = self.contentsScale;
+    one.backgroundColor = [self.backgroundColor copy];
+    one.contentMode = self.contentMode;
+    one.htmlLayoutEdgeInsets = self.htmlLayoutEdgeInsets;
+    one.extraDisplayIdentifier = [self.extraDisplayIdentifier copy];
+    
+    return one;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.textLayout forKey:@"textLayout"];
+    [aCoder encodeObject:self.text forKey:@"text"];
+    [aCoder encodeObject:self.attributedText forKey:@"attributedText"];
+    [aCoder encodeObject:self.textColor forKey:@"textColor"];
+    [aCoder encodeObject:self.textBackgroundColor forKey:@"textBackgroundColor"];
+    [aCoder encodeObject:self.textBoundingStrokeColor forKey:@"textBoundingStrokeColor"];
+    [aCoder encodeObject:self.font forKey:@"font"];
+    [aCoder encodeFloat:self.linespacing forKey:@"linespacing"];
+    [aCoder encodeInteger:self.textAlignment forKey:@"textAlignment"];
+    [aCoder encodeInteger:self.vericalAlignment forKey:@"vericalAlignment"];
+    [aCoder encodeInteger:self.underlineStyle forKey:@"underlineStyle"];
+    [aCoder encodeObject:self.underlineColor forKey:@"underlineColor"];
+    [aCoder encodeInteger:self.lineBreakMode forKey:@"lineBreakMode"];
+    [aCoder encodeInteger:self.textDrawMode forKey:@"textDrawMode"];
+    [aCoder encodeObject:self.strokeColor forKey:@"strokeColor"];
+    [aCoder encodeFloat:self.strokeWidth forKey:@"strokeWidth"];
+    [aCoder encodeCGSize:self.suggestSize forKey:@"suggestSize"];
+    [aCoder encodeInteger:self.maxNumberOfLines forKey:@"maxNumberOfLines"];
+    [aCoder encodeInteger:self.numberOfLines forKey:@"numberOfLines"];
+    [aCoder encodeBool:self.needDebug forKey:@"needDebug"];
+    [aCoder encodeBool:self.isTruncation forKey:@"isTruncation"];
+    [aCoder encodeObject:self.identifier forKey:@"identifier"];
+    [aCoder encodeInteger:self.tag forKey:@"tag"];
+    [aCoder encodeBool:self.clipsToBounds forKey:@"clipsToBounds"];
+    [aCoder encodeBool:self.opaque forKey:@"opaque"];
+    [aCoder encodeBool:self.hidden forKey:@"hidden"];
+    [aCoder encodeFloat:self.alpha forKey:@"alpha"];
+    [aCoder encodeCGRect:self.frame forKey:@"frame"];
+    [aCoder encodeCGRect:self.bounds forKey:@"bounds"];
+    [aCoder encodeFloat:self.height forKey:@"height"];
+    [aCoder encodeFloat:self.width forKey:@"width"];
+    [aCoder encodeFloat:self.left forKey:@"left"];
+    [aCoder encodeFloat:self.right forKey:@"right"];
+    [aCoder encodeFloat:self.top forKey:@"top"];
+    [aCoder encodeFloat:self.bottom forKey:@"bottom"];
+    [aCoder encodeCGPoint:self.center forKey:@"center"];
+    [aCoder encodeCGPoint:self.position forKey:@"position"];
+    [aCoder encodeFloat:self.cornerRadius forKey:@"cornerRadius"];
+    [aCoder encodeObject:self.cornerBackgroundColor forKey:@"cornerBackgroundColor"];
+    [aCoder encodeObject:self.cornerBorderColor forKey:@"cornerBorderColor"];
+    [aCoder encodeFloat:self.cornerBorderWidth forKey:@"cornerBorderWidth"];
+    [aCoder encodeObject:self.shadowColor forKey:@"shadowColor"];
+    [aCoder encodeFloat:self.shadowOpacity forKey:@"shadowOpacity"];
+    [aCoder encodeCGSize:self.shadowOffset forKey:@"shadowOffset"];
+    [aCoder encodeFloat:self.shadowRadius forKey:@"shadowRadius"];
+    [aCoder encodeFloat:self.contentsScale forKey:@"contentsScale"];
+    [aCoder encodeObject:self.backgroundColor forKey:@"backgroundColor"];
+    [aCoder encodeInteger:self.contentMode forKey:@"contentMode"];
+    [aCoder encodeUIEdgeInsets:self.htmlLayoutEdgeInsets forKey:@"htmlLayoutEdgeInsets"];
+    [aCoder encodeObject:self.extraDisplayIdentifier forKey:@"extraDisplayIdentifier"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.textLayout = [aDecoder decodeObjectForKey:@"textLayout"];
+        self.text = [aDecoder decodeObjectForKey:@"text"];
+        self.attributedText = [aDecoder decodeObjectForKey:@"attributedText"];
+        self.textColor = [aDecoder decodeObjectForKey:@"textColor"];
+        self.textBackgroundColor = [aDecoder decodeObjectForKey:@"textBackgroundColor"];
+        self.textBoundingStrokeColor = [aDecoder decodeObjectForKey:@"textBoundingStrokeColor"];
+        self.font = [aDecoder decodeObjectForKey:@"font"];
+        self.linespacing = [aDecoder decodeFloatForKey:@"linespacing"];
+        self.textAlignment = [aDecoder decodeIntegerForKey:@"textAlignment"];
+        self.vericalAlignment = [aDecoder decodeIntegerForKey:@"vericalAlignment"];
+        self.underlineStyle = [aDecoder decodeIntegerForKey:@"underlineStyle"];
+        self.underlineColor = [aDecoder decodeObjectForKey:@"underlineColor"];
+        self.lineBreakMode = [aDecoder decodeIntegerForKey:@"lineBreakMode"];
+        self.textDrawMode = [aDecoder decodeIntegerForKey:@"textDrawMode"];
+        self.strokeColor = [aDecoder decodeObjectForKey:@"strokeColor"];
+        self.strokeWidth = [aDecoder decodeFloatForKey:@"strokeWidth"];
+        self.suggestSize = [aDecoder decodeCGSizeForKey:@"suggestSize"];
+        self.maxNumberOfLines = [aDecoder decodeIntegerForKey:@"maxNumberOfLines"];
+        self.numberOfLines = [aDecoder decodeIntegerForKey:@"numberOfLines"];
+        self.needDebug  = [aDecoder decodeIntegerForKey:@"needDebug"];
+        self.isTruncation = [aDecoder decodeIntegerForKey:@"isTruncation"];
+        self.identifier = [aDecoder decodeObjectForKey:@"identifier"];
+        self.tag = [aDecoder decodeIntegerForKey:@"tag"];
+        self.clipsToBounds = [aDecoder decodeBoolForKey:@"clipsToBounds"];
+        self.opaque = [aDecoder decodeBoolForKey:@"opaque"];
+        self.hidden = [aDecoder decodeBoolForKey:@"hidden"];
+        self.alpha = [aDecoder decodeFloatForKey:@"alpha"];
+        self.frame = [aDecoder decodeCGRectForKey:@"frame"];
+        self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];
+        self.center = [aDecoder decodeCGPointForKey:@"center"];
+        self.position = [aDecoder decodeCGPointForKey:@"position"];
+        self.cornerRadius = [aDecoder decodeFloatForKey:@"cornerRadius"];
+        self.cornerBackgroundColor = [aDecoder decodeObjectForKey:@"cornerBackgroundColor"];
+        self.cornerBorderColor = [aDecoder decodeObjectForKey:@"cornerBorderColor"];
+        self.cornerBorderWidth = [aDecoder decodeFloatForKey:@"cornerBorderWidth"];
+        self.shadowColor = [aDecoder decodeObjectForKey:@"shadowColor"];
+        self.shadowOpacity = [aDecoder decodeFloatForKey:@"shadowOpacity"];
+        self.shadowOffset = [aDecoder decodeCGSizeForKey:@"shadowOffset"];
+        self.shadowRadius = [aDecoder decodeFloatForKey:@"shadowRadius"];
+        self.contentsScale = [aDecoder decodeFloatForKey:@"contentsScale"];
+        self.backgroundColor = [aDecoder decodeObjectForKey:@"backgroundColor"];
+        self.contentMode = [aDecoder decodeIntegerForKey:@"contentMode"];
+        self.htmlLayoutEdgeInsets = [aDecoder decodeUIEdgeInsetsForKey:@"htmlLayoutEdgeInsets"];
+        self.extraDisplayIdentifier = [aDecoder decodeObjectForKey:@"extraDisplayIdentifier"];
+    }
+    return self;
+}
 
 #pragma mark - Init
 
@@ -130,7 +301,7 @@
 
 - (void)lw_addLongPressActionWithData:(id)data
                        highLightColor:(UIColor *)highLightColor {
-
+    
     [self.attributedText addLongPressActionWithData:data
                                      highLightColor:highLightColor];
     [self _creatTextLayout];
@@ -204,16 +375,19 @@
     if (URL) {
         userInfo = @{@"URL":URL};
     }
+    
     NSMutableAttributedString* attachString =
-    [NSMutableAttributedString lw_textAttachmentStringWithContent:[[UIImageView alloc]
-                                                                   initWithFrame:CGRectMake(0,
-                                                                                            0,
-                                                                                            size.width,
-                                                                                            size.height)]                                                                                                   userInfo:userInfo
-                                                      contentMode:contentMode
-                                                           ascent:ascent
-                                                          descent:descent
-                                                            width:size.width];
+    [NSMutableAttributedString
+     lw_textAttachmentStringWithContent:[[UIImageView alloc]
+                                         initWithFrame:CGRectMake(0,
+                                                                  0,
+                                                                  size.width,
+                                                                  size.height)]
+     userInfo:userInfo
+     contentMode:contentMode
+     ascent:ascent
+     descent:descent
+     width:size.width];
     [self.attributedText replaceCharactersInRange:range
                              withAttributedString:attachString];
     [self _creatTextLayout];

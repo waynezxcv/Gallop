@@ -28,6 +28,70 @@
 
 @implementation LWHTMLTextConfig
 
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextStorage* one = [[LWTextStorage alloc] init];
+    one.textColor = [self.textColor copy];
+    one.textBackgroundColor = [self.textBackgroundColor copy];
+    one.font = [self.font copy];
+    one.linespacing = self.linespacing;
+    one.characterSpacing = self.characterSpacing;
+    one.textAlignment = self.textAlignment;
+    one.underlineStyle = self.underlineStyle;
+    one.underlineColor = [self.underlineColor copy];
+    one.lineBreakMode = self.lineBreakMode;
+    one.textDrawMode = self.textDrawMode;
+    one.strokeColor = [self.strokeColor copy];
+    one.strokeWidth = self.strokeWidth;
+    one.extraDisplayIdentifier = [self.extraDisplayIdentifier copy];
+
+    return one;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.textColor forKey:@"textColor"];
+    [aCoder encodeObject:self.textBackgroundColor forKey:@"textBackgroundColor"];
+    [aCoder encodeObject:self.font forKey:@"font"];
+    [aCoder encodeFloat:self.linespacing forKey:@"linespacing"];
+    [aCoder encodeInteger:self.characterSpacing forKey:@"characterSpacing"];
+    [aCoder encodeInteger:self.textAlignment forKey:@"textAlignment"];
+    [aCoder encodeInteger:self.underlineStyle forKey:@"underlineStyle"];
+    [aCoder encodeObject:self.underlineColor forKey:@"underlineColor"];
+    [aCoder encodeInteger:self.lineBreakMode forKey:@"lineBreakMode"];
+    [aCoder encodeInteger:self.textDrawMode forKey:@"textDrawMode"];
+    [aCoder encodeObject:self.strokeColor forKey:@"strokeColor"];
+    [aCoder encodeFloat:self.strokeWidth forKey:@"strokeWidth"];
+    [aCoder encodeObject:self.extraDisplayIdentifier forKey:@"extraDisplayIdentifier"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.textColor = [aDecoder decodeObjectForKey:@"textColor"];
+        self.textBackgroundColor = [aDecoder decodeObjectForKey:@"textBackgroundColor"];
+        self.font = [aDecoder decodeObjectForKey:@"font"];
+        self.underlineColor = [aDecoder decodeObjectForKey:@"underlineColor"];
+        self.strokeColor = [aDecoder decodeObjectForKey:@"strokeColor"];
+        self.extraDisplayIdentifier = [aDecoder decodeObjectForKey:@"extraDisplayIdentifier"];
+        self.linespacing = [aDecoder decodeFloatForKey:@"linespacing"];
+        self.strokeWidth = [aDecoder decodeFloatForKey:@"strokeWidth"];
+        self.characterSpacing = [aDecoder decodeIntegerForKey:@"characterSpacing"];
+        self.textAlignment = [aDecoder decodeIntegerForKey:@"textAlignment"];
+        self.underlineStyle = [aDecoder decodeIntegerForKey:@"underlineStyle"];
+        self.lineBreakMode = [aDecoder decodeIntegerForKey:@"lineBreakMode"];
+        self.textDrawMode = [aDecoder decodeIntegerForKey:@"textDrawMode"];
+    }
+    return self;
+}
+
 + (LWHTMLTextConfig *)defaultsTextConfig {
     static LWHTMLTextConfig* config;
     static dispatch_once_t onceToken;

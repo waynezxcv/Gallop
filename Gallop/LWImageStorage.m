@@ -23,111 +23,150 @@
  */
 
 #import "LWImageStorage.h"
-#import "CALayer+WebCache.h"
-#import <objc/runtime.h>
 #import "GallopDefine.h"
-#import "LWTransaction.h"
-#import "CALayer+LWTransaction.h"
 #import "LWAsyncDisplayLayer.h"
 #import "UIImage+Gallop.h"
-
+#import "GallopUtils.h"
 
 
 @interface LWImageStorage()
+
 @property (nonatomic,assign) BOOL needRerendering;
 
 @end
-
-
-
-static CGSize _LWSizeFillWithAspectRatio(CGFloat sizeToScaleAspectRatio, CGSize destinationSize) {
-    CGFloat destinationAspectRatio = destinationSize.width / destinationSize.height;
-    if (sizeToScaleAspectRatio > destinationAspectRatio) {
-        return CGSizeMake(destinationSize.height * sizeToScaleAspectRatio, destinationSize.height);
-    } else {
-        return CGSizeMake(destinationSize.width, floorf(destinationSize.width / sizeToScaleAspectRatio));
-    }
-}
-
-static CGSize _LWSSizeFitWithAspectRatio(CGFloat aspectRatio, CGSize constraints) {
-    CGFloat constraintAspectRatio = constraints.width / constraints.height;
-    if (aspectRatio > constraintAspectRatio) {
-        return CGSizeMake(constraints.width, constraints.width / aspectRatio);
-    } else {
-        return CGSizeMake(constraints.height * aspectRatio, constraints.height);
-    }
-}
-
-static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize,
-                                                          CGSize boundsSize,
-                                                          UIViewContentMode contentMode,
-                                                          CGRect cropRect,
-                                                          BOOL forceUpscaling,
-                                                          CGSize *outBackingSize,
-                                                          CGRect *outDrawRect) {
-    size_t destinationWidth = boundsSize.width;
-    size_t destinationHeight = boundsSize.height;
-    CGFloat boundsAspectRatio = (float)destinationWidth / (float)destinationHeight;
-    
-    CGSize scaledSizeForImage = sourceImageSize;
-    BOOL cropToRectDimensions = !CGRectIsEmpty(cropRect);
-    
-    if (cropToRectDimensions) {
-        scaledSizeForImage = CGSizeMake(boundsSize.width / cropRect.size.width, boundsSize.height / cropRect.size.height);
-    } else {
-        if (contentMode == UIViewContentModeScaleAspectFill)
-            scaledSizeForImage = _LWSizeFillWithAspectRatio(boundsAspectRatio, sourceImageSize);
-        else if (contentMode == UIViewContentModeScaleAspectFit)
-            scaledSizeForImage = _LWSSizeFitWithAspectRatio(boundsAspectRatio, sourceImageSize);
-    }
-    if (forceUpscaling == NO && (scaledSizeForImage.width * scaledSizeForImage.height) < (destinationWidth * destinationHeight)) {
-        destinationWidth = (size_t)roundf(scaledSizeForImage.width);
-        destinationHeight = (size_t)roundf(scaledSizeForImage.height);
-        if (destinationWidth == 0 || destinationHeight == 0) {
-            *outBackingSize = CGSizeZero;
-            *outDrawRect = CGRectZero;
-            return;
-        }
-    }
-    CGFloat sourceImageAspectRatio = sourceImageSize.width / sourceImageSize.height;
-    CGSize scaledSizeForDestination = CGSizeMake(destinationWidth, destinationHeight);
-    if (cropToRectDimensions) {
-        scaledSizeForDestination = CGSizeMake(boundsSize.width / cropRect.size.width, boundsSize.height / cropRect.size.height);
-    } else {
-        if (contentMode == UIViewContentModeScaleAspectFill)
-            scaledSizeForDestination = _LWSizeFillWithAspectRatio(sourceImageAspectRatio, scaledSizeForDestination);
-        else if (contentMode == UIViewContentModeScaleAspectFit)
-            scaledSizeForDestination = _LWSSizeFitWithAspectRatio(sourceImageAspectRatio, scaledSizeForDestination);
-    }
-    CGRect drawRect = CGRectZero;
-    if (cropToRectDimensions) {
-        drawRect = CGRectMake(-cropRect.origin.x * scaledSizeForDestination.width,
-                              -cropRect.origin.y * scaledSizeForDestination.height,
-                              scaledSizeForDestination.width,
-                              scaledSizeForDestination.height);
-    } else {
-        if (contentMode == UIViewContentModeScaleAspectFill) {
-            drawRect = CGRectMake(((destinationWidth - scaledSizeForDestination.width) * cropRect.origin.x),
-                                  ((destinationHeight - scaledSizeForDestination.height) * cropRect.origin.y),
-                                  scaledSizeForDestination.width,
-                                  scaledSizeForDestination.height);
-            
-        } else {
-            drawRect = CGRectMake(((destinationWidth - scaledSizeForDestination.width) / 2.0),
-                                  ((destinationHeight - scaledSizeForDestination.height) / 2.0),
-                                  scaledSizeForDestination.width,
-                                  scaledSizeForDestination.height);
-        }
-    }
-    *outDrawRect = drawRect;
-    *outBackingSize = CGSizeMake(destinationWidth, destinationHeight);
-}
-
 
 @implementation LWImageStorage
 
 @synthesize cornerRadius = _cornerRadius;
 @synthesize cornerBorderWidth = _cornerBorderWidth;
+
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWImageStorage* one = [[LWImageStorage alloc] init];
+    if ([self.contents conformsToProtocol:@protocol(NSCopying)]) {
+        one.contents = [self.contents copy];
+    } else {
+        one.contents = self.contents;
+    }
+    one.localImageType = self.localImageType;
+    one.placeholder = [self.placeholder copy];
+    one.fadeShow = self.fadeShow;
+    one.userInteractionEnabled = self.userInteractionEnabled;
+    one.needRerendering = self.needRerendering;
+    one.needResize = self.needResize;
+    one.isBlur = self.isBlur;
+    one.identifier = [self.identifier copy];
+    one.tag = self.tag;
+    one.clipsToBounds = self.clipsToBounds;
+    one.opaque = self.opaque;
+    one.hidden = self.hidden;
+    one.alpha = self.alpha;
+    one.frame = self.frame;
+    one.bounds = self.bounds;
+    one.center = self.center;
+    one.position = self.position;
+    one.cornerRadius = self.cornerRadius;
+    one.cornerBackgroundColor = [self.cornerBackgroundColor copy];
+    one.cornerBorderColor = [self.cornerBorderColor copy];
+    one.cornerBorderWidth = self.cornerBorderWidth;
+    one.shadowColor = self.shadowColor;
+    one.shadowOpacity = self.shadowOpacity;
+    one.shadowOffset = self.shadowOffset;
+    one.shadowRadius = self.shadowRadius;
+    one.contentsScale = self.contentsScale;
+    one.backgroundColor = [self.backgroundColor copy];
+    one.contentMode = self.contentMode;
+    one.htmlLayoutEdgeInsets = self.htmlLayoutEdgeInsets;
+    one.extraDisplayIdentifier = [self.extraDisplayIdentifier copy];
+    return one;
+}
+
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.contents forKey:@"contents"];
+    [aCoder encodeInteger:self.localImageType forKey:@"localImageType"];
+    [aCoder encodeObject:self.placeholder forKey:@"placeholder"];
+    [aCoder encodeBool:self.fadeShow forKey:@"fadeShow"];
+    [aCoder encodeBool:self.userInteractionEnabled forKey:@"userInteractionEnabled"];
+    [aCoder encodeBool:self.needRerendering forKey:@"needRerendering"];
+    [aCoder encodeBool:self.needResize forKey:@"needResize"];
+    [aCoder encodeBool:self.isBlur forKey:@"isBlur"];
+    [aCoder encodeObject:self.identifier forKey:@"identifier"];
+    [aCoder encodeInteger:self.tag forKey:@"tag"];
+    [aCoder encodeBool:self.clipsToBounds forKey:@"clipsToBounds"];
+    [aCoder encodeBool:self.opaque forKey:@"opaque"];
+    [aCoder encodeBool:self.hidden forKey:@"hidden"];
+    [aCoder encodeFloat:self.alpha forKey:@"alpha"];
+    [aCoder encodeCGRect:self.frame forKey:@"frame"];
+    [aCoder encodeCGRect:self.bounds forKey:@"bounds"];
+    [aCoder encodeFloat:self.height forKey:@"height"];
+    [aCoder encodeFloat:self.width forKey:@"width"];
+    [aCoder encodeFloat:self.left forKey:@"left"];
+    [aCoder encodeFloat:self.right forKey:@"right"];
+    [aCoder encodeFloat:self.top forKey:@"top"];
+    [aCoder encodeFloat:self.bottom forKey:@"bottom"];
+    [aCoder encodeCGPoint:self.center forKey:@"center"];
+    [aCoder encodeCGPoint:self.position forKey:@"position"];
+    [aCoder encodeFloat:self.cornerRadius forKey:@"cornerRadius"];
+    [aCoder encodeObject:self.cornerBackgroundColor forKey:@"cornerBackgroundColor"];
+    [aCoder encodeObject:self.cornerBorderColor forKey:@"cornerBorderColor"];
+    [aCoder encodeFloat:self.cornerBorderWidth forKey:@"cornerBorderWidth"];
+    [aCoder encodeObject:self.shadowColor forKey:@"shadowColor"];
+    [aCoder encodeFloat:self.shadowOpacity forKey:@"shadowOpacity"];
+    [aCoder encodeCGSize:self.shadowOffset forKey:@"shadowOffset"];
+    [aCoder encodeFloat:self.shadowRadius forKey:@"shadowRadius"];
+    [aCoder encodeFloat:self.contentsScale forKey:@"contentsScale"];
+    [aCoder encodeObject:self.backgroundColor forKey:@"backgroundColor"];
+    [aCoder encodeInteger:self.contentMode forKey:@"contentMode"];
+    [aCoder encodeUIEdgeInsets:self.htmlLayoutEdgeInsets forKey:@"htmlLayoutEdgeInsets"];
+    [aCoder encodeObject:self.extraDisplayIdentifier forKey:@"extraDisplayIdentifier"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.contents = [aDecoder decodeObjectForKey:@"contents"];
+        self.placeholder = [aDecoder decodeObjectForKey:@"placeholder"];
+        self.localImageType = [aDecoder decodeIntegerForKey:@"localImageType"];
+        self.fadeShow = [aDecoder decodeBoolForKey:@"fadeShow"];
+        self.userInteractionEnabled = [aDecoder decodeBoolForKey:@"userInteractionEnabled"];
+        self.needResize = [aDecoder decodeBoolForKey:@"needResize"];
+        self.needRerendering = [aDecoder decodeBoolForKey:@"needRerendering"];
+        self.isBlur = [aDecoder decodeBoolForKey:@"isBlur"];
+        self.identifier = [aDecoder decodeObjectForKey:@"identifier"];
+        self.tag = [aDecoder decodeIntegerForKey:@"tag"];
+        self.clipsToBounds = [aDecoder decodeBoolForKey:@"clipsToBounds"];
+        self.opaque = [aDecoder decodeBoolForKey:@"opaque"];
+        self.hidden = [aDecoder decodeBoolForKey:@"hidden"];
+        self.alpha = [aDecoder decodeFloatForKey:@"alpha"];
+        self.frame = [aDecoder decodeCGRectForKey:@"frame"];
+        self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];
+        self.center = [aDecoder decodeCGPointForKey:@"center"];
+        self.position = [aDecoder decodeCGPointForKey:@"position"];
+        self.cornerRadius = [aDecoder decodeFloatForKey:@"cornerRadius"];
+        self.cornerBackgroundColor = [aDecoder decodeObjectForKey:@"cornerBackgroundColor"];
+        self.cornerBorderColor = [aDecoder decodeObjectForKey:@"cornerBorderColor"];
+        self.cornerBorderWidth = [aDecoder decodeFloatForKey:@"cornerBorderWidth"];
+        self.shadowColor = [aDecoder decodeObjectForKey:@"shadowColor"];
+        self.shadowOpacity = [aDecoder decodeFloatForKey:@"shadowOpacity"];
+        self.shadowOffset = [aDecoder decodeCGSizeForKey:@"shadowOffset"];
+        self.shadowRadius = [aDecoder decodeFloatForKey:@"shadowRadius"];
+        self.contentsScale = [aDecoder decodeFloatForKey:@"contentsScale"];
+        self.backgroundColor = [aDecoder decodeObjectForKey:@"backgroundColor"];
+        self.contentMode = [aDecoder decodeIntegerForKey:@"contentMode"];
+        self.htmlLayoutEdgeInsets = [aDecoder decodeUIEdgeInsetsForKey:@"htmlLayoutEdgeInsets"];
+        self.extraDisplayIdentifier = [aDecoder decodeObjectForKey:@"extraDisplayIdentifier"];
+    }
+    return self;
+}
 
 #pragma mark - LifeCycle
 
@@ -169,15 +208,17 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
 }
 
 - (void)lw_drawInContext:(CGContextRef)context isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld {
+
     if (isCancelld()) {
         return;
     }
+
     if ([self.contents isKindOfClass:[NSURL class]]) {
         return;
     }
+
     if ([self.contents isKindOfClass:[UIImage class]] &&
         self.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
-        
         UIImage* image = (UIImage *)self.contents;
         BOOL isOpaque = self.opaque;
         UIColor* backgroundColor = self.backgroundColor;
@@ -188,7 +229,6 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
         CGRect rect = self.frame;
         rect = CGRectStandardize(rect);
         
-        //image rect
         CGRect imgRect = {
             {rect.origin.x + cornerBorderWidth,rect.origin.y + cornerBorderWidth},
             {rect.size.width - 2 * cornerBorderWidth,rect.size.height - 2 * cornerBorderWidth}
@@ -222,7 +262,7 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
         [cornerPath addClip];
         
         [image lw_drawInRect:imgRect
-             withContentMode:self.contentMode
+             contentMode:self.contentMode
                clipsToBounds:YES];
         
         CGContextRestoreGState(context);
@@ -236,321 +276,6 @@ static void _LWCroppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize
 
 @end
 
-static const void* reuseIdentifierKey;
-static const void* URLKey;
-
-@implementation UIView (LWImageStorage)
-
-- (NSString *)identifier {
-    return objc_getAssociatedObject(self, &reuseIdentifierKey);
-}
-
-- (void)setIdentifier:(NSString *)identifier {
-    objc_setAssociatedObject(self, &reuseIdentifierKey, identifier, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-- (NSURL *)URL {
-    return objc_getAssociatedObject(self, &URLKey);
-}
-
-- (void)setURL:(NSURL *)URL {
-    objc_setAssociatedObject(self, &URLKey, URL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-
-- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage
-                       resizeBlock:(void(^)(LWImageStorage*imageStorage, CGFloat delta))resizeBlock {
-    if ([imageStorage.contents isKindOfClass:[UIImage class]]) {
-        switch (imageStorage.localImageType) {
-            case LWLocalImageDrawInLWAsyncDisplayView: {
-                return;
-            }
-            case LWLocalImageTypeDrawInSubView: {
-                UIImage* image = (UIImage *)imageStorage.contents;
-                self.backgroundColor = imageStorage.backgroundColor;
-                self.clipsToBounds = imageStorage.clipsToBounds;
-                self.contentMode = imageStorage.contentMode;
-                if (!imageStorage.needResize) {
-
-                    LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
-                    [layerAsyncTransaction
-                     addAsyncOperationWithTarget:self
-                     selector:@selector(layoutWithStorage:)
-                     object:imageStorage
-                     completion:^(BOOL canceled) {
-                     }];
-
-                } else {
-                    CGSize imageSize = image.size;
-                    CGFloat imageScale = imageSize.height/imageSize.width;
-                    CGSize reSize = CGSizeMake(imageStorage.bounds.size.width,
-                                               imageStorage.bounds.size.width * imageScale);
-                    CGFloat delta = reSize.height - imageStorage.frame.size.height;
-                    imageStorage.frame = CGRectMake(imageStorage.frame.origin.x,
-                                                    imageStorage.frame.origin.y,
-                                                    imageStorage.frame.size.width,
-                                                    imageStorage.frame.size.height + delta);
-
-                    LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
-                    [layerAsyncTransaction
-                     addAsyncOperationWithTarget:self
-                     selector:@selector(layoutWithStorage:)
-                     object:imageStorage
-                     completion:^(BOOL canceled) {
-                         resizeBlock(imageStorage,delta);
-                     }];
-                }
-                __weak typeof(self)weakSelf = self;
-                [self _setContentsImage:image
-                           imageStorage:imageStorage
-                             completion:^{
-                                 __strong typeof(weakSelf) swself = weakSelf;
-                                 if (imageStorage.fadeShow) {
-                                     [swself fadeShowAnimation];
-                                 }
-                             }];
-                return;
-            }
-        }
-    }
-    
-    if ([imageStorage.contents isKindOfClass:[NSString class]]) {
-        imageStorage.contents = [NSURL URLWithString:imageStorage.contents];
-    }
-    
-    if ([[(NSURL *)imageStorage.contents absoluteString] isEqualToString:self.URL.absoluteString]) {
-        return;
-    }
-    
-    self.URL = imageStorage.contents;
-    self.backgroundColor = imageStorage.backgroundColor;
-    self.clipsToBounds = imageStorage.clipsToBounds;
-    self.contentMode = imageStorage.contentMode;
-    
-    if (!imageStorage.needResize) {
-        LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
-        [layerAsyncTransaction
-         addAsyncOperationWithTarget:self
-         selector:@selector(layoutWithStorage:)
-         object:imageStorage
-         completion:^(BOOL canceled) {
-         }];
-    }
-
-    __weak typeof(self) weakSelf = self;
-    [self.layer lw_setImageWithURL:(NSURL *)imageStorage.contents
-                  placeholderImage:imageStorage.placeholder
-                      cornerRadius:imageStorage.cornerRadius
-             cornerBackgroundColor:imageStorage.cornerBackgroundColor
-                       borderColor:imageStorage.cornerBorderColor
-                       borderWidth:imageStorage.cornerBorderWidth
-                              size:imageStorage.frame.size
-                       contentMode:imageStorage.contentMode
-                            isBlur:imageStorage.isBlur
-                           options:SDWebImageAvoidAutoSetImage
-                          progress:nil
-                         completed:^(UIImage *image,
-                                     NSError *error,
-                                     SDImageCacheType cacheType,
-                                     NSURL *imageURL) {
-                             if (!image) {
-                                 return ;
-                             }
-                             if (imageStorage.needResize) {
-                                 CGSize imageSize = image.size;
-                                 CGFloat imageScale = imageSize.height/imageSize.width;
-                                 CGSize reSize = CGSizeMake(imageStorage.bounds.size.width,
-                                                            imageStorage.bounds.size.width * imageScale);
-                                 CGFloat delta = reSize.height - imageStorage.frame.size.height;
-                                 imageStorage.frame = CGRectMake(imageStorage.frame.origin.x,
-                                                                 imageStorage.frame.origin.y,
-                                                                 imageStorage.frame.size.width,
-                                                                 imageStorage.frame.size.height + delta);
-
-                                 LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
-                                 [layerAsyncTransaction
-                                  addAsyncOperationWithTarget:self
-                                  selector:@selector(layoutWithStorage:)
-                                  object:imageStorage
-                                  completion:^(BOOL canceled) {
-                                      resizeBlock(imageStorage,delta);
-                                  }];
-                             }
-                             [weakSelf _setContentsImage:image
-                                            imageStorage:imageStorage
-                                              completion:^{
-                                                  if (imageStorage.fadeShow) {
-                                                      [weakSelf fadeShowAnimation];
-                                                  }
-                                              }];
-                         }];
-}
-
-- (void)_setContentsImage:(UIImage *)image
-             imageStorage:(LWImageStorage *)imageStorage
-               completion:(void(^)())completion {
-    if (!image || !imageStorage) {
-        return;
-    }
-    
-    if (imageStorage.isBlur && [imageStorage.contents isKindOfClass:[UIImage class]]) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            UIImage* blurImage = [image lw_applyBlurWithRadius:20
-                                                     tintColor:RGB(0, 0, 0, 0.15f)
-                                         saturationDeltaFactor:1.4
-                                                     maskImage:nil];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
-                [layerAsyncTransaction
-                 addAsyncOperationWithTarget:self.layer
-                 selector:@selector(setContents:)
-                 object:(__bridge id _Nullable)blurImage.CGImage
-                 completion:^(BOOL canceled) {
-                     completion();
-                 }];
-                
-            });
-        });
-        
-    } else {
-        LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
-        [layerAsyncTransaction
-         addAsyncOperationWithTarget:self.layer
-         selector:@selector(setContents:)
-         object:(__bridge id _Nullable)image.CGImage
-         completion:^(BOOL canceled) {
-             completion();
-         }];
-    }
-}
-
-- (void)_rerenderingImage:(UIImage *)image
-             imageStorage:(LWImageStorage *)imageStorage
-               completion:(void(^)())compeltion {
-    if (!image || !imageStorage) {
-        return;
-    }
-    @autoreleasepool {
-        BOOL forceUpscaling = NO;
-        BOOL cropEnabled = YES;
-        BOOL isOpaque = imageStorage.opaque;
-        UIColor* backgroundColor = imageStorage.backgroundColor;
-        UIViewContentMode contentMode = imageStorage.contentMode;
-        CGFloat contentsScale = imageStorage.contentsScale;
-        CGRect cropDisplayBounds = CGRectZero;
-        CGRect cropRect = CGRectMake(0.5, 0.5, 0, 0);
-        BOOL hasValidCropBounds = cropEnabled && !CGRectIsNull(cropDisplayBounds) && !CGRectIsEmpty(cropDisplayBounds);
-        CGRect bounds = (hasValidCropBounds ? cropDisplayBounds : imageStorage.bounds);
-        CGSize imageSize = image.size;
-        CGSize imageSizeInPixels = CGSizeMake(imageSize.width * image.scale, imageSize.height * image.scale);
-        CGSize boundsSizeInPixels = CGSizeMake(floorf(bounds.size.width * contentsScale), floorf(bounds.size.height * contentsScale));
-        BOOL contentModeSupported = contentMode == UIViewContentModeScaleAspectFill ||
-        contentMode == UIViewContentModeScaleAspectFit ||
-        contentMode == UIViewContentModeCenter;
-        CGSize backingSize   = CGSizeZero;
-        CGRect imageDrawRect = CGRectZero;
-        CGFloat cornerRadius = imageStorage.cornerRadius;
-        UIColor* cornerBackgroundColor = imageStorage.cornerBackgroundColor;
-        UIColor* cornerBorderColor = imageStorage.cornerBorderColor;
-        CGFloat cornerBorderWidth = imageStorage.cornerBorderWidth;
-        if (boundsSizeInPixels.width * contentsScale < 1.0f || boundsSizeInPixels.height * contentsScale < 1.0f ||
-            imageSizeInPixels.width < 1.0f                  || imageSizeInPixels.height < 1.0f) {
-            return;
-        }
-        if (!cropEnabled || !contentModeSupported) {
-            backingSize = imageSizeInPixels;
-            imageDrawRect = (CGRect){.size = backingSize};
-        }
-        else {
-            _LWCroppedImageBackingSizeAndDrawRectInBounds(imageSizeInPixels,
-                                                          boundsSizeInPixels,
-                                                          contentMode,
-                                                          cropRect,
-                                                          forceUpscaling,
-                                                          &backingSize,
-                                                          &imageDrawRect);
-        }
-        if (backingSize.width <= 0.0f || backingSize.height <= 0.0f ||
-            imageDrawRect.size.width <= 0.0f || imageDrawRect.size.height <= 0.0f) {
-            return;
-        }
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            UIGraphicsBeginImageContextWithOptions(backingSize,isOpaque,contentsScale);
-            if (nil == UIGraphicsGetCurrentContext()) {
-                return;
-            }
-            if (isOpaque && backgroundColor) {
-                [backgroundColor setFill];
-                UIRectFill(CGRectMake(0, 0, backingSize.width, backingSize.height));
-            }
-            
-            UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:imageDrawRect
-                                                                  cornerRadius:cornerRadius * contentsScale];
-            
-            UIBezierPath* backgroundRect = [UIBezierPath bezierPathWithRect:imageDrawRect];
-            if (cornerBackgroundColor) {
-                [cornerBackgroundColor setFill];
-            }
-            [backgroundRect fill];
-            [cornerPath addClip];
-            [image drawInRect:imageDrawRect];
-            if (cornerBorderColor) {
-                [cornerBorderColor setStroke];
-            }
-            [cornerPath stroke];
-            [cornerPath setLineWidth:cornerBorderWidth];
-            
-            CGImageRef processedImageRef = (UIGraphicsGetImageFromCurrentImageContext().CGImage);
-            UIGraphicsEndImageContext();
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                LWTransaction* layerAsyncTransaction = self.layer.lw_asyncTransaction;
-                [layerAsyncTransaction
-                 addAsyncOperationWithTarget:self.layer
-                 selector:@selector(setContents:)
-                 object:(__bridge id _Nullable)processedImageRef
-                 completion:^(BOOL canceled) {
-                     compeltion();
-                 }];
-            });
-        });
-    }
-}
-
-- (void)layoutWithStorage:(LWImageStorage *)imageStorage {
-    if (!CGRectEqualToRect(self.frame, imageStorage.frame)) {
-        self.frame = imageStorage.frame;
-    }
-    self.hidden = NO;
-}
-
-- (void)cleanup {
-    CGImageRef imageRef = (__bridge_retained CGImageRef)(self.layer.contents);
-    id contents = self.layer.contents;
-    NSURL* URL = self.URL;
-    self.layer.contents = nil;
-    self.URL = nil;
-    if (imageRef) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            [contents class];
-            [URL class];
-            CFRelease(imageRef);
-        });
-    }
-    self.hidden = YES;
-}
-
-- (void)fadeShowAnimation {
-    [self.layer removeAnimationForKey:@"fadeshowAnimation"];
-    CATransition* transition = [CATransition animation];
-    transition.duration = 0.15;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    transition.type = kCATransitionFade;
-    [self.layer addAnimation:transition forKey:@"fadeshowAnimation"];
-}
-
-@end
 
 
 

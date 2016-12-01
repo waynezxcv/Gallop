@@ -49,7 +49,7 @@ typedef NS_ENUM(NSUInteger, LWTextVericalAlignment) {
 /**
  *  文本容器，包含文本绘制的范围大小、路径、会edgeInsets等信息
  */
-@interface LWTextContainer : NSObject
+@interface LWTextContainer : NSObject <NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,assign) LWTextVericalAlignment vericalAlignment;//垂直对齐方式，默认是TOP
 @property (nonatomic,assign,readonly) CGSize size;//容器的大小

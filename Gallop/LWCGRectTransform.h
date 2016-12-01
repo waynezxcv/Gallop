@@ -22,28 +22,19 @@
  THE SOFTWARE.
  */
 
-#ifndef Gallop_h
-#define Gallop_h
-
-#import "NSMutableAttributedString+Gallop.h"
-#import "CALayer+LWTransaction.h"
-#import "LWAsyncDisplayView.h"
-#import "LWHTMLDisplayView.h"
-#import "LWTextLayout.h"
-#import "LWStorageBuilder.h"
-#import "LWHTMLLayout.h"
-#import "CALayer+WebCache.h"
-#import "LWTextParser.h"
-#import "GallopDefine.h"
-#import "GallopUtils.h"
-#import "LWTextStorage.h"
-#import "LWImageStorage.h"
-#import "LWStorage.h"
-#import "UIImage+Gallop.h"
-#import "UIView+DisplayAddtions.h"
-#import "NSString+HTML.h"
-#import "NSManagedObject+LWLayout.h"
-#import "LWLayout.h"
+#import <UIKit/UIKit.h>
 
 
-#endif /* Gallop_h */
+
+@interface LWCGRectTransform : NSObject
+
+
+/**
+ *  根据contentMode获取绘制的CGRect
+ *
+ */
++ (CGRect)lw_CGRectFitWithContentMode:(UIViewContentMode)contentMode
+                                 rect:(CGRect)rect
+                                 size:(CGSize)siz;
+
+@end

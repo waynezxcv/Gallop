@@ -25,7 +25,11 @@
 
 #import <UIKit/UIKit.h>
 #import "LWStorage.h"
-#import "GallopUtils.h"
+#import "GallopDefine.h"
+
+
+
+
 
 /**
  *  如果是本地图片，可以选择是直接绘制在LWAsyncDisplayView上还是新建一个UIView并add到LWAsyncDisplayView上
@@ -44,7 +48,7 @@ typedef NS_ENUM(NSUInteger, LWLocalImageType){
 /**
  *   图片绘制的数据模型
  */
-@interface LWImageStorage : LWStorage
+@interface LWImageStorage : LWStorage <NSCopying,NSMutableCopying,NSCoding>
 
 @property (nonatomic,strong) id contents;//内容（UIImage or NSURL）
 @property (nonatomic,assign) LWLocalImageType localImageType;//本地图片的种类，默认是LWLocalImageDrawInLWAsyncDisplayView
@@ -73,38 +77,5 @@ typedef NS_ENUM(NSUInteger, LWLocalImageType){
 
 @end
 
-
-/**
- *  LWImageStorage对UIView的扩展
- */
-@interface UIView (LWImageStorage)
-
-
-@property (nonatomic,copy) NSString* identifier;//一个标示符字符串，跟LWImageStorage中的同名属性对应
-
-/**
- * 设置一个LWImageStorage对象给UIView对象，从而完成图片的渲染
- *
- *  @param imageStorage 一个LWImageStorage对象
- *  @param resizeBlock  重新调整图片大小回调Block
- */
-- (void)setContentWithImageStorage:(LWImageStorage *)imageStorage
-                       resizeBlock:(void(^)(LWImageStorage*imageStorage, CGFloat delta))resizeBlock;
-
-
-/**
- *  设置一个LWImageStorage对象给UIView对象，从而完成位置布局
- *
- *  @param imageStorage 一个LWImageStorage对象
- */
-- (void)layoutWithStorage:(LWImageStorage *)imageStorage;
-
-
-/**
- *  清除UIView对象上的内容，并隐藏
- */
-- (void)cleanup;
-
-@end
 
 

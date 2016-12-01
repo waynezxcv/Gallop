@@ -29,7 +29,7 @@
 /**
  *  对CTRunDelegateRef的封装
  */
-@interface LWTextRunDelegate : NSObject<NSCoding,NSCopying>
+@interface LWTextRunDelegate : NSObject<NSCoding,NSMutableCopying,NSCopying>
 
 @property (nullable,nonatomic,assign) CTRunDelegateRef CTRunDelegate;//CoreText中的CTRunDelegateRef
 @property (nullable,nonatomic,strong) NSDictionary* userInfo;//自定义的一些信息

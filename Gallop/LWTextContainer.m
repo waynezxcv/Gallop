@@ -40,6 +40,46 @@
     CGFloat _pathLineWidth;
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    LWTextContainer* one = [[LWTextContainer alloc] init];
+    one.vericalAlignment = self.vericalAlignment;
+    one.size = self.size;
+    one.path = [self.path copy];
+    one.edgeInsets = self.edgeInsets;
+    one.maxNumberOfLines = self.maxNumberOfLines;
+    return one;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return [self copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeInteger:self.vericalAlignment forKey:@"vericalAlignment"];
+    [aCoder encodeCGSize:self.size forKey:@"size"];
+    [aCoder encodeObject:self.path forKey:@"path"];
+    [aCoder encodeUIEdgeInsets:self.edgeInsets forKey:@"edgeInsets"];
+    [aCoder encodeInteger:self.maxNumberOfLines forKey:@"maxNumberOfLines"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.vericalAlignment = [aDecoder decodeIntegerForKey:@"vericalAlignment"];
+        self.size = [aDecoder decodeCGSizeForKey:@"size"];
+        self.path = [aDecoder decodeObjectForKey:@"path"];
+        self.edgeInsets = [aDecoder decodeUIEdgeInsetsForKey:@"edgeInsets"];
+        self.maxNumberOfLines = [aDecoder decodeIntegerForKey:@"maxNumberOfLines"];
+    }
+    return self;
+}
+
+#pragma mark - Init
+
 - (instancetype)init {
     self = [super init];
     if (!self) return nil;
