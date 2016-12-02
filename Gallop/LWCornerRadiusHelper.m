@@ -203,19 +203,16 @@
                                                      4 * (int)width,
                                                      colorSpace,
                                                      kCGImageAlphaPremultipliedFirst);
-        //total rect
         CGRect rect = {
             {0,0},
             {width,height}
         };
 
-        //image rect
         CGRect imgRect = {
             {borderWidth,borderWidth},
             {width - 2 * borderWidth,height - 2 * borderWidth}
         };
 
-        //draw cornerBackground
         if (cornerBackgroundColor) {
             CGContextSaveGState(context);
             CGContextAddRect(context, rect);
@@ -226,7 +223,6 @@
 
         {
             CGContextSaveGState(context);
-            //draw cornerRadius image
             if (cornerRadius) {
                 UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:imgRect
                                                                       cornerRadius:cornerRadius];
@@ -238,7 +234,6 @@
             CGContextRestoreGState(context);
         }
 
-        //draw border
         if (borderColor && borderWidth != 0) {
             CGContextSaveGState(context);
             UIBezierPath* bezierPath = [UIBezierPath bezierPathWithRoundedRect:imgRect

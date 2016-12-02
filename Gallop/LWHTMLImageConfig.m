@@ -26,15 +26,6 @@
 #import "GallopUtils.h"
 #import "GallopDefine.h"
 
-//@property (nonatomic,assign) BOOL autolayoutHeight;//是否在图片下载完成后，按图片比例自适应高度，默认YES
-//@property (nonatomic,assign) CGSize size;//图片的大小
-//@property (nonatomic,strong) UIImage* placeholder;//占位图
-//@property (nonatomic,assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;//是否响应用户事件
-//@property (nonatomic,assign) BOOL needAddToImageCallbacks;//是否需要将这个Image包含到点击事件的回调数组里去
-//@property (nonatomic,assign) UIEdgeInsets edgeInsets;//设置该storage的edgeInsets，优先级高于paragraphEdgeInsets
-//@property (nonatomic,copy) NSString* extraDisplayIdentifier;//额外绘制的标记字符串
-//@property (nonatomic,assign) UIViewContentMode contentMode;//效果UIImageView的同名属性
-
 
 @implementation LWHTMLImageConfig
 

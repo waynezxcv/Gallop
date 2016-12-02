@@ -129,7 +129,6 @@
         for (LWAsyncDisplayTransactionOperation* operation in self.operations) {
             [operation callAndReleaseCompletionBlock:isCanceled];
         }
-        /* remove */
         self.state = LWAsyncTransactionStateComplete;
         if (_completionBlock) {
             _completionBlock(self, isCanceled);

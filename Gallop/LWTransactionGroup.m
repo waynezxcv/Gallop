@@ -59,11 +59,11 @@ static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observ
     CFOptionFlags activities = (kCFRunLoopBeforeWaiting | kCFRunLoopExit);
     
     CFRunLoopObserverContext context = {
-        0,           // version
-        (__bridge void *)transactionGroup,  // info
-        &CFRetain,   // retain
-        &CFRelease,  // release
-        NULL         // copyDescription
+        0,
+        (__bridge void *)transactionGroup,
+        &CFRetain,
+        &CFRelease,
+        NULL
     };
     observer = CFRunLoopObserverCreate(NULL,
                                        activities,

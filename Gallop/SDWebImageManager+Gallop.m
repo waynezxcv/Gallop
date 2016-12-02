@@ -56,16 +56,11 @@
                                            progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                           completed:(SDWebImageCompletionWithFinishedBlock)completedBlock {
     
-    // Invoking this method without a completedBlock is pointless
-    NSAssert(completedBlock != nil, @"If you mean to prefetch the image, use -[SDWebImagePrefetcher prefetchURLs] instead");
-    
-    // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
-    // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
     if ([url isKindOfClass:NSString.class]) {
         url = [NSURL URLWithString:(NSString *)url];
     }
     
-    // Prevents app crashing on argument type error like sending NSNull instead of NSURL
+
     if (![url isKindOfClass:NSURL.class]) {
         url = nil;
     }
@@ -119,13 +114,13 @@
                                     if ((!image || options & SDWebImageRefreshCached) && (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] || [self.delegate imageManager:self shouldDownloadImageForURL:url])) {
                                         if (image && options & SDWebImageRefreshCached) {
                                             dispatch_main_sync_safe(^{
-                                                // If image was found in the cache but SDWebImageRefreshCached is provided, notify about the cached image
-                                                // AND try to re-download it in order to let a chance to NSURLCache to refresh it from server.
+
+                                                
                                                 completedBlock(image, nil, cacheType, YES, url);
                                             });
                                         }
                                         
-                                        // download if no image or requested to refresh anyway, and download allowed by delegate
+
                                         SDWebImageDownloaderOptions downloaderOptions = 0;
                                         if (options & SDWebImageLowPriority) downloaderOptions |= SDWebImageDownloaderLowPriority;
                                         if (options & SDWebImageProgressiveDownload) downloaderOptions |= SDWebImageDownloaderProgressiveDownload;
@@ -135,17 +130,15 @@
                                         if (options & SDWebImageAllowInvalidSSLCertificates) downloaderOptions |= SDWebImageDownloaderAllowInvalidSSLCertificates;
                                         if (options & SDWebImageHighPriority) downloaderOptions |= SDWebImageDownloaderHighPriority;
                                         if (image && options & SDWebImageRefreshCached) {
-                                            // force progressive off if image already cached but forced refreshing
+
                                             downloaderOptions &= ~SDWebImageDownloaderProgressiveDownload;
-                                            // ignore image read from NSURLCache if image if cached but force refreshing
+
                                             downloaderOptions |= SDWebImageDownloaderIgnoreCachedResponse;
                                         }
                                         id <SDWebImageOperation> subOperation = [self.imageDownloader downloadImageWithURL:url options:downloaderOptions progress:progressBlock completed:^(UIImage *downloadedImage, NSData *data, NSError *error, BOOL finished) {
                                             __strong __typeof(weakOperation) strongOperation = weakOperation;
                                             if (!strongOperation || strongOperation.isCancelled) {
-                                                // Do nothing if the operation was cancelled
-                                                // See #699 for more details
-                                                // if we would call the completedBlock, there could be a race condition between this block and another completedBlock for the same object, so if this one is called second, we will overwrite the new data
+
                                             }
                                             else if (error) {
                                                 dispatch_main_sync_safe(^{
@@ -174,7 +167,6 @@
                                                 }
                                                 BOOL cacheOnDisk = !(options & SDWebImageCacheMemoryOnly);
                                                 if (options & SDWebImageRefreshCached && image && !downloadedImage) {
-                                                    // Image refresh hit the NSURLCache cache, do not call the completion block
                                                 }
                                                 else if (downloadedImage && (!downloadedImage.images || (options & SDWebImageTransformAnimatedImage)) && [self.delegate respondsToSelector:@selector(imageManager:transformDownloadedImage:withURL:)]) {
                                                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -245,7 +237,6 @@
                                         }
                                     }
                                     else {
-                                        // Image not in cache and download disallowed by delegate
                                         dispatch_main_sync_safe(^{
                                             __strong __typeof(weakOperation) strongOperation = weakOperation;
                                             if (strongOperation && !weakOperation.isCancelled) {
