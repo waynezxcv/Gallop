@@ -25,7 +25,9 @@
 #import "LWTransactionGroup.h"
 #import "CALayer+LWTransaction.h"
 
-static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info);
+static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observer,
+                                                     CFRunLoopActivity activity,
+                                                     void* info);
 
 @interface LWTransactionGroup ()
 
