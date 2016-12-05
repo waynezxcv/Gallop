@@ -22,6 +22,8 @@
 #define MESSAGE_TYPE_WEBSITE @"website"
 #define MESSAGE_TYPE_VIDEO @"video"
 #define AVATAR_IDENTIFIER @"avatar"
+#define IMAGE_IDENTIFIER @"image"
+#define WEBSITE_COVER_IDENTIFIER @"cover"
 
 
 @interface CellLayout : LWLayout <NSCopying>

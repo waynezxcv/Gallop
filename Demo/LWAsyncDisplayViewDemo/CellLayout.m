@@ -94,10 +94,14 @@
             contentBottom = openStorage.bottom;
         }
         //解析表情和主题
+        //解析表情、主题、网址
         [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
         [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
+        [LWTextParser parseHttpURLWithTextStorage:contentTextStorage
+                                        linkColor:RGB(113, 129, 161, 1)
+                                   highlightColor:RGB(0, 0, 0, 0.15f)];
         
         //添加长按复制
         [contentTextStorage lw_addLongPressActionWithData:contentTextStorage.text
@@ -121,7 +125,7 @@
                                               imageWidth*1.7);
                 NSString* imagePositionString = NSStringFromCGRect(imageRect);
                 [imagePositionArray addObject:imagePositionString];
-                LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
+                LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:IMAGE_IDENTIFIER];
                 imageStorage.tag = 0;
                 imageStorage.contentMode = UIViewContentModeScaleAspectFill;
                 imageStorage.clipsToBounds = YES;
@@ -139,7 +143,7 @@
                     
                     NSString* imagePositionString = NSStringFromCGRect(imageRect);
                     [imagePositionArray addObject:imagePositionString];
-                    LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
+                    LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:IMAGE_IDENTIFIER];
                     imageStorage.clipsToBounds = YES;
                     imageStorage.contentMode = UIViewContentModeScaleAspectFill;
                     imageStorage.tag = i;
@@ -166,7 +170,7 @@
                                               60.0f);
             
             //左边的图片
-            LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+            LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:WEBSITE_COVER_IDENTIFIER];
             NSString* URLString = [statusModel.imgs objectAtIndex:0];
             imageStorage.contents = [NSURL URLWithString:URLString];
             imageStorage.clipsToBounds = YES;
@@ -465,11 +469,14 @@
         [self addStorage:closeStorage];
         CGFloat contentBottom = closeStorage.bottom + 10.0f;
         
-        //解析表情和主题
+        //解析表情、主题、网址
         [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
         [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                         linkColor:RGB(113, 129, 161, 1)
                                    highlightColor:RGB(0, 0, 0, 0.15)];
+        [LWTextParser parseHttpURLWithTextStorage:contentTextStorage
+                                        linkColor:RGB(113, 129, 161, 1)
+                                   highlightColor:RGB(0, 0, 0, 0.15f)];
         
         
         //添加长按复制
@@ -494,7 +501,7 @@
                                               imageWidth*1.7);
                 NSString* imagePositionString = NSStringFromCGRect(imageRect);
                 [imagePositionArray addObject:imagePositionString];
-                LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
+                LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:IMAGE_IDENTIFIER];
                 imageStorage.tag = 0;
                 imageStorage.clipsToBounds = YES;
                 imageStorage.contentMode = UIViewContentModeScaleAspectFill;
@@ -513,7 +520,7 @@
                     
                     NSString* imagePositionString = NSStringFromCGRect(imageRect);
                     [imagePositionArray addObject:imagePositionString];
-                    LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:@"image"];
+                    LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:IMAGE_IDENTIFIER];
                     imageStorage.clipsToBounds = YES;
                     imageStorage.contentMode = UIViewContentModeScaleAspectFill;
                     imageStorage.tag = i;
@@ -540,7 +547,7 @@
                                               60.0f);
             
             //左边的图片
-            LWImageStorage* imageStorage = [[LWImageStorage alloc] init];
+            LWImageStorage* imageStorage = [[LWImageStorage alloc] initWithIdentifier:WEBSITE_COVER_IDENTIFIER];
             NSString* URLString = [statusModel.imgs objectAtIndex:0];
             imageStorage.contents = [NSURL URLWithString:URLString];
             imageStorage.clipsToBounds = YES;
