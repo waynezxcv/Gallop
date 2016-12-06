@@ -154,37 +154,6 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 #pragma mark - Actions
-//点赞
-- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike {
-    /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
-     延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
-    UIImage* screenshot = [GallopUtils screenshotFromView:cell];
-    UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
-    imgView.image = screenshot;
-    [self.tableView addSubview:imgView];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [imgView removeFromSuperview];
-    });
-    
-    
-    CellLayout* layout = [self.dataSource objectAtIndex:cell.indexPath.row];
-    NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
-    if (isLike) {
-        [newLikeList addObject:@"waynezxcv的粉丝"];
-    } else {
-        [newLikeList removeObject:@"waynezxcv的粉丝"];
-    }
-    
-    StatusModel* statusModel = layout.statusModel;
-    statusModel.likeList = newLikeList;
-    statusModel.isLike = isLike;
-    layout = [self layoutWithStatusModel:statusModel index:cell.indexPath.row];
-    [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:layout];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:cell.indexPath.row inSection:0]]
-                          withRowAnimation:UITableViewRowAnimationNone];
-}
-
 //开始评论
 - (void)commentWithCell:(TableViewCell *)cell  {
     self.postComment.from = @"Waynezxcv的粉丝";
@@ -232,6 +201,56 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 
+/* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
+ 延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
+- (void)coverScreenshotAndDelayRemoveWithCell:(UITableViewCell *)cell cellHeight:(CGFloat)cellHeight {
+
+    UIImage* screenshot = [GallopUtils screenshotFromView:cell];
+    
+    UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
+    
+    imgView.frame = CGRectMake(imgView.frame.origin.x,
+                               imgView.frame.origin.y,
+                               imgView.frame.size.width,
+                               cellHeight);
+    
+    imgView.contentMode = UIViewContentModeTop;
+    imgView.backgroundColor = [UIColor whiteColor];
+    imgView.image = screenshot;
+    [self.tableView addSubview:imgView];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [imgView removeFromSuperview];
+    });
+    
+}
+
+
+//点赞
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike {
+    
+    
+    CellLayout* layout = [self.dataSource objectAtIndex:cell.indexPath.row];
+    NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.likeList];
+    if (isLike) {
+        [newLikeList addObject:@"waynezxcv的粉丝"];
+    } else {
+        [newLikeList removeObject:@"waynezxcv的粉丝"];
+    }
+    
+    StatusModel* statusModel = layout.statusModel;
+    statusModel.likeList = newLikeList;
+    statusModel.isLike = isLike;
+    layout = [self layoutWithStatusModel:statusModel index:cell.indexPath.row];
+    
+    [self coverScreenshotAndDelayRemoveWithCell:cell cellHeight:layout.cellHeight];
+
+    [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:layout];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:cell.indexPath.row inSection:0]]
+                          withRowAnimation:UITableViewRowAnimationNone];
+}
+
+
 //展开Cell
 - (void)openTableViewCell:(TableViewCell *)cell {
     CellLayout* layout =  [self.dataSource objectAtIndex:cell.indexPath.row];
@@ -240,22 +259,9 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                                                 index:cell.indexPath.row
                                                                         dateFormatter:self.dateFormatter];
     
-    
-    /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
-     延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
-    UIImage* screenshot = [GallopUtils screenshotFromView:cell];
-    UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
-    imgView.frame = CGRectMake(imgView.frame.origin.x, imgView.frame.origin.y, imgView.frame.size.width, newLayout.cellHeight);
-    imgView.contentMode = UIViewContentModeTop;
-    imgView.backgroundColor = [UIColor whiteColor];
-    imgView.image = screenshot;
-    [self.tableView addSubview:imgView];
-    
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [imgView removeFromSuperview];
-    });
-    
+    [self coverScreenshotAndDelayRemoveWithCell:cell cellHeight:newLayout.cellHeight];
+
+
     [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:newLayout];
     [self.tableView reloadRowsAtIndexPaths:@[cell.indexPath]
                           withRowAnimation:UITableViewRowAnimationNone];
@@ -269,20 +275,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                               index:cell.indexPath.row
                                                       dateFormatter:self.dateFormatter];
     
-    /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
-     延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
-    UIImage* screenshot = [GallopUtils screenshotFromView:cell];
-    UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
-    imgView.frame = CGRectMake(imgView.frame.origin.x, imgView.frame.origin.y, imgView.frame.size.width, newLayout.cellHeight);
-    imgView.backgroundColor = [UIColor whiteColor];
-    imgView.contentMode = UIViewContentModeTop;
-    imgView.image = screenshot;
-    [self.tableView addSubview:imgView];
-    
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [imgView removeFromSuperview];
-    });
+    [self coverScreenshotAndDelayRemoveWithCell:cell cellHeight:newLayout.cellHeight];
+
     
     [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:newLayout];
     [self.tableView reloadRowsAtIndexPaths:@[cell.indexPath]
@@ -301,22 +295,11 @@ const CGFloat kRefreshBoundary = 170.0f;
     StatusModel* statusModel = layout.statusModel;
     statusModel.commentList = newCommentLists;
     CellLayout* newLayout = [self layoutWithStatusModel:statusModel index:model.index];
+
     
-    /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
-     延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
     UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:model.index inSection:0]];
-    UIImage* screenshot = [GallopUtils screenshotFromView:cell];
-    UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
-    imgView.frame = CGRectMake(imgView.frame.origin.x, imgView.frame.origin.y, imgView.frame.size.width, newLayout.cellHeight);
-    imgView.backgroundColor = [UIColor whiteColor];
-    imgView.contentMode = UIViewContentModeTop;
-    imgView.image = screenshot;
-    [self.tableView addSubview:imgView];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [imgView removeFromSuperview];
-    });
-    
+    [self coverScreenshotAndDelayRemoveWithCell:cell cellHeight:newLayout.cellHeight];
+
     [self.dataSource replaceObjectAtIndex:model.index withObject:newLayout];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.index inSection:0]]
                           withRowAnimation:UITableViewRowAnimationNone];

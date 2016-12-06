@@ -51,38 +51,51 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
-    if (indexPath.row == 0) {
-        cell.textLabel.text = @"属性文本使用示例";
-    }
-    else if (indexPath.row == 1) {
-        cell.textLabel.text = @"图片设置圆角半径和模糊效果示例";
-    }
-    else if (indexPath.row == 2) {
-        cell.textLabel.text = @"使用Gallop构建FeedsList示例";
-    }
-    else if (indexPath.row == 3) {
-        cell.textLabel.text = @"Gallop进行HTML解析示例";
+    switch (indexPath.row) {
+        case 0:
+            cell.textLabel.text = @"属性文本使用示例";
+            break;
+        case 1:
+            cell.textLabel.text = @"图片设置圆角半径和模糊效果示例";
+            break;
+        case 2:
+            cell.textLabel.text = @"使用Gallop构建FeedsList示例";
+            break;
+        case 3:
+            cell.textLabel.text = @"Gallop进行HTML解析示例";
+            break;
+        default:
+            break;
     }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 0) {
-        RichTextDemo1ViewController* vc = [[RichTextDemo1ViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if (indexPath.row == 1) {
-        CornerRadiusViewController* vc = [[CornerRadiusViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if (indexPath.row == 2) {
-        MomentsViewController* vc = [[MomentsViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if (indexPath.row == 3) {
-        ArticleListViewController* vc = [[ArticleListViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
+    
+    switch (indexPath.row) {
+        case 0:{
+            RichTextDemo1ViewController* vc = [[RichTextDemo1ViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 1:{
+            CornerRadiusViewController* vc = [[CornerRadiusViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 2:{
+            MomentsViewController* vc = [[MomentsViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 3:{
+            ArticleListViewController* vc = [[ArticleListViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        default:
+            break;
     }
 }
 
