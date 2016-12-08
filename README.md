@@ -286,7 +286,7 @@ htmlView.layout = layout;
 * **更加详细的内容，请看各个头文件和Demo，有详细的注释**
 
 
-## 如果你喜欢Gallop，请考虑点亮右上角的星星~Star~
+## 如果你喜欢Gallop，请点亮右上角的星星 :) ~Star~
 ## 如果你发现什么问题，请添加issue.
 
 ## Thanks ：）~
