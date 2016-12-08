@@ -93,10 +93,12 @@ typedef void(^LWAsyncDisplayViewAutoLayoutCallback)(LWImageStorage* imageStorage
 @property (nonatomic,copy) LWAsyncDisplayViewAutoLayoutCallback auotoLayoutCallback;//自动布局回调Block
 @property (nonatomic,strong,readonly) UILongPressGestureRecognizer* longPressGesture;//长按手势
 
+
+
 /**
- *  移除所有高亮显示
+ *  移除高亮显示
  *
  */
-- (void)removeAllHighlights;
+- (void)removeHighlightIfNeed;
 
 @end

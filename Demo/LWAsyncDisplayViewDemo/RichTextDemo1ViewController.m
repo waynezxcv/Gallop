@@ -149,7 +149,7 @@
     UIPasteboard* pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = self.preCopyText;
     [self resignFirstResponder];
-    [self.asyncView removeAllHighlights];
+    [self.asyncView removeHighlightIfNeed];
     
 }
 

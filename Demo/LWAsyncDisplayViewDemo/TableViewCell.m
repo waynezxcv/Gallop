@@ -148,7 +148,7 @@
     pasteboard.string = self.preCopyText;
     
     [self resignFirstResponder];
-    [self.asyncDisplayView removeAllHighlights];
+    [self.asyncDisplayView removeHighlightIfNeed];
     
 }
 

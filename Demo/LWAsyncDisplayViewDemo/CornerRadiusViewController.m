@@ -33,7 +33,7 @@
     LWImageStorage* is1 = [[LWImageStorage alloc] init];
     is1.contentMode = UIViewContentModeScaleAspectFill;
     is1.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, ts.bottom + 10.0f, 100.0f, 100.0f);
-    is1.contents = [NSURL URLWithString:@"http://upload.chinaz.com/2016/1024/16102400312025068.jpg"];
+    is1.contents = [NSURL URLWithString:@"http://img4.bitautoimg.com/autoalbum/files/20101220/862/13374086240035_1469891_15.JPG"];
     is1.clipsToBounds = YES;
     
     
@@ -44,19 +44,19 @@
     lis.cornerRadius = 25.0f;
     lis.cornerBackgroundColor = [UIColor whiteColor];
     lis.cornerBorderColor = [UIColor redColor];
-    lis.cornerBorderWidth = 0.0f;
+    lis.cornerBorderWidth = 3.0f;
+    lis.contentMode = UIViewContentModeScaleAspectFill;
     lis.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, is1.bottom + 10.0f, 100.0f, 100.0f);
     
     
     //3.网络图片设置圆角半径和模糊效果
     LWImageStorage* is2 = [[LWImageStorage alloc] init];
     is2.frame = CGRectMake(SCREEN_WIDTH/2 - 50.0f, lis.bottom + 10.0f, 100.0f, 100.0f);
-    is2.contents = [NSURL URLWithString:@"http://upload.chinaz.com/2016/1024/16102400312025068.jpg"];
+    is2.contents = [NSURL URLWithString:@"http://img4.bitautoimg.com/autoalbum/files/20101220/862/13374086240035_1469891_15.JPG"];
     is2.cornerRadius = 50.0f;
-    is2.cornerBorderWidth = 0.0f;
-    is2.cornerBorderColor = [UIColor orangeColor];
     is2.contentMode = UIViewContentModeScaleAspectFill;
     is2.isBlur = YES;
+    
     
     //4.直接对CALayer对象使用
     UIView* view2 = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 50,
@@ -65,9 +65,9 @@
                                                                   100.0f)];
     [self.view addSubview:view2];
     [view2.layer lw_setImageWithURL:
-     [NSURL URLWithString:@"http://upload.chinaz.com/2016/1024/16102400312025068.jpg"]
+     [NSURL URLWithString:@"http://img4.bitautoimg.com/autoalbum/files/20101220/862/13374086240035_1469891_15.JPG"]
                    placeholderImage:nil
-                       cornerRadius:25.0f
+                       cornerRadius:50.0f
               cornerBackgroundColor:RGB(255, 255, 255, 1.0f)
                         borderColor:[UIColor orangeColor]
                         borderWidth:5.0f

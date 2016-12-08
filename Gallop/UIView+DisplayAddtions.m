@@ -91,6 +91,7 @@ static void _croppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize,
                     CGSize reSize = CGSizeMake(imageStorage.bounds.size.width,
                                                imageStorage.bounds.size.width * imageScale);
                     CGFloat delta = reSize.height - imageStorage.frame.size.height;
+                    
                     imageStorage.frame = CGRectMake(imageStorage.frame.origin.x,
                                                     imageStorage.frame.origin.y,
                                                     imageStorage.frame.size.width,
@@ -139,6 +140,7 @@ static void _croppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize,
     }
 
     __weak typeof(self) weakSelf = self;
+    
     [self.layer lw_setImageWithURL:(NSURL *)imageStorage.contents
                   placeholderImage:imageStorage.placeholder
                       cornerRadius:imageStorage.cornerRadius
@@ -211,6 +213,7 @@ static void _croppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize,
 
 - (void)_addSetImageTransactionWithImage:(UIImage *)image
                               completion:(void(^)())completion {
+    
     [self.layer.lw_asyncTransaction addAsyncOperationWithTarget:self.layer
                                                        selector:@selector(setContents:)
                                                          object:(__bridge id _Nullable)image.CGImage

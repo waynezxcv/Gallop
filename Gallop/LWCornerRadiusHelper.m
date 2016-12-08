@@ -229,7 +229,6 @@
                 CGContextAddPath(context, bezierPath.CGPath);
                 CGContextClip(context);
             }
-
             CGContextDrawImage(context, imgRect, processedImg.CGImage);
             CGContextRestoreGState(context);
         }
@@ -247,9 +246,11 @@
 
         CGImageRef imageMasked = CGBitmapContextCreateImage(context);
         UIImage* results = [UIImage imageWithCGImage:imageMasked];
+        
         CGImageRelease(imageMasked);
         CGContextRelease(context);
         CGColorSpaceRelease(colorSpace);
+        
         return results;
     }
     return img;

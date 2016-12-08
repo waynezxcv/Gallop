@@ -41,16 +41,6 @@ Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框�
 ***
 
 
-## Demo screenshot
-
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/pic1.png)
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/pic2.png)
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/pic3.png)
-![](https://github.com/waynezxcv/Gallop/raw/master/pics/pic4.png)
-
-***
-
-
 ## Modifications
 
 v0.3.7
@@ -296,7 +286,7 @@ htmlView.layout = layout;
 * **更加详细的内容，请看各个头文件和Demo，有详细的注释**
 
 
-## 如果你喜欢Gallop，请考虑点一下Star.
+## 如果你喜欢Gallop，请考虑点亮右上角的星星~Star~
 ## 如果你发现什么问题，请添加issue.
 
 ## Thanks ：）~

@@ -411,7 +411,11 @@
     [(LWAsyncDisplayLayer *)self.layer displayImmediately];
 }
 
-- (void)removeAllHighlights {
+
+- (void)removeHighlightIfNeed {
+    if (!_highlight) {
+        return;
+    }
     _highlightAdjustPoint = CGPointZero;
     _touchBeganPoint = CGPointZero;
     _showingHighlight = NO;
