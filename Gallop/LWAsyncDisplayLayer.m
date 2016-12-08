@@ -232,10 +232,13 @@
                  }];
             });
         });
+        
     } else {
+        
         if (transaction.willDisplayBlock) {
             transaction.willDisplayBlock(self);
         }
+        
         UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, self.contentsScale);
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (self.opaque) {

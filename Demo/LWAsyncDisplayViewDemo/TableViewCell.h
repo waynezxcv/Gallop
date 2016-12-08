@@ -19,6 +19,7 @@
 
 @interface TableViewCell : UITableViewCell
 
+@property (nonatomic,assign) BOOL displaysAsynchronously;//是否异步绘制
 @property (nonatomic,strong) CellLayout* cellLayout;
 @property (nonatomic,strong) NSIndexPath* indexPath;
 @property (nonatomic,copy) void(^clickedImageCallback)(TableViewCell* cell,NSInteger imageIndex);

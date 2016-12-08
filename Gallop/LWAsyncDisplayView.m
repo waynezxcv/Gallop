@@ -109,7 +109,9 @@
                 [self addSubview:container];
             }
             [self.imageContainers addObject:container];
-            [container setContentWithImageStorage:imageStorage resizeBlock:resizeBlock];
+            [container setContentWithImageStorage:imageStorage
+                           displaysAsynchronously:self.displaysAsynchronously
+                                      resizeBlock:resizeBlock];
         }
     }
 }
@@ -460,9 +462,11 @@
 #pragma mark - Setter
 
 - (void)setDisplaysAsynchronously:(BOOL)displaysAsynchronously {
-    _displaysAsynchronously = displaysAsynchronously;
-    [(LWAsyncDisplayLayer *)self.layer
-     setDisplaysAsynchronously:_displaysAsynchronously];
+    if (_displaysAsynchronously != displaysAsynchronously) {
+        _displaysAsynchronously = displaysAsynchronously;
+        [(LWAsyncDisplayLayer *)self.layer
+         setDisplaysAsynchronously:_displaysAsynchronously];
+    }
 }
 
 - (void)setLayout:(LWLayout *)layout {

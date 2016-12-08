@@ -346,10 +346,10 @@
 			children = (
 				B085B3441CB69C7B00087739 /* Vendor */,
 				0134D12A1D16BDEE00FB91FF /* Root */,
-				01F58BBD1D85AA1D0089DB02 /* RichTextDemo1 */,
-				01D5B2F21D37D525007C5CB1 /* CornerRaius Demo */,
-				B0ACEBED1CEDC9530019074F /* WechatMomentsDemo */,
-				0134D11D1D16B62D00FB91FF /* HTML Parsing Demo 1 */,
+				01F58BBD1D85AA1D0089DB02 /* LWTextStorageDemo */,
+				01D5B2F21D37D525007C5CB1 /* LWImageStorageDemo */,
+				B0ACEBED1CEDC9530019074F /* Feeds */,
+				0134D11D1D16B62D00FB91FF /* HTMLParsing */,
 				011DFA1D1C987CD6000410D7 /* Supporting Files */,
 			);
 			name = Demo;
@@ -463,14 +463,14 @@
 			name = HTMLParser;
 			sourceTree = "<group>";
 		};
-		0134D11D1D16B62D00FB91FF /* HTML Parsing Demo 1 */ = {
+		0134D11D1D16B62D00FB91FF /* HTMLParsing */ = {
 			isa = PBXGroup;
 			children = (
 				B0C9A92F1D2273D300DFAA44 /* ArticleList */,
 				0134D11E1D16B64A00FB91FF /* HTMLParsingViewController.h */,
 				0134D11F1D16B64A00FB91FF /* HTMLParsingViewController.m */,
 			);
-			name = "HTML Parsing Demo 1";
+			name = HTMLParsing;
 			sourceTree = "<group>";
 		};
 		0134D12A1D16BDEE00FB91FF /* Root */ = {
@@ -484,13 +484,13 @@
 			name = Root;
 			sourceTree = "<group>";
 		};
-		01D5B2F21D37D525007C5CB1 /* CornerRaius Demo */ = {
+		01D5B2F21D37D525007C5CB1 /* LWImageStorageDemo */ = {
 			isa = PBXGroup;
 			children = (
 				01D5B2F31D37D548007C5CB1 /* CornerRadiusViewController.h */,
 				01D5B2F41D37D548007C5CB1 /* CornerRadiusViewController.m */,
 			);
-			name = "CornerRaius Demo";
+			name = LWImageStorageDemo;
 			sourceTree = "<group>";
 		};
 		01D5B32D1D37F630007C5CB1 /* _WebImage */ = {
@@ -512,13 +512,13 @@
 			name = _WebImage;
 			sourceTree = "<group>";
 		};
-		01F58BBD1D85AA1D0089DB02 /* RichTextDemo1 */ = {
+		01F58BBD1D85AA1D0089DB02 /* LWTextStorageDemo */ = {
 			isa = PBXGroup;
 			children = (
 				01F58BBE1D85AA8C0089DB02 /* RichTextDemo1ViewController.h */,
 				01F58BBF1D85AA8C0089DB02 /* RichTextDemo1ViewController.m */,
 			);
-			name = RichTextDemo1;
+			name = LWTextStorageDemo;
 			sourceTree = "<group>";
 		};
 		B079C2841CD8C58F003B15D3 /* _CoreText */ = {
@@ -597,7 +597,7 @@
 			name = _Transactions;
 			sourceTree = "<group>";
 		};
-		B0ACEBED1CEDC9530019074F /* WechatMomentsDemo */ = {
+		B0ACEBED1CEDC9530019074F /* Feeds */ = {
 			isa = PBXGroup;
 			children = (
 				010D02621D966138002887C7 /* Others */,
@@ -608,7 +608,7 @@
 				B0ACEBF01CEDC9A50019074F /* CellLayout.h */,
 				B0ACEBF11CEDC9A50019074F /* CellLayout.m */,
 			);
-			name = WechatMomentsDemo;
+			name = Feeds;
 			sourceTree = "<group>";
 		};
 		B0C9A92F1D2273D300DFAA44 /* ArticleList */ = {

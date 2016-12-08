@@ -26,17 +26,21 @@
 #import "CommentModel.h"
 #import "LWAlertView.h"
 
+
+
+
 @interface MomentsViewController ()
 
 <UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic,strong) NSArray* fakeDatasource;
-@property (nonatomic,strong) TableViewHeader* tableViewHeader;
-@property (nonatomic,strong) CommentView* commentView;
 @property (nonatomic,strong) UITableView* tableView;
 @property (nonatomic,strong) NSMutableArray* dataSource;
-@property (nonatomic,assign,getter = isNeedRefresh) BOOL needRefresh;
+@property (nonatomic,strong) TableViewHeader* tableViewHeader;
+@property (nonatomic,strong) CommentView* commentView;
 @property (nonatomic,strong) CommentModel* postComment;
+@property (nonatomic,assign,getter = isNeedRefresh) BOOL needRefresh;
+@property (nonatomic,assign) BOOL displaysAsynchronously;//是否异步绘制
 
 @end
 
@@ -107,6 +111,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 }
 
 - (void)confirgueCell:(TableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    cell.displaysAsynchronously = self.displaysAsynchronously;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.indexPath = indexPath;
     CellLayout* cellLayout = self.dataSource[indexPath.row];
@@ -204,7 +209,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
  延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
 - (void)coverScreenshotAndDelayRemoveWithCell:(UITableViewCell *)cell cellHeight:(CGFloat)cellHeight {
-
+    
     UIImage* screenshot = [GallopUtils screenshotFromView:cell];
     
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.tableView convertRect:cell.frame toView:self.tableView]];
@@ -244,7 +249,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     layout = [self layoutWithStatusModel:statusModel index:cell.indexPath.row];
     
     [self coverScreenshotAndDelayRemoveWithCell:cell cellHeight:layout.cellHeight];
-
+    
     [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:layout];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:cell.indexPath.row inSection:0]]
                           withRowAnimation:UITableViewRowAnimationNone];
@@ -260,8 +265,8 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                                         dateFormatter:self.dateFormatter];
     
     [self coverScreenshotAndDelayRemoveWithCell:cell cellHeight:newLayout.cellHeight];
-
-
+    
+    
     [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:newLayout];
     [self.tableView reloadRowsAtIndexPaths:@[cell.indexPath]
                           withRowAnimation:UITableViewRowAnimationNone];
@@ -276,7 +281,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                                                       dateFormatter:self.dateFormatter];
     
     [self coverScreenshotAndDelayRemoveWithCell:cell cellHeight:newLayout.cellHeight];
-
+    
     
     [self.dataSource replaceObjectAtIndex:cell.indexPath.row withObject:newLayout];
     [self.tableView reloadRowsAtIndexPaths:@[cell.indexPath]
@@ -295,11 +300,11 @@ const CGFloat kRefreshBoundary = 170.0f;
     StatusModel* statusModel = layout.statusModel;
     statusModel.commentList = newCommentLists;
     CellLayout* newLayout = [self layoutWithStatusModel:statusModel index:model.index];
-
+    
     
     UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:model.index inSection:0]];
     [self coverScreenshotAndDelayRemoveWithCell:cell cellHeight:newLayout.cellHeight];
-
+    
     [self.dataSource replaceObjectAtIndex:model.index withObject:newLayout];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.index inSection:0]]
                           withRowAnimation:UITableViewRowAnimationNone];
@@ -393,13 +398,33 @@ const CGFloat kRefreshBoundary = 170.0f;
     return layout;
 }
 
+- (void)segmentControlIndexChanged:(UISegmentedControl *)segmentedControl {
+    NSInteger idx = segmentedControl.selectedSegmentIndex;
+    switch (idx) {
+        case 0:
+            self.displaysAsynchronously = YES;
+            break;
+        case 1:
+            self.displaysAsynchronously = NO;
+            break;
+    }
+}
+
 #pragma mark - Getter
 
 - (void)setup {
     self.needRefresh = YES;
+    self.displaysAsynchronously = YES;
     self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationItem.title = @"Gallop构建朋友圈Demo";
+    
+    UISegmentedControl* segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"异步绘制",@"非异步绘制"]];
+    segmentedControl.selectedSegmentIndex = 0;
+    [segmentedControl addTarget:self
+                         action:@selector(segmentControlIndexChanged:)
+               forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = segmentedControl;
 }
+
 
 - (CommentView *)commentView {
     if (_commentView) {

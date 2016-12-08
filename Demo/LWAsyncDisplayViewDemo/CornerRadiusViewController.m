@@ -18,6 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"LWImageStorage示例";
     self.view.backgroundColor = [UIColor whiteColor];
     
     LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc]

@@ -22,7 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"属性文本";
+    self.title = @"LWTextStorage示例";
     self.view.backgroundColor = [UIColor whiteColor];
     
     //创建LWAsyncDisplayView对象

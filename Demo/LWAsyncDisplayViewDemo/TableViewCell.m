@@ -163,7 +163,6 @@
     return YES;
 }
 
-
 #pragma mark - Actions
 //点击菜单按钮
 - (void)didClickedMenuButton {
@@ -232,6 +231,13 @@
 
 - (void)_setCellLayout {
     self.menu.statusModel = self.cellLayout.statusModel;
+}
+
+- (void)setDisplaysAsynchronously:(BOOL)displaysAsynchronously {
+    if (_displaysAsynchronously != displaysAsynchronously) {
+        _displaysAsynchronously = displaysAsynchronously;
+    }
+    self.asyncDisplayView.displaysAsynchronously = self.displaysAsynchronously;
 }
 
 #pragma mark - Getter

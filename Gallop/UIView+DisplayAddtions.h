@@ -46,6 +46,7 @@
  *  @param resizeBlock  重新调整图片大小回调Block
  */
 - (void)setContentWithImageStorage:(LWImageStorage *)imageStorage
+            displaysAsynchronously:(BOOL)displaysAsynchronously
                        resizeBlock:(void(^)(LWImageStorage*imageStorage, CGFloat delta))resizeBlock;
 
 

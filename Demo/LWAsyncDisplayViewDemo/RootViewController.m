@@ -11,6 +11,8 @@
 #import "MomentsViewController.h"
 #import "ArticleListViewController.h"
 
+
+
 @interface RootViewController ()
 
 <UITableViewDelegate,UITableViewDataSource>
@@ -37,7 +39,6 @@
     [self.view addSubview:self.tableView];
 }
 
-
 #pragma mark -
 
 
@@ -53,18 +54,16 @@
     }
     switch (indexPath.row) {
         case 0:
-            cell.textLabel.text = @"属性文本使用示例";
+            cell.textLabel.text = @"LWTextStorage使用示例";
             break;
         case 1:
-            cell.textLabel.text = @"图片设置圆角半径和模糊效果示例";
+            cell.textLabel.text = @"LWImageStorage使用示例";
             break;
         case 2:
-            cell.textLabel.text = @"使用Gallop构建FeedsList示例";
+            cell.textLabel.text = @"使用Gallop构建Feeds示例";
             break;
         case 3:
-            cell.textLabel.text = @"Gallop进行HTML解析示例";
-            break;
-        default:
+            cell.textLabel.text = @"使用Gallop进行HTML解析示例";
             break;
     }
     return cell;
@@ -93,8 +92,6 @@
             ArticleListViewController* vc = [[ArticleListViewController alloc] init];
             [self.navigationController pushViewController:vc animated:YES];
         }
-            break;
-        default:
             break;
     }
 }
