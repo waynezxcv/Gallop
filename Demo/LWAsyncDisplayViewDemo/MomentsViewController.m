@@ -44,7 +44,13 @@
 
 @end
 
+
+
 const CGFloat kRefreshBoundary = 170.0f;
+
+
+
+
 @implementation MomentsViewController
 
 #pragma mark - ViewControllerLifeCycle
@@ -417,7 +423,7 @@ const CGFloat kRefreshBoundary = 170.0f;
     self.displaysAsynchronously = YES;
     self.view.backgroundColor = [UIColor whiteColor];
     
-    UISegmentedControl* segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"异步绘制",@"非异步绘制"]];
+    UISegmentedControl* segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"异步绘制开",@"异步绘制关"]];
     segmentedControl.selectedSegmentIndex = 0;
     [segmentedControl addTarget:self
                          action:@selector(segmentControlIndexChanged:)

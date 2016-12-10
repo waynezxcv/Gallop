@@ -71,4 +71,20 @@
 + (void)parseTopicWithLWTextStorage:(LWTextStorage *)textStorage
                           linkColor:(UIColor *)linkColor
                      highlightColor:(UIColor *)higlightColor;
+
+
+
+
+/**
+ *  解析 手机号码 并添加链接
+ *
+ *  @param textStorage   需要解析的LWTextStorage对象
+ *  @param linkColor     链接文本颜色
+ *  @param higlightColor 链接点击时高亮颜色
+ */
++ (void)parseTelWithLWTextStorage:(LWTextStorage *)textStorage
+                        linkColor:(UIColor *)linkColor
+                   highlightColor:(UIColor *)higlightColor;
+
+
 @end

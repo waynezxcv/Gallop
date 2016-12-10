@@ -17,14 +17,20 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
+
+
+
+
+
 #import "LWTextParser.h"
 
 
 #define EmojiRegular @"\\[[a-zA-Z0-9\\u4e00-\\u9fa5]+\\]"
 #define AccountRegular @"@[\u4e00-\u9fa5a-zA-Z0-9_-]{2,30}"
 #define TopicRegular @"#[^#]+#"
-#define TELRegular @"^1[3|4|5|7|8][0-9]\\d{8}$"
+#define TELRegular @"1[3|4|5|7|8][0-9]\\d{8}"
 #define URLRegular @"[a-zA-z]+://[^\\s]*"
+
 
 
 static inline NSRegularExpression* EmojiRegularExpression();
@@ -35,6 +41,7 @@ static inline NSRegularExpression* TelRegularExpression();
 
 
 @implementation LWTextParser
+
 
 + (void)parseEmojiWithTextStorage:(LWTextStorage *)textStorage {
     NSString* text = textStorage.text;
@@ -77,11 +84,10 @@ static inline NSRegularExpression* TelRegularExpression();
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         if (textStorage.text.length >= range.location + range.length) {
-            [textStorage lw_addLinkWithData:content
+            [textStorage lw_addLinkWithData:[NSString stringWithFormat:@"href://%@",content]
                                       range:range
                                   linkColor:linkColor
                              highLightColor:higlightColor];
-
         }
     }];
 }
@@ -103,13 +109,14 @@ static inline NSRegularExpression* TelRegularExpression();
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         if (textStorage.text.length >= range.location + range.length) {
-            [textStorage lw_addLinkWithData:content
+            [textStorage lw_addLinkWithData:[NSString stringWithFormat:@"user://%@",content]
                                       range:range
                                   linkColor:linkColor
                              highLightColor:higlightColor];
         }
     }];
 }
+
 
 + (void)parseTopicWithLWTextStorage:(LWTextStorage *)textStorage
                           linkColor:(UIColor *)linkColor
@@ -127,13 +134,14 @@ static inline NSRegularExpression* TelRegularExpression();
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         if (textStorage.text.length >= range.location + range.length) {
-            [textStorage lw_addLinkWithData:content
+            [textStorage lw_addLinkWithData:[NSString stringWithFormat:@"topic://%@",content]
                                       range:range
                                   linkColor:linkColor
                              highLightColor:higlightColor];
         }
     }];
 }
+
 
 + (void)parseTelWithLWTextStorage:(LWTextStorage *)textStorage
                         linkColor:(UIColor *)linkColor
@@ -151,13 +159,14 @@ static inline NSRegularExpression* TelRegularExpression();
         NSRange range = [match range];
         NSString* content = [text substringWithRange:range];
         if (textStorage.text.length >= range.location + range.length) {
-            [textStorage lw_addLinkWithData:content
+            [textStorage lw_addLinkWithData:[NSString stringWithFormat:@"tel://%@",content]
                                       range:range
                                   linkColor:linkColor
                              highLightColor:higlightColor];
         }
     }];
 }
+
 
 @end
 
@@ -169,7 +178,8 @@ static inline NSRegularExpression* EmojiRegularExpression() {
     dispatch_once(&onceToken, ^{
         _EmojiRegularExpression = [[NSRegularExpression alloc]
                                    initWithPattern:EmojiRegular
-                                   options:NSRegularExpressionAnchorsMatchLines error:nil];
+                                   options:NSRegularExpressionAnchorsMatchLines
+                                   error:nil];
     });
     return _EmojiRegularExpression;
 }
@@ -180,7 +190,8 @@ static inline NSRegularExpression* URLRegularExpression() {
     dispatch_once(&onceToken, ^{
         _URLRegularExpression = [[NSRegularExpression alloc]
                                  initWithPattern:URLRegular
-                                 options:NSRegularExpressionAnchorsMatchLines error:nil];
+                                 options:NSRegularExpressionAnchorsMatchLines
+                                 error:nil];
     });
     return _URLRegularExpression;
 }
@@ -191,7 +202,8 @@ static inline NSRegularExpression* AccountRegularExpression() {
     dispatch_once(&onceToken, ^{
         _AccountRegularExpression = [[NSRegularExpression alloc]
                                      initWithPattern:AccountRegular
-                                     options:NSRegularExpressionAnchorsMatchLines error:nil];
+                                     options:NSRegularExpressionAnchorsMatchLines
+                                     error:nil];
     });
     return _AccountRegularExpression;
 }
@@ -202,7 +214,8 @@ static inline NSRegularExpression* TopicRegularExpression() {
     dispatch_once(&onceToken, ^{
         _TopicRegularExpression = [[NSRegularExpression alloc]
                                    initWithPattern:TopicRegular
-                                   options:NSRegularExpressionCaseInsensitive error:nil];
+                                   options:NSRegularExpressionCaseInsensitive
+                                   error:nil];
     });
     return _TopicRegularExpression;
 }
@@ -213,7 +226,8 @@ static inline NSRegularExpression* TelRegularExpression() {
     dispatch_once(&onceToken, ^{
         _TelRegularExpression = [[NSRegularExpression alloc]
                                  initWithPattern:TELRegular
-                                 options:NSRegularExpressionCaseInsensitive error:nil];
+                                 options:NSRegularExpressionCaseInsensitive
+                                 error:nil];
     });
     return _TelRegularExpression;
 }
