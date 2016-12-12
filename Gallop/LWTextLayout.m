@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -126,11 +126,11 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
 
 + (LWTextLayout *)lw_layoutWithContainer:(LWTextContainer *)container
                                     text:(NSAttributedString *)text {
-
+    
     if (!text || !container) {
         return nil;
     }
-
+    
     NSMutableAttributedString* mutableAtrributedText = text.mutableCopy;
     NSInteger maxNumberOfLines = container.maxNumberOfLines;
     CGPathRef containerPath = container.path.CGPath;
@@ -143,21 +143,21 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                                 containerBoudingBox.size,
                                                 maxNumberOfLines,
                                                 &cfRange);
-
-
+    
+    
     NSInteger realLength = cfRange.length;
     BOOL needTruncation = NO;
     if (originLength != realLength) {
         needTruncation  = YES;
     }
     CGMutablePathRef suggetPath = CGPathCreateMutable();
-
+    
     CGRect suggestRect = {
         containerBoudingBox.origin,
         {containerBoudingBox.size.width,
             suggestSize.height}
     };
-
+    
     if (containerBoudingBox.size.height != CGFLOAT_MAX) {
         switch (container.vericalAlignment) {
             case LWTextVericalAlignmentTop:
@@ -176,13 +176,13 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                 break;
         }
     }
-
+    
     CGPathAddRect(suggetPath, NULL,suggestRect);
     CTFrameRef ctFrame = CTFramesetterCreateFrame(ctFrameSetter,
                                                   cfRange,
                                                   suggetPath,
                                                   NULL);
-
+    
     NSInteger rowIndex = -1;
     NSUInteger rowCount = 0;
     CGRect lastRect = CGRectMake(0.0f, - CGFLOAT_MAX, 0.0f, 0.0f);
@@ -195,14 +195,14 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
         lineOrigins = malloc(lineCount * sizeof(CGPoint));
         CTFrameGetLineOrigins(ctFrame, CFRangeMake(0, lineCount), lineOrigins);
     }
-
+    
     BOOL isNeedStroke = NO;
     CGRect textBoundingRect = CGRectZero;
     NSUInteger lineCurrentIndex = 0;
     NSMutableArray* highlights = [[NSMutableArray alloc] init];
     NSMutableArray* backgroundColors = [[NSMutableArray alloc] init];
     NSMutableArray* boundingStrokes = [[NSMutableArray alloc] init];
-
+    
     for (NSUInteger i = 0; i < lineCount; i++) {
         CTLineRef ctLine = CFArrayGetValueAtIndex(ctLines, i);
         CFArrayRef ctRuns = CTLineGetGlyphRuns(ctLine);
@@ -225,7 +225,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                         @[[NSValue valueWithCGRect:suggestRect]];
                         highlight.positions = highlightPositions;
                     }
-
+                    
                     else {
                         NSArray* highlightPositions = [self _highlightPositionsWithCtFrame:ctFrame
                                                                                      range:highlight.range];
@@ -242,7 +242,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                     }
                 }
             }
-
+            
             {
                 LWTextHighlight* highlight = [attributes objectForKey:LWTextLongPressAttributedName];
                 if (highlight) {
@@ -262,7 +262,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                     }
                 }
             }
-
+            
             LWTextBackgroundColor* color = [attributes objectForKey:LWTextBackgroundColorAttributedName];
             if (color) {
                 NSArray* backgroundsPositions = [self _highlightPositionsWithCtFrame:ctFrame range:color.range];
@@ -271,7 +271,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                     [backgroundColors addObject:color];
                 }
             }
-
+            
             LWTextBoundingStroke* boundingStroke = [attributes objectForKey:LWTextBoundingStrokeAttributedName];
             if (boundingStroke) {
                 NSArray* boundingStrokePositions = [self _highlightPositionsWithCtFrame:ctFrame range:color.range];
@@ -285,12 +285,12 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                 isNeedStroke = YES;
             }
         }
-
+        
         CGPoint ctLineOrigin = lineOrigins[i];
         CGPoint position;
         position.x = suggestRect.origin.x + ctLineOrigin.x;
         position.y = suggestRect.size.height + suggestRect.origin.y - ctLineOrigin.y;
-
+        
         LWTextLine* line = [LWTextLine lw_textLineWithCTlineRef:ctLine lineOrigin:position];
         CGRect rect = line.frame;
         BOOL newRow = YES;
@@ -321,12 +321,12 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
             textBoundingRect = CGRectUnion(textBoundingRect,rect);
         }
     }
-
+    
     NSMutableArray* attachments = [[NSMutableArray alloc] init];
     NSMutableArray* attachmentRanges = [[NSMutableArray alloc] init];
     NSMutableArray* attachmentRects = [[NSMutableArray alloc] init];
     NSMutableSet* attachmentContentsSet = [[NSMutableSet alloc] init];
-
+    
     for (NSUInteger i = 0; i < lines.count; i ++) {
         LWTextLine* line = lines[i];
         if (line.attachments.count > 0) {
@@ -340,12 +340,12 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
             }
         }
     }
-
+    
     suggestRect = CGRectMake(suggestRect.origin.x - container.edgeInsets.left,
                              suggestRect.origin.y - container.edgeInsets.top,
                              suggestRect.size.width + container.edgeInsets.left + container.edgeInsets.right,
                              suggestRect.size.height + container.edgeInsets.top + container.edgeInsets.bottom);
-
+    
     LWTextLayout* layout = [[LWTextLayout alloc] init];
     layout.needStrokeDraw = isNeedStroke;
     layout.container = container;
@@ -374,7 +374,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     if (lineOrigins){
         free(lineOrigins);
     }
-
+    
     return layout;
 }
 
@@ -405,7 +405,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
         containerView:(UIView *)containerView
        containerLayer:(CALayer *)containerLayer
           isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld {
-
+    
     if (self.isNeedTextBackgroundColorDraw) {
         [self _drawTextBackgroundColorInContext:context
                                      textLayout:self
@@ -413,7 +413,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                           point:point
                                     isCancelled:isCancelld];
     }
-
+    
     if (self.isNeedBoudingStrokeDraw) {
         [self _drawTextBoudingStrokeInContext:context
                                    textLayout:self
@@ -421,7 +421,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                         point:point
                                   isCancelled:isCancelld];
     }
-
+    
     if (self.isNeedDebugDraw) {
         [self _drawDebugInContext:context
                        textLayout:self
@@ -429,13 +429,13 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                             point:point
                       isCancelled:isCancelld];
     }
-
+    
     [self _drawTextInContext:context
                   textLayout:self
                         size:size
                        point:point
                  isCancelled:isCancelld];
-
+    
     if (self.isNeedAttachmentDraw) {
         [self _drawAttachmentsIncontext:context
                               textLayou:self
@@ -452,7 +452,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                      size:(CGSize)size
                                     point:(CGPoint)point
                               isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld  {
-
+    
     [textLayout.backgroundColors enumerateObjectsUsingBlock:^(LWTextBackgroundColor *
                                                               _Nonnull background,
                                                               NSUInteger idx,
@@ -478,7 +478,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                    size:(CGSize)size
                                   point:(CGPoint)point
                             isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld  {
-
+    
     [textLayout.boudingStrokes enumerateObjectsUsingBlock:^(LWTextBoundingStroke * _Nonnull boundingStroke,
                                                             NSUInteger idx,
                                                             BOOL * _Nonnull stop) {
@@ -491,7 +491,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
             }
             CGRect rect = [value CGRectValue];
             CGRect adjustRect = CGRectMake(point.x + rect.origin.x, point.y + rect.origin.y, rect.size.width, rect.size.height);
-
+            
             UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect cornerRadius:2.0f];
             [boundingStroke.strokeColor setStroke];
             [beizerPath setLineWidth:1.0f];
@@ -505,7 +505,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                        size:(CGSize)size
                       point:(CGPoint)point
                 isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld  {
-
+    
     CGRect r = CGRectOffset(textLayout.cgPathBox, point.x, point.y);
     CGContextAddRect(context,CGRectMake(r.origin.x - 0.2f,
                                         r.origin.y - 1.0f,
@@ -514,12 +514,12 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     CGContextSetLineWidth(context, 0.2f);
     CGContextSetStrokeColorWithColor(context, [UIColor purpleColor].CGColor);
     CGContextStrokePath(context);
-
-
+    
+    
     CGContextAddRect(context, CGRectOffset(textLayout.textBoundingRect,point.x,point.y));
     CGContextSetFillColorWithColor(context, RGB(44.0f, 189.0f, 230.0f, 0.1f).CGColor);
     CGContextFillPath(context);
-
+    
     [textLayout.linesArray enumerateObjectsUsingBlock:^(LWTextLine * _Nonnull line,
                                                         NSUInteger idx,
                                                         BOOL * _Nonnull stop) {
@@ -529,14 +529,14 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
         CGContextMoveToPoint(context,
                              line.lineOrigin.x + point.x,
                              (line.lineOrigin.y + point.y + 1.0f));
-
+        
         CGContextAddLineToPoint(context,
                                 line.lineOrigin.x + point.x + line.lineWidth,
                                 (line.lineOrigin.y + point.y + 1.0f));
         CGContextSetLineWidth(context, 1.0f);//base line
         CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
         CGContextStrokePath(context);
-
+        
         for (LWTextGlyph* glyph in line.glyphs) {
             CGContextAddRect(context, CGRectMake(point.x + line.lineOrigin.x + glyph.position.x,
                                                  line.lineOrigin.y + point.y  - glyph.ascent,
@@ -548,8 +548,8 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
             CGContextStrokePath(context);
         }
     }];
-
-
+    
+    
     [textLayout.textHighlights enumerateObjectsUsingBlock:^(LWTextHighlight * _Nonnull highlight,
                                                             NSUInteger idx,
                                                             BOOL * _Nonnull stop) {
@@ -560,7 +560,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
             if (isCancelld()) {
                 break;
             }
-
+            
             CGRect rect = [rectValue CGRectValue];
             CGRect adjustRect = CGRectOffset(rect, point.x, point.y);
             UIBezierPath* beizerPath = [UIBezierPath bezierPathWithRoundedRect:adjustRect
@@ -576,7 +576,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                       size:(CGSize)size
                      point:(CGPoint)point
                isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld {
-
+    
     CGContextSaveGState(context);
     CGContextTranslateCTM(context, point.x, point.y);
     CGContextTranslateCTM(context, 0, size.height);
@@ -618,12 +618,12 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     if (!textStroke) {
         return;
     }
-
+    
     CTFontRef runFont = CFDictionaryGetValue(runAttrs, kCTFontAttributeName);
     if (!runFont){
         return;
     }
-
+    
     NSUInteger glyphCount = CTRunGetGlyphCount(run);
     if (glyphCount <= 0) {
         return;
@@ -632,7 +632,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     CTRunGetGlyphs(run, CFRangeMake(0, 0),glyphs);
     CGPoint glyphPositions[glyphCount];
     CTRunGetPositions(run, CFRangeMake(0, 0), glyphPositions);
-
+    
     CGColorRef strokeColor = textStroke.strokeColor.CGColor;
     CGFloat strokeWidth = textStroke.strokeWidth;
     CGContextSaveGState(context);
@@ -654,20 +654,21 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                     containerView:(UIView *)containerView
                    containerLayer:(CALayer *)containerLayer
                       isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelld {
+    
     for (NSUInteger i = 0; i < textLayout.attachments.count; i++) {
         if (isCancelld()) {
             break;
         }
         LWTextAttachment* attachment = textLayout.attachments[i];
-
+        
         if (!attachment.content) {
             continue;
         }
-
+        
         UIImage* image = nil;
         UIView* view = nil;
         CALayer* layer = nil;
-
+        
         if ([attachment.content isKindOfClass:[UIImage class]]) {
             image = attachment.content;
         } else if ([attachment.content isKindOfClass:[UIView class]]) {
@@ -675,22 +676,25 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
         } else if ([attachment.content isKindOfClass:[CALayer class]]) {
             layer = attachment.content;
         }
-
+        
         if ((!image && !view && !layer) || (!image && !view && !layer) ||
             (image && !context) || (view && !containerView)
             || (layer && !containerLayer)) {
             continue;
         }
-
+        
         CGSize asize = image ? image.size : view ? view.frame.size : layer.frame.size;
         CGRect rect = ((NSValue *)textLayout.attachmentRects[i]).CGRectValue;
         rect = UIEdgeInsetsInsetRect(rect,attachment.contentEdgeInsets);
-        rect =  [LWCGRectTransform lw_CGRectFitWithContentMode: attachment.contentMode rect:rect size:asize];
+        rect =  [LWCGRectTransform lw_CGRectFitWithContentMode:attachment.contentMode
+                                                          rect:rect
+                                                          size:asize];
         rect = CGRectStandardize(rect);
         rect.origin.x += point.x;
         rect.origin.y += point.y;
-
+        
         if (image) {
+            
             CGImageRef ref = image.CGImage;
             if (ref) {
                 CGContextSaveGState(context);
@@ -699,51 +703,72 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                 CGContextDrawImage(context, rect, ref);
                 CGContextRestoreGState(context);
             }
+            
         } else if (view) {
+            
             dispatch_main_sync_safe(^{
                 view.frame = rect;
                 [containerView addSubview:view];
-                if ([view isKindOfClass:[UIImageView class]]) {
-                    if (attachment.userInfo) {
-                        if (attachment.userInfo[@"URL"]) {
-                            [view.layer lw_setImageWithURL:attachment.userInfo[@"URL"]
-                                          placeholderImage:nil
-                                              cornerRadius:0
-                                                      size:CGSizeZero
-                                               contentMode:attachment.contentMode
-                                                    isBlur:NO
-                                                   options:0
-                                                  progress:nil completed:^(UIImage *image,
-                                                                           NSError *error,
-                                                                           SDImageCacheType
-                                                                           cacheType,
-                                                                           NSURL *imageURL) {}];
-                        }
-                    }
+                
+                if (attachment.userInfo && attachment.userInfo[@"URL"]) {
+                    [view.layer lw_setImageWithURL:attachment.userInfo[@"URL"]
+                                  placeholderImage:nil
+                                      cornerRadius:0
+                                              size:CGSizeZero
+                                       contentMode:attachment.contentMode
+                                            isBlur:NO
+                                           options:0
+                                          progress:nil
+                                         completed:^(UIImage *image,
+                                                     NSError *error,
+                                                     SDImageCacheType
+                                                     cacheType,
+                                                     NSURL *imageURL) {}];
                 }
             });
+            
         } else if (layer) {
             dispatch_main_sync_safe(^{
                 layer.frame = rect;
                 [containerLayer addSublayer:layer];
+                
+                if (attachment.userInfo && attachment.userInfo[@"URL"]) {
+                    [layer lw_setImageWithURL:attachment.userInfo[@"URL"]
+                             placeholderImage:nil
+                                 cornerRadius:0
+                                         size:CGSizeZero
+                                  contentMode:attachment.contentMode
+                                       isBlur:NO
+                                      options:0
+                                     progress:nil
+                                    completed:^(UIImage *image,
+                                                NSError *error,
+                                                SDImageCacheType
+                                                cacheType,
+                                                NSURL *imageURL) {}];
+                }
+                
             });
-
+            
         }
     }
 }
 
+
 - (void)removeAttachmentFromSuperViewOrLayer {
     for (LWTextAttachment* attachment in self.attachments) {
-        if ([attachment.content isKindOfClass:[UIView class]]) {
-            dispatch_main_sync_safe(^{
-                UIView* view = attachment.content;
-                [view removeFromSuperview];
-            });
-        } else if ([attachment.content isKindOfClass:[CALayer class]]) {
-            dispatch_main_sync_safe(^{
-                CALayer* layer = attachment.content;
-                [layer removeFromSuperlayer];
-            });
+        @autoreleasepool {
+            if ([attachment.content isKindOfClass:[UIView class]]) {
+                dispatch_main_sync_safe(^{
+                    UIView* view = attachment.content;
+                    [view removeFromSuperview];
+                });
+            } else if ([attachment.content isKindOfClass:[CALayer class]]) {
+                dispatch_main_sync_safe(^{
+                    CALayer* layer = attachment.content;
+                    [layer removeFromSuperlayer];
+                });
+            }
         }
     }
 }
@@ -761,22 +786,22 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     if (!lines) {
         return nil;
     }
-
+    
     CFIndex count = CFArrayGetCount(lines);
     CGPoint origins[count];
     CGAffineTransform transform = CGAffineTransformIdentity;
     transform = CGAffineTransformMakeTranslation(0, boundsRect.size.height);
     transform = CGAffineTransformScale(transform, 1.f, -1.f);
     CTFrameGetLineOrigins(ctFrame, CFRangeMake(0,0), origins);
-
+    
     for (int i = 0; i < count; i++) {
         CGPoint linePoint = origins[i];
         CTLineRef line = CFArrayGetValueAtIndex(lines, i);
         CFRange range = CTLineGetStringRange(line);
-
+        
         if ([self _isPosition:selectionStartPosition inRange:range] &&
             [self _isPosition:selectionEndPosition inRange:range]) {
-
+            
             CGFloat ascent, descent, leading, offset, offset2;
             offset = CTLineGetOffsetForStringIndex(line, selectionStartPosition, NULL);
             offset2 = CTLineGetOffsetForStringIndex(line, selectionEndPosition, NULL);
@@ -785,7 +810,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                          linePoint.y - descent,
                                          offset2 - offset,
                                          ascent + descent);
-
+            
             CGRect rect = CGRectApplyAffineTransform(lineRect, transform);
             CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
                                            rect.origin.y + boundsRect.origin.y,
@@ -794,7 +819,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
             [positions addObject:[NSValue valueWithCGRect:adjustRect]];
             break;
         }
-
+        
         if ([self _isPosition:selectionStartPosition inRange:range]) {
             CGFloat ascent, descent, leading, width, offset;
             offset = CTLineGetOffsetForStringIndex(line, selectionStartPosition, NULL);
@@ -803,17 +828,17 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                          linePoint.y - descent,
                                          width - offset,
                                          ascent + descent);
-
+            
             CGRect rect = CGRectApplyAffineTransform(lineRect, transform);
             CGRect adjustRect = CGRectMake(rect.origin.x + boundsRect.origin.x,
                                            rect.origin.y + boundsRect.origin.y,
                                            rect.size.width,
                                            rect.size.height);
             [positions addObject:[NSValue valueWithCGRect:adjustRect]];
-
+            
         } else if (selectionStartPosition < range.location &&
                    selectionEndPosition >= range.location + range.length) {
-
+            
             CGFloat ascent, descent, leading, width;
             width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
             CGRect lineRect = CGRectMake(linePoint.x,
@@ -826,10 +851,10 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                            rect.size.width,
                                            rect.size.height);
             [positions addObject:[NSValue valueWithCGRect:adjustRect]];
-
+            
         } else if (selectionStartPosition < range.location &&
                    [self _isPosition:selectionEndPosition inRange:range]) {
-
+            
             CGFloat ascent, descent, leading, width, offset;
             offset = CTLineGetOffsetForStringIndex(line, selectionEndPosition, NULL);
             width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
@@ -858,14 +883,14 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                             CGSize size,
                                             NSUInteger numberOfLines,
                                             CFRange* rangeToSize) {
-
+    
     CGSize constraints = CGSizeMake(size.width, MAXFLOAT);
     if (numberOfLines > 0) {
         CGMutablePathRef path = CGPathCreateMutable();
         CGPathAddRect(path, NULL, CGRectMake(0.0f, 0.0f, constraints.width, MAXFLOAT));
         CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
         CFArrayRef lines = CTFrameGetLines(frame);
-
+        
         if (CFArrayGetCount(lines) > 0) {
             NSInteger lastVisibleLineIndex = MIN((CFIndex)numberOfLines, CFArrayGetCount(lines)) - 1;
             CTLineRef lastVisibleLine = CFArrayGetValueAtIndex(lines, lastVisibleLineIndex);
