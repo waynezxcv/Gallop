@@ -46,66 +46,7 @@
 @synthesize text = _text;
 
 
-
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWTextStorage* one = [[LWTextStorage alloc] init];
-    one.textLayout = [self.textLayout copy];
-    one.text = [self.text copy];
-    one.attributedText = [self.attributedText mutableCopy];
-    one.textColor = [self.textColor copy];
-    one.textBackgroundColor = [self.textBackgroundColor copy];
-    one.textBoundingStrokeColor = [self.textBoundingStrokeColor copy];
-    one.font = [self.font copy];
-    one.linespacing = self.linespacing;
-    one.characterSpacing = self.characterSpacing;
-    one.textAlignment = self.textAlignment;
-    one.vericalAlignment = self.vericalAlignment;
-    one.underlineStyle = self.underlineStyle;
-    one.underlineColor = [self.underlineColor copy];
-    one.lineBreakMode = self.lineBreakMode;
-    one.textDrawMode = self.textDrawMode;
-    one.strokeColor = [self.strokeColor copy];
-    one.strokeWidth = self.strokeWidth;
-    one.suggestSize = self.suggestSize;
-    one.maxNumberOfLines = self.maxNumberOfLines;
-    one.numberOfLines = self.numberOfLines;
-    one.needDebug = self.needDebug;
-    one.isTruncation = self.isTruncation;
-    one.identifier = [self.identifier copy];
-    one.tag = self.tag;
-    one.clipsToBounds = self.clipsToBounds;
-    one.opaque = self.opaque;
-    one.hidden = self.hidden;
-    one.alpha = self.alpha;
-    one.frame = self.frame;
-    one.bounds = self.bounds;
-    one.center = self.center;
-    one.position = self.position;
-    one.cornerRadius = self.cornerRadius;
-    one.cornerBackgroundColor = [self.cornerBackgroundColor copy];
-    one.cornerBorderColor = [self.cornerBorderColor copy];
-    one.cornerBorderWidth = self.cornerBorderWidth;
-    one.shadowColor = self.shadowColor;
-    one.shadowOpacity = self.shadowOpacity;
-    one.shadowOffset = self.shadowOffset;
-    one.shadowRadius = self.shadowRadius;
-    one.contentsScale = self.contentsScale;
-    one.backgroundColor = [self.backgroundColor copy];
-    one.contentMode = self.contentMode;
-    one.htmlLayoutEdgeInsets = self.htmlLayoutEdgeInsets;
-    one.extraDisplayIdentifier = [self.extraDisplayIdentifier copy];
-    
-    return one;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
-
 #pragma mark - NSCoding
-
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.textLayout forKey:@"textLayout"];
     [aCoder encodeObject:self.text forKey:@"text"];

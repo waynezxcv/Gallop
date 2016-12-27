@@ -36,7 +36,7 @@
 /**
  *  文本布局模型，对CoreText的封装
  */
-@interface LWTextLayout : NSObject <NSCoding,NSCopying,NSMutableCopying>
+@interface LWTextLayout : NSObject <NSCoding>
 
 @property (nonatomic,strong,readonly) LWTextContainer* container;//文本容器
 @property (nonatomic,strong,readonly) NSAttributedString* text;//文本

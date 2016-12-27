@@ -38,21 +38,6 @@
 
 @implementation LWLayout
 
-
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWLayout* one = [[LWLayout alloc] init];
-    one.textStorages = [self.textStorages mutableCopy];
-    one.imageStorages = [self.imageStorages mutableCopy];
-    one.totalStorages = [self.totalStorages mutableCopy];
-    return one;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
-
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {

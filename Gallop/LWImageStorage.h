@@ -45,10 +45,11 @@ typedef NS_ENUM(NSUInteger, LWLocalImageType){
     LWLocalImageTypeDrawInSubView,
 };
 
+
 /**
  *   图片绘制的数据模型
  */
-@interface LWImageStorage : LWStorage <NSCopying,NSMutableCopying,NSCoding>
+@interface LWImageStorage : LWStorage <NSCoding>
 
 @property (nonatomic,strong) id contents;//内容（UIImage or NSURL）
 @property (nonatomic,assign) LWLocalImageType localImageType;//本地图片的种类，默认是LWLocalImageDrawInLWAsyncDisplayView

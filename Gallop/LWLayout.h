@@ -99,7 +99,8 @@
  *  Gallop的布局模型。其中包含了LWStorage及其子类的对象。
  */
 
-@interface LWLayout : NSObject <LWLayoutProtocol,NSCoding,NSCopying,NSMutableCopying>
+@interface LWLayout : NSObject <LWLayoutProtocol,NSCoding>
+
 
 
 @end

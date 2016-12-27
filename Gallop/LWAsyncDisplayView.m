@@ -484,10 +484,12 @@
     LWTextHighlight* oldHighlight = _highlight;
     NSArray* oldImageStorages = _imageStorages;
     NSArray* oldTextStorages = _textStorages;
+    
     _layout = nil;
     _imageStorages = nil;
     _textStorages = nil;
     _highlight = nil;
+    
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [oldLayout class];
@@ -500,6 +502,7 @@
     _imageStorages = self.layout.imageStorages;
     _textStorages = self.layout.textStorages;
     [self.layer setNeedsDisplay];
+    
     
     __weak typeof(self) weakSelf = self;
     [self setImageStoragesResizeBlock:^(LWImageStorage* imageStorage,CGFloat delta) {

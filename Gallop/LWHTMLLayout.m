@@ -45,17 +45,6 @@
     return self;
 }
 
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWHTMLLayout* one = [[LWHTMLLayout alloc] init];
-    one.items = [self.items mutableCopy];
-    return one;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
-
 - (id)init {
     self = [super init];
     if (self) {

@@ -40,54 +40,6 @@
 @synthesize cornerRadius = _cornerRadius;
 @synthesize cornerBorderWidth = _cornerBorderWidth;
 
-
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWImageStorage* one = [[LWImageStorage alloc] init];
-    if ([self.contents conformsToProtocol:@protocol(NSCopying)]) {
-        one.contents = [self.contents copy];
-    } else {
-        one.contents = self.contents;
-    }
-    one.localImageType = self.localImageType;
-    one.placeholder = [self.placeholder copy];
-    one.fadeShow = self.fadeShow;
-    one.userInteractionEnabled = self.userInteractionEnabled;
-    one.needRerendering = self.needRerendering;
-    one.needResize = self.needResize;
-    one.isBlur = self.isBlur;
-    one.identifier = [self.identifier copy];
-    one.tag = self.tag;
-    one.clipsToBounds = self.clipsToBounds;
-    one.opaque = self.opaque;
-    one.hidden = self.hidden;
-    one.alpha = self.alpha;
-    one.frame = self.frame;
-    one.bounds = self.bounds;
-    one.center = self.center;
-    one.position = self.position;
-    one.cornerRadius = self.cornerRadius;
-    one.cornerBackgroundColor = [self.cornerBackgroundColor copy];
-    one.cornerBorderColor = [self.cornerBorderColor copy];
-    one.cornerBorderWidth = self.cornerBorderWidth;
-    one.shadowColor = self.shadowColor;
-    one.shadowOpacity = self.shadowOpacity;
-    one.shadowOffset = self.shadowOffset;
-    one.shadowRadius = self.shadowRadius;
-    one.contentsScale = self.contentsScale;
-    one.backgroundColor = [self.backgroundColor copy];
-    one.contentMode = self.contentMode;
-    one.htmlLayoutEdgeInsets = self.htmlLayoutEdgeInsets;
-    one.extraDisplayIdentifier = [self.extraDisplayIdentifier copy];
-    return one;
-}
-
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
-
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {

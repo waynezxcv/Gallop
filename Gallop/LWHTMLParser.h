@@ -33,7 +33,7 @@
 @class LWHTMLParser;
 
 
-@protocol LWHTMLParserDelegate  <NSObject>
+@protocol LWHTMLParserDelegate<NSObject>
 
 @optional
 

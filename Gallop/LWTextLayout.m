@@ -69,47 +69,12 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
 
 @implementation LWTextLayout
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWTextLayout* one = [[LWTextLayout alloc] init];
-    one.container = [self.container copy];
-    one.text = [self.text copy];
-    one.ctFrame = self.ctFrame;
-    one.ctFrameSetter = self.ctFrameSetter;
-    one.numberOfLines = self.numberOfLines;
-    one.maxNumberOfLines = self.maxNumberOfLines;
-    one.cgPath = self.cgPath;
-    one.suggestSize = self.suggestSize;
-    one.textBoundingRect = self.textBoundingRect;
-    one.textBoundingSize = self.textBoundingSize;
-    one.linesArray = [self.linesArray copy];
-    one.attachments = [self.attachments copy];
-    one.attachmentRanges = [self.attachmentRanges copy];
-    one.attachmentRects = [self.attachmentRects copy];
-    one.attachmentContentsSet = [self.attachmentContentsSet copy];
-    one.textHighlights = [self.textHighlights copy];
-    one.backgroundColors = [self.backgroundColors copy];
-    one.boudingStrokes = [self.boudingStrokes copy];
-    one.needDebugDraw = self.needDebugDraw;
-    one.needTextBackgroundColorDraw = self.needTextBackgroundColorDraw;
-    one.needStrokeDraw = self.needStrokeDraw;
-    one.needBoudingStrokeDraw = self.needBoudingStrokeDraw;
-    one.needTruncation = self.needTruncation;
-    return one;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
-
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.container forKey:@"container"];
     [aCoder encodeObject:self.text forKey:@"text"];
 }
-
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     LWTextContainer* container = [aDecoder decodeObjectForKey:@"container"];
@@ -240,7 +205,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                     }
                 }
             }
-             {
+            {
                 LWTextHighlight* highlight = [attributes objectForKey:LWTextLongPressAttributedName];
                 if (highlight) {
                     if (highlight.type == LWTextHighLightTypeLongPress) {

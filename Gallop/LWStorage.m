@@ -42,47 +42,6 @@
 
 @implementation LWStorage
 
-
-#pragma mark - NSCoping
-
-- (id)copyWithZone:(NSZone *)zone {
-    LWStorage* one = [[LWStorage alloc] init];
-    one.identifier = [self.identifier copy];
-    one.tag = self.tag;
-    one.clipsToBounds = self.clipsToBounds;
-    one.opaque = self.opaque;
-    one.hidden = self.hidden;
-    one.alpha = self.alpha;
-    one.frame = self.frame;
-    one.bounds = self.bounds;
-    one.height = self.height;
-    one.width = self.width;
-    one.left = self.left;
-    one.right = self.right;
-    one.top = self.top;
-    one.bottom = self.bottom;
-    one.center = self.center;
-    one.position = self.position;
-    one.cornerRadius = self.cornerRadius;
-    one.cornerBackgroundColor = [self.cornerBackgroundColor copy];
-    one.cornerBorderColor = [self.cornerBorderColor copy];
-    one.cornerBorderWidth = self.cornerBorderWidth;
-    one.shadowColor = self.shadowColor;
-    one.shadowOpacity = self.shadowOpacity;
-    one.shadowOffset = self.shadowOffset;
-    one.shadowRadius = self.shadowRadius;
-    one.contentsScale = self.contentsScale;
-    one.backgroundColor = [self.backgroundColor copy];
-    one.contentMode = self.contentMode;
-    one.htmlLayoutEdgeInsets = self.htmlLayoutEdgeInsets;
-    one.extraDisplayIdentifier = [self.extraDisplayIdentifier copy];
-    return one;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return [self copyWithZone:zone];
-}
-
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {

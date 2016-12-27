@@ -81,8 +81,8 @@ static CGFloat LWTextWidthCallback(void *ref);
     delegate.ascent = self.ascent;
     delegate.descent = self.descent;
     delegate.width = self.width;
-    delegate.userInfo = [self.userInfo copy];
     delegate.height = self.height;
+    delegate.userInfo = [self.userInfo copy];
     return delegate;
 }
 
