@@ -34,9 +34,6 @@
 #import "CALayer+LWTransaction.h"
 
 
-
-
-
 static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                             NSAttributedString* attributedString,
                                             CGSize size,
@@ -131,6 +128,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
         return nil;
     }
     
+    
     NSMutableAttributedString* mutableAtrributedText = text.mutableCopy;
     NSInteger maxNumberOfLines = container.maxNumberOfLines;
     CGPathRef containerPath = container.path.CGPath;
@@ -155,7 +153,8 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     CGRect suggestRect = {
         containerBoudingBox.origin,
         {containerBoudingBox.size.width,
-            suggestSize.height}
+            suggestSize.height
+        }
     };
     
     if (containerBoudingBox.size.height != CGFLOAT_MAX) {
@@ -216,8 +215,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
             if (glyphCount == 0) {
                 continue;
             }
-            NSDictionary* attributes = (id)CTRunGetAttributes(run);
-            {
+            NSDictionary* attributes = (id)CTRunGetAttributes(run); {
                 LWTextHighlight* highlight = [attributes objectForKey:LWTextLinkAttributedName];
                 if (highlight) {
                     if (highlight.type == LWTextHighLightTypeWholeText) {
@@ -242,8 +240,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                     }
                 }
             }
-            
-            {
+             {
                 LWTextHighlight* highlight = [attributes objectForKey:LWTextLongPressAttributedName];
                 if (highlight) {
                     if (highlight.type == LWTextHighLightTypeLongPress) {
