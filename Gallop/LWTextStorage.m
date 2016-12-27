@@ -48,6 +48,7 @@
 
 #pragma mark - NSCoding
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
     [aCoder encodeObject:self.textLayout forKey:@"textLayout"];
     [aCoder encodeObject:self.text forKey:@"text"];
     [aCoder encodeObject:self.attributedText forKey:@"attributedText"];
@@ -101,7 +102,7 @@
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         self.textLayout = [aDecoder decodeObjectForKey:@"textLayout"];
         self.text = [aDecoder decodeObjectForKey:@"text"];

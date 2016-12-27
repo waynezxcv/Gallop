@@ -43,6 +43,7 @@
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
     [aCoder encodeObject:self.contents forKey:@"contents"];
     [aCoder encodeInteger:self.localImageType forKey:@"localImageType"];
     [aCoder encodeObject:self.placeholder forKey:@"placeholder"];
@@ -83,7 +84,7 @@
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         self.contents = [aDecoder decodeObjectForKey:@"contents"];
         self.placeholder = [aDecoder decodeObjectForKey:@"placeholder"];
