@@ -52,35 +52,6 @@
     [aCoder encodeBool:self.needRerendering forKey:@"needRerendering"];
     [aCoder encodeBool:self.needResize forKey:@"needResize"];
     [aCoder encodeBool:self.isBlur forKey:@"isBlur"];
-    [aCoder encodeObject:self.identifier forKey:@"identifier"];
-    [aCoder encodeInteger:self.tag forKey:@"tag"];
-    [aCoder encodeBool:self.clipsToBounds forKey:@"clipsToBounds"];
-    [aCoder encodeBool:self.opaque forKey:@"opaque"];
-    [aCoder encodeBool:self.hidden forKey:@"hidden"];
-    [aCoder encodeFloat:self.alpha forKey:@"alpha"];
-    [aCoder encodeCGRect:self.frame forKey:@"frame"];
-    [aCoder encodeCGRect:self.bounds forKey:@"bounds"];
-    [aCoder encodeFloat:self.height forKey:@"height"];
-    [aCoder encodeFloat:self.width forKey:@"width"];
-    [aCoder encodeFloat:self.left forKey:@"left"];
-    [aCoder encodeFloat:self.right forKey:@"right"];
-    [aCoder encodeFloat:self.top forKey:@"top"];
-    [aCoder encodeFloat:self.bottom forKey:@"bottom"];
-    [aCoder encodeCGPoint:self.center forKey:@"center"];
-    [aCoder encodeCGPoint:self.position forKey:@"position"];
-    [aCoder encodeFloat:self.cornerRadius forKey:@"cornerRadius"];
-    [aCoder encodeObject:self.cornerBackgroundColor forKey:@"cornerBackgroundColor"];
-    [aCoder encodeObject:self.cornerBorderColor forKey:@"cornerBorderColor"];
-    [aCoder encodeFloat:self.cornerBorderWidth forKey:@"cornerBorderWidth"];
-    [aCoder encodeObject:self.shadowColor forKey:@"shadowColor"];
-    [aCoder encodeFloat:self.shadowOpacity forKey:@"shadowOpacity"];
-    [aCoder encodeCGSize:self.shadowOffset forKey:@"shadowOffset"];
-    [aCoder encodeFloat:self.shadowRadius forKey:@"shadowRadius"];
-    [aCoder encodeFloat:self.contentsScale forKey:@"contentsScale"];
-    [aCoder encodeObject:self.backgroundColor forKey:@"backgroundColor"];
-    [aCoder encodeInteger:self.contentMode forKey:@"contentMode"];
-    [aCoder encodeUIEdgeInsets:self.htmlLayoutEdgeInsets forKey:@"htmlLayoutEdgeInsets"];
-    [aCoder encodeObject:self.extraDisplayIdentifier forKey:@"extraDisplayIdentifier"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -94,29 +65,6 @@
         self.needResize = [aDecoder decodeBoolForKey:@"needResize"];
         self.needRerendering = [aDecoder decodeBoolForKey:@"needRerendering"];
         self.isBlur = [aDecoder decodeBoolForKey:@"isBlur"];
-        self.identifier = [aDecoder decodeObjectForKey:@"identifier"];
-        self.tag = [aDecoder decodeIntegerForKey:@"tag"];
-        self.clipsToBounds = [aDecoder decodeBoolForKey:@"clipsToBounds"];
-        self.opaque = [aDecoder decodeBoolForKey:@"opaque"];
-        self.hidden = [aDecoder decodeBoolForKey:@"hidden"];
-        self.alpha = [aDecoder decodeFloatForKey:@"alpha"];
-        self.frame = [aDecoder decodeCGRectForKey:@"frame"];
-        self.bounds = [aDecoder decodeCGRectForKey:@"bounds"];
-        self.center = [aDecoder decodeCGPointForKey:@"center"];
-        self.position = [aDecoder decodeCGPointForKey:@"position"];
-        self.cornerRadius = [aDecoder decodeFloatForKey:@"cornerRadius"];
-        self.cornerBackgroundColor = [aDecoder decodeObjectForKey:@"cornerBackgroundColor"];
-        self.cornerBorderColor = [aDecoder decodeObjectForKey:@"cornerBorderColor"];
-        self.cornerBorderWidth = [aDecoder decodeFloatForKey:@"cornerBorderWidth"];
-        self.shadowColor = [aDecoder decodeObjectForKey:@"shadowColor"];
-        self.shadowOpacity = [aDecoder decodeFloatForKey:@"shadowOpacity"];
-        self.shadowOffset = [aDecoder decodeCGSizeForKey:@"shadowOffset"];
-        self.shadowRadius = [aDecoder decodeFloatForKey:@"shadowRadius"];
-        self.contentsScale = [aDecoder decodeFloatForKey:@"contentsScale"];
-        self.backgroundColor = [aDecoder decodeObjectForKey:@"backgroundColor"];
-        self.contentMode = [aDecoder decodeIntegerForKey:@"contentMode"];
-        self.htmlLayoutEdgeInsets = [aDecoder decodeUIEdgeInsetsForKey:@"htmlLayoutEdgeInsets"];
-        self.extraDisplayIdentifier = [aDecoder decodeObjectForKey:@"extraDisplayIdentifier"];
     }
     return self;
 }
