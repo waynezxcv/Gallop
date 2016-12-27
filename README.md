@@ -3,12 +3,12 @@
 
 
 
-# Gallop v0.4.3
+# Gallop v0.5.0
 
 ## About Gallop
 
 
-Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框架。只需要使用框架中抽象的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIIamgeView）模型来构建界面，Gallop将确保你的应用的流畅性。
+Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框架。只需要使用框架中的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIIamgeView）模型来构建界面，Gallop将确保你的应用的流畅性。
 
 
 ## Architecture
@@ -21,8 +21,8 @@ Gallop是一个功能强大、性能优秀使用异步绘制的图文混排框�
 
 * 搭建对滚动性能有要求的图文混排界面,能保证FPS在60hz。
 * 搭建富文本界面，比如在文本中添加本地、网络图片，对文字添加点击、长按事件、绘制文本边框、空心字等。
+* 快捷地实现对网络图片和本地图片的圆角和模糊处理等，并能对处理过后的图片提供缓存，无需重复处理，提高效率。
 * 解析HTML渲染生成原生iOS页面，并可做自定义的调节。
-* 简便地实现对网络图片和本地图片的圆角和模糊处理等，并能提供缓存，无需重复处理。
 
 ## Requirements
 
@@ -86,8 +86,9 @@ v0.2.3
 v0.2.2 
 * 现在，LWAsyncDisplayView内部将自动维护一个复用池，可以为LWStorage设置一个NSString*类型的Identifier，
 来复用内部的相关UIView,简化API。
-
 * 修复了对文字添加链接重叠而发生冲突的bug.
+
+
 
 *** 
 

@@ -106,8 +106,6 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                                                 containerBoudingBox.size,
                                                 maxNumberOfLines,
                                                 &cfRange);
-    
-    
     NSInteger realLength = cfRange.length;
     BOOL needTruncation = NO;
     if (originLength != realLength) {
@@ -116,8 +114,8 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     CGMutablePathRef suggetPath = CGPathCreateMutable();
     
     CGRect suggestRect = {
-        containerBoudingBox.origin,
-        {containerBoudingBox.size.width,
+        containerBoudingBox.origin,{
+            containerBoudingBox.size.width,
             suggestSize.height
         }
     };
@@ -180,16 +178,16 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
             if (glyphCount == 0) {
                 continue;
             }
-            NSDictionary* attributes = (id)CTRunGetAttributes(run); {
+            NSDictionary* attributes = (id)CTRunGetAttributes(run);
+            
+            {
                 LWTextHighlight* highlight = [attributes objectForKey:LWTextLinkAttributedName];
                 if (highlight) {
                     if (highlight.type == LWTextHighLightTypeWholeText) {
                         NSArray* highlightPositions =
                         @[[NSValue valueWithCGRect:suggestRect]];
                         highlight.positions = highlightPositions;
-                    }
-                    
-                    else {
+                    } else {
                         NSArray* highlightPositions = [self _highlightPositionsWithCtFrame:ctFrame
                                                                                      range:highlight.range];
                         highlight.positions = highlightPositions;
@@ -205,6 +203,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                     }
                 }
             }
+            
             {
                 LWTextHighlight* highlight = [attributes objectForKey:LWTextLongPressAttributedName];
                 if (highlight) {

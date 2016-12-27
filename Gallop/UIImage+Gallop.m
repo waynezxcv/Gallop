@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -45,10 +45,10 @@
                                                  4 * (int)width,
                                                  colorSpace,
                                                  kCGImageAlphaPremultipliedFirst);
-
+    
     CGRect contentModeRect = [LWCGRectTransform lw_CGRectFitWithContentMode:contentMode
-                                                               rect:CGRectMake(0, 0,width, height)
-                                                               size:self.size];
+                                                                       rect:CGRectMake(0, 0,width, height)
+                                                                       size:self.size];
     CGContextSaveGState(context);
     CGContextAddRect(context, contentModeRect);
     CGContextClip(context);
@@ -117,11 +117,11 @@
                                                  kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
     CGColorSpaceRelease(colorSpace);
     CGContextSetBlendMode(context, kCGBlendModeCopy);
-
+    
     CGContextTranslateCTM(context, -pointX, pointY-(CGFloat)height);
     CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, (CGFloat)width, (CGFloat)height), cgImage);
     CGContextRelease(context);
-
+    
     CGFloat red   = (CGFloat)pixelData[0] / 255.0f;
     CGFloat green = (CGFloat)pixelData[1] / 255.0f;
     CGFloat blue  = (CGFloat)pixelData[2] / 255.0f;
@@ -185,7 +185,7 @@ static int pairGCD(int a, int b) {
     if (a < b) {
         return pairGCD(b, a);
     }
-
+    
     while (true) {
         int const r = a % b;
         if (r == 0) {
@@ -263,13 +263,13 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
             transform = CGAffineTransformTranslate(transform, self.size.width, self.size.height);
             transform = CGAffineTransformRotate(transform, M_PI);
             break;
-
+            
         case UIImageOrientationLeft:
         case UIImageOrientationLeftMirrored:
             transform = CGAffineTransformTranslate(transform, self.size.width, 0);
             transform = CGAffineTransformRotate(transform, M_PI_2);
             break;
-
+            
         case UIImageOrientationRight:
         case UIImageOrientationRightMirrored:
             transform = CGAffineTransformTranslate(transform, 0, self.size.height);
@@ -285,7 +285,7 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
             transform = CGAffineTransformTranslate(transform, self.size.width, 0);
             transform = CGAffineTransformScale(transform, -1, 1);
             break;
-
+            
         case UIImageOrientationLeftMirrored:
         case UIImageOrientationRightMirrored:
             transform = CGAffineTransformTranslate(transform, self.size.height, 0);
@@ -338,24 +338,24 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
             tran = CGAffineTransformMakeTranslation(rect.size.width, 0.0);
             tran = CGAffineTransformScale(tran, -1.0, 1.0);
             break;
-
+            
         case UIImageOrientationDown:
             tran = CGAffineTransformMakeTranslation(rect.size.width,
                                                     rect.size.height);
             tran = CGAffineTransformRotate(tran, M_PI);
             break;
-
+            
         case UIImageOrientationDownMirrored:
             tran = CGAffineTransformMakeTranslation(0.0, rect.size.height);
             tran = CGAffineTransformScale(tran, 1.0, -1.0);
             break;
-
+            
         case UIImageOrientationLeft:
             bnds = swapWidthAndHeight(bnds);
             tran = CGAffineTransformMakeTranslation(0.0, rect.size.width);
             tran = CGAffineTransformRotate(tran, 3.0 * M_PI / 2.0);
             break;
-
+            
         case UIImageOrientationLeftMirrored:
             bnds = swapWidthAndHeight(bnds);
             tran = CGAffineTransformMakeTranslation(rect.size.height,
@@ -363,23 +363,23 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
             tran = CGAffineTransformScale(tran, -1.0, 1.0);
             tran = CGAffineTransformRotate(tran, 3.0 * M_PI / 2.0);
             break;
-
+            
         case UIImageOrientationRight:
             bnds = swapWidthAndHeight(bnds);
             tran = CGAffineTransformMakeTranslation(rect.size.height, 0.0);
             tran = CGAffineTransformRotate(tran, M_PI / 2.0);
             break;
-
+            
         case UIImageOrientationRightMirrored:
             bnds = swapWidthAndHeight(bnds);
             tran = CGAffineTransformMakeScale(-1.0, 1.0);
             tran = CGAffineTransformRotate(tran, M_PI / 2.0);
             break;
-
+            
         default:
             return self;
     }
-
+    
     UIGraphicsBeginImageContext(bnds.size);
     ctxt = UIGraphicsGetCurrentContext();
     switch (orient) {
@@ -390,7 +390,7 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
             CGContextScaleCTM(ctxt, -1.0, 1.0);
             CGContextTranslateCTM(ctxt, -rect.size.height, 0.0);
             break;
-
+            
         default:
             CGContextScaleCTM(ctxt, 1.0, -1.0);
             CGContextTranslateCTM(ctxt, 0.0, -rect.size.height);
@@ -440,7 +440,7 @@ static CGRect swapWidthAndHeight(CGRect rect) {
 
 - (UIImage *)lw_subImageWithRect:(CGRect)rect {
     CGImageRef newImageRef = CGImageCreateWithImageInRect(self.CGImage, rect);
-    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    UIImage* newImage = [UIImage imageWithCGImage:newImageRef];
     CGImageRelease(newImageRef);
     return newImage;
 }
@@ -449,7 +449,7 @@ static CGRect swapWidthAndHeight(CGRect rect) {
     CGRect rect = (CGRect){CGPointZero, size};
     UIGraphicsBeginImageContext(rect.size);
     [self drawInRect:rect];
-    UIImage *resImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage* resImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return resImage;
 }
@@ -506,7 +506,11 @@ static CGRect swapWidthAndHeight(CGRect rect) {
     return image;
 }
 
-- (UIImage *)lw_applyBlurWithRadius:(CGFloat)blurRadius tintColor:(UIColor *)tintColor saturationDeltaFactor:(CGFloat)saturationDeltaFactor maskImage:(UIImage *)maskImage {
+- (UIImage *)lw_applyBlurWithRadius:(CGFloat)blurRadius
+                          tintColor:(UIColor *)tintColor
+              saturationDeltaFactor:(CGFloat)saturationDeltaFactor
+                          maskImage:(UIImage *)maskImage {
+    
     if (self.size.width < 1 || self.size.height < 1) {
         return nil;
     }
@@ -516,10 +520,10 @@ static CGRect swapWidthAndHeight(CGRect rect) {
     if (maskImage && !maskImage.CGImage) {
         return nil;
     }
-
+    
     CGRect imageRect = { CGPointZero, self.size };
     UIImage *effectImage = self;
-
+    
     BOOL hasBlur = blurRadius > __FLT_EPSILON__;
     BOOL hasSaturationChange = fabs(saturationDeltaFactor - 1.) > __FLT_EPSILON__;
     if (hasBlur || hasSaturationChange) {
@@ -528,13 +532,13 @@ static CGRect swapWidthAndHeight(CGRect rect) {
         CGContextScaleCTM(effectInContext, 1.0, -1.0);
         CGContextTranslateCTM(effectInContext, 0, -self.size.height);
         CGContextDrawImage(effectInContext, imageRect, self.CGImage);
-
+        
         vImage_Buffer effectInBuffer;
         effectInBuffer.data     = CGBitmapContextGetData(effectInContext);
         effectInBuffer.width    = CGBitmapContextGetWidth(effectInContext);
         effectInBuffer.height   = CGBitmapContextGetHeight(effectInContext);
         effectInBuffer.rowBytes = CGBitmapContextGetBytesPerRow(effectInContext);
-
+        
         UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
         CGContextRef effectOutContext = UIGraphicsGetCurrentContext();
         vImage_Buffer effectOutBuffer;
@@ -542,9 +546,9 @@ static CGRect swapWidthAndHeight(CGRect rect) {
         effectOutBuffer.width    = CGBitmapContextGetWidth(effectOutContext);
         effectOutBuffer.height   = CGBitmapContextGetHeight(effectOutContext);
         effectOutBuffer.rowBytes = CGBitmapContextGetBytesPerRow(effectOutContext);
-
+        
         if (hasBlur) {
-
+            
             CGFloat inputRadius = blurRadius * [[UIScreen mainScreen] scale];
             NSUInteger radius = floor(inputRadius * 3. * sqrt(2 * M_PI) / 4 + 0.5);
             if (radius % 2 != 1) {
@@ -580,19 +584,19 @@ static CGRect swapWidthAndHeight(CGRect rect) {
         if (!effectImageBuffersAreSwapped)
             effectImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-
+        
         if (effectImageBuffersAreSwapped)
             effectImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     }
-
+    
     UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
     CGContextRef outputContext = UIGraphicsGetCurrentContext();
     CGContextScaleCTM(outputContext, 1.0, -1.0);
     CGContextTranslateCTM(outputContext, 0, -self.size.height);
-
+    
     CGContextDrawImage(outputContext, imageRect, self.CGImage);
-
+    
     if (hasBlur) {
         CGContextSaveGState(outputContext);
         if (maskImage) {
@@ -601,17 +605,17 @@ static CGRect swapWidthAndHeight(CGRect rect) {
         CGContextDrawImage(outputContext, imageRect, effectImage.CGImage);
         CGContextRestoreGState(outputContext);
     }
-
+    
     if (tintColor) {
         CGContextSaveGState(outputContext);
         CGContextSetFillColorWithColor(outputContext, tintColor.CGColor);
         CGContextFillRect(outputContext, imageRect);
         CGContextRestoreGState(outputContext);
     }
-
+    
     UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-
+    
     return outputImage;
 }
 

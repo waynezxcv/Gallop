@@ -27,7 +27,6 @@
 
 @implementation LWHTMLNode
 
-
 - (id)copyWithZone:(NSZone *)zone {
     LWHTMLNode* one = [[LWHTMLNode alloc] init];
     one.parent = [self.parent copy];
