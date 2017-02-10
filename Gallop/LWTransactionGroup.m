@@ -39,7 +39,7 @@ static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observ
 
 #pragma mark - Init
 
-+ (id)mainTransactionGroup {
++ (LWTransactionGroup *)mainTransactionGroup {
     static LWTransactionGroup* mainTransactionGroup;
     if (mainTransactionGroup == nil) {
         mainTransactionGroup = [[LWTransactionGroup alloc] init];

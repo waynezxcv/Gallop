@@ -368,6 +368,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 //模拟下载数据
 - (void)fakeDownload {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        
         if (self.needRefresh) {
             [self.dataSource removeAllObjects];
             for (NSInteger i = 0 ; i < 10; i ++) {//让数据更多

@@ -27,7 +27,7 @@
 #import "LWTransaction.h"
 
 /**
- *  一个全局的对象，用于管理当前所有的LWTransaction,对CFRunLoopObserverRef的封装
+ *  用于在主线程runloop中管理当前所有的LWTransaction,对CFRunLoopObserverRef的封装
  */
 @interface LWTransactionGroup : NSObject
 
@@ -36,7 +36,7 @@
  *
  *  @return 一个LWTransactionGroup对象
  */
-+ (id)mainTransactionGroup;
++ (LWTransactionGroup *)mainTransactionGroup;
 
 /**
  *  一个LWTransaction的CALayer容器添加到LWTransactionGroup

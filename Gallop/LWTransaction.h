@@ -69,7 +69,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncTransactionState) {
  *
  *  @return 一个LWTransaction对象
  */
-- (id)initWithCallbackQueue:(dispatch_queue_t)callbackQueue
+- (LWTransaction *)initWithCallbackQueue:(dispatch_queue_t)callbackQueue
             completionBlock:(LWAsyncTransactionCompletionBlock)completionBlock;
 
 @property (nonatomic,strong,readonly) dispatch_queue_t callbackQueue;//回调所在的dispatch_queue_t

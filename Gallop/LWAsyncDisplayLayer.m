@@ -34,6 +34,7 @@
 
 @property (nonatomic,strong) LWFlag* displayFlag;
 
+
 @end
 
 
@@ -42,12 +43,14 @@
 
 #pragma mark -
 
+
 + (dispatch_queue_t)displayQueue {
     static dispatch_queue_t displayQueue = NULL;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         displayQueue = dispatch_queue_create("com.Gallop.LWAsyncDisplayLayer.displayQueue",
                                              DISPATCH_QUEUE_CONCURRENT);
+        
         dispatch_set_target_queue(displayQueue,
                                   dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,0));
     });
@@ -107,7 +110,7 @@
         if (transaction.willDisplayBlock) {
             transaction.willDisplayBlock(self);
         }
-
+        
         CGImageRef imageRef = (__bridge_retained CGImageRef)(self.contents);
         id contents = self.contents;
         self.contents = nil;
@@ -117,7 +120,7 @@
                 CFRelease(imageRef);
             });
         }
-
+        
         if (transaction.didDisplayBlock) {
             transaction.didDisplayBlock(self, YES);
         }
@@ -150,7 +153,7 @@
         CGFloat scale = self.contentsScale;
         CGColorRef backgroundColor = (opaque && self.backgroundColor) ?
         CGColorRetain(self.backgroundColor) : NULL;
-
+        
         if (size.width < 1 || size.height < 1) {
             CGImageRef image = (__bridge_retained CGImageRef)(self.contents);
             self.contents = nil;
@@ -167,7 +170,6 @@
         }
         
         dispatch_async([LWAsyncDisplayLayer displayQueue], ^{
-            
             if (isCancelledBlock()) {
                 CGColorRelease(backgroundColor);
                 return;
