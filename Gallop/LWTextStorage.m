@@ -46,6 +46,28 @@
 @synthesize text = _text;
 
 
+#pragma mark - Override Hash & isEqual
+
+- (BOOL)isEqual:(id)object {
+    if (!object || ![object isMemberOfClass:[LWTextStorage class]]) {
+        return NO;
+    }
+    if (self == object) {
+        return YES;
+    }
+    LWTextStorage* textStorage = (LWTextStorage *)object;
+    return [textStorage.text isEqualToString:self.text] && CGRectEqualToRect(textStorage.frame, self.frame);
+}
+
+- (NSUInteger)hash {
+    long v1 = (long)self.text;
+    long v2 = (long)[NSValue valueWithCGRect:self.frame];
+    return v1 ^ v2;
+}
+
+
+
+
 #pragma mark - NSCoding
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [super encodeWithCoder:aCoder];

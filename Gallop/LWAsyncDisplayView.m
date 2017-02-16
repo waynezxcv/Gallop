@@ -470,10 +470,11 @@
 }
 
 - (void)setLayout:(LWLayout *)layout {
-    if (_layout == layout) {
+
+    if ([_layout isEqual: layout]) {
         return;
     }
-    
+
     [self _cleanAddToReusePool];
     
     _highlightAdjustPoint = CGPointZero;

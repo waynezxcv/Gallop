@@ -5,7 +5,9 @@
 
 # Gallop v0.5.1
 
-## About Gallop
+
+
+## About 
 
 Gallop is a powerful rich text framework which support Asynchronous rendering.you just need use LWTextStorage object instead of UILabel object and use LWImageStorage object instead of UIImageView object,Gallop will make sure your app scroll smoothly.
 
@@ -40,18 +42,68 @@ Gallop is a powerful rich text framework which support Asynchronous rendering.yo
 4. Add the .h and .m files under the Gallop folder to your project.
 5. #import "Gallop.h".
 
-***
+
+
+## Modifications
+
+v0.5.1
+
+* Use "- (id)initWithCallbackQueue:(dispatch_queue_t)callbackQueue" istead of "- (LWTransaction *)initWithCallbackQueue:(dispatch_queue_t)callbackQueue".
+* Use "+ (id)mainTransactionGroup;" instead of "+ (LWTransactionGroup *)mainTransactionGroup;".
+* modifies the return value type ,because it's conflict with FMDB
+
+
+v0.3.7
+* Fixed an issue where the LWImageStorage object "contentMode" property setting was invalid.
+
+
+v0.3.6
+
+* You can set the number of lines of text by property "maxNumberOfLines" of LWTextStorage object.
+* You can use the LWTextStorage property "VericalAlignment" to set the text vertical alignment.
+
+
+v0.3.5
+* LWImageStorage add blur property.
+
+
+v0.3.4
+* Support cache layout model by CoreData.
+
+
+v0.3.3
+* Changed the integration, to solve the problem with the SDWebImage part of the file conflict.
+
+v0.3.2
+* Now, set the corner radius of the web image will be an additional cache, to solve the problem of excessive memory consumption.
+
+v0.3.1
+* Parsing HTML rendering to generate native iOS webpage, the image can be adjusted according to the original image height.
+
+v0.3.0 
+* Added the ability to parse HTML rendering to generate native iOS pages.
+
+v0.2.5
+* Optimized for image loading.
+
+v0.2.4
+* add classed TransactionGroup，LWTransaction，CALayer+LWTransaction.
+
+v0.2.2 
+* Now, LWAsyncDisplayView internal will automatically maintain a reuse pool, you can set  LWStorage a Identifier property,To reuse the internal associated UIView object.
+* Fixed a bug that caused the link to overlap with the text.
+
 
 ## API Quickstart
 
-1.use LWTextStorage object to insert a image in the text and add a click event.
+1.Use LWTextStorage object to insert a image in the text and add a click event.
 
 
 ```objc
 
 //create a LWAsyncDisplayView object
 
-LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,                                                                     64.0,SCREEN_WIDTH,SCREEN_HEIGHT - 64.0f)];
+LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,64.0,SCREEN_WIDTH,SCREEN_HEIGHT - 64.0f)];
 view.delegate = self;
 [self.view addSubview:view];
 
@@ -79,7 +131,10 @@ contentMode:UIViewContentModeScaleAspectFill
 imageSize:CGSizeMake(80, 40)
 alignment:LWTextAttachAlignmentTop
 range:NSMakeRange(33, 0)];
-//在文字中插入UIView的子类
+
+
+//inser a UIView object in the text
+
 [ts lw_replaceTextWithView:switchView
 contentMode:UIViewContentModeScaleAspectFill
 size:switchView.frame.size
@@ -126,7 +181,7 @@ if ([data isKindOfClass:[NSString class]]) {
 ```
 
 
-2.more usage about LWTextStorage
+2.More usage about LWTextStorage
 
 ```objc
 
@@ -182,7 +237,7 @@ LWTextStorage* ts4 = [LWTextStorage lw_textStrageWithText:as2 frame:CGRectZero];
 
 ```
 
-3.usage of LWImageStorage
+3.Usage of LWImageStorage
 
 ```objc
 
@@ -206,7 +261,7 @@ is2.isBlur = YES;
 
 ```
 
-4.use Gallop to parsing HTML
+4.Use Gallop to parsing HTML
 
 ```objc
 
@@ -249,11 +304,9 @@ htmlView.layout = layout;
 
 
 
-## Thanks ：）
-
 ## License
 
-Gallop is available under the MIT license. See the LICENSE file for more info.
+* Gallop is available under the MIT license. See the LICENSE file for more info.
 
 
 
@@ -264,18 +317,19 @@ Gallop is available under the MIT license. See the LICENSE file for more info.
 
 
 
+
 # Gallop v0.5.1
 
-## About Gallop
+## 关于 Gallop
 
 Gallop是使用异步绘制的富文本、图文混排框架。只需要使用框架中的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIImageView）模型来构建界面，Gallop将确保你的应用的流畅性。
 
 
-## Architecture
+## 架构
 
 ![](https://github.com/waynezxcv/Gallop/raw/master/pics/architecture.png)
 
-## Features
+## 特性
 
 
 * 构建复杂的富文本界面应用，稳定滚动FPS在60hz。
@@ -285,13 +339,13 @@ Gallop是使用异步绘制的富文本、图文混排框架。只需要使用�
 * 便捷地解析文本中的表情、http(s)链接、@用户、#主题#、电话号码。
 * 快捷实现对网络、本地图片圆角和模糊处理等，能对处理过后的图片直接提供缓存，无需重复处理。
 
-## Requirements
+## 依赖
 
 * 网络图片加载、缓存部分依赖于[SDWebImage](https://github.com/rs/SDWebImage) 'SDWebImage', '~>3.7'
 * HTML解析依赖libxml2库
 
 
-## Installation
+## 安装
 
 1. 在XCode的Build Phases-> Link Binary With Libraries中添加libxml2.tbd库
 2. 在XCode的Build Setting->Header Search Paths中添加‘/usr/include/libxml2’
@@ -299,16 +353,15 @@ Gallop是使用异步绘制的富文本、图文混排框架。只需要使用�
 4. 将Gallop文件夹下的.h及.m文件添加到你的工程当中
 5. #import "Gallop.h"
 
-***
 
 
-## Modifications
+## 更新说明
 
 v0.5.1
 
 * "- (id)initWithCallbackQueue:(dispatch_queue_t)callbackQueue" -> "- (LWTransaction *)initWithCallbackQueue:(dispatch_queue_t)callbackQueue"
 * "+ (id)mainTransactionGroup;" -> "+ (LWTransactionGroup *)mainTransactionGroup;"
-*  因与FMDB中的"commit:"方法冲突，修改了这两个方法的返回类型。
+* 因与FMDB中的"commit:"方法冲突，修改了这两个方法的返回类型。
 
 
 v0.3.7
@@ -357,16 +410,13 @@ v0.2.2
 * 修复了对文字添加链接重叠而发生冲突的bug.
 
 
-*** 
-
-
-## API Quickstart
+## API 使用介绍
 
 1.使用LWTextStorage在文本中插入图片、添加点击事件
 
 ```objc
 //创建LWAsyncDisplayView对象
-LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,                                                                     64.0,SCREEN_WIDTH,SCREEN_HEIGHT - 64.0f)];
+LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,64.0,SCREEN_WIDTH,SCREEN_HEIGHT - 64.0f)];
 //设置代理
 view.delegate = self;
 [self.view addSubview:view];
@@ -551,11 +601,10 @@ htmlView.layout = layout;
 
 ```
 
-* **更加详细的内容，请看各个头文件和Demo，有详细的注释**
 
-## Thanks ：）
+* **更加详细的内容，请看各个头文件和Demo，有详细的注释**
 
 ## License
 
-Gallop is available under the MIT license. See the LICENSE file for more info.
+* Gallop is available under the MIT license. See the LICENSE file for more info.
 

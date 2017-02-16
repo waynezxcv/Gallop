@@ -38,6 +38,28 @@
 
 @implementation LWLayout
 
+
+#pragma mark - Override Hash & isEqual
+
+- (BOOL)isEqual:(id)object {
+    if (self == object) {
+        return YES;
+    }
+
+    if (!object || ![object isKindOfClass:[LWLayout class]]) {
+        return NO;
+    }
+    LWLayout* layout = (LWLayout *)object;
+    return ([layout.textStorages isEqual:self.textStorages] && [layout.imageStorages isEqual:self.imageStorages]);
+}
+
+- (NSUInteger)hash {
+    long v1 = (long)((__bridge void *)self.textStorages);
+    long v2 = (long)((__bridge void *)self.imageStorages);
+    return v1 ^ v2;
+}
+
+
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {

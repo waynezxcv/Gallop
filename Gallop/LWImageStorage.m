@@ -40,6 +40,30 @@
 @synthesize cornerRadius = _cornerRadius;
 @synthesize cornerBorderWidth = _cornerBorderWidth;
 
+
+#pragma mark - Override Hash & isEqual
+
+
+- (BOOL)isEqual:(id)object {
+    if (!object || ![object isMemberOfClass:[LWImageStorage class]]) {
+        return NO;
+    }
+    if (self == object) {
+        return YES;
+    }
+
+    LWImageStorage* imageStorage = (LWImageStorage *)object;
+    return [imageStorage.contents isEqual:self.contents] && CGRectEqualToRect(imageStorage.frame, self.frame);
+}
+
+
+- (NSUInteger)hash {
+    long v1 = (long)self.contents;
+    long v2 = (long)[NSValue valueWithCGRect:self.frame];
+    return v1 ^ v2;
+}
+
+
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
