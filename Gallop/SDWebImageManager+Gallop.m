@@ -69,7 +69,6 @@
         url = nil;
     }
     
-    
     __block SDWebImageCombinedOperation *operation = [SDWebImageCombinedOperation new];
     __weak SDWebImageCombinedOperation *weakOperation = operation;
     
@@ -134,6 +133,7 @@
                     downloaderOptions &= ~SDWebImageDownloaderProgressiveDownload;
                     downloaderOptions |= SDWebImageDownloaderIgnoreCachedResponse;
                 }
+                
                 SDWebImageDownloadToken *subOperationToken =
                 [self.imageDownloader downloadImageWithURL:url
                                                    options:downloaderOptions

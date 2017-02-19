@@ -72,10 +72,11 @@
 		01BE57FC1E5865C400A2A266 /* CALayer+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BE57FB1E5865C400A2A266 /* CALayer+WebCache.m */; };
 		01BE57FF1E5865DD00A2A266 /* CALayer+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BE57FE1E5865DD00A2A266 /* CALayer+WebCacheOperation.m */; };
 		01D14EF41CDCFA780028714A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D14EF31CDCFA780028714A /* RootViewController.m */; };
-		01D5B2F51D37D548007C5CB1 /* CornerRadiusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D5B2F41D37D548007C5CB1 /* CornerRadiusViewController.m */; };
 		01F51A0E1CA1B1CE00463571 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 01F51A0C1CA1B1CE00463571 /* CoreData.xcdatamodeld */; };
 		01F51A181CA1B7A400463571 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F51A171CA1B7A400463571 /* CoreData.framework */; };
 		01F58BC01D85AA8C0089DB02 /* RichTextDemo1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F58BBF1D85AA8C0089DB02 /* RichTextDemo1ViewController.m */; };
+		01FFE22B1E5A062500D05DFE /* ImageDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FFE22A1E5A062500D05DFE /* ImageDemoViewController.m */; };
+		01FFE22E1E5A070100D05DFE /* ImageDemoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FFE22D1E5A070100D05DFE /* ImageDemoTableViewCell.m */; };
 		B0ACEC021CEDC9A50019074F /* AutoFitSizeTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBEF1CEDC9A50019074F /* AutoFitSizeTextView.m */; };
 		B0ACEC031CEDC9A50019074F /* CellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBF11CEDC9A50019074F /* CellLayout.m */; };
 		B0ACEC041CEDC9A50019074F /* CommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B0ACEBF31CEDC9A50019074F /* CommentModel.m */; };
@@ -242,12 +243,14 @@
 		01BE57FE1E5865DD00A2A266 /* CALayer+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+WebCacheOperation.m"; path = "../Gallop/CALayer+WebCacheOperation.m"; sourceTree = "<group>"; };
 		01D14EF21CDCFA780028714A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		01D14EF31CDCFA780028714A /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
-		01D5B2F31D37D548007C5CB1 /* CornerRadiusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CornerRadiusViewController.h; sourceTree = "<group>"; };
-		01D5B2F41D37D548007C5CB1 /* CornerRadiusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CornerRadiusViewController.m; sourceTree = "<group>"; };
 		01F51A0D1CA1B1CE00463571 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
 		01F51A171CA1B7A400463571 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		01F58BBE1D85AA8C0089DB02 /* RichTextDemo1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RichTextDemo1ViewController.h; sourceTree = "<group>"; };
 		01F58BBF1D85AA8C0089DB02 /* RichTextDemo1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RichTextDemo1ViewController.m; sourceTree = "<group>"; };
+		01FFE2291E5A062500D05DFE /* ImageDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageDemoViewController.h; sourceTree = "<group>"; };
+		01FFE22A1E5A062500D05DFE /* ImageDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageDemoViewController.m; sourceTree = "<group>"; };
+		01FFE22C1E5A070100D05DFE /* ImageDemoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageDemoTableViewCell.h; sourceTree = "<group>"; };
+		01FFE22D1E5A070100D05DFE /* ImageDemoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageDemoTableViewCell.m; sourceTree = "<group>"; };
 		B0ACEBEE1CEDC9A50019074F /* AutoFitSizeTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoFitSizeTextView.h; sourceTree = "<group>"; };
 		B0ACEBEF1CEDC9A50019074F /* AutoFitSizeTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoFitSizeTextView.m; sourceTree = "<group>"; };
 		B0ACEBF01CEDC9A50019074F /* CellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellLayout.h; sourceTree = "<group>"; };
@@ -397,7 +400,7 @@
 				015FC0E31CDFA48800B4DF82 /* Gallop.h */,
 				0130235C1D43B061005EAE25 /* Model */,
 				B085B3421CB68CF500087739 /* Views */,
-				01BE57F31E5846B200A2A266 /* SDWebImageHook */,
+				01BE57F31E5846B200A2A266 /* Hook */,
 				01D5B32D1D37F630007C5CB1 /* ImageDisplay */,
 				B08CFE2B1D02CD4100A8B70D /* Transactions */,
 				B079C2841CD8C58F003B15D3 /* CoreText */,
@@ -512,7 +515,7 @@
 			name = Root;
 			sourceTree = "<group>";
 		};
-		01BE57F31E5846B200A2A266 /* SDWebImageHook */ = {
+		01BE57F31E5846B200A2A266 /* Hook */ = {
 			isa = PBXGroup;
 			children = (
 				012EDDE81D931D08009AFA90 /* SDWebImageManager+Gallop.h */,
@@ -528,14 +531,16 @@
 				01BE57FD1E5865DD00A2A266 /* CALayer+WebCacheOperation.h */,
 				01BE57FE1E5865DD00A2A266 /* CALayer+WebCacheOperation.m */,
 			);
-			name = SDWebImageHook;
+			name = Hook;
 			sourceTree = "<group>";
 		};
 		01D5B2F21D37D525007C5CB1 /* LWImageStorageDemo */ = {
 			isa = PBXGroup;
 			children = (
-				01D5B2F31D37D548007C5CB1 /* CornerRadiusViewController.h */,
-				01D5B2F41D37D548007C5CB1 /* CornerRadiusViewController.m */,
+				01FFE2291E5A062500D05DFE /* ImageDemoViewController.h */,
+				01FFE22A1E5A062500D05DFE /* ImageDemoViewController.m */,
+				01FFE22C1E5A070100D05DFE /* ImageDemoTableViewCell.h */,
+				01FFE22D1E5A070100D05DFE /* ImageDemoTableViewCell.m */,
 			);
 			name = LWImageStorageDemo;
 			sourceTree = "<group>";
@@ -811,6 +816,7 @@
 				B0F991D11D937EA000D7B529 /* LWImageBrowserModel.m in Sources */,
 				B0F991CB1D937EA000D7B529 /* LWActionSheetView.m in Sources */,
 				012EDE491D931FB1009AFA90 /* LWHTMLLayout.m in Sources */,
+				01FFE22B1E5A062500D05DFE /* ImageDemoViewController.m in Sources */,
 				012EDDE01D931CB8009AFA90 /* LWLayout.m in Sources */,
 				0106E7C81E57303C00C5A3C6 /* SDWebImageDownloader.m in Sources */,
 				012EDE4D1D931FB1009AFA90 /* LWStorageBuilder.m in Sources */,
@@ -857,7 +863,7 @@
 				0106E7CD1E57303C00C5A3C6 /* UIImage+GIF.m in Sources */,
 				012EDDEC1D931D08009AFA90 /* SDWebImageManager+Gallop.m in Sources */,
 				019141C01E58BA8500587074 /* LWGIFImage.m in Sources */,
-				01D5B2F51D37D548007C5CB1 /* CornerRadiusViewController.m in Sources */,
+				01FFE22E1E5A070100D05DFE /* ImageDemoTableViewCell.m in Sources */,
 				B0ACEC0A1CEDC9A50019074F /* TableViewHeader.m in Sources */,
 				B0C9A9321D2273EF00DFAA44 /* ArticleListModel.m in Sources */,
 				0106E7D21E57303C00C5A3C6 /* UIView+WebCache.m in Sources */,

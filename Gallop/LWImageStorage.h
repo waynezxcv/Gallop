@@ -79,18 +79,3 @@ typedef NS_ENUM(NSUInteger, LWLocalImageType){
 @end
 
 
-@interface LWImageStorageCornerRadiusConfig : NSObject
-
-
-
-@end
-
-
-@interface LWImageStorageBlurConfig : NSObject
-
-
-
-
-@end
-
-

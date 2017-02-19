@@ -63,18 +63,14 @@
                                   borderWidth:(CGFloat)borderWidth
                                   contentMode:(UIViewContentMode)contentMode
                                        isBlur:(BOOL)isBlur {
-    
     //将圆角和模糊的相关属性值写入到一个字符串中，以kLWImageProcessorPrefixKey开头。
-    
     if (!url) {
         return nil;
     }
-    
     CGFloat cr = -1;
     CGFloat cg = -1;
     CGFloat cb = -1;
     CGFloat ca = -1;
-    
     if (cornerBackgroundColor) {
         CGFloat cornerComponents[4];
         [self getRGBComponents:cornerComponents
@@ -106,7 +102,6 @@
         blur = 1;
     }
     
-    
     //生成绘制信息标识的字符串
     NSString* imageStransformCacheKey =
     [NSString stringWithFormat:
@@ -134,7 +129,7 @@
     
     //从标识字符串中，依次去除圆角半径和模式的相关属性值，对原图进行处理
     if (key && [key hasPrefix:[NSString stringWithFormat:@"%@",
-                        kLWImageProcessorPrefixKey]]) {
+                               kLWImageProcessorPrefixKey]]) {
         NSString* infoString =
         [key substringFromIndex:kLWImageProcessorPrefixKey.length];
         NSArray* arr = [infoString componentsSeparatedByString:@","];
@@ -200,6 +195,8 @@
                                           saturationDeltaFactor:1.4
                                                       maskImage:nil];
         }
+        
+        
         
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = CGBitmapContextCreate(NULL,

@@ -5,8 +5,9 @@
 
 
 
+
 #import <UIKit/UIKit.h>
 
-@interface CornerRadiusViewController : UIViewController
+@interface ImageDemoViewController : UIViewController
 
 @end

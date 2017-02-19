@@ -7,9 +7,12 @@
 
 #import "RootViewController.h"
 #import "RichTextDemo1ViewController.h"
-#import "CornerRadiusViewController.h"
 #import "MomentsViewController.h"
 #import "ArticleListViewController.h"
+#import "ImageDemoViewController.h"
+
+
+
 
 
 
@@ -60,7 +63,7 @@
             cell.textLabel.text = @"LWImageStorage使用示例";
             break;
         case 2:
-            cell.textLabel.text = @"使用Gallop构建Feeds示例";
+            cell.textLabel.text = @"使用Gallop构建Feed List 示例";
             break;
         case 3:
             cell.textLabel.text = @"使用Gallop进行HTML解析示例";
@@ -79,7 +82,7 @@
         }
             break;
         case 1:{
-            CornerRadiusViewController* vc = [[CornerRadiusViewController alloc] init];
+            ImageDemoViewController* vc = [[ImageDemoViewController alloc] init];
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;

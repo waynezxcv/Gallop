@@ -66,7 +66,6 @@ static char imageURLKey;
             self.image = placeholder;
         });
     }
-    
     if (url) {
         __weak typeof(self) weakSelf = self;
         id <SDWebImageOperation> operation = [[SDWebImageManager sharedManager]
@@ -92,16 +91,13 @@ static char imageURLKey;
                                                       completedBlock(image,data,error);
                                                       return;
                                                   }
-                                                  
                                                   dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                                                      
                                                       SDImageFormat imageFormat = [NSData sd_imageFormatForImageData:data];
                                                       if (imageFormat == SDImageFormatGIF) {
                                                           
                                                           //GIF
                                                           LWGIFImage* gif = [[LWGIFImage alloc] initWithGIFData:data];
                                                           dispatch_main_async_safe(^{
-                                                              
                                                               if (gif && (options & SDWebImageAvoidAutoSetImage) && completedBlock) {
                                                                   completedBlock(gif,data,error);
                                                                   return;

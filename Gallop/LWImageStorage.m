@@ -113,7 +113,6 @@
 }
 
 - (BOOL)needRerendering {
-    
     //这个图片设置了圆角的相关属性，需要对原图进行处理
     if (self.cornerBorderWidth != 0 || self.cornerRadius != 0) {
         return YES;
@@ -146,6 +145,8 @@
     
     if ([self.contents isKindOfClass:[UIImage class]] &&
         self.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
+        
+        
         UIImage* image = (UIImage *)self.contents;
         BOOL isOpaque = self.opaque;
         UIColor* backgroundColor = self.backgroundColor;
@@ -198,6 +199,8 @@
             [cornerBorderColor setStroke];
             [cornerPath stroke];
         }
+        
+        
     }
 }
 

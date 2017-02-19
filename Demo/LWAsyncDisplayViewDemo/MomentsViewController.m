@@ -91,6 +91,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
     if (self.isNeedRefresh) {
         [self refreshBegin];
     }
@@ -523,7 +524,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         @"statusID":@"8",
         @"commentList":@[@{@"from":@"SIZE潮流生活",
                            @"to":@"waynezxcv",
-                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                           @"content":@"使用Gallop适合包含文字、图片高性能的展示型界面的构建。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
       
@@ -533,11 +534,12 @@ const CGFloat kRefreshBoundary = 170.0f;
         @"avatar":@"http://tva4.sinaimg.cn/crop.0.0.700.700.50/006qdyzsjw8fashgddslaj30jg0jg0wb.jpg",
         @"content":@"#GIF#少女时期的东方教主#林青霞#",
         @"date":@"1459668442",
-        @"imgs":@[@"http://ww3.sinaimg.cn/bmiddle/006qdyzsly1fctmnzwqcwg307505pasc.gif"],
+        @"imgs":@[@"http://ww3.sinaimg.cn/bmiddle/006qdyzsly1fctmnzwqcwg307505pasc.gif",
+                  @"http://ww3.sinaimg.cn/bmiddle/006qdyzsly1fctmo1wpw5g307505p1kx.gif"],
         @"statusID":@"22",
         @"commentList":@[@{@"from":@"someone",
                            @"to":@"waynezxcv",
-                           @"content":@"gif同样流畅"}],
+                           @"content":@"Gif也能获得优秀的体验。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
       
@@ -555,13 +557,13 @@ const CGFloat kRefreshBoundary = 170.0f;
         @"statusID":@"1",
         @"commentList":@[@{@"from":@"SIZE潮流生活",
                            @"to":@"",
-                           @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"},
+                           @"content":@"哈哈哈..."},
                          @{@"from":@"waynezxcv",
                            @"to":@"SIZE潮流生活",
                            @"content":@"哈哈哈哈"},
                          @{@"from":@"SIZE潮流生活",
                            @"to":@"waynezxcv",
-                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                           @"content":@"使用Gallop能尽量保持滚动时的FPS在60hz"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv",@"伊布拉希莫维奇",@"权志龙",@"郜林",@"扎克伯格"]},
       
@@ -575,7 +577,7 @@ const CGFloat kRefreshBoundary = 170.0f;
         @"statusID":@"1",
         @"commentList":@[@{@"from":@"伊布拉西莫维奇",
                            @"to":@"",
-                           @"content":@"使用Gallop来快速构建图文混排界面。享受如丝般顺滑的滚动体验。"}],
+                           @"content":@"手动再见..."}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv",@"Gallop"]},
       
@@ -601,7 +603,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"哈哈哈哈"},
                          @{@"from":@"SIZE潮流生活",
                            @"to":@"waynezxcv",
-                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                           @"content":@"打得不错。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
       
@@ -623,7 +625,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"哈哈哈哈"},
                          @{@"from":@"SIZE潮流生活",
                            @"to":@"waynezxcv",
-                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                           @"content":@"+++"}],
         @"isLike":@(NO),
         @"likeList":@[@"Tim Cook"]},
       
@@ -640,7 +642,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"哈哈哈哈"},
                          @{@"from":@"SIZE潮流生活",
                            @"to":@"waynezxcv",
-                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                           @"content":@"打得不错。"}],
         @"isLike":@(NO),
         @"likeList":@[@"Tim Cook"]},
       
@@ -676,7 +678,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"哈哈哈哈"},
                          @{@"from":@"SIZE潮流生活",
                            @"to":@"waynezxcv",
-                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                           @"content":@"打得不错。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
       
@@ -696,7 +698,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"哈哈哈哈"},
                          @{@"from":@"SIZE潮流生活",
                            @"to":@"waynezxcv",
-                           @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
+                           @"content":@"打得不错。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
       

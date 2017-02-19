@@ -3,7 +3,7 @@
 
 
 
-# Gallop v0.5.1
+# Gallop v0.6.0
 
 
 
@@ -25,12 +25,12 @@ Gallop is a powerful rich text framework which support Asynchronous rendering.yo
 * easily draw text frame bouding, drawing the hollow words, sets the text vertical Alignment property, etc
 * easy to parse the expression in the text, like http(s) link, @ user, # theme #, phone number.
 * fast to sets the image corner radius property and blur processing, can be processed directly after the image to provide a cache, without repeated processing, improve performance.
-
+* support GIF.
 
 
 ## Requirements
 
-* web image download and cache depends on [SDWebImage](https://github.com/rs/SDWebImage) 'SDWebImage', '~>3.7'.
+* web image download and cache depends on [SDWebImage](https://github.com/rs/SDWebImage) 'SDWebImage', '~> 4.0'.
 * HTML parsing depends on the libxml2 library.
 
 
@@ -45,6 +45,11 @@ Gallop is a powerful rich text framework which support Asynchronous rendering.yo
 
 
 ## Modifications
+
+v0.6.0
+
+* depend on SDWebImage 4.0
+* fixed bugs.
 
 v0.5.1
 
@@ -338,10 +343,12 @@ Gallop是使用异步绘制的富文本、图文混排框架。只需要使用�
 * 绘制文本边框、绘制空心字、设置垂直方向Alignment等。
 * 便捷地解析文本中的表情、http(s)链接、@用户、#主题#、电话号码。
 * 快捷实现对网络、本地图片圆角和模糊处理等，能对处理过后的图片直接提供缓存，无需重复处理。
+* 支持GIF显示
+
 
 ## 依赖
 
-* 网络图片加载、缓存部分依赖于[SDWebImage](https://github.com/rs/SDWebImage) 'SDWebImage', '~>3.7'
+* 网络图片加载、缓存部分依赖于[SDWebImage](https://github.com/rs/SDWebImage) 'SDWebImage', '~>4.0'
 * HTML解析依赖libxml2库
 
 
@@ -356,6 +363,11 @@ Gallop是使用异步绘制的富文本、图文混排框架。只需要使用�
 
 
 ## 更新说明
+
+v0.6.0
+
+* 依赖于SDWebImage 4.0
+
 
 v0.5.1
 

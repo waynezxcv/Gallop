@@ -31,6 +31,7 @@
 @class LWAsyncDisplayView;
 @class LWTextStorage;
 @class LWImageStorage;
+@class LWAsyncImageView;
 
 
 @protocol LWAsyncDisplayViewDelegate <NSObject>
@@ -92,7 +93,6 @@ typedef void(^LWAsyncDisplayViewAutoLayoutCallback)(LWImageStorage* imageStorage
 @property (nonatomic,assign) BOOL displaysAsynchronously;//是否异步绘制，默认是YES
 @property (nonatomic,copy) LWAsyncDisplayViewAutoLayoutCallback auotoLayoutCallback;//自动布局回调Block
 @property (nonatomic,strong,readonly) UILongPressGestureRecognizer* longPressGesture;//长按手势
-
 
 
 /**

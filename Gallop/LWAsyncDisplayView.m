@@ -35,6 +35,14 @@
 
 
 
+
+struct LWAyncDisplayStatus {
+    BOOL needLayout : 1;
+    BOOL needDisplay : 1;
+    BOOL needClenup : 1;
+};
+
+
 @interface LWAsyncDisplayView ()<LWAsyncDisplayLayerDelegate>
 
 @property (nonatomic,strong) NSMutableArray* reusePool;//这个数组用来存放暂时不使用的LWAsyncImageView
@@ -51,6 +59,7 @@
     CGPoint _touchBeganPoint;
     NSArray* _textStorages;
     NSArray* _imageStorages;
+    struct LWAyncDisplayStatus _displayFlag;
 }
 
 
@@ -76,12 +85,18 @@
     self.layer.opaque = YES;
     self.layer.contentsScale = [GallopUtils contentsScale];
     self.displaysAsynchronously = YES;
+    
     _showingHighlight = NO;
     _highlight = nil;
     _touchBeganPoint = CGPointZero;
     _highlightAdjustPoint = CGPointZero;
     _textStorages = nil;
     _imageStorages = nil;
+    
+    _displayFlag.needClenup = YES;
+    _displayFlag.needLayout = YES;
+    _displayFlag.needDisplay = YES;
+    
     [self addGestureRecognizer:self.longPressGesture];
 }
 
@@ -98,12 +113,10 @@
     [self.imageContainers removeAllObjects];
 }
 
-
 - (void)setImageStoragesResizeBlock:(void(^)(LWImageStorage* imageStorage, CGFloat delta))resizeBlock {
-    //遍历imageStorages绘制
+    //遍历imageStorages
     for (NSInteger i = 0; i < _imageStorages.count; i ++) {
         @autoreleasepool {
-            
             LWImageStorage* imageStorage = _imageStorages[i];
             if ([imageStorage.contents isKindOfClass:[UIImage class]] &&
                 imageStorage.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
@@ -124,7 +137,6 @@
             container.frame = imageStorage.frame;
             container.hidden = NO;
             [container lw_setImageWihtImageStorage:imageStorage resize:resizeBlock completion:nil];
-            
             [self.imageContainers addObject:container];
         }
     }
@@ -144,7 +156,6 @@
 #pragma mark - Display
 
 - (LWAsyncDisplayTransaction *)asyncDisplayTransaction {
-    
     LWAsyncDisplayTransaction* transaction = [[LWAsyncDisplayTransaction alloc] init];
     transaction.willDisplayBlock = ^(CALayer *layer) {
         for (LWTextStorage* textStorage in _textStorages) {
@@ -176,7 +187,6 @@
         if (isCancelledBlock()) {
             return;
         }
-        
         //这个代理方法调用需要用户额外绘制的内容
         [self.delegate extraAsyncDisplayIncontext:context size:self.bounds.size isCancelled:isCancelledBlock];
     }
@@ -449,7 +459,6 @@
     if (_longPressGesture) {
         return _longPressGesture;
     }
-    
     _longPressGesture = [[UILongPressGestureRecognizer alloc]
                          initWithTarget:self
                          action:@selector(longPressHandler:)];
@@ -474,28 +483,7 @@
     }
     
     [self _cleanImageViewAddToReusePool];
-    
-    _highlightAdjustPoint = CGPointZero;
-    _touchBeganPoint = CGPointZero;
-    _showingHighlight = NO;
-    
-    id <LWLayoutProtocol> oldLayout = _layout;
-    LWTextHighlight* oldHighlight = _highlight;
-    NSArray* oldImageStorages = _imageStorages;
-    NSArray* oldTextStorages = _textStorages;
-    
-    _layout = nil;
-    _imageStorages = nil;
-    _textStorages = nil;
-    _highlight = nil;
-    
-    //在子线程释放之前的对象
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        [oldLayout class];
-        [oldTextStorages class];
-        [oldImageStorages class];
-        [oldHighlight class];
-    });
+    [self _cleanupAndReleaseModelOnSubThread];
     
     _layout = layout;
     _imageStorages = self.layout.imageStorages;
@@ -511,5 +499,32 @@
         }
     }];
 }
+
+- (void)_cleanupAndReleaseModelOnSubThread {
+    
+    id <LWLayoutProtocol> oldLayout = _layout;
+    LWTextHighlight* oldHighlight = _highlight;
+    NSArray* oldImageStorages = _imageStorages;
+    NSArray* oldTextStorages = _textStorages;
+    
+    _layout = nil;
+    _imageStorages = nil;
+    _textStorages = nil;
+    _highlight = nil;
+    
+    _highlightAdjustPoint = CGPointZero;
+    _touchBeganPoint = CGPointZero;
+    _showingHighlight = NO;
+    
+    //在子线程释放之前的对象
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [oldLayout class];
+        [oldTextStorages class];
+        [oldImageStorages class];
+        [oldHighlight class];
+    });
+}
+
+
 
 @end
