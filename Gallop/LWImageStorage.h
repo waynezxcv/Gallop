@@ -32,7 +32,7 @@
 
 
 /**
- *  如果是本地图片，可以选择是直接绘制在LWAsyncDisplayView上还是新建一个UIView并add到LWAsyncDisplayView上
+ *  如果是本地图片，可以选择是直接绘制在LWAsyncDisplayView上还是新建一个LWAsyncImageView并add到LWAsyncDisplayView上
  */
 typedef NS_ENUM(NSUInteger, LWLocalImageType){
     /**
@@ -40,9 +40,9 @@ typedef NS_ENUM(NSUInteger, LWLocalImageType){
      */
     LWLocalImageDrawInLWAsyncDisplayView,
     /**
-     *  新建一个UIView并add到LWAsyncDisplayView上
+     *  绘制在LWAsyncImageView上
      */
-    LWLocalImageTypeDrawInSubView,
+    LWLocalImageTypeDrawInLWAsyncImageView,
 };
 
 
@@ -78,5 +78,19 @@ typedef NS_ENUM(NSUInteger, LWLocalImageType){
 
 @end
 
+
+@interface LWImageStorageCornerRadiusConfig : NSObject
+
+
+
+@end
+
+
+@interface LWImageStorageBlurConfig : NSObject
+
+
+
+
+@end
 
 

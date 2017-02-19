@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,37 +23,37 @@
  */
 
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 #import "SDWebImageManager.h"
 
 
 
-@interface CALayer(WebCacheOperation)
-
-/**
- *  通过Key给CALayer对象设置下载的NSOperation对象
- *
- *  @param operation NSOperation对象
- *  @param key       NSOperation对象对应的Key
- */
-- (void)sd_setImageLoadOperation:(id)operation forKey:(NSString *)key;
+@interface CALayer (WebCacheOperation)
 
 
 /**
- *  通过Key来取消这个CALayer对象上的NSOperation
+ *  把NSOperation对象设置到LWAsyncImageView的关联对象operationDictionary上，用于取消操作
  *
- *  @param key NSOperation对象对应的Key
+ *  @param operation operation对象
+ *  @param key       operation对象存在字典中的key
  */
-- (void)sd_cancelImageLoadOperationWithKey:(NSString *)key;
+
+- (void)lw_setImageLoadOperation:(nullable id)operation forKey:(nullable NSString *)key;
 
 
 /**
- *  通过Key来移除这个CALayer对象上的NSOperation
+ *  取消这个LWAsyncImageView上的一个下载任务
  *
- *  @param key NSOperation对象对应的Key
+ *  @param key       operation对象存在字典中的key
  */
-- (void)sd_removeImageLoadOperationWithKey:(NSString *)key;
+- (void)lw_cancelImageLoadOperationWithKey:(nullable NSString *)key;
 
+
+
+/**
+ *  将一个operation对象从关联对象operationDictionary中移除
+ *
+ */
+- (void)lw_removeImageLoadOperationWithKey:(nullable NSString *)key;
 
 @end

@@ -22,15 +22,41 @@
  THE SOFTWARE.
  */
 
-#import "SDImageCache.h"
+#import "LWAsyncImageView.h"
+#import "SDWebImageManager.h"
 
+
+
+
+
+
+
+@interface LWAsyncImageView (WebCacheOperation)
+
+
+/**
+ *  把NSOperation对象设置到LWAsyncImageView的关联对象operationDictionary上，用于取消操作
+ *
+ *  @param operation operation对象
+ *  @param key       operation对象存在字典中的key
+ */
+
+- (void)lw_setImageLoadOperation:(nullable id)operation forKey:(nullable NSString *)key;
+
+
+/**
+ *  取消这个LWAsyncImageView上的一个下载任务
+ *
+ *  @param key       operation对象存在字典中的key
+ */
+- (void)lw_cancelImageLoadOperationWithKey:(nullable NSString *)key;
 
 
 
 /**
- *  Gallop对SDImageCache的Hook，通过methodSwizzling来实现对图片处理并缓存
+ *  将一个operation对象从关联对象operationDictionary中移除
+ *
  */
-
-@interface SDImageCache (Gallop)
+- (void)lw_removeImageLoadOperationWithKey:(nullable NSString *)key;
 
 @end

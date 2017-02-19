@@ -53,8 +53,8 @@
 }
 
 - (void)callAndReleaseCompletionBlock:(BOOL)canceled {
-    void (*objc_msgSendToPerfom)(id, SEL, id) = (void*)objc_msgSend;
-    objc_msgSendToPerfom(self.target,self.selector,self.object);
+    void (*objc_msgSendToPerform)(id, SEL, id) = (void*)objc_msgSend;
+    objc_msgSendToPerform(self.target,self.selector,self.object);
     if (self.completion) {
         self.completion(canceled);
         self.completion = nil;

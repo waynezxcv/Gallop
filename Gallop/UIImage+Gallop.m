@@ -45,7 +45,6 @@
                                                  4 * (int)width,
                                                  colorSpace,
                                                  kCGImageAlphaPremultipliedFirst);
-    
     CGRect contentModeRect = [LWCGRectTransform lw_CGRectFitWithContentMode:contentMode
                                                                        rect:CGRectMake(0, 0,width, height)
                                                                        size:self.size];
@@ -62,7 +61,6 @@
     CGColorSpaceRelease(colorSpace);
     return processedImg;
 }
-
 
 - (void)lw_drawInRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clips {
     CGRect drawRect = [LWCGRectTransform lw_CGRectFitWithContentMode:contentMode rect:rect size:self.size];
@@ -235,7 +233,7 @@ static UIImage* animatedImageWithAnimatedGIFImageSource(CGImageSourceRef const s
     return animation;
 }
 
-static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRef CF_RELEASES_ARGUMENT source) {
+static UIImage* animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRef CF_RELEASES_ARGUMENT source) {
     if (source) {
         UIImage* const image = animatedImageWithAnimatedGIFImageSource(source);
         CFRelease(source);
@@ -321,7 +319,7 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
 }
 
 
-- (UIImage*)lw_rotate:(UIImageOrientation)orient {
+- (UIImage *)lw_rotate:(UIImageOrientation)orient {
     CGRect bnds = CGRectZero;
     UIImage* copy = nil;
     CGContextRef ctxt = nil;
@@ -522,7 +520,7 @@ static CGRect swapWidthAndHeight(CGRect rect) {
     }
     
     CGRect imageRect = { CGPointZero, self.size };
-    UIImage *effectImage = self;
+    UIImage* effectImage = self;
     
     BOOL hasBlur = blurRadius > __FLT_EPSILON__;
     BOOL hasSaturationChange = fabs(saturationDeltaFactor - 1.) > __FLT_EPSILON__;

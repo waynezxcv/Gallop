@@ -85,6 +85,7 @@ static void* LWCurrentTransacitonKey = @"LWCurrentTransacitonKey";
             transactions = [NSHashTable hashTableWithOptions:NSPointerFunctionsObjectPointerPersonality];
             self.transactions = transactions;
         }
+        
         transaction = [[LWTransaction alloc] initWithCallbackQueue:dispatch_get_main_queue()
                                                    completionBlock:^(LWTransaction *completeTransaction, BOOL isCancelled) {
                                                        [transactions removeObject:completeTransaction];

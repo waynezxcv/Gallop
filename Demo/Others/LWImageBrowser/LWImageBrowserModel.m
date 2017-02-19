@@ -72,20 +72,23 @@
     }
     __weak typeof(self) weakSelf = self;
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
-    [manager downloadImageWithURL:self.thumbnailURL
-                          options:0
-                         progress:nil
-                        completed:^(UIImage *image, NSError *error,
-                                    SDImageCacheType cacheType,
-                                    BOOL finished,
-                                    NSURL *imageURL) {
-                            if (finished) {
-                                weakSelf.thumbnailImage = image;
-                                weakSelf.destinationFrame =
-                                [weakSelf calculateDestinationFrameWithSize:weakSelf.thumbnailImage.size
-                                                                      index:weakSelf.index];
-                            }
-                        }];
+    [manager loadImageWithURL:self.thumbnailURL
+                      options:0
+                     progress:nil
+                    completed:^(UIImage * _Nullable image,
+                                NSData * _Nullable data,
+                                NSError * _Nullable error,
+                                SDImageCacheType cacheType,
+                                BOOL finished,
+                                NSURL * _Nullable imageURL) {
+                        if (finished) {
+                            weakSelf.thumbnailImage = image;
+                            weakSelf.destinationFrame =
+                            [weakSelf calculateDestinationFrameWithSize:weakSelf.thumbnailImage.size
+                                                                  index:weakSelf.index];
+                        }
+                    }];
+    
 }
 
 

@@ -51,7 +51,7 @@
     if (self == object) {
         return YES;
     }
-
+    
     LWImageStorage* imageStorage = (LWImageStorage *)object;
     return [imageStorage.contents isEqual:self.contents] && CGRectEqualToRect(imageStorage.frame, self.frame);
 }
@@ -113,10 +113,11 @@
 }
 
 - (BOOL)needRerendering {
+    
+    //这个图片设置了圆角的相关属性，需要对原图进行处理
     if (self.cornerBorderWidth != 0 || self.cornerRadius != 0) {
         return YES;
-    }
-    else {
+    } else {
         return _needRerendering;
     }
 }
@@ -124,6 +125,7 @@
 #pragma mark - Methods
 
 - (void)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(NSInteger)topCapHeight {
+    
     if ([self.contents isKindOfClass:[UIImage class]] &&
         self.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
         self.contents = [(UIImage *)self.contents
@@ -198,6 +200,8 @@
         }
     }
 }
+
+
 
 @end
 

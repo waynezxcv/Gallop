@@ -65,20 +65,19 @@
                                                                   100.0f,
                                                                   100.0f)];
     [self.view addSubview:view2];
-    [view2.layer lw_setImageWithURL:
-     [NSURL URLWithString:@"http://img4.bitautoimg.com/autoalbum/files/20101220/862/13374086240035_1469891_15.JPG"]
+    
+    [view2.layer lw_setImageWithURL:[NSURL URLWithString:@"http://img4.bitautoimg.com/autoalbum/files/20101220/862/13374086240035_1469891_15.JPG"]
                    placeholderImage:nil
                        cornerRadius:50.0f
               cornerBackgroundColor:RGB(255, 255, 255, 1.0f)
                         borderColor:[UIColor orangeColor]
                         borderWidth:5.0f
-                               size:CGSizeMake(100.0f, 100.0f)
+                               size:CGSizeMake(100, 100)
                         contentMode:UIViewContentModeScaleAspectFill
                              isBlur:NO
                             options:0
                            progress:nil
                           completed:nil];
-    
     
     LWLayout* layout = [[LWLayout alloc] init];
     [layout addStorages:@[ts,is1,lis,is2]];

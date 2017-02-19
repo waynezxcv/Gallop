@@ -22,9 +22,7 @@
  THE SOFTWARE.
  */
 
-
-
-#import <UIKit/UIKit.h>
+#import "LWAsyncImageView.h"
 #import "GallopDefine.h"
 #import "SDWebImageCompat.h"
 #import "SDWebImageManager+Gallop.h"
@@ -32,17 +30,16 @@
 
 /*
  *
- * CALayer下载网络图片扩展 、
- *
+ * LWAsyncImageView下载网络图片扩展
  */
 
 
 
-@interface  CALayer (WebCache)
+
+@interface LWAsyncImageView (WebCache)
 
 
 /**
- *  CALayer扩展下载网络图片的功能
  *  @param url                   图片的URL
  *  @param placeholder           占位图
  *  @param cornerRadius          圆角半径值
@@ -54,19 +51,18 @@
  *  @param progressBlock         一个下载进度回调Block
  *  @param completedBlock        一个下载完毕回调Block
  */
-- (void)lw_setImageWithURL:(NSURL *)url
-          placeholderImage:(UIImage *)placeholder
-              cornerRadius:(CGFloat)cornerRadius
-     cornerBackgroundColor:(UIColor *)cornerBackgroundColor
-               borderColor:(UIColor *)borderColor
-               borderWidth:(CGFloat)borderWidth
-                      size:(CGSize)size
-               contentMode:(UIViewContentMode)contentMode
-                    isBlur:(BOOL)isBlur
-                   options:(SDWebImageOptions)options
-                  progress:(LWWebImageDownloaderProgressBlock)progressBlock
-                 completed:(LWWebImageDownloaderCompletionBlock)completedBlock;
-
+- (void)lw_asyncSetImageWithURL:(NSURL *)url
+               placeholderImage:(UIImage *)placeholder
+                   cornerRadius:(CGFloat)cornerRadius
+          cornerBackgroundColor:(UIColor *)cornerBackgroundColor
+                    borderColor:(UIColor *)borderColor
+                    borderWidth:(CGFloat)borderWidth
+                           size:(CGSize)size
+                    contentMode:(UIViewContentMode)contentMode
+                         isBlur:(BOOL)isBlur
+                        options:(SDWebImageOptions)options
+                       progress:(LWWebImageDownloaderProgressBlock)progressBlock
+                      completed:(LWWebImageDownloaderCompletionBlock)completedBlock;
 
 /**
  *  获取当前图片的URL

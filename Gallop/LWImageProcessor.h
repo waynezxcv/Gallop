@@ -24,13 +24,13 @@
 
 #import <UIKit/UIKit.h>
 
-static const NSString* LWCornerRadiusPrefixKey = @"LWCornerRadiusPrefixKey";
+static const NSString* kLWImageProcessorPrefixKey = @"kLWImageProcessorPrefixKey";
 
 /**
- *  这个类用于下载和缓存圆角半径图片，设置圆角半径时，会额外缓存一份
+ *  这个类用于处理图片，生成缓存的key
  */
 
-@interface LWCornerRadiusHelper : NSObject
+@interface LWImageProcessor : NSObject
 
 
 /**

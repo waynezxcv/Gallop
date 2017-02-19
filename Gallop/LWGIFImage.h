@@ -22,15 +22,61 @@
  THE SOFTWARE.
  */
 
-#import "SDImageCache.h"
 
 
+
+
+#import <UIKit/UIKit.h>
+
+
+@interface LWGIFImage : UIImage
+
+/**
+ * 第一帧图片
+ */
+@property (nonatomic, strong, readonly) UIImage* coverImage;
+
+/**
+ * 保存了帧索引对应的时间的字典
+ */
+@property (nonatomic, strong, readonly) NSDictionary* timesForIndex;
+
+/**
+ * 播放循环次数
+ */
+@property (nonatomic, assign, readonly) NSUInteger loopCount;
+
+/**
+ * 总帧数
+ */
+@property (nonatomic, assign, readonly) NSUInteger frameCount;
+
+/**
+ * 构造方法
+ */
+- (id)initWithGIFData:(NSData *)data;
+
+/**
+ * 获取帧索引对应的图片
+ */
+- (UIImage *)frameImageWithIndex:(NSInteger)index;
+
+
+@end
+
+extern const NSTimeInterval kLWGIFDelayTimeIntervalMinimumValue;
 
 
 /**
- *  Gallop对SDImageCache的Hook，通过methodSwizzling来实现对图片处理并缓存
+ * 这个代理对象有一个weak的target对象，用来实现转发消息,并避免循环引用
  */
 
-@interface SDImageCache (Gallop)
+@interface LWProxy : NSProxy
+
+@property (nonatomic,weak) id target;
++ (instancetype)proxyWithObject:(id)object;
 
 @end
+
+
+

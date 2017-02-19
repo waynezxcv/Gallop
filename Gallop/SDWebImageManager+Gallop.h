@@ -29,6 +29,7 @@
 @property (strong, nonatomic) NSMutableSet *failedURLs;
 @property (strong, nonatomic) NSMutableArray *runningOperations;
 
+
 /**
  *  通过一个URL下载图片并缓存，如果缓存已经存在，则直接读取缓存的图片
  *
@@ -55,6 +56,8 @@
                                              isBlur:(BOOL)isBlur
                                             options:(SDWebImageOptions)options
                                            progress:(SDWebImageDownloaderProgressBlock)progressBlock
-                                          completed:(SDWebImageCompletionWithFinishedBlock)completedBlock;
+                                          completed:(SDInternalCompletionBlock)completedBlock;
+
+
 
 @end

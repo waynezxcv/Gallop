@@ -42,7 +42,6 @@ typedef NS_ENUM(NSUInteger, LWTransactionContainerState) {
 };
 
 
-
 @protocol LWTransactionContainerDelegate
 
 @property (nonatomic,readonly,assign) LWTransactionContainerState transactionContainerState;//操作事务容器的状态

@@ -32,7 +32,6 @@
 #import "LWTextLayout.h"
 #import "LWStorageBuilder.h"
 #import "LWHTMLLayout.h"
-#import "CALayer+WebCache.h"
 #import "LWTextParser.h"
 #import "GallopDefine.h"
 #import "GallopUtils.h"
@@ -40,10 +39,10 @@
 #import "LWImageStorage.h"
 #import "LWStorage.h"
 #import "UIImage+Gallop.h"
-#import "UIView+DisplayAddtions.h"
 #import "NSString+HTML.h"
 #import "NSManagedObject+LWLayout.h"
+#import "LWAsyncImageView+WebCache.h"
+#import "CALayer+WebCache.h"
 #import "LWLayout.h"
-
 
 #endif /* Gallop_h */

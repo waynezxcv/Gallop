@@ -23,9 +23,7 @@
  */
 
 
-
-
-#import "CALayer+WebCacheOperation.h"
+#import "LWAsyncImageView+WebCacheOperation.h"
 #import <objc/runtime.h>
 
 
@@ -33,7 +31,8 @@ static char loadOperationKey;
 
 typedef NSMutableDictionary<NSString *, id> LWOperationsDictionary;
 
-@implementation CALayer (WebCacheOperation)
+@implementation LWAsyncImageView (WebCacheOperation)
+
 
 - (LWOperationsDictionary *)operationDictionary {
     LWOperationsDictionary *operations = objc_getAssociatedObject(self, &loadOperationKey);

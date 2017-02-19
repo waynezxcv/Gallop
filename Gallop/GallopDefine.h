@@ -29,7 +29,6 @@
 #ifndef GallopDefine_h
 #define GallopDefine_h
 
-
 //屏幕宽
 #ifndef SCREEN_WIDTH
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
@@ -100,13 +99,18 @@
 
 
 
+
+
 /******************************************************************************/
-/* Private */
+@class LWImageStorage;
 typedef BOOL(^LWAsyncDisplayIsCanclledBlock)(void);
 typedef void(^LWAsyncDisplayWillDisplayBlock)(CALayer *layer);
 typedef void(^LWAsyncDisplayBlock)(CGContextRef context, CGSize size, LWAsyncDisplayIsCanclledBlock isCancelledBlock);
 typedef void(^LWAsyncDisplayDidDisplayBlock)(CALayer *layer, BOOL finished);
-/* Private */
+typedef void(^LWHTMLImageResizeBlock)(LWImageStorage*imageStorage, CGFloat delta);
+typedef void(^LWAsyncCompleteBlock)(void);
+typedef void(^LWWebImageDownloaderProgressBlock)(NSInteger receivedSize, NSInteger expectedSize, NSURL* targetURL);
+typedef void(^LWWebImageDownloaderCompletionBlock)(UIImage* image,NSData* imageData,NSError* error);
 /******************************************************************************/
 
 

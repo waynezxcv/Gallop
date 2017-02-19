@@ -195,28 +195,32 @@ LWActionSheetViewDelegate>
 }
 
 - (void)_preDownLoadImageWithIndex:(NSInteger)index {
+    
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     if (index + 1 < self.imageModels.count) {
         LWImageBrowserModel* nextModel = [self.imageModels objectAtIndex:index + 1];
-        [manager downloadImageWithURL:nextModel.HDURL
-                              options:0
-                             progress:nil
-                            completed:^(UIImage *image,
-                                        NSError *error,
-                                        SDImageCacheType cacheType,
-                                        BOOL finished,
-                                        NSURL *imageURL) {}];
+        [manager loadImageWithURL:nextModel.HDURL
+                          options:0
+                         progress:nil
+                        completed:^(UIImage * _Nullable image,
+                                    NSData * _Nullable data,
+                                    NSError * _Nullable error,
+                                    SDImageCacheType cacheType,
+                                    BOOL finished,
+                                    NSURL * _Nullable imageURL) {}];
     }
     if (index - 1 >= 0) {
         LWImageBrowserModel* previousModel = [self.imageModels objectAtIndex:index - 1];
-        [manager downloadImageWithURL:previousModel.HDURL
-                              options:0
-                             progress:nil
-                            completed:^(UIImage *image,
-                                        NSError *error,
-                                        SDImageCacheType cacheType,
-                                        BOOL finished,
-                                        NSURL *imageURL) {}];
+        
+        [manager loadImageWithURL:previousModel.HDURL
+                          options:0
+                         progress:nil
+                        completed:^(UIImage * _Nullable image,
+                                    NSData * _Nullable data,
+                                    NSError * _Nullable error,
+                                    SDImageCacheType cacheType,
+                                    BOOL finished,
+                                    NSURL * _Nullable imageURL) {}];
     }
 }
 

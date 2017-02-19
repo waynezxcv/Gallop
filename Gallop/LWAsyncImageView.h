@@ -22,15 +22,47 @@
  THE SOFTWARE.
  */
 
-#import "SDImageCache.h"
+
+#import <UIKit/UIKit.h>
 
 
+@class LWImageStorage;
+@class LWGIFImage;
+
+
+@interface LWAsyncImageView : UIImageView
+
+/**
+ *  一个标示符字符串，跟LWImageStorage中的同名属性对应.
+ *  当LWAsyncImageView不需要时，会放入LWAsyncDisplayView的reusePool当中
+ *  需要用到时，通过这个identifier为key去reusePool中取
+ */
+@property (nonatomic,copy) NSString* identifier;
 
 
 /**
- *  Gallop对SDImageCache的Hook，通过methodSwizzling来实现对图片处理并缓存
+ *  是否启动异步绘制
+ *  YES时，会把对layer.conents，setFrame等赋值任务加入到LWTransactionGroup队列中
+ *  然后通过观察主线程RunLoop的状态为 kCFRunLoopBeforeWaiting | kCFRunLoopExit 时才执行
  */
+@property (nonatomic,assign) BOOL displayAsynchronously;
 
-@interface SDImageCache (Gallop)
+
+/**
+ *  GIF动画图片模型
+ *
+ *
+ */
+@property (nonatomic,strong) LWGIFImage* gifImage;
+
+/**
+ *  如果图片是gif，可以指定动画播放模式。
+ *  NSDefaultRunLoopMode:当UIScrollView及其子类对象滚动式，将暂停播放
+ *  NSRunLoopCommonModes：当UIScrollView及其子类对象滚动式，不会暂停播放
+ *
+ */
+@property (nonatomic,copy) NSString* animationRunLoopMode;
+
+
 
 @end

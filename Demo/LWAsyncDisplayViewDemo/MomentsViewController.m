@@ -42,6 +42,7 @@
 @property (nonatomic,assign,getter = isNeedRefresh) BOOL needRefresh;
 @property (nonatomic,assign) BOOL displaysAsynchronously;//是否异步绘制
 
+
 @end
 
 
@@ -504,7 +505,8 @@ const CGFloat kRefreshBoundary = 170.0f;
         return _fakeDatasource;
     }
     _fakeDatasource =
-    @[@{@"type":@"image",
+    @[
+      @{@"type":@"image",
         @"name":@"型格志style",
         @"avatar":@"http://tp4.sinaimg.cn/5747171147/50/5741401933/0",
         @"content":@"春天卫衣的正确打开方式https://github.com/waynezxcv/Gallop",
@@ -524,6 +526,21 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
+      
+      
+      @{@"type":@"image",
+        @"name":@"someone",
+        @"avatar":@"http://tva4.sinaimg.cn/crop.0.0.700.700.50/006qdyzsjw8fashgddslaj30jg0jg0wb.jpg",
+        @"content":@"#GIF#少女时期的东方教主#林青霞#",
+        @"date":@"1459668442",
+        @"imgs":@[@"http://ww3.sinaimg.cn/bmiddle/006qdyzsly1fctmnzwqcwg307505pasc.gif"],
+        @"statusID":@"22",
+        @"commentList":@[@{@"from":@"someone",
+                           @"to":@"waynezxcv",
+                           @"content":@"gif同样流畅"}],
+        @"isLike":@(NO),
+        @"likeList":@[@"waynezxcv"]},
+      
       
       @{@"type":@"image",
         @"name":@"SIZE潮流生活",
@@ -662,9 +679,6 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"nice~使用Gallop。支持异步绘制，让滚动如丝般顺滑。"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
-      
-      
-      
       
       
       @{@"type":@"image",

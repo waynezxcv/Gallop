@@ -27,6 +27,9 @@
 #import "GallopUtils.h"
 #import "GallopDefine.h"
 
+
+
+
 @interface LWTextContainer ()
 
 @property (nonatomic,assign) CGSize size;

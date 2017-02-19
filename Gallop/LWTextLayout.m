@@ -32,6 +32,11 @@
 #import "NSMutableAttributedString+Gallop.h"
 #import "LWCGRectTransform.h"
 #import "CALayer+LWTransaction.h"
+#import "CALayer+WebCache.h"
+
+
+
+
 
 
 static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
@@ -654,6 +659,7 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
         rect.origin.x += point.x;
         rect.origin.y += point.y;
         
+        //图片类型的附件直接绘制到LWAsyncImageView上
         if (image) {
             
             CGImageRef ref = image.CGImage;
@@ -666,30 +672,34 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
             }
             
         } else if (view) {
+            view.frame = rect;
+            [containerView addSubview:view];
             
-            dispatch_main_sync_safe(^{
-                view.frame = rect;
-                [containerView addSubview:view];
+            dispatch_main_async_safe(^{
+                
+                layer.frame = rect;
+                [containerLayer addSublayer:layer];
                 
                 if (attachment.userInfo && attachment.userInfo[@"URL"]) {
+                    
                     [view.layer lw_setImageWithURL:attachment.userInfo[@"URL"]
                                   placeholderImage:nil
                                       cornerRadius:0
+                             cornerBackgroundColor:nil
+                                       borderColor:nil
+                                       borderWidth:0
                                               size:CGSizeZero
                                        contentMode:attachment.contentMode
                                             isBlur:NO
                                            options:0
                                           progress:nil
-                                         completed:^(UIImage *image,
-                                                     NSError *error,
-                                                     SDImageCacheType
-                                                     cacheType,
-                                                     NSURL *imageURL) {}];
+                                         completed:nil];
                 }
             });
             
         } else if (layer) {
-            dispatch_main_sync_safe(^{
+            
+            dispatch_main_async_safe(^{
                 layer.frame = rect;
                 [containerLayer addSublayer:layer];
                 
@@ -697,20 +707,17 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
                     [layer lw_setImageWithURL:attachment.userInfo[@"URL"]
                              placeholderImage:nil
                                  cornerRadius:0
+                        cornerBackgroundColor:nil
+                                  borderColor:nil
+                                  borderWidth:0
                                          size:CGSizeZero
                                   contentMode:attachment.contentMode
                                        isBlur:NO
                                       options:0
                                      progress:nil
-                                    completed:^(UIImage *image,
-                                                NSError *error,
-                                                SDImageCacheType
-                                                cacheType,
-                                                NSURL *imageURL) {}];
+                                    completed:nil];
                 }
-                
             });
-            
         }
     }
 }
@@ -720,12 +727,12 @@ static inline CGSize _getSuggetSizeAndRange(CTFramesetterRef framesetter,
     for (LWTextAttachment* attachment in self.attachments) {
         @autoreleasepool {
             if ([attachment.content isKindOfClass:[UIView class]]) {
-                dispatch_main_sync_safe(^{
+                dispatch_main_async_safe(^{
                     UIView* view = attachment.content;
                     [view removeFromSuperview];
                 });
             } else if ([attachment.content isKindOfClass:[CALayer class]]) {
-                dispatch_main_sync_safe(^{
+                dispatch_main_async_safe(^{
                     CALayer* layer = attachment.content;
                     [layer removeFromSuperlayer];
                 });

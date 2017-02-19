@@ -43,7 +43,6 @@
 
 #pragma mark -
 
-
 + (dispatch_queue_t)displayQueue {
     static dispatch_queue_t displayQueue = NULL;
     static dispatch_once_t onceToken;
@@ -82,6 +81,7 @@
     [super setNeedsDisplay];
 }
 
+
 - (void)display {
     [self _hackResetNeedsDisplay];
     [self display:self.displaysAsynchronously];
@@ -104,6 +104,8 @@
 
 
 - (void)display:(BOOL)asynchronously {
+    
+    
     __strong id <LWAsyncDisplayLayerDelegate> delegate = (id) self.delegate;
     LWAsyncDisplayTransaction* transaction = [delegate asyncDisplayTransaction];
     if (!transaction.displayBlock) {
@@ -127,6 +129,7 @@
         return;
     }
     
+    //清除之前的内容
     CGImageRef imageRef = (__bridge_retained CGImageRef)(self.contents);
     id contents = self.contents;
     self.contents = nil;
@@ -137,6 +140,8 @@
         });
     }
     
+    
+    //把内容尽可能多的绘制在同一个CALayer上，然后赋值给contents
     if (asynchronously) {
         if (transaction.willDisplayBlock) {
             transaction.willDisplayBlock(self);
@@ -216,22 +221,21 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 __weak typeof(self) weakSelf = self;
                 LWTransaction* layerAsyncTransaction = self.lw_asyncTransaction;
-                [layerAsyncTransaction
-                 addAsyncOperationWithTarget:self
-                 selector:@selector(setContents:)
-                 object:(__bridge id)(image.CGImage)
-                 completion:^(BOOL canceled) {
-                     __strong typeof(weakSelf) swself = weakSelf;
-                     if (canceled) {
-                         if (transaction.didDisplayBlock) {
-                             transaction.didDisplayBlock(swself,NO);
-                         }
-                     } else {
-                         if (transaction.didDisplayBlock) {
-                             transaction.didDisplayBlock(swself,YES);
-                         }
-                     }
-                 }];
+                [layerAsyncTransaction addAsyncOperationWithTarget:self
+                                                          selector:@selector(setContents:)
+                                                            object:(__bridge id)(image.CGImage)
+                                                        completion:^(BOOL canceled) {
+                                                            __strong typeof(weakSelf) swself = weakSelf;
+                                                            if (canceled) {
+                                                                if (transaction.didDisplayBlock) {
+                                                                    transaction.didDisplayBlock(swself,NO);
+                                                                }
+                                                            } else {
+                                                                if (transaction.didDisplayBlock) {
+                                                                    transaction.didDisplayBlock(swself,YES);
+                                                                }
+                                                            }
+                                                        }];
             });
         });
         
@@ -260,6 +264,8 @@
                 }
             } CGContextRestoreGState(context);
         }
+        
+        
         transaction.displayBlock(context, self.bounds.size, ^{return NO;});
         UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();

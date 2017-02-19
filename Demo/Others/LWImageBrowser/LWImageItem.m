@@ -99,48 +99,52 @@ const CGFloat kDuration = 0.3f;
     }
     CGRect destinationRect = [self calculateDestinationFrameWithSize:self.imageModel.thumbnailImage.size];
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
-    BOOL isImageCached = [manager cachedImageExistsForURL:self.imageModel.HDURL];
+    
     __weak typeof(self) weakSelf = self;
-    //还未下载的图片
-    if (!isImageCached) {
-        self.imageView.image = self.imageModel.thumbnailImage;
-        if (animated) {
-            self.imageView.frame = self.imageModel.originPosition;
-            [UIView animateWithDuration:0.18f
-                                  delay:0.0f
-                                options:UIViewAnimationOptionCurveEaseIn
-                             animations:^{
-                                 weakSelf.imageView.center = weakSelf.center;
-                             } completion:^(BOOL finished) {
-                                 if (finished) {
-                                     [weakSelf downloadImageWithDestinationRect:destinationRect];
-                                 }
-                             }];
-        } else {
-            weakSelf.imageView.center = weakSelf.center;
-            [self downloadImageWithDestinationRect:destinationRect];
+    [manager cachedImageExistsForURL:self.imageModel.HDURL completion:^(BOOL isInCache) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        //还未下载的图片
+        if (!isInCache) {
+            sself.imageView.image = sself.imageModel.thumbnailImage;
+            if (animated) {
+                sself.imageView.frame = sself.imageModel.originPosition;
+                [UIView animateWithDuration:0.18f
+                                      delay:0.0f
+                                    options:UIViewAnimationOptionCurveEaseIn
+                                 animations:^{
+                                     sself.imageView.center = sself.center;
+                                 } completion:^(BOOL finished) {
+                                     if (finished) {
+                                         [weakSelf downloadImageWithDestinationRect:destinationRect];
+                                     }
+                                 }];
+            } else {
+                sself.imageView.center = sself.center;
+                [sself downloadImageWithDestinationRect:destinationRect];
+            }
         }
-    }
-    //已经下载的图片
-    else {
         
-        if (animated) {
-            self.imageView.frame = self.imageModel.originPosition;
-            [self.imageView sd_setImageWithURL:self.imageModel.HDURL];
-            [UIView animateWithDuration:kDuration
-                                  delay:0.0f
-                 usingSpringWithDamping:0.7
-                  initialSpringVelocity:0.0f
-                                options:0 animations:^{
-                                    weakSelf.imageView.frame = destinationRect;
-                                } completion:^(BOOL finished) {
-                                    
-                                }];
-        } else {
-            [self.imageView sd_setImageWithURL:self.imageModel.HDURL];
-            self.imageView.frame = destinationRect;
+        //已经下载的图片
+        else {
+            
+            if (animated) {
+                sself.imageView.frame = sself.imageModel.originPosition;
+                [sself.imageView sd_setImageWithURL:sself.imageModel.HDURL];
+                [UIView animateWithDuration:kDuration
+                                      delay:0.0f
+                     usingSpringWithDamping:0.7
+                      initialSpringVelocity:0.0f
+                                    options:0 animations:^{
+                                        sself.imageView.frame = destinationRect;
+                                    } completion:^(BOOL finished) {
+                                        
+                                    }];
+            } else {
+                [sself.imageView sd_setImageWithURL:sself.imageModel.HDURL];
+                sself.imageView.frame = destinationRect;
+            }
         }
-    }
+    }];;
 }
 
 - (void)downloadImageWithDestinationRect:(CGRect)destinationRect {
@@ -149,29 +153,35 @@ const CGFloat kDuration = 0.3f;
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [manager downloadImageWithURL:self.imageModel.HDURL
-                              options:options
-                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                 progressHUD.progress = (float)receivedSize/expectedSize;
-                             } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                                 __strong typeof(weakSelf) sself = weakSelf;
-                                 if (finished && image) {
-                                     [LWProgeressHUD hideAllHUDForView:sself];
-                                     sself.imageView.image = image;
-                                     sself.imageModel.thumbnailImage = image;
-                                     if ([sself.eventDelegate respondsToSelector:@selector(didFinishedDownLoadHDImage)]) {
-                                         [sself.eventDelegate didFinishedDownLoadHDImage];
-                                     }
-                                     [UIView animateWithDuration:kDuration
-                                                           delay:0.0f
-                                          usingSpringWithDamping:0.7
-                                           initialSpringVelocity:0.0f
-                                                         options:0 animations:^{
-                                                             sself.imageView.frame = destinationRect;
-                                                         } completion:^(BOOL finished) {
-                                                         }];
+        [manager loadImageWithURL:self.imageModel.HDURL
+                          options:options
+                         progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+                             progressHUD.progress = (float)receivedSize/expectedSize;
+                         } completed:^(UIImage * _Nullable image,
+                                       NSData * _Nullable data,
+                                       NSError * _Nullable error,
+                                       SDImageCacheType cacheType,
+                                       BOOL finished,
+                                       NSURL * _Nullable imageURL) {
+                             
+                             __strong typeof(weakSelf) sself = weakSelf;
+                             if (finished && image) {
+                                 [LWProgeressHUD hideAllHUDForView:sself];
+                                 sself.imageView.image = image;
+                                 sself.imageModel.thumbnailImage = image;
+                                 if ([sself.eventDelegate respondsToSelector:@selector(didFinishedDownLoadHDImage)]) {
+                                     [sself.eventDelegate didFinishedDownLoadHDImage];
                                  }
-                             }];
+                                 [UIView animateWithDuration:kDuration
+                                                       delay:0.0f
+                                      usingSpringWithDamping:0.7
+                                       initialSpringVelocity:0.0f
+                                                     options:0 animations:^{
+                                                         sself.imageView.frame = destinationRect;
+                                                     } completion:^(BOOL finished) {
+                                                     }];
+                             }
+                         }];
     });
 }
 

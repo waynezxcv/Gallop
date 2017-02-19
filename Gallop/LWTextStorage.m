@@ -66,8 +66,6 @@
 }
 
 
-
-
 #pragma mark - NSCoding
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [super encodeWithCoder:aCoder];
@@ -284,6 +282,7 @@
             break;
     }
     NSDictionary* userInfo;
+    
     if (URL) {
         userInfo = @{@"URL":URL};
     }
