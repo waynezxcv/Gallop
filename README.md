@@ -333,7 +333,7 @@ htmlView.layout = layout;
 
 
 
-# Gallop v0.5.1
+# Gallop v0.6.0
 
 ## 关于 Gallop
 
