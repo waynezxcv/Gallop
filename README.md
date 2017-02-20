@@ -9,7 +9,13 @@
 
 ## About 
 
-Gallop is a powerful rich text framework which support Asynchronous rendering.you just need use LWTextStorage object instead of UILabel object and use LWImageStorage object instead of UIImageView object,Gallop will make sure your app scroll smoothly.
+
+Gallop is a powerful rich text framework that support Asynchronous display.
+It encapsulates CoreText's rich text functions and commonly used image processing capabilities.
+just need use LWTextStorage object instead of UILabel object and use LWImageStorage object instead of UIImageView object,Gallop will make sure your app scroll smoothly.
+You can also use Gallop to parse HTML pages and customize machining to parse HTML pages into iOS native pages.
+
+
 
 
 ## Architecture
@@ -30,7 +36,7 @@ Gallop is a powerful rich text framework which support Asynchronous rendering.yo
 
 ## Requirements
 
-* iOS 8.0
+* iOS 8.0 and later
 
 
 ## Dependency
@@ -331,7 +337,12 @@ htmlView.layout = layout;
 
 ## 关于 Gallop
 
-Gallop是使用异步绘制的富文本、图文混排框架。只需要使用框架中的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIImageView）模型来构建界面，Gallop将使应用获得优秀的体验。
+
+Gallop是使用异步绘制的富文本、图文混排框架。它封装了CoreText的富文本功能和常用的图片处理功能。
+只需要使用框架中的LWTextStorage、LWImageStorage模型来构建文本和图片界面，Gallop将使应用获得优秀的性能。
+也可以使用Gallop来解析HTML页面，并自定义加工，将HTML网页解析成iOS原生界面。
+
+
 
 
 ## 架构
@@ -349,9 +360,10 @@ Gallop是使用异步绘制的富文本、图文混排框架。只需要使用�
 * 快捷实现对网络、本地图片圆角和模糊处理等，能对处理过后的图片直接提供缓存，无需重复处理。
 * 支持GIF显示
 
-** 要求
 
-* iOS 8.0
+** 安装要求
+
+* iOS 8.0及以上版本
 
 ## 依赖
 
