@@ -27,9 +27,12 @@
 #import "LWTransaction.h"
 
 /**
- *  LWTransaction对象是通过runloop的observer观察到退出一个runloop和runloop即将进入休眠时
- *  需要执行的操作的抽象。这个事务依附在一个CALayer对象上，这里表示这个 CALayer容器上的LWTransaction对象 的状态
+ *  这个扩展给CALayer添加一个哈希表，用来保存这个CALayer上的LWTransaction对象
+ *
  */
+
+
+
 typedef NS_ENUM(NSUInteger, LWTransactionContainerState) {
     /**
      *  没有操作需要处理

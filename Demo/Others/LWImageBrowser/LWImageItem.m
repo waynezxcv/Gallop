@@ -80,12 +80,7 @@ const CGFloat kDuration = 0.3f;
         _imageModel = imageModel;
     }
     self.zoomScale = 1.0f;
-    if (self.isFirstShow) {
-        [self loadHdImage:YES];
-    }
-    else {
-        [self loadHdImage:NO];
-    }
+    [self loadHdImage:self.isFirstShow];
 }
 
 - (void)loadHdImage:(BOOL)animated {
@@ -97,6 +92,7 @@ const CGFloat kDuration = 0.3f;
         self.imageView.frame = [self calculateDestinationFrameWithSize:self.imageModel.placeholder.size];
         return;
     }
+
     CGRect destinationRect = [self calculateDestinationFrameWithSize:self.imageModel.thumbnailImage.size];
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
     
@@ -115,7 +111,7 @@ const CGFloat kDuration = 0.3f;
                                      sself.imageView.center = sself.center;
                                  } completion:^(BOOL finished) {
                                      if (finished) {
-                                         [weakSelf downloadImageWithDestinationRect:destinationRect];
+                                         [sself downloadImageWithDestinationRect:destinationRect];
                                      }
                                  }];
             } else {
@@ -148,6 +144,7 @@ const CGFloat kDuration = 0.3f;
 }
 
 - (void)downloadImageWithDestinationRect:(CGRect)destinationRect {
+    
     __weak typeof(self) weakSelf = self;
     LWProgeressHUD* progressHUD = [LWProgeressHUD showHUDAddedTo:self];
     SDWebImageManager* manager = [SDWebImageManager sharedManager];

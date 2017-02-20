@@ -42,8 +42,8 @@
 - (void)setImageModel:(LWImageBrowserModel *)imageModel {
     if (_imageModel != imageModel) {
         _imageModel = imageModel;
+        self.imageItem.imageModel = self.imageModel;
     }
-    self.imageItem.imageModel = self.imageModel;
 }
 
 @end

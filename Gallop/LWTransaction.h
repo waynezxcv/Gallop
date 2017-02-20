@@ -55,8 +55,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncTransactionState) {
 
 
 /**
- LWTransaction对象是通过runloop的observer观察到退出一个runloop和runloop即将进入休眠时
- *  需要执行的操作的抽象。一个LWTransaction中又包含了许多Operation。Operation包含消息的接收者target，选择子selector，和参数object
+ * LWTransaction封装了一个消息的接收者target、selecotr、和一个参数object
  */
 @interface LWTransaction : NSObject
 
@@ -70,7 +69,7 @@ typedef NS_ENUM(NSUInteger, LWAsyncTransactionState) {
  *  @return 一个LWTransaction对象
  */
 - (LWTransaction *)initWithCallbackQueue:(dispatch_queue_t)callbackQueue
-            completionBlock:(LWAsyncTransactionCompletionBlock)completionBlock;
+                         completionBlock:(LWAsyncTransactionCompletionBlock)completionBlock;
 
 @property (nonatomic,strong,readonly) dispatch_queue_t callbackQueue;//回调所在的dispatch_queue_t
 @property (nonatomic,copy,readonly) LWAsyncTransactionCompletionBlock completionBlock;//处理完成时回调的Block

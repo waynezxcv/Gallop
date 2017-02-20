@@ -27,7 +27,10 @@
 #import "LWTransaction.h"
 
 /**
- *  用于在主线程runloop中管理当前所有的LWTransaction,对CFRunLoopObserverRef的封装
+ *  这个类用于管理所有transactions<LWTransaction *>容器不为空的CALayer对象
+ *  LWTransactionGroup把这些CALayer对象放在一个哈希表layersContainers中
+ *  LWTransactionGroup注册了一个主线程的runLoopObserver，当状态为(kCFRunLoopBeforeWaiting | kCFRunLoopExit)时，
+ *  LWTransactionGroup会遍历layersContainers，来对这些CALayer上的所有LWTransactions执行 commit
  */
 @interface LWTransactionGroup : NSObject
 
@@ -39,7 +42,7 @@
 + (LWTransactionGroup *)mainTransactionGroup;
 
 /**
- *  一个LWTransaction的CALayer容器添加到LWTransactionGroup
+ *  将一个包含LWTransaction事物的CALayer添加到LWTransactionGroup
  *
  *  @param containerLayer CALayer容器
  */
@@ -47,7 +50,7 @@
 
 /**
  *  提交mainTransactionGroup当中所有容器中的所有任务的操作
- *  mainTransactionGroup->containerLayer->LWTrasactions->LWTrasaction->operaiton
+ *
  */
 + (void)commit;
 

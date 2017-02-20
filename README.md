@@ -19,7 +19,7 @@ Gallop is a powerful rich text framework which support Asynchronous rendering.yo
 
 ## Features
 
-* use Gallop Building complex rich text interface application, can get a great experience,stable rolling FPS at 60 hz.
+* use Gallop Building complex rich text interface application, can get a great experience.
 * you can easy to insert local images,web images or UIView object in the text.
 * easily add click and long press events to the text.
 * easily draw text frame bouding, drawing the hollow words, sets the text vertical Alignment property, etc
@@ -30,9 +30,13 @@ Gallop is a powerful rich text framework which support Asynchronous rendering.yo
 
 ## Requirements
 
+* iOS 8.0
+
+
+## Dependency
+
 * web image download and cache depends on [SDWebImage](https://github.com/rs/SDWebImage) 'SDWebImage', '~> 4.0'.
 * HTML parsing depends on the libxml2 library.
-
 
 ## Installation
 
@@ -327,7 +331,7 @@ htmlView.layout = layout;
 
 ## 关于 Gallop
 
-Gallop是使用异步绘制的富文本、图文混排框架。只需要使用框架中的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIImageView）模型来构建界面，Gallop将确保你的应用的流畅性。
+Gallop是使用异步绘制的富文本、图文混排框架。只需要使用框架中的LWTextStorage(相当于UIKit中的UILabel)、LWImageStorage（相当于UIKit中的UIImageView）模型来构建界面，Gallop将使应用获得优秀的体验。
 
 
 ## 架构
@@ -337,7 +341,7 @@ Gallop是使用异步绘制的富文本、图文混排框架。只需要使用�
 ## 特性
 
 
-* 构建复杂的富文本界面应用，稳定滚动FPS在60hz。
+* 构建复杂的富文本界面应用，能获得一个优秀的滚动性能。
 * 在文本中添加本地、网络图片、UIView及其子类。
 * 对文本添加点击、长按事件。
 * 绘制文本边框、绘制空心字、设置垂直方向Alignment等。
@@ -345,6 +349,9 @@ Gallop是使用异步绘制的富文本、图文混排框架。只需要使用�
 * 快捷实现对网络、本地图片圆角和模糊处理等，能对处理过后的图片直接提供缓存，无需重复处理。
 * 支持GIF显示
 
+** 要求
+
+* iOS 8.0
 
 ## 依赖
 

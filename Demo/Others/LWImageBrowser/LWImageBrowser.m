@@ -62,6 +62,7 @@ LWActionSheetViewDelegate>
 @implementation LWImageBrowser
 
 #pragma mark - ViewControllerLifeCycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];

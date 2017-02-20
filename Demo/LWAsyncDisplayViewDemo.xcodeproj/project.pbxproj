@@ -633,10 +633,10 @@
 		B08CFE2B1D02CD4100A8B70D /* Transactions */ = {
 			isa = PBXGroup;
 			children = (
-				012EDDFF1D931DED009AFA90 /* CALayer+LWTransaction.h */,
-				012EDE001D931DED009AFA90 /* CALayer+LWTransaction.m */,
 				012EDE011D931DED009AFA90 /* LWTransaction.h */,
 				012EDE021D931DED009AFA90 /* LWTransaction.m */,
+				012EDDFF1D931DED009AFA90 /* CALayer+LWTransaction.h */,
+				012EDE001D931DED009AFA90 /* CALayer+LWTransaction.m */,
 				012EDE031D931DED009AFA90 /* LWTransactionGroup.h */,
 				012EDE041D931DED009AFA90 /* LWTransactionGroup.m */,
 				B0B7DF8A1DEFCBF00050BFB1 /* LWFlag.h */,
