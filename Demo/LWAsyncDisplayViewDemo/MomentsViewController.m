@@ -369,23 +369,18 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 //模拟下载数据
 - (void)fakeDownload {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        
-        if (self.needRefresh) {
-            [self.dataSource removeAllObjects];
-            for (NSInteger i = 0 ; i < 10; i ++) {//让数据更多
-                for (NSInteger i = 0; i < self.fakeDatasource.count; i ++) {
-                    LWLayout* layout = [self layoutWithStatusModel:
-                                        [[StatusModel alloc] initWithDict:self.fakeDatasource[i]]
-                                                             index:i];
-                    [self.dataSource addObject:layout];
-                }
+    if (self.needRefresh) {
+        [self.dataSource removeAllObjects];
+        for (NSInteger i = 0 ; i < 10; i ++) {//让数据更多
+            for (NSInteger i = 0; i < self.fakeDatasource.count; i ++) {
+                LWLayout* layout = [self layoutWithStatusModel:
+                                    [[StatusModel alloc] initWithDict:self.fakeDatasource[i]]
+                                                         index:i];
+                [self.dataSource addObject:layout];
             }
         }
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [self refreshComplete];
-        });
-    });
+    }
+    [self refreshComplete];
 }
 
 //模拟刷新完成
@@ -534,12 +529,11 @@ const CGFloat kRefreshBoundary = 170.0f;
         @"avatar":@"http://tva4.sinaimg.cn/crop.0.0.700.700.50/006qdyzsjw8fashgddslaj30jg0jg0wb.jpg",
         @"content":@"#GIF#少女时期的东方教主#林青霞#",
         @"date":@"1459668442",
-        @"imgs":@[@"http://ww3.sinaimg.cn/bmiddle/006qdyzsly1fctmnzwqcwg307505pasc.gif",
-                  @"http://ww3.sinaimg.cn/bmiddle/006qdyzsly1fctmo1wpw5g307505p1kx.gif"],
+        @"imgs":@[@"http://ww3.sinaimg.cn/bmiddle/006qdyzsly1fctmnzwqcwg307505pasc.gif"],
         @"statusID":@"22",
         @"commentList":@[@{@"from":@"someone",
                            @"to":@"waynezxcv",
-                           @"content":@"Gif也能获得优秀的体验。"}],
+                           @"content":@"支持GIF"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv"]},
       

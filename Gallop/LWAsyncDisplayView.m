@@ -1,18 +1,18 @@
 /*
  https://github.com/waynezxcv/Gallop
-
+ 
  Copyright (c) 2016 waynezxcv <liuweiself@126.com>
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -41,14 +41,10 @@
 @property (nonatomic,strong) UILongPressGestureRecognizer* longPressGesture;//长按手势
 @property (nonatomic,assign) BOOL showingHighlight;//是否正在高亮显示
 @property (nonatomic,strong) LWTextHighlight* highlight;//当前的高亮显示
-@property (nonatomic,assign) CGPoint highlightAdjustPoint;
-@property (nonatomic,assign) CGPoint touchBeganPoint;
-@property (nonatomic,copy) NSArray* textStorages;
-@property (nonatomic,copy) NSArray* imageStorages;
+@property (nonatomic,assign) CGPoint highlightAdjustPoint;//高亮的坐标偏移点
+@property (nonatomic,assign) CGPoint touchBeganPoint;//记录触摸开始的坐标
 
 @end
-
-
 
 
 @implementation LWAsyncDisplayView
@@ -77,8 +73,6 @@
     self.displaysAsynchronously = YES;
     _showingHighlight = NO;
     _highlight = nil;
-    _textStorages = nil;
-    _imageStorages = nil;
     _touchBeganPoint = CGPointZero;
     _highlightAdjustPoint = CGPointZero;
     [self addGestureRecognizer:self.longPressGesture];
@@ -99,14 +93,13 @@
 
 - (void)setImageStoragesResizeBlock:(void(^)(LWImageStorage* imageStorage, CGFloat delta))resizeBlock {
     //遍历imageStorages
-    for (NSInteger i = 0; i < _imageStorages.count; i ++) {
+    for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
         @autoreleasepool {
-            LWImageStorage* imageStorage = _imageStorages[i];
+            LWImageStorage* imageStorage = self.layout.imageStorages[i];
             if ([imageStorage.contents isKindOfClass:[UIImage class]] &&
                 imageStorage.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
                 continue;
             }
-
             LWAsyncImageView* container = [self _dequeueReusableImageContainerWithIdentifier:imageStorage.identifier];
             if (!container) {
                 container = [[LWAsyncImageView alloc] initWithFrame:CGRectZero];
@@ -141,22 +134,22 @@
 - (LWAsyncDisplayTransaction *)asyncDisplayTransaction {
     LWAsyncDisplayTransaction* transaction = [[LWAsyncDisplayTransaction alloc] init];
     transaction.willDisplayBlock = ^(CALayer *layer) {
-        for (LWTextStorage* textStorage in _textStorages) {
+        for (LWTextStorage* textStorage in self.layout.textStorages) {
             //先移除之前的附件
             [textStorage.textLayout removeAttachmentFromSuperViewOrLayer];
         }
     };
-
+    
     transaction.displayBlock = ^(CGContextRef context,
                                  CGSize size,
                                  LWAsyncDisplayIsCanclledBlock isCancelledBlock) {
         [self _drawStoragesInContext:context
                          inCancelled:isCancelledBlock];
     };
-
+    
     transaction.didDisplayBlock = ^(CALayer *layer, BOOL finished) {
         if (!finished) {
-            for (LWTextStorage* textStorage in _textStorages) {
+            for (LWTextStorage* textStorage in self.layout.textStorages) {
                 [textStorage.textLayout removeAttachmentFromSuperViewOrLayer];
             }
         }
@@ -165,7 +158,7 @@
 }
 
 - (void)_drawStoragesInContext:(CGContextRef)context inCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelledBlock {
-
+    
     if ([self.delegate respondsToSelector:@selector(extraAsyncDisplayIncontext:size:isCancelled:)]) {
         if (isCancelledBlock()) {
             return;
@@ -173,17 +166,17 @@
         //这个代理方法调用需要用户额外绘制的内容
         [self.delegate extraAsyncDisplayIncontext:context size:self.bounds.size isCancelled:isCancelledBlock];
     }
-
+    
     //绘制图片内容
-    for (LWImageStorage* imageStorage in _imageStorages) {
+    for (LWImageStorage* imageStorage in self.layout.imageStorages) {
         if (isCancelledBlock()) {
             return;
         }
         [imageStorage lw_drawInContext:context isCancelled:isCancelledBlock];
     }
-
+    
     //绘制文字内容
-    for (LWTextStorage* textStorage in _textStorages) {
+    for (LWTextStorage* textStorage in self.layout.textStorages) {
         [textStorage.textLayout drawIncontext:context
                                          size:CGSizeZero
                                         point:textStorage.frame.origin
@@ -191,7 +184,7 @@
                                containerLayer:self.layer
                                   isCancelled:isCancelledBlock];
     }
-
+    
     //绘制高亮内容
     if (_showingHighlight && _highlight) {
         for (NSValue* rectValue in _highlight.positions) {
@@ -210,19 +203,19 @@
 #pragma mark - Touch
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-
+    
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     BOOL found = NO;
-
+    
     if (_highlight) {
         _highlight = nil;
         if (_showingHighlight) {
             [self _hideHighlight];
         }
     }
-
-    for (LWTextStorage* textStorage in _textStorages) {
+    
+    for (LWTextStorage* textStorage in self.layout.textStorages) {
         if (!_highlight) {
             LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:NO textStorage:textStorage touchPoint:touchPoint];
             if (hightlight) {
@@ -234,7 +227,7 @@
             }
         }
     }
-
+    
     if (!found) {
         [super touchesBegan:touches withEvent:event];
     }
@@ -244,13 +237,13 @@
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     BOOL found = NO;
-
+    
     if (!_highlight) {
         [super touchesMoved:touches withEvent:event];
         return;
     }
-
-    for (LWTextStorage* textStorage in _textStorages) {
+    
+    for (LWTextStorage* textStorage in self.layout.textStorages) {
         LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:NO textStorage:textStorage touchPoint:touchPoint];
         if (hightlight == _highlight) {
             if (!_showingHighlight) {
@@ -265,7 +258,7 @@
         }
         break;
     }
-
+    
     if (!found) {
         [super touchesMoved:touches withEvent:event];
     }
@@ -275,8 +268,8 @@
     UITouch* touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     BOOL found = NO;
-
-    for (LWImageStorage* imageStorage in _imageStorages) {
+    
+    for (LWImageStorage* imageStorage in self.layout.imageStorages) {
         if (CGRectContainsPoint(imageStorage.frame, touchPoint)) {
             if (self.delegate &&
                 [self.delegate respondsToSelector:@selector(lwAsyncDisplayView:didCilickedImageStorage:touch:)] &&
@@ -287,13 +280,13 @@
             break;
         }
     }
-
+    
     if (!_highlight && !found) {
         [super touchesEnded:touches withEvent:event];
         return;
     }
-
-    for (LWTextStorage* textStorage in _textStorages) {
+    
+    for (LWTextStorage* textStorage in self.layout.textStorages) {
         LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:NO textStorage:textStorage touchPoint:touchPoint];
         if (hightlight == _highlight) {
             if (self.delegate &&
@@ -311,21 +304,21 @@
                        _highlight = nil;
                        [self _hideHighlight];
                    });
-
+    
     if (!found) {
         [super touchesEnded:touches withEvent:event];
     }
 }
 
 - (void)longPressHandler:(UILongPressGestureRecognizer *)longPressGestureRecognizer {
-
+    
     switch (longPressGestureRecognizer.state) {
         case UIGestureRecognizerStateBegan:{
             CGPoint point = [longPressGestureRecognizer locationInView:self];
             _touchBeganPoint = point;
-            for (LWTextStorage* textStorage in _textStorages) {
+            for (LWTextStorage* textStorage in self.layout.textStorages) {
                 LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:YES textStorage:textStorage touchPoint:_touchBeganPoint];
-
+                
                 if (hightlight.type == LWTextHighLightTypeLongPress) {
                     if (_highlight != hightlight) {
                         _highlight = hightlight;
@@ -336,14 +329,13 @@
                 }
             }
         }break;
-
+            
         case UIGestureRecognizerStateEnded:{
             if (_highlight.type != LWTextHighLightTypeLongPress) {
                 _highlight = nil;
                 [self _hideHighlight];
             }
-
-            for (LWTextStorage* textStorage in _textStorages) {
+            for (LWTextStorage* textStorage in self.layout.textStorages) {
                 LWTextHighlight* hightlight =  [self _searchTextHighlightWithType:YES textStorage:textStorage touchPoint:_touchBeganPoint];
                 if (_highlight && hightlight == _highlight) {
                     if (self.delegate &&
@@ -354,7 +346,7 @@
                 }
             }
         }break;
-
+            
         default: break;
     }
 }
@@ -362,11 +354,11 @@
 - (LWTextHighlight *)_searchTextHighlightWithType:(BOOL)isLongPress
                                       textStorage:(LWTextStorage *)textStorage
                                        touchPoint:(CGPoint)touchPoint {
-
+    
     if (![textStorage isKindOfClass:[LWTextStorage class]]) {
         return nil;
     }
-
+    
     CGPoint adjustPosition = textStorage.frame.origin;
     LWTextHighlight* needShow = nil;
     for (LWTextHighlight* one in textStorage.textLayout.textHighlights) {
@@ -460,54 +452,48 @@
 }
 
 - (void)setLayout:(LWLayout *)layout {
-
+    
     if ([_layout isEqual: layout]) {
         return;
     }
-
+    
+    [self _resetHighlight];
     [self _cleanImageViewAddToReusePool];
     [self _cleanupAndReleaseModelOnSubThread];
-
+    
     _layout = layout;
-    _imageStorages = self.layout.imageStorages;
-    _textStorages = self.layout.textStorages;
-
     [self.layer setNeedsDisplay];
-
+    
     __weak typeof(self) weakSelf = self;
     [self setImageStoragesResizeBlock:^(LWImageStorage* imageStorage,CGFloat delta) {
+        
         __strong typeof(weakSelf) swself = weakSelf;
         if (swself.auotoLayoutCallback) {
             swself.auotoLayoutCallback(imageStorage,delta);
         }
+        
     }];
 }
 
-- (void)_cleanupAndReleaseModelOnSubThread {
-
-    id <LWLayoutProtocol> oldLayout = _layout;
-    LWTextHighlight* oldHighlight = _highlight;
-    NSArray* oldImageStorages = _imageStorages;
-    NSArray* oldTextStorages = _textStorages;
-
-    _layout = nil;
-    _imageStorages = nil;
-    _textStorages = nil;
-    _highlight = nil;
-
+- (void)_resetHighlight {
     _highlightAdjustPoint = CGPointZero;
     _touchBeganPoint = CGPointZero;
     _showingHighlight = NO;
+}
 
+- (void)_cleanupAndReleaseModelOnSubThread {
+    
+    id <LWLayoutProtocol> oldLayout = _layout;
+    LWTextHighlight* oldHighlight = _highlight;
+    
+    _layout = nil;
+    _highlight = nil;
+    
     //在子线程释放之前的对象
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [oldLayout class];
-        [oldTextStorages class];
-        [oldImageStorages class];
         [oldHighlight class];
     });
 }
-
-
 
 @end

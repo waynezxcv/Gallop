@@ -8,6 +8,11 @@
 
 #import "AppDelegate.h"
 #import "RootViewController.h"
+#import "SDImageCache.h"
+#import "SDWebImageDownloader.h"
+
+
+
 
 @interface AppDelegate ()
 
@@ -23,6 +28,7 @@
     UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:rootVC];
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
