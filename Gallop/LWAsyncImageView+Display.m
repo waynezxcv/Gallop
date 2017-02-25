@@ -174,9 +174,9 @@ static void _croppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize,C
 }
 
 - (void)_setWebImageWithImageStorage:(LWImageStorage *)imageStorage resize:(LWHTMLImageResizeBlock)resizeBlock completion:(LWAsyncCompleteBlock)completion {
-
+    
     NSURL* url;
-    UIImage* placeholder = imageStorage.placeholder;
+    id placeholder = imageStorage.placeholder;
     BOOL needResize = imageStorage.needResize;
     CGFloat cornerRaiuds = imageStorage.cornerRadius;
     UIColor* cornerBgColor = imageStorage.cornerBackgroundColor;

@@ -146,6 +146,8 @@
         if (transaction.willDisplayBlock) {
             transaction.willDisplayBlock(self);
         }
+        
+        
         LWFlag* displayFlag = _displayFlag;
         int32_t value = displayFlag.value;
         

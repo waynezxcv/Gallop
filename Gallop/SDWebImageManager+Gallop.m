@@ -23,31 +23,30 @@
  */
 
 
+
+
 #import "SDWebImageManager+Gallop.h"
 #import <objc/message.h>
 #import "LWImageProcessor.h"
 #import "SDImageCache+Gallop.h"
 
 
-
-
-
 @interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
-    
-    
-    @property (nonatomic,assign,getter = isCancelled) BOOL cancelled;
-    @property (nonatomic,copy) SDWebImageNoParamsBlock cancelBlock;
-    @property (nonatomic,strong) NSOperation* cacheOperation;
-    
-    
-    @end
+
+
+@property (nonatomic,assign,getter = isCancelled) BOOL cancelled;
+@property (nonatomic,copy) SDWebImageNoParamsBlock cancelBlock;
+@property (nonatomic,strong) NSOperation* cacheOperation;
+
+
+@end
 
 
 @implementation SDWebImageManager(Gallop)
-    
-    @dynamic runningOperations;
-    @dynamic failedURLs;
-    
+
+@dynamic runningOperations;
+@dynamic failedURLs;
+
 - (id <SDWebImageOperation>)lw_downloadImageWithURL:(NSURL *)url
                                        cornerRadius:(CGFloat)cornerRadius
                               cornerBackgroundColor:(UIColor *)cornerBackgroundColor
@@ -244,16 +243,16 @@
     }];
     return operation;
 }
-    
-    
+
+
 - (void)lw_callCompletionBlockForOperation:(nullable SDWebImageCombinedOperation*)operation
                                 completion:(nullable SDInternalCompletionBlock)completionBlock
                                      error:(nullable NSError *)error
                                        url:(nullable NSURL *)url {
     [self lw_callCompletionBlockForOperation:operation completion:completionBlock image:nil data:nil error:error cacheType:SDImageCacheTypeNone finished:YES url:url];
 }
-    
-    
+
+
 - (void)lw_callCompletionBlockForOperation:(nullable SDWebImageCombinedOperation*)operation
                                 completion:(nullable SDInternalCompletionBlock)completionBlock
                                      image:(nullable UIImage *)image
@@ -269,8 +268,8 @@
         }
     });
 }
-    
-    
+
+
 - (void)lw_safelyRemoveOperationFromRunning:(nullable SDWebImageCombinedOperation*)operation {
     @synchronized (self.runningOperations) {
         if (operation) {
@@ -278,7 +277,7 @@
         }
     }
 }
-    
-    
-    @end
+
+
+@end
 

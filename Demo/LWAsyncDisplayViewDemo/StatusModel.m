@@ -23,6 +23,7 @@
         self.commentList = dict[@"commentList"];
         self.likeList = dict[@"likeList"];
         self.isLike = [dict[@"isLike"] boolValue];
+        self.thumbnail = dict[@"thumbnail"];
     }
     return self;
 }
@@ -41,6 +42,7 @@
     one.commentList = [self.commentList copy];
     one.likeList = [self.likeList copy];
     one.isLike = self.isLike;
+    one.thumbnail = self.thumbnail;
     return one;
 }
 

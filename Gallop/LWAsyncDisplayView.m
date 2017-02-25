@@ -32,6 +32,9 @@
 #import "LWTransactionGroup.h"
 #import "CALayer+LWTransaction.h"
 #import "LWAsyncImageView+Display.h"
+#import "LWFlag.h"
+
+
 
 
 @interface LWAsyncDisplayView ()<LWAsyncDisplayLayerDelegate>
@@ -43,6 +46,8 @@
 @property (nonatomic,strong) LWTextHighlight* highlight;//当前的高亮显示
 @property (nonatomic,assign) CGPoint highlightAdjustPoint;//高亮的坐标偏移点
 @property (nonatomic,assign) CGPoint touchBeganPoint;//记录触摸开始的坐标
+@property (nonatomic,strong,readonly) LWFlag* displayFlag;//一个自增的标识类，用于取消绘制。
+
 
 @end
 
@@ -50,6 +55,15 @@
 @implementation LWAsyncDisplayView
 
 #pragma mark - LifeCycle
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self setup];
+    }
+    return self;
+}
+
 
 - (id)init {
     self = [super init];
@@ -76,11 +90,59 @@
     _touchBeganPoint = CGPointZero;
     _highlightAdjustPoint = CGPointZero;
     [self addGestureRecognizer:self.longPressGesture];
+    _displayFlag = [[LWFlag alloc] init];
+}
+
+- (void)setLayout:(LWLayout *)layout {
+    
+    if ([_layout isEqual: layout]) {
+        return;
+    }
+    
+    [self _resetHighlight];
+    [self _cleanImageViewAddToReusePool];
+    [self _cleanupAndReleaseModelOnSubThread];
+    
+    _layout = layout;
+    [self.layer setNeedsDisplay];
+    
+    __weak typeof(self) weakSelf = self;
+    [self setImageStoragesResizeBlock:^(LWImageStorage* imageStorage,CGFloat delta) {
+        __strong typeof(weakSelf) swself = weakSelf;
+        if (swself.auotoLayoutCallback) {
+            swself.auotoLayoutCallback(imageStorage,delta);
+        }
+    }];
 }
 
 #pragma mark - Private
 
+- (void)_resetHighlight {
+    _highlightAdjustPoint = CGPointZero;
+    _touchBeganPoint = CGPointZero;
+    _showingHighlight = NO;
+}
+
+
+- (void)_cleanupAndReleaseModelOnSubThread {
+    
+    id <LWLayoutProtocol> oldLayout = _layout;
+    LWTextHighlight* oldHighlight = _highlight;
+    
+    _layout = nil;
+    _highlight = nil;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [oldLayout class];
+        [oldHighlight class];
+    });
+}
+
+
 - (void)_cleanImageViewAddToReusePool {
+    
+    [self.displayFlag increment];
+    
     for (NSInteger i = 0; i < self.imageContainers.count; i ++) {
         LWAsyncImageView* container = [self.imageContainers objectAtIndex:i];
         container.image = nil;
@@ -88,24 +150,43 @@
         container.hidden = YES;
         [self.reusePool addObject:container];
     }
+    
     [self.imageContainers removeAllObjects];
+    
 }
 
+
 - (void)setImageStoragesResizeBlock:(void(^)(LWImageStorage* imageStorage, CGFloat delta))resizeBlock {
-    //遍历imageStorages
+    
+    LWFlag* displayFlag = _displayFlag;
+    int32_t value = displayFlag.value;
+    
+    LWAsyncDisplayIsCanclledBlock isCancelledBlock = ^ BOOL() {
+        return value != _displayFlag.value;
+    };
+    
     for (NSInteger i = 0; i < self.layout.imageStorages.count; i ++) {
+        
         @autoreleasepool {
+            
+            if (isCancelledBlock()) {
+                return;
+            }
+            
             LWImageStorage* imageStorage = self.layout.imageStorages[i];
             if ([imageStorage.contents isKindOfClass:[UIImage class]] &&
                 imageStorage.localImageType == LWLocalImageDrawInLWAsyncDisplayView) {
                 continue;
             }
+            
+            
             LWAsyncImageView* container = [self _dequeueReusableImageContainerWithIdentifier:imageStorage.identifier];
             if (!container) {
                 container = [[LWAsyncImageView alloc] initWithFrame:CGRectZero];
                 container.identifier = imageStorage.identifier;
                 [self addSubview:container];
             }
+            
             container.displayAsynchronously = self.displaysAsynchronously;
             container.backgroundColor = imageStorage.backgroundColor;
             container.clipsToBounds = imageStorage.clipsToBounds;
@@ -134,6 +215,7 @@
 - (LWAsyncDisplayTransaction *)asyncDisplayTransaction {
     LWAsyncDisplayTransaction* transaction = [[LWAsyncDisplayTransaction alloc] init];
     transaction.willDisplayBlock = ^(CALayer *layer) {
+        
         for (LWTextStorage* textStorage in self.layout.textStorages) {
             //先移除之前的附件
             [textStorage.textLayout removeAttachmentFromSuperViewOrLayer];
@@ -163,6 +245,7 @@
         if (isCancelledBlock()) {
             return;
         }
+        
         //这个代理方法调用需要用户额外绘制的内容
         [self.delegate extraAsyncDisplayIncontext:context size:self.bounds.size isCancelled:isCancelledBlock];
     }
@@ -346,10 +429,10 @@
                 }
             }
         }break;
-            
         default: break;
     }
 }
+
 
 - (LWTextHighlight *)_searchTextHighlightWithType:(BOOL)isLongPress
                                       textStorage:(LWTextStorage *)textStorage
@@ -446,54 +529,8 @@
 - (void)setDisplaysAsynchronously:(BOOL)displaysAsynchronously {
     if (_displaysAsynchronously != displaysAsynchronously) {
         _displaysAsynchronously = displaysAsynchronously;
-        [(LWAsyncDisplayLayer *)self.layer
-         setDisplaysAsynchronously:_displaysAsynchronously];
+        [(LWAsyncDisplayLayer *)self.layer setDisplaysAsynchronously:_displaysAsynchronously];
     }
-}
-
-- (void)setLayout:(LWLayout *)layout {
-    
-    if ([_layout isEqual: layout]) {
-        return;
-    }
-    
-    [self _resetHighlight];
-    [self _cleanImageViewAddToReusePool];
-    [self _cleanupAndReleaseModelOnSubThread];
-    
-    _layout = layout;
-    [self.layer setNeedsDisplay];
-    
-    __weak typeof(self) weakSelf = self;
-    [self setImageStoragesResizeBlock:^(LWImageStorage* imageStorage,CGFloat delta) {
-        
-        __strong typeof(weakSelf) swself = weakSelf;
-        if (swself.auotoLayoutCallback) {
-            swself.auotoLayoutCallback(imageStorage,delta);
-        }
-        
-    }];
-}
-
-- (void)_resetHighlight {
-    _highlightAdjustPoint = CGPointZero;
-    _touchBeganPoint = CGPointZero;
-    _showingHighlight = NO;
-}
-
-- (void)_cleanupAndReleaseModelOnSubThread {
-    
-    id <LWLayoutProtocol> oldLayout = _layout;
-    LWTextHighlight* oldHighlight = _highlight;
-    
-    _layout = nil;
-    _highlight = nil;
-    
-    //在子线程释放之前的对象
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        [oldLayout class];
-        [oldHighlight class];
-    });
 }
 
 @end
