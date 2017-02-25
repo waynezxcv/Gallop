@@ -33,21 +33,21 @@
 
 
 @interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
-
-
-@property (nonatomic,assign,getter = isCancelled) BOOL cancelled;
-@property (nonatomic,copy) SDWebImageNoParamsBlock cancelBlock;
-@property (nonatomic,strong) NSOperation* cacheOperation;
-
-
-@end
+    
+    
+    @property (nonatomic,assign,getter = isCancelled) BOOL cancelled;
+    @property (nonatomic,copy) SDWebImageNoParamsBlock cancelBlock;
+    @property (nonatomic,strong) NSOperation* cacheOperation;
+    
+    
+    @end
 
 
 @implementation SDWebImageManager(Gallop)
-
-@dynamic runningOperations;
-@dynamic failedURLs;
-
+    
+    @dynamic runningOperations;
+    @dynamic failedURLs;
+    
 - (id <SDWebImageOperation>)lw_downloadImageWithURL:(NSURL *)url
                                        cornerRadius:(CGFloat)cornerRadius
                               cornerBackgroundColor:(UIColor *)cornerBackgroundColor
@@ -166,12 +166,12 @@
                                                                  [self.failedURLs removeObject:url];
                                                              }
                                                          }
+                                                         
                                                          BOOL cacheOnDisk = !(options & SDWebImageCacheMemoryOnly);
                                                          //刷新图片缓存触发了NSURLCache缓存
                                                          if (options & SDWebImageRefreshCached && cachedImage && !downloadedImage) {
-                                                             //需要对下载的图片进行变换
-                                                         } else if (downloadedImage && (!downloadedImage.images || (options & SDWebImageTransformAnimatedImage)) && [self.delegate respondsToSelector:@selector(imageManager:transformDownloadedImage:withURL:)]) {
                                                              
+                                                         } else if (downloadedImage && (!downloadedImage.images || (options & SDWebImageTransformAnimatedImage)) && [self.delegate respondsToSelector:@selector(imageManager:transformDownloadedImage:withURL:)]) {
                                                              
                                                              dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                                                                  UIImage* transformedImage = [self.delegate imageManager:self transformDownloadedImage:downloadedImage withURL:url];
@@ -188,34 +188,38 @@
                                                          } else {
                                                              
                                                              if (downloadedImage && finished) {//下载完成
-                                                                 /*********  缓存图片，这个方法已经被替换  **************/
-                                                                 [self.imageCache storeImage:downloadedImage imageData:downloadedData forKey:key toDisk:cacheOnDisk completion:nil];
-                                                                 /***********************************************/
+                                                                 
+                                                                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                                                                     /*********  缓存图片，这个方法已经被替换  **************/
+                                                                     [self.imageCache storeImage:downloadedImage imageData:downloadedData forKey:key toDisk:cacheOnDisk completion:^{
+                                                                         dispatch_main_async_safe(^{
+                                                                             //没有取消
+                                                                             if (operation && !operation.isCancelled && completedBlock) {
+                                                                                 /*****  从缓存中读取经过处理的图片缓存  ****/
+                                                                                 if ([key hasPrefix:[NSString stringWithFormat:@"%@",kLWImageProcessorPrefixKey]]) {
+                                                                                     completedBlock([self.imageCache imageFromCacheForKey:key],
+                                                                                                    downloadedData,
+                                                                                                    nil,
+                                                                                                    SDImageCacheTypeNone,
+                                                                                                    finished,
+                                                                                                    url);
+                                                                                     /*******************************/
+                                                                                 } else {//不需要处理的图片
+                                                                                     completedBlock(downloadedImage,
+                                                                                                    downloadedData,
+                                                                                                    nil,
+                                                                                                    SDImageCacheTypeNone,
+                                                                                                    finished,
+                                                                                                    url);
+                                                                                 }
+                                                                             }
+                                                                         });
+                                                                     }];
+                                                                     /***********************************************/
+                                                                 });
                                                              }
-                                                             
-                                                             dispatch_main_async_safe(^{
-                                                                 //没有取消
-                                                                 if (operation && !operation.isCancelled && completedBlock) {
-                                                                     /*****  从缓存中读取经过处理的图片缓存  ****/
-                                                                     if ([key hasPrefix:[NSString stringWithFormat:@"%@",kLWImageProcessorPrefixKey]]) {
-                                                                         completedBlock([self.imageCache imageFromCacheForKey:key],
-                                                                                        downloadedData,
-                                                                                        nil,
-                                                                                        SDImageCacheTypeNone,
-                                                                                        finished,
-                                                                                        url);
-                                                                         /*******************************/
-                                                                     } else {//不需要处理的图片
-                                                                         completedBlock(downloadedImage,
-                                                                                        downloadedData,
-                                                                                        nil,
-                                                                                        SDImageCacheTypeNone,
-                                                                                        finished,
-                                                                                        url);
-                                                                     }
-                                                                 }
-                                                             });
                                                          }
+                                                         
                                                      }
                                                      if (finished) {
                                                          [self lw_safelyRemoveOperationFromRunning:strongOperation];
@@ -240,16 +244,16 @@
     }];
     return operation;
 }
-
-
+    
+    
 - (void)lw_callCompletionBlockForOperation:(nullable SDWebImageCombinedOperation*)operation
                                 completion:(nullable SDInternalCompletionBlock)completionBlock
                                      error:(nullable NSError *)error
                                        url:(nullable NSURL *)url {
     [self lw_callCompletionBlockForOperation:operation completion:completionBlock image:nil data:nil error:error cacheType:SDImageCacheTypeNone finished:YES url:url];
 }
-
-
+    
+    
 - (void)lw_callCompletionBlockForOperation:(nullable SDWebImageCombinedOperation*)operation
                                 completion:(nullable SDInternalCompletionBlock)completionBlock
                                      image:(nullable UIImage *)image
@@ -265,8 +269,8 @@
         }
     });
 }
-
-
+    
+    
 - (void)lw_safelyRemoveOperationFromRunning:(nullable SDWebImageCombinedOperation*)operation {
     @synchronized (self.runningOperations) {
         if (operation) {
@@ -274,7 +278,7 @@
         }
     }
 }
-
-
-@end
+    
+    
+    @end
 
