@@ -3,7 +3,7 @@
 
 
 
-# Gallop v0.6.0
+# Gallop v0.6.1
 
 ## 关于 Gallop
 
@@ -314,7 +314,7 @@ htmlView.layout = layout;
 
 
 
-# Gallop v0.6.0
+# Gallop v0.6.1
 
 
 
@@ -428,13 +428,11 @@ v0.2.2
 ```objc
 
 //create a LWAsyncDisplayView object
-
 LWAsyncDisplayView* view = [[LWAsyncDisplayView alloc] initWithFrame:CGRectMake(0.0f,64.0,SCREEN_WIDTH,SCREEN_HEIGHT - 64.0f)];
 view.delegate = self;
 [self.view addSubview:view];
 
 //create a LWTextStorage object
-
 LWTextStorage* ts = [[LWTextStorage alloc] init];
 ts.frame = CGRectMake(20, 50.0f,SCREEN_WIDTH - 40.0f, ts.suggestSize.height);
 ts.text = @"Gallop支持图文混排,可以在文字中插入本地图片→和网络图片→UIView的子类→.给指定位置文字添加链接.快来试试吧。";
@@ -443,7 +441,6 @@ UIImage* image = [UIImage imageNamed:@"pic.jpeg"];
 UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
 
 //insert a local image in the text
-
 [ts lw_replaceTextWithImage:image
 contentMode:UIViewContentModeScaleAspectFill
 imageSize:CGSizeMake(40, 40)
@@ -451,7 +448,6 @@ alignment:LWTextAttachAlignmentTop
 range:NSMakeRange(26, 0)];
 
 //insert a web image in the text
-
 [ts lw_replaceTextWithImageURL:[NSURL URLWithString:@"http://joymepic.joyme.com/article/uploads/20163/81460101559518330.jpeg?imageView2/1"]
 contentMode:UIViewContentModeScaleAspectFill
 imageSize:CGSizeMake(80, 40)
@@ -460,7 +456,6 @@ range:NSMakeRange(33, 0)];
 
 
 //inser a UIView object in the text
-
 [ts lw_replaceTextWithView:switchView
 contentMode:UIViewContentModeScaleAspectFill
 size:switchView.frame.size
@@ -468,7 +463,6 @@ alignment:LWTextAttachAlignmentTop
 range:NSMakeRange(44, 0)];
 
 //add a click event in the text
-
 [ts lw_addLinkWithData:@"链接 ：）"
 range:NSMakeRange(53,4)
 linkColor:[UIColor blueColor]
@@ -484,7 +478,6 @@ highLightColor:RGB(0, 0, 0, 0.25f)];
 
 
 //create a LWLayout object
-
 LWLayout* layout = [[LWLayout alloc] init];
 [layout addStorage:ts];
 
@@ -494,7 +487,6 @@ view.layout = layout;
 
 
 //click and long press event call back
-
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
 didCilickedTextStorage:(LWTextStorage *)textStorage
 linkdata:(id)data {

@@ -582,7 +582,7 @@ const CGFloat kRefreshBoundary = 170.0f;
                            @"content":@"哈哈哈哈"},
                          @{@"from":@"SIZE潮流生活",
                            @"to":@"waynezxcv",
-                           @"content":@"使用Gallop能尽量保持滚动时的FPS在60hz"}],
+                           @"content":@"使用Gallop能保持滚动时的FPS在60hz"}],
         @"isLike":@(NO),
         @"likeList":@[@"waynezxcv",@"伊布拉希莫维奇",@"权志龙",@"郜林",@"扎克伯格"]},
       

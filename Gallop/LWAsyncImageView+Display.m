@@ -197,7 +197,9 @@ static void _croppedImageBackingSizeAndDrawRectInBounds(CGSize sourceImageSize,C
         url = (NSURL *)imageStorage.contents;
     } else {
         resizeBlock(imageStorage,0);
-        completion();
+        if (completion) {
+            completion();
+        }
         return;
     }
     
