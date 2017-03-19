@@ -73,15 +73,16 @@
 }
 
 - (void)setup {
-    self.layer.opaque = YES;
     self.layer.contentsScale = [GallopUtils contentsScale];
+    [self addGestureRecognizer:self.longPressGesture];
+    self.layer.opaque = YES;
     self.displaysAsynchronously = YES;
+    
     _showingHighlight = NO;
     _highlight = nil;
     _touchBeganPoint = CGPointZero;
     _highlightAdjustPoint = CGPointZero;
     _displayFlag = [[LWFlag alloc] init];
-    [self addGestureRecognizer:self.longPressGesture];
 }
 
 - (void)setLayout:(LWLayout *)layout {
