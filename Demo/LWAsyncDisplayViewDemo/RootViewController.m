@@ -26,15 +26,13 @@
 
 @implementation RootViewController
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
     self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
     NSDictionary* attributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
     self.navigationController.navigationBar.titleTextAttributes = attributes;
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
+    
     self.title = @"Gallop";
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.delegate = self;

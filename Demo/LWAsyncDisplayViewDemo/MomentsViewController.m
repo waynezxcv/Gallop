@@ -56,15 +56,12 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 #pragma mark - ViewControllerLifeCycle
 
-- (void)loadView {
-    [super loadView];
-    [self setup];
-}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.view addSubview:self.tableView];
-    [self.view addSubview:self.commentView];
+    [self setupUI];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -416,7 +413,7 @@ const CGFloat kRefreshBoundary = 170.0f;
 
 #pragma mark - Getter
 
-- (void)setup {
+- (void)setupUI {
     self.needRefresh = YES;
     self.displaysAsynchronously = YES;
     self.view.backgroundColor = [UIColor whiteColor];
@@ -427,6 +424,9 @@ const CGFloat kRefreshBoundary = 170.0f;
                          action:@selector(segmentControlIndexChanged:)
                forControlEvents:UIControlEventValueChanged];
     self.navigationItem.titleView = segmentedControl;
+    
+    [self.view addSubview:self.tableView];
+    [self.view addSubview:self.commentView];
 }
 
 

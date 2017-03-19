@@ -56,15 +56,6 @@
 
 #pragma mark - LifeCycle
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self setup];
-    }
-    return self;
-}
-
-
 - (id)init {
     self = [super init];
     if (self) {
@@ -89,8 +80,8 @@
     _highlight = nil;
     _touchBeganPoint = CGPointZero;
     _highlightAdjustPoint = CGPointZero;
-    [self addGestureRecognizer:self.longPressGesture];
     _displayFlag = [[LWFlag alloc] init];
+    [self addGestureRecognizer:self.longPressGesture];
 }
 
 - (void)setLayout:(LWLayout *)layout {
@@ -213,6 +204,7 @@
 #pragma mark - Display
 
 - (LWAsyncDisplayTransaction *)asyncDisplayTransaction {
+    
     LWAsyncDisplayTransaction* transaction = [[LWAsyncDisplayTransaction alloc] init];
     transaction.willDisplayBlock = ^(CALayer *layer) {
         

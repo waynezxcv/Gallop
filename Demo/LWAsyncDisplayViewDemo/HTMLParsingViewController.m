@@ -31,8 +31,8 @@
 
 #pragma mark - ViewControllerLifeCycle
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(0, 0, 80.0f, 30.0f);
     [button setTitle:@"UIWebView" forState:UIControlStateNormal];
@@ -119,7 +119,7 @@
         /** cover description **/
         [builder createLWStorageWithXPath:@"//div[@class='img-wrap']/span[@class='img-source']"];
         NSString* coverDes = [builder contents];
-
+        
         /** title  **/
         LWHTMLTextConfig* titleConfig = [[LWHTMLTextConfig alloc] init];
         titleConfig.font = [UIFont fontWithName:@"STHeitiSC-Medium" size:18.0];
@@ -245,7 +245,7 @@
             [tmp addObject:imageModel];
         }
     }
-
+    
     LWImageBrowser* browser = [[LWImageBrowser alloc] initWithImageBrowserModels:tmp
                                                                     currentIndex:index];
     browser.isScalingToHide = NO ;
