@@ -62,7 +62,7 @@
 
 //获取iOS版本号
 #ifndef IOS_VERSION
-#define IOS_VERSION ［[UIDevice currentDevice] systemVersion] floatValue]
+#define IOS_VERSION [[UIDevice currentDevice] systemVersion] floatValue]
 #endif
 
 
