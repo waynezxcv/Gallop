@@ -3,7 +3,6 @@
 
 # Gallop v0.6.2
 
-
 ## About 
 
 Gallop is a powerful rich text framework that support Asynchronous display.
