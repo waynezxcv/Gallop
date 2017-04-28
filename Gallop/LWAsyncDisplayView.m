@@ -64,6 +64,14 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self setup];
+    }
+    return self;
+}
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -184,7 +192,12 @@
             container.clipsToBounds = imageStorage.clipsToBounds;
             container.contentMode = imageStorage.contentMode;
             container.frame = imageStorage.frame;
+            container.layer.shadowColor = imageStorage.shadowColor.CGColor;
+            container.layer.shadowOffset = imageStorage.shadowOffset;
+            container.layer.shadowOpacity = imageStorage.shadowOpacity;
+            container.layer.shadowRadius = imageStorage.shadowRadius;
             container.hidden = NO;
+            
             [container lw_setImageWihtImageStorage:imageStorage resize:resizeBlock completion:nil];
             [self.imageContainers addObject:container];
         }

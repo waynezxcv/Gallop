@@ -53,6 +53,7 @@
             avatarStorage.cornerBorderWidth = 1.0f;
             avatarStorage.cornerBorderColor = [UIColor grayColor];
             
+            
             //名字模型 nameTextStorage
             LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
             nameTextStorage.text = statusModel.name;

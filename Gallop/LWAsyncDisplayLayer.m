@@ -76,6 +76,16 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        _displayFlag = [[LWFlag alloc] init];
+        self.opaque = YES;
+        self.displaysAsynchronously = YES;
+    }
+    return self;
+}
+
 - (void)setNeedsDisplay {
     [self cancelAsyncDisplay];
     [super setNeedsDisplay];
